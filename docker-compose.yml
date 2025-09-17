@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  static-site:
+    image: nginx:alpine
+    volumes:
+      - ./_site:/usr/share/nginx/html:ro  # Quarto output goes here
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.static.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.static.entrypoints=web"
+      - "traefik.http.services.static.loadbalancer.server.port=80"
+
+networks:
+  proxy:
+    external: true
