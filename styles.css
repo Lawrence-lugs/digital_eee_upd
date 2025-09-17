@@ -1,1 +1,10 @@
 /* css styles */
+
+/* Sticky Table of Contents for Quarto sidebar */
+.quarto-sidebar-toc {
+	position: sticky;
+	top: 1.5rem;
+	max-height: calc(100vh - 2rem);
+	overflow-y: auto;
+	z-index: 100;
+}

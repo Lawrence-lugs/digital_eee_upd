@@ -1,19 +1,31 @@
 project:
   type: website
+  render:
+    - pages/*.qmd
 
 website:
   title: "EEE Digital"
+  page-navigation: true
+  bread-crumbs: true
   navbar:
     left:
-      - href: index.qmd
+      - href: pages/index.qmd
         text: Home
-      - about.qmd
-
+      - href: pages/about.qmd
+        text: About
+      - href: pages/undergraduate.qmd
+        text: Undergraduate Projects
+      - href: exercises
+        text: Vercises
+      - href: kmaps
+        text: Kmaps
+  
 format:
   html:
     theme:
       - cosmo
       - brand
+      # - darkly
     css: styles.css
     toc: true
 

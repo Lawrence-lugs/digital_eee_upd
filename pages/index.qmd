@@ -1,0 +1,81 @@
+---
+title: "EEE Digital Design Resources Disambiguation"
+toc: true
+---
+
+This is a Quarto website.
+
+To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+
+
+# Plotly Works Look
+
+For a demonstration of a line plot on a polar axis, see @fig-polar.
+
+```{python}
+#| label: fig-polar
+#| fig-cap: "Plotly Polar Line Plot Test"
+
+import numpy as np
+import plotly.express as px
+
+r = np.arange(0, 2, 0.01)
+theta = 2 * 180 * r
+
+# Set rticks
+px.line_polar(r=r, theta=theta, start_angle=0, direction="counterclockwise")
+```
+
+
+# Quick Maths
+
+More
+
+$\sum_i^n r_i=\sum_i^n s(q_i-z)$
+
+$=\frac{s[(\sum_i^nq_i)-nz]}{n}$
+
+$=\frac{s}{n}\sum q_i-sz$
+
+### Accounting for the output scale…
+
+$r_y=\sum_i^n r_{xi}=\sum_i^n s_x(q_{xi}-z_x)$
+
+$r_y=\frac{s_x[(\sum_i^nq_{xi})-nz_x]}{n}$
+
+$r_y=\frac{s_x}{n}\sum q_{xi}-sz_x$
+
+$s_y(q_y-z_y)=\frac{s_x}{n}\sum q_{xi}-sz_x$
+
+$q_y=\frac{s_x}{s_yn}\sum q_{xi}-\frac{s_x}{s_y}z_x+z_y$
+
+
+# Some Verilog
+
+When writing verilog
+
+```verilog
+module boxmaker #(
+  parameter bigNess = $clog2(64),
+  parameter highNess = 12,
+) (
+  input clk, nrst,
+  logic [bigNess-1:0][highNess-1:0] box_o,
+);
+
+  always@(posedge clk or negedge nrst) begin
+    if (!nrst)
+      box_o <= '0;
+    else
+      for (int row = 0; row=row+1;row < highNess) begin
+        box_o <= row;
+      end
+
+  end
+
+
+endmodule
+
+```
+
+Got this
