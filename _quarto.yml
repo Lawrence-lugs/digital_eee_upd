@@ -1,6 +1,7 @@
 project:
   type: website
   render:
+    - "*.qmd"
     - pages/*.qmd
 
 website:
@@ -9,7 +10,7 @@ website:
   bread-crumbs: true
   navbar:
     left:
-      - href: pages/index.qmd
+      - href: index.qmd
         text: Home
       - href: pages/about.qmd
         text: About
