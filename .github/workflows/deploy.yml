@@ -16,4 +16,6 @@ jobs:
         run: quarto render
 
       - name: Rebuild and restart containers
-        run: docker-compose up -d --build
+        run: | 
+          docker compose up -d --build
+          docker system prune -f
