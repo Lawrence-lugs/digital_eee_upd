@@ -9,19 +9,11 @@ jobs:
     runs-on: [self-hosted,digitaleee]
 
     steps:
-      - name: Update server repo
-        run: |
-          cd ~/workspace/digital_eee_upd
-          git fetch origin main
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      # 1. Ensure repo is synced
-      - name: Pull latest code
-        run: git pull origin main
-
-      # 2. Render Quarto project
       - name: Render Quarto site
         run: quarto render
 
-      # 3. Rebuild and restart containers
       - name: Rebuild and restart containers
         run: docker-compose up -d --build
