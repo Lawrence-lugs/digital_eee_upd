@@ -9,6 +9,11 @@ jobs:
     runs-on: [self-hosted,digitaleee]
 
     steps:
+      - name: Update server repo
+        run: |
+          cd ~/workspace/digital_eee_upd
+          git fetch origin main
+
       # 1. Ensure repo is synced
       - name: Pull latest code
         run: git pull origin main
