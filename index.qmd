@@ -9,7 +9,7 @@ To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
 
 # Verilog Crash Course
 
-We've deployed a ![Verilog crash course](https://uvle.upd.edu.ph/course/view.php?id=23162) recently.
+We've deployed a [Verilog crash course](https://uvle.upd.edu.ph/course/view.php?id=23162) recently.
 
 # Plotly Works Look
 
