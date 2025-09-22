@@ -17,5 +17,5 @@ jobs:
 
       - name: Rebuild and restart containers
         run: | 
-          docker compose up -d --build
+          docker compose up -d
           docker system prune -f
