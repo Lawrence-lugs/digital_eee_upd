@@ -17,7 +17,7 @@ jobs:
           environment-file: env.yml
           environment-name: digital_eee_upd
           cache-environment: true
-          post-cleanup: environment
+          download-micromamba: false
 
       - name: Render Quarto site
         shell: bash -l {0}
