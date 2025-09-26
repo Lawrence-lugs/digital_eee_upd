@@ -12,16 +12,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - uses: mamba-org/setup-micromamba@v2
-        with:
-          environment-file: env.yml
-          environment-name: digital_eee_upd
-          cache-environment: true
-          download-micromamba: false
-
       - name: Render Quarto site
         shell: bash -l {0}
         run: |
+          mamba activate base
           quarto render
 
       - name: Rebuild and restart containers
