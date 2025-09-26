@@ -12,8 +12,26 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Set up Mambaforge
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          miniforge-variant: Mambaforge
+          miniforge-version: latest
+          use-mamba: true
+          environment-file: env.yml
+          activate-environment: digital_eee_upd
+          auto-activate-base: false
+
+      - name: Check conda env
+        shell: bash -l {0}
+        run: |
+          mamba info
+          mamba list
+
       - name: Render Quarto site
-        run: quarto render
+        shell: bash -l {0}
+        run: |
+          quarto render
 
       - name: Rebuild and restart containers
         run: | 
