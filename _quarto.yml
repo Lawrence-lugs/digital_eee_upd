@@ -18,6 +18,8 @@ website:
         text: Undergraduate Projects
       - href: exercises
         text: Vercises
+      - href: crashcourse
+        text: Verilog Crash Course
       - href: kmaps
         text: Kmaps
   
