@@ -20,8 +20,8 @@ website:
         text: Vercises
       - href: crashcourse
         text: Verilog Crash Course
-      - href: kmaps
-        text: Kmaps
+      - href: kmapgameee
+        text: kmap-gamEEE
   
 format:
   html:
