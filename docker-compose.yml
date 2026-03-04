@@ -16,8 +16,10 @@ services:
     # Traefik labels for domain routing
     # labels:
     #  - "traefik.enable=true"
+    #  - "traefik.http.routers.static.rule=PathPrefix(`/`)"
     #  - "traefik.http.routers.static.rule=Host(`digital.eee.upd.edu.ph`)"
     #  - "traefik.http.routers.static.entrypoints=websecure"
+    #  - "traefik.http.routers.static.tls=true"     
     #  - "traefik.http.routers.static.tls.certresolver=myresolver"
     #  - "traefik.http.services.static.loadbalancer.server.port=80"
 

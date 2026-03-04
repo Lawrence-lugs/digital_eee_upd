@@ -7,6 +7,11 @@ This is a Quarto website.
 
 To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
 
+The `module` and `endmodule` keywords.
+
+A Verilog design is always wrapped between a `module` and an `endmodule`.
+Inside, we declare **inputs** (signals that come into the module) and **outputs** (signals the module drives). These declarations are done inside a parenthesis right after the module name. Each port declaration is separated by commas.
+
 # Verilog Crash Course
 
 We've deployed a [Verilog crash course](https://uvle.upd.edu.ph/course/view.php?id=23162) recently.
