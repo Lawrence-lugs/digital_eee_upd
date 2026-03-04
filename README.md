@@ -12,7 +12,15 @@ To get the environment containing all the dependencies for this repo either:
 1. Clone the repository.  
 2. Open VS Code → Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`) → **Dev Containers: Open Folder in Container**.
 
-You **will need docker for that to work**.
+You **will need docker for that to work**. 
+Download and install **Docker** for your operating system:
+
+- [All platforms (Linux)](https://docs.docker.com/engine/install/)
+- [Windows](https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe)
+- [Mac with Intel Chip](https://desktop.docker.com/mac/main/amd64/Docker.dmg)
+- [Mac with Apple Chip](https://desktop.docker.com/mac/main/arm64/Docker.dmg)
+
+
 
 ### Codespace
 
