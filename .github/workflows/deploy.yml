@@ -18,6 +18,8 @@ jobs:
           environment-name: digital_eee_upd
           cache-environment: true
           post-cleanup: all
+          download-micromamba: false
+          micromamba-binary-path: /home/runnerman/micromamba-bin/micromamba
 
       - name: Render Quarto site
         shell: bash -l {0}
