@@ -1,0 +1,46 @@
+---
+title: "Verilog Crash Course"
+format:
+  html:
+    css: vcc.css
+---
+
+::: {.vcc-nav}
+[Overview](index.qmd) | [Foundations](00-fundamentals.qmd) | [Combinational](01-combinational.qmd) | [Sequential](02-sequential.qmd) | [Verification](03-verification.qmd) | [Practices](04-practices.qmd) | [Extras](05-extras.qmd)
+:::
+::: {.vcc-grid}
+::: {.vcc-card}
+### Start here
+- [Foundations](00-fundamentals.qmd)
+- [Combinational logic](01-combinational.qmd)
+:::
+::: {.vcc-card}
+### Continue
+- [Sequential logic](02-sequential.qmd)
+- [Verification ideas](03-verification.qmd)
+:::
+::: {.vcc-card}
+### Finish strong
+- [Coding practices](04-practices.qmd)
+- [Extras and credits](05-extras.qmd)
+:::
+:::
+## Original Course Intro
+
+This crash course was born out of sheer frustration with how Verilog is often taught online: tutorials that dive too quickly into low-level details, cryptic syntax, and performance caveats, leaving beginners more confused than confident.
+
+Instead, this course takes a different approach: it **assumes you already have some programming background,** and focuses on what you actually need to know to **get started writing hardware descriptions right away**.
+
+The central idea is simple: algorithms are just sequences of steps, and hardware can implement those steps by moving through **states** in time. With this mindset, you’ll learn how to quickly translate algorithms into **state machines in Verilog**, turning abstract logic into actual hardware descriptions you can simulate and test.
+
+The goal here is **fast prototyping from algorithm to HDL**, comprehensive enough to be useful, but lean enough to avoid overwhelming detail. This course is not meant to replace a full digital design class. Instead, it prepares you for one, giving you the confidence to write real Verilog and understand how sequential logic works, so that later, when you encounter advanced topics like timing closure or performance optimizations, you’ll already have a solid foundation to build upon.
+
+By the end of this course, you should feel comfortable looking at an algorithm, imagining its steps as states, and coding up a working prototype in Verilog.
+
+This crash course is organized as follows:
+
+Eight modules (numbered 000 all the way to 111) that teach you all the fundamentals you need to implement any realizable algorithm into Verilog, the true goal of this crash course. Each module has a corresponding assessment to test your understanding. You can optionally go through the assessments right away (through the dedicated tile) if you are coming here with sufficient Verilog knowledge and you want to test your skills.
+
+If you have completed the assessments, you will gain access to a hidden set of modules focusing on advanced Verilog constructs and coding styles, meant for advanced users who want to create more complicated architectures.
+
+Next: [Foundations](00-fundamentals.qmd)

@@ -1,0 +1,90 @@
+var collapsibleSettings = document.getElementsByClassName('collapsible-actions');
+if (collapsibleSettings.length) {
+    // We are on course edit page
+    var expandAll = collapsibleSettings[0].firstElementChild;
+    var advancedButton = document.createElement('button');
+    advancedButton.setAttribute('class', 'btn btn-secondary advanced-options-button');
+    advancedButton.setAttribute('type', 'button');
+    var advancedButtonText = document.createTextNode('Show advanced options');
+    advancedButton.appendChild(advancedButtonText);
+    expandAll.parentNode.insertBefore(advancedButton, expandAll);
+
+    // Section 1: Global hides
+    var globalCssHide = ['#id_tagshdr'];
+    jQuery(globalCssHide.join(', ')).hide();
+
+    // Section 2: Global Advanced Modules
+    var globalAdvanced = ['#id_competenciessection', '#id_activitycompletionheader', '#fitem_id_cmidnumber'];
+    jQuery(globalAdvanced.join(', ')).hide();
+    
+    // Section 3: Module-wide
+    var moduleSpecificMap = {
+        'page-mod-assign-mod': ['#id_feedback_types'],
+        'page-mod-quiz-mod': ['#id_feedback_types', '#id_modstandardgrade'],
+    };
+    var moduleSpecificAdvanced = moduleSpecificMap[document.body.id] || [];
+
+    // Show method
+    jQuery(moduleSpecificAdvanced.join(', ')).hide();
+    var advanced = [].concat(globalAdvanced, moduleSpecificAdvanced);
+    jQuery(advancedButton).click(
+        function() {
+            jQuery(advanced.join(', ')).show();
+        }
+    );
+
+    // Assignment module customizations
+    if (document.body.id === 'page-mod-assign-mod') {
+        var assignmentShowDescription = document.getElementById('id_showdescription');
+        if (assignmentShowDescription) {
+            if (!assignmentShowDescription.checked) {
+                assignmentShowDescription.click();
+            }
+        }
+    }
+}
+
+// Question type customizations
+if (document.body.id === 'page-mod-quiz-edit') {
+    var advancedQuestionButton = document.createElement('button');
+    advancedQuestionButton.setAttribute('class', 'btn btn-secondary advanced-options-button mr-2');
+    advancedQuestionButton.setAttribute('id', 'show_all_qtypes');
+    advancedQuestionButton.setAttribute('type', 'button');
+    var advancedQuestionButtonText = document.createTextNode('Show all types');
+    advancedQuestionButton.appendChild(advancedQuestionButtonText);
+    var questionButtonArea = document.getElementsByClassName('submitbuttons');
+    questionButtonArea[0].appendChild(advancedQuestionButton);
+
+    var quizQuestionAdvanced = [    
+        "item_qtype_algebra", "item_qtype_calculated", "item_qtype_calculatedmulti", "item_qtype_calculatedsimple", 
+        "item_qtype_combined", "item_qtype_multianswer", "item_qtype_multinumerical", "item_qtype_oumultiresponse", 
+        "item_qtype_pmatch", "item_qtype_pmatchjme", "item_qtype_varnumeric", "item_qtype_varnumericset"
+    ];
+
+    var questionAdvancedOptions = [];
+    quizQuestionAdvanced.forEach(
+        function(labelFor, index) {
+            questionAdvancedOptions.push(
+                $('label[for="' + labelFor + '"]').parent()
+            )
+        }
+    );
+
+    questionAdvancedOptions.forEach(
+        function(option, index) {
+            option.hide();
+        }
+    );
+
+    $('body').on('DOMNodeInserted', function (event) {
+        let modal = event.target;
+        let button = modal.querySelector('#show_all_qtypes');
+        if (button) {
+            $('#show_all_qtypes').click(
+                function() {
+                    $('.option').show();
+                }
+            )
+        }
+    });
+}

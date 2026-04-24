@@ -29,8 +29,5 @@ jobs:
       # The above sequence has been deprecated upon the use of a unified root deployment script
       # It now handles the git submodule updates and rendering by itself, so we just need to trigger it.
 
-      - name: Trigger Unified Root Deployment
-              run: |
-                # Execute the root script as the workspace owner.
-                # The deploy.sh will handle git submodule updates and the compose graph.
-                sudo -u lawrence /home/lawrence/workspace/deploy.sh
+    - name: Trigger Unified Root Deployment
+      run: sudo -u lawrence /home/lawrence/workspace/deploy.sh

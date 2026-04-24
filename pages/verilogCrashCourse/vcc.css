@@ -1,0 +1,62 @@
+/* Verilog Crash Course mini-site styles */
+.vcc-nav {
+  margin: 0 0 1rem 0;
+  padding: 0.75rem 1rem;
+  background: #f4f9ff;
+  border-left: 4px solid #0a5ea8;
+  border-radius: 6px;
+}
+
+.vcc-callout {
+  padding: 0.9rem 1rem;
+  background: #fff9f0;
+  border: 1px solid #f3d49f;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.vcc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0 1.5rem 0;
+}
+
+.vcc-card {
+  border: 1px solid #dbe7f3;
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  background: #ffffff;
+}
+
+.vcc-nextprev {
+  margin-top: 2rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #d9e4ef;
+}
+
+.vcc-small {
+  font-size: 0.95rem;
+  color: #3e4f61;
+}
+
+.vcc-section {
+  margin-bottom: 2rem;
+}
+
+.vcc-block {
+  margin: 0.9rem 0;
+  padding: 0.9rem 1rem;
+  border: 1px solid #e5ebf2;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.vcc-block img {
+  max-width: 100%;
+  height: auto;
+}
+
+.vcc-block .no-overflow {
+  overflow: visible;
+}

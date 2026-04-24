@@ -1,0 +1,1 @@
+document.addEventListener('keydown',function(e){if(e.key==='Tab'){$('body').addClass('show-focus-outlines')}});document.addEventListener('click',function(e){$('body').removeClass('show-focus-outlines')})

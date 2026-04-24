@@ -2,12 +2,13 @@ project:
   type: website
   render:
     - "*.qmd"
-    - pages/*.qmd  
+    - pages/**/*.qmd  
   post-render:
     - cp static_apps/FSM_simulatEEE.html _site/
 
 website:
   title: "EEE Digital"
+  favicon: logo.png
   page-navigation: true
   bread-crumbs: true
   navbar:
@@ -20,7 +21,7 @@ website:
         text: Undergraduate Projects
       - href: exercises
         text: Vercises
-      - href: crashcourse
+      - href: pages/verilogCrashCourse/index.qmd
         text: Verilog Crash Course
       - href: kmapgameee
         text: kmap-gamEEE

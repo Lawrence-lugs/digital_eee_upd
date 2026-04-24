@@ -1,0 +1,28 @@
+services:
+  quartonotes:
+    image: quartonotes
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: quarttonotes_inst
+    stdin_open: true
+    tty: true
+    working_dir: /root/workspace
+    ports:
+      - "4200:4200"
+    environment:
+      - DISPLAY=:0
+      - WAYLAND_DISPLAY=wayland-0
+      - XDG_RUNTIME_DIR=/mnt/wslg/runtime-dir
+      - PULSE_SERVER=/mnt/wslg/PulseServer
+      - SHELL=/bin/bash
+      #- SSH_AUTH_SOCK=/ssh-agent
+    volumes:
+      - ../:/root/workspace
+      # WSLg Graphics & Audio Sockets
+      - /run/desktop/mnt/host/wslg/.X11-unix:/tmp/.X11-unix
+      - /run/desktop/mnt/host/wslg:/mnt/wslg
+      # Hardware Acceleration (GPU Drivers)
+      - /usr/lib/wsl:/usr/lib/wsl
+      #- ${SSH_AUTH_SOCK}:/ssh-agent
+      #- ${HOME}/.gitconfig:/root/.gitconfig

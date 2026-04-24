@@ -1,0 +1,675 @@
+---
+title: "Verification Track: Modules 101 and 110"
+format:
+  html:
+    css: vcc.css
+---
+
+::: {.vcc-nav}
+[Overview](index.qmd) | [Foundations](00-fundamentals.qmd) | [Combinational](01-combinational.qmd) | [Sequential](02-sequential.qmd) | [Verification](03-verification.qmd) | [Practices](04-practices.qmd) | [Extras](05-extras.qmd)
+:::
+## Module 101: Testbench Basics and Verification
+
+So far, we’ve been writing synthesizable Verilog — the kind that represents hardware. But before we ever put a design on an FPGA or chip, we **must test it in simulation**. That’s where **testbenches** come in.
+
+A **testbench** is just another Verilog module, but:
+
+- It doesn’t describe hardware.
+- It drives inputs and monitors outputs of the design under test.
+- It uses special non-synthesizable constructs (like delays and printing) that only exist in simulation.
+
+## Basic Testbench Structure
+
+A testbench usually has three parts:
+
+1. **Design Under Test (DUT) instantiation** — we create an instance of our design module.
+2. **Clock generation** — a process that toggles `clk` so the design can run.
+3. **Stimulus and checking** — use `initial` blocks to provide input values and monitor outputs.
+
+Let’s walk through these step by step.
+
+##### Timescale
+
+At the top of the testbench file, we write a **timescale directive**:
+
+---
+
+```
+`timescale 1ns/1ps
+```
+
+---
+
+This means:
+
+- 1 time unit = 1 nanosecond. We’ll use this to define delays (e.g., `#10` means wait 10 ns). More on this later.
+- Simulation precision (how granular the logic gate delays would be represented) = 1 picosecond.
+
+##### Instantiating the Design Under Test (DUT)
+
+For this part, let's say we want to simulate and verify the **multiplication via repeated addition** FSM that we have implemented in the previous module.
+
+First, we declare signals for the testbench to drive:
+
+---
+
+```
+module tb_multiplier;         // module declaration. A testbench does not have explicit input and output ports!
+    // declare internal signals that will be used by the testbench    // these are the input and output ports of the design we are planning to test
+    reg clk;
+    reg reset;
+    reg start;
+    reg [3:0] a, b;
+    wire [7:0] result;
+    wire done;
+
+    // Instantiate the design under test (DUT)
+    multiplier_fsm uut (
+        .clk(clk),
+        .reset(reset),
+        .start(start),
+        .a(a),
+        .b(b),
+        .result(result),
+        .done(done)
+    );
+```
+
+---
+
+ ℹ️
+**Take note of the following when writing testbenches:**
+
+- `reg` is used for inputs (since testbench drives them).
+- `wire` is used for outputs (since DUT drives them).
+
+##### Clock Generation
+
+We need a free-running clock. We can make one by toggling clk, which was declared as `reg`, every 5 ns:
+
+---
+
+```
+    // Clock generation: 10 ns period (100 MHz)
+    initial clk = 0;
+    always #5 clk = ~clk;
+```
+
+---
+
+ℹ️Here:
+
+- `initial` sets `clk = 0` at time 0.
+- `always #5` toggles `clk` every 5 ns. We are using nanoseconds because that is what was defined in the **timescale** directive earlier.
+- So the clock period that will be provided to clock our design is 10 ns.
+
+##### Stimulus with `initial begin`
+
+To control inputs, we use an `initial begin ... end` block:
+
+---
+
+```
+    initial begin
+        // Initialize signals
+        reset = 1;
+        start = 0;
+        a = 0;
+        b = 0;
+
+        // Hold reset for 20 ns before setting it to 0
+        #20 reset = 0;
+
+        // Start multiplication: 3 * 5
+        a = 4'd3;
+        b = 4'd5;
+        start = 1;     // set start to 1
+        #10 start = 0; // after 10 ns, set start to 0 (pulse start)
+
+        // Wait for completion by waiting for the posedge of done to happen        // The testbench essentially halts at this point and will only proceed once done becomes 1        @(posedge done);
+        // Display result
+        $display("3 * 5 = %d (expected 15)", result);
+
+        // Wait for 20ns more then finish simulation
+        #20 $finish;
+    end
+```
+
+![initial](./Course_ Verilog Crash Course_files/initial (1).png)
+
+---
+
+ℹ️**We introduced three new Verilog keywords here:**
+
+- **`#delay`**: Wait a given amount of simulation time (non-synthesizable). Time units are defined using the **timescale** directive.
+- **`$display`**: Print messages during simulation (like `printf`). This message shows up in the console.
+- **`$finish`**: End the simulation.
+
+⚠️⚠️⚠️**These are non-synthesizable constructs (i.e., no hardware equivalent)!**
+
+- **You can't tell the hardware to delay an output at exactly x nanoseconds.** Logic gates have delays due to their non-idealities, but you can't specifically assign a delay for them!
+- **You can't tell the hardware to print out messages** (where is it going to print out anyway?).
+- **Hardware always runs.** It is a circuit. You can't just halt it.
+
+**They only exist in the simulator, and that’s perfectly fine for a testbench.**
+
+## Putting It All Together
+
+Here’s the complete testbench for the multiplier FSM:
+
+---
+
+```
+`timescale 1ns/1ps             // timescale directive for time units
+module tb_multiplier;          // module declaration. A testbench does not have explicit input and output ports!
+
+    // declare internal signals that will be used by the testbench    // these are the input and output ports of the design we are planning to test    reg clk;
+    reg reset;
+    reg start;
+    reg [3:0] a, b;
+    wire [7:0] result;
+    wire done;
+
+    // Instantiate DUT
+    multiplier_fsm uut (
+        .clk(clk),
+        .reset(reset),
+        .start(start),
+        .a(a),
+        .b(b),
+        .result(result),
+        .done(done)
+    );
+
+    // Clock generation
+    initial clk = 0;
+    always #5 clk = ~clk;  // toggle every 5 ns, so 10 ns clock period
+
+    // Test sequence    initial begin
+        // Initialize signals
+        reset = 1; start = 0; a = 0; b = 0;
+        #20 reset = 0; // Hold reset for 20 ns before setting it to 0
+
+        // Start multiplication: 3 * 5
+        a = 4'd3; b = 4'd5;
+        start = 1;     // set start to 1
+        #10 start = 0; // after 10 ns, set start to 0 (pulse start)
+
+        // Wait for completion by waiting for the posedge of done to happen        // The testbench essentially halts at this point and will only proceed once done becomes 1        @(posedge done);        $display("3 * 5 = %d (expected 15)", result); // Display result
+
+        // Wait for 20ns more then finish simulation
+        #20 $finish;
+    endendmodule
+```
+
+![testbench](./Course_ Verilog Crash Course_files/testbench.png)
+
+---
+
+- A **testbench is not hardware** — it’s a simulation driver.
+- Use `initial` blocks to define test sequences.
+- Use `always #delay` to make clocks.
+- Use `$display`, `$finish`, `$dumpfile`, `$dumpvars` for simulation-only
+  tasks.
+
+## Viewing Waveforms
+
+Most simulators let you save signals into a **waveform file** (like `.vcd`) that you can view in tools such as GTKWave. For example:
+
+---
+
+```
+initial begin
+    $dumpfile("tb_multiplier.vcd");
+    $dumpvars(0, tb_multiplier);
+end
+```
+
+---
+
+This records all signals so you can open them in a waveform viewer.
+
+Waveforms let you see the step-by-step values of `a`, `b`, `result`, `state`,
+and `done`.
+
+![simulation_draw](./Course_ Verilog Crash Course_files/simulation_draw (2).png).png)
+
+If you insert the code above into the testbench for the multiplier FSM and run it on a simulator tool, you would see the following waveforms:
+
+![simulation](./Course_ Verilog Crash Course_files/simulation (1).png).png)
+
+ℹ️For Verilog simulations using Vivado, you don't need to add these lines anymore, as Vivado automatically sets up the waveform viewer using your testbench signals.
+
+## Module 110: Advanced Verification Ideas
+
+The previous module introduced a basic testbench setup that allows you to verify your designs. If you want to thoroughly test your design, you would need more test cases. You can, in fact, scale up the previous testbench module to cover more tests. However, as designs get more complex. testbenches also get complex. Let's now make **more flexible and self-checking** testbenches to simplify our verification tasks.
+
+## From Manual Testing to Automated Testing
+
+In the previous module, we wrote a simple testbench that:
+
+- Ran one multiplication (3 × 5).
+- Waited until the design finished.
+- Printed the result.
+
+That works for small tests, but real designs need **hundreds or thousands of test cases**. Manually watching waveforms or checking printouts is too tedious.
+
+So now we introduce:
+
+- **Tasks**: reusable “subroutines” in Verilog testbenches.
+- **Self-checking testbenches**: testbench automatically compares DUT outputs to expected values.
+
+##### Using Tasks for Reusable Tests
+
+A **task** in Verilog is like a **mini-subroutine**:
+
+- You can pass arguments (inputs, outputs).
+- You can reuse the same sequence of test steps many times.
+- Tasks exist **only in the testbench** — they are not synthesizable hardware.
+
+This is especially helpful when your test sequence has a lot of repeated code (like pulsing `start`, waiting for `done`, checking `result`).
+
+Here’s our **task definition** for running one multiplication test:
+
+---
+
+```
+    // Define a reusable test "subroutine"
+    task run_test;
+        input [3:0] a_in, b_in;    // the test inputs
+        input [7:0] expected;      // the expected product
+        begin
+            // Apply inputs
+            #10
+            a = a_in;
+            b = b_in;
+
+            // Pulse 'start' to begin operation
+            start = 1;
+            #10 start = 0;
+
+            // Wait until the DUT signals completion
+            @(posedge done);
+
+            // Compare DUT output with expected result
+            if (result == expected)
+                $display("PASS: %d * %d = %d", a_in, b_in, result);
+            else
+                $display("FAIL: %d * %d, got %d expected %d",
+                          a_in, b_in, result, expected);
+        end
+    endtask
+```
+
+---
+
+##### How to Call the Task
+
+Calling a task looks just like calling a function in C:
+
+---
+
+```
+    // Example calls inside the testbench
+    run_test(3, 5, 15);   // expect 3 * 5 = 15
+    run_test(2, 4, 8);    // expect 2 * 4 = 8
+    run_test(7, 6, 42);   // expect 7 * 6 = 42
+```
+
+---
+
+Each call:
+
+1. Sets the inputs `a` and `b`.
+2. Pulses the `start` signal.
+3. Waits for the DUT to finish.
+4. Prints PASS/FAIL automatically.
+
+ℹ️Without tasks, you’d have to copy-paste the same dozen lines of code every time you want to test a new input pair. With tasks, you just call `run_test(...)`. This keeps the testbench shorter, clearer, and
+easier to maintain.
+
+### Running more test cases using `task`
+
+Now let’s build a testbench that runs **several multiplications automatically**:
+
+---
+
+```
+`timescale 1ns/1ps
+module tb_multiplier;
+    reg clk;
+    reg reset;
+    reg start;
+    reg [3:0] a, b;
+    wire [7:0] result;
+    wire done;
+
+    // Instantiate DUT
+    multiplier_fsm uut (
+        .clk(clk),
+        .reset(reset),
+        .start(start),
+        .a(a),
+        .b(b),
+        .result(result),
+        .done(done)
+    );
+
+    // Clock generation: 10 ns period
+    initial clk = 0;
+    always #5 clk = ~clk;
+
+    // Define task for test reuse
+    task run_test;
+        input [3:0] a_in, b_in;
+        input [7:0] expected;
+        begin
+            #10
+            a = a_in;
+            b = b_in;
+            start = 1;
+            #10 start = 0;
+
+            // Wait until multiplication is done
+            @(posedge done);
+
+            // Self-checking
+            if (result == expected)
+                $display("PASS: %d * %d = %d", a_in, b_in, result);
+            else
+                $display("FAIL: %d * %d, got %d expected %d", a_in, b_in, result, expected);
+        end
+    endtask
+
+    // Test sequence
+    initial begin
+        // $dumpfile("tb_multiplier.vcd");
+        // $dumpvars(0, tb_multiplier);
+
+        // Initialize
+        reset = 1; start = 0; a = 0; b = 0;
+        #20 reset = 0;
+
+        // Run multiple tests
+        run_test(3, 5, 15);
+        run_test(2, 4, 8);
+        run_test(7, 6, 42);
+        run_test(9, 3, 27);
+        run_test(15, 15, 225);
+
+        // Finish simulation
+        #20 $finish;
+    end
+endmodule
+```
+
+---
+
+##### ℹ️Key Ideas in This Testbench
+
+- **Tasks** simplify code: instead of repeating “set inputs, pulse start, wait, check result” for each test, we just call `run_test(...)`.
+- **Self-checking**: the testbench decides **PASS** or **FAIL** automatically by comparing
+  `result` with the expected product.
+- **Multiple test cases**: we can run as many as we like, quickly.
+
+![simulation_manual](./Course_ Verilog Crash Course_files/simulation_manual (1).png).png)
+
+![](./Course_ Verilog Crash Course_files/console_manual.png)
+
+## Software vs Hardware Models
+
+So far, we’ve written self-checking testbenches with tasks, but all test inputs were hardcoded. That’s fine for a few cases, but what if we want to test **hundreds** or **thousands** of cases?
+
+In real projects, engineers often have:
+
+- A **software reference model** (e.g., Python, C, MATLAB) that implements the algorithm.
+- A **hardware design** (our Verilog DUT).
+
+To verify correctness, they generate test inputs, run them through the software model, and compare the hardware outputs.
+
+Instead of manually coding every test case, we can store them in a **file** and have the Verilog testbench read them automatically.
+
+## File Reading in Verilog Testbenches
+
+Verilog provides system tasks like `$fopen`, `$fscanf`, and `$feof` for file handling. These are simulation-only constructs.
+
+Here’s a simple loop that reads test vectors from a file:
+
+---
+
+```
+integer fd;            // file descriptor (handle for opened file)
+integer scan_status;   // will hold the return status of fscanf
+reg [3:0] a_in, b_in;  // inputs read from file
+reg [7:0] expected;    // expected result read from file
+
+initial begin
+    // Try to open the file in read mode ("r")
+    fd = $fopen("test_vectors.txt", "r");
+    if (fd == 0) begin
+        $display("ERROR: Could not open file!");
+        $finish; // exit simulation if file not found
+    end
+
+    // Loop until end of file is reached
+    while (!$feof(fd)) begin
+        // fscanf returns the number of successful conversions
+        // "%d %d %d" means: read 3 integers separated by spaces/newlines
+        scan_status = $fscanf(fd, "%d %d %d\n", a_in, b_in, expected);
+
+        if (scan_status == 3) begin
+            // Only run test if all 3 numbers were read correctly
+            run_test(a_in, b_in, expected);
+        end
+    end
+
+    // Close the file when done
+    $fclose(fd);
+    $finish; // end simulation
+end
+```
+
+---
+
+- `$fopen("filename", "r")` → opens file for reading.
+- `$fscanf` → reads formatted text (like `scanf` in C).
+- `$feof(fd)` → checks for end of file.
+- `$fclose(fd)` → closes the file.
+
+##### Python Test Vector Generator
+
+To make test vectors, let’s write a small Python program.
+
+This script randomly generates input pairs `(a, b)`, computes `expected = a * b`, and writes them to a text file:
+
+---
+
+```
+import random
+
+with open("test_vectors.txt", "w") as f:
+    for _ in range(20):  # generate 20 test cases
+        a = random.randint(0, 15)  # 4-bit input
+        b = random.randint(0, 15)  # 4-bit input
+        expected = a * b           # software model
+        f.write(f"{a} {b} {expected}\n")
+```
+
+---
+
+Each line has three numbers:
+
+---
+
+```
+a b expected
+```
+
+---
+
+Example output:
+
+---
+
+```
+6 9 54
+4 13 52
+11 12 132
+4 14 56
+```
+
+---
+
+Now our testbench:
+
+1. Opens the file generated by the Python script.
+2. Reads each line (`a`, `b`, `expected`).
+3. Calls `run_test(a, b, expected)`.
+4. Prints PASS/FAIL for each case.
+
+##### Key Takeaways
+
+- File-driven testbenches let you scale to **large numbers of test cases**.
+- You can generate inputs/outputs from a **software reference model** and reuse them in hardware simulation.
+- This bridges the gap between **algorithm verification** and **hardware verification**.
+
+## Putting It All Together
+
+Now, we can write a full testbench that utilizes all the concepts introduced so far (tasks + file-reading), which allows the testbench to be more flexible and comprehensive. Here is the complete testbench:
+
+---
+
+```
+`timescale 1ns/1ps
+module tb_multiplier;
+    // Testbench signals
+    reg clk;
+    reg reset;
+    reg start;
+    reg [3:0] a, b;
+    wire [7:0] result;
+    wire done;
+
+    // Instantiate Design Under Test (DUT)
+    multiplier_fsm uut (
+        .clk(clk),
+        .reset(reset),
+        .start(start),
+        .a(a),
+        .b(b),
+        .result(result),
+        .done(done)
+    );
+
+    // Clock generation: 10 ns period
+    initial clk = 0;
+    always #5 clk = ~clk;
+
+    // Reusable test subroutine
+    task run_test;
+        input [3:0] a_in, b_in;
+        input [7:0] expected;
+        begin
+            // Apply inputs
+            #10
+            a = a_in;
+            b = b_in;
+
+            // Pulse start signal for one clock cycle
+            start = 1;
+            #10 start = 0;
+
+            // Wait for DUT to assert "done"
+            @(posedge done);
+
+            // Self-checking: compare DUT output with expected value
+            if (result == expected)
+                $display("PASS: %d * %d = %d", a_in, b_in, result);
+            else
+                $display("FAIL: %d * %d, got %d expected %d",
+                         a_in, b_in, result, expected);
+        end
+    endtask
+
+    // File handling variables
+    integer fd;            // file descriptor
+    integer scan_status;   // return value from fscanf
+    reg [3:0] a_in, b_in;  // inputs read from file
+    reg [7:0] expected;    // expected result read from file
+
+    // Test sequence
+    initial begin
+        // Enable waveform dumping for GTKWave
+        $dumpfile("tb_multiplier.vcd");
+        $dumpvars(0, tb_multiplier);
+
+        // Initialize signals
+        reset = 1; start = 0; a = 0; b = 0;
+        #20 reset = 0;
+
+        // --- Hardcoded tests first ---
+        run_test(3, 5, 15);
+        run_test(2, 4, 8);
+        run_test(7, 6, 42);
+
+        // --- File-driven tests next ---
+        fd = $fopen("test_vectors.txt", "r");
+        if (fd == 0) begin
+            $display("ERROR: Could not open file!");
+            $finish;
+        end
+
+        while (!$feof(fd)) begin
+            scan_status = $fscanf(fd, "%d %d %d\n", a_in, b_in, expected);
+            if (scan_status == 3) begin
+                run_test(a_in, b_in, expected);
+            end
+        end
+
+        $fclose(fd);
+
+        #20 $finish;
+    end
+endmodule
+```
+
+---
+
+This combined testbench demonstrates:
+
+- **Manual tests** (good for quick sanity checks).
+- **Reusable task** (`run_test`) to avoid repeated code.
+- **File-driven verification** so you can easily scale up testing with hundreds of test vectors, possibly generated from a Python “golden model.”
+
+![simulation_automated](./Course_ Verilog Crash Course_files/simulation_automated.png)
+
+![](./Course_ Verilog Crash Course_files/console_automated.png)
+
+### End of Module Recap
+
+✅By the end of this module, students can now:
+
+- Write **self-checking testbenches** with tasks.
+- Automate testing by **reading from files**.
+- Understand the connection between **software models** (Python) and hardware verification.
+
+### Module Activity : The Coding Environment
+
+In reality, we do not use **Jupyter Notebooks** to run Verilog simulations. Rather, Verilog simulations are typically done in integrated design environments.
+For this activity,  open the **[Verilog Crash Course Github Repository](https://github.com/Lawrence-lugs/microlabverilogcrashcourse).**
+To start the design environment, click **Code > Codespaces > Open in Codespace...**
+The codespace will have a setup stage for about 10 minutes. However, at the end, you should see a coding-environment-like window.
+
+From this window, you can write files, see waveforms, run arbitrary code and commands in the terminal, and other such things.
+This is how digital design engineers typically do their work.
+
+In this activity, you'll be
+
+1. Familiarizing yourself with using the terminal to run Verilog simulations
+2. Using a waveform viewer
+3. Writing a testbench and debugging verilog code
+
+The rest of the instructions for this activity are written on the Github page itself (scroll down from there).
+
+Previous: [Sequential](02-sequential.qmd)
+Next: [Practices](04-practices.qmd)

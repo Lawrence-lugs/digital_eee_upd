@@ -1,29 +1,39 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
 {
-	"name": "Ubuntu",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/base:noble",
-	"features": {
-		"ghcr.io/rocker-org/devcontainer-features/quarto-cli:1": {},
-		"ghcr.io/devcontainers/features/python:1": {
-			"version": "3.11"
-		}
-	},
-	"postCreateCommand": "pip install seaborn numpy pandas jupyter plotly"
+  "name": "Miniforge Python Environment",
+  // We now enforce building off of gh workflows and avoid local builds
+  "image": "ghcr.io/lawrence-lugs/quartolatex:latest",  
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/opt/conda/bin/python",
+        "python.terminal.activateEnvironment": true
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter",
+        "quarto.quarto",
+        "mushan.vscode-paste-image"
+      ]
+    }
+  },
+//   "initializeCommand": "/bin/sh -lc \"if command -v xhost >/dev/null 2>&1; then xhost +localhost || true; else echo XQuartz_xhost_not_found; fi; current=$(defaults read org.xquartz.x11 enable_iglx 2>/dev/null || echo 0); if [ \\\"$current\\\" -eq 0 ]; then echo Enabling_XQuartz_indirect_GL; defaults write org.xquartz.x11 enable_iglx 1 || true; echo Restart_XQuartz_to_apply; fi\"",
+//   "containerEnv": {
+//     "DISPLAY": "host.docker.internal:0",
+//     "SHELL": "/bin/bash",
+//     "LIBGL_ALWAYS_INDIRECT": "1"
+//   }
 
-	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
-
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
-
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "uname -a",
-
-	// Configure tool-specific properties.
-	// "customizations": {},
-
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+  "containerEnv": {
+    "DISPLAY": ":0",
+    "WAYLAND_DISPLAY": "wayland-0",
+    "XDG_RUNTIME_DIR": "/mnt/wslg/runtime-dir",
+    "PULSE_SERVER": "/mnt/wslg/PulseServer",
+    "SHELL": "/bin/bash"
+  },
+  "mounts": [
+    "type=bind,source=/run/desktop/mnt/host/wslg/.X11-unix,target=/tmp/.X11-unix",
+    "type=bind,source=/run/desktop/mnt/host/wslg,target=/mnt/wslg",
+    "type=bind,source=/usr/lib/wsl,target=/usr/lib/wsl"
+  ]
 }
