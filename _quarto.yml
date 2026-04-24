@@ -2,9 +2,9 @@ project:
   type: website
   render:
     - "*.qmd"
-    - pages/*.qmd
-  resources:
-    - "static_apps/FSM_simulatEEE.html"
+    - pages/*.qmd  
+  post-render:
+    - cp static_apps/* _site/
 
 website:
   title: "EEE Digital"
@@ -24,7 +24,7 @@ website:
         text: Verilog Crash Course
       - href: kmapgameee
         text: kmap-gamEEE
-      - href: static_apps/FSM_simulatEEE.html
+      - href: FSM_simulatEEE.html
         text: FSMsimulatEEE
   
 format:
