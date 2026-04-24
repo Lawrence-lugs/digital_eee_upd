@@ -15,10 +15,6 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - href: pages/about.qmd
-        text: About
-      - href: pages/undergraduate.qmd
-        text: Undergraduate Projects
       - href: exercises
         text: Vercises
       - href: pages/verilogCrashCourse/index.qmd
