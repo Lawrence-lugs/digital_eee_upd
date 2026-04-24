@@ -3,6 +3,7 @@ version: "3.8"
 services:
   static-site:
     image: nginx:alpine
+    restart: unless-stopped
     volumes:
       - ./_site:/usr/share/nginx/html:ro  # Quarto output goes here
     networks:
