@@ -39,7 +39,7 @@ include-in-header:
     </h1>
     <p class="text-xl mb-12 max-w-2xl leading-relaxed text-gray-600">
       Course materials, interactive simulation tools, and open-source hardware
-      from the digital design group at the University of the Philippines Diliman.
+      from the digital design people at the University of the Philippines Diliman.
     </p>
     <div class="flex gap-4 flex-wrap justify-center">
       <a href="pages/verilogCrashCourse/index.html"
@@ -153,7 +153,7 @@ include-in-header:
           <p class="text-gray-500 leading-relaxed mb-5">
             A structured introduction to Verilog HDL covering combinational logic,
             sequential circuits, finite state machines, verification techniques,
-            and coding best practices. Originally deployed on UVLE.
+            and coding best practices. Originally deployed on UVLe.
           </p>
           <span class="text-sm font-semibold" style="color: #7B0D1E;">View Course →</span>
         </div>
@@ -197,7 +197,7 @@ include-in-header:
         </h3>
         <p class="text-sm text-gray-500 leading-relaxed">
           A pipelined RV32IMC processor implementing the RISC-V base integer ISA
-          with multiply (M) and compressed instruction (C) extensions.
+          with multiply (M) and compressed instruction (C) extensions. Targets the Artix A7-200T.
         </p>
       </a>
 
@@ -219,7 +219,7 @@ include-in-header:
         </h3>
         <p class="text-sm text-gray-500 leading-relaxed">
           A minimal processor with a simple custom ISA designed to teach students
-          processor architecture fundamentals. Taped out on the SkyWater 130nm
+          processor architecture fundamentals. DRC,LVS clean on the SkyWater 130nm
           open PDK.
         </p>
       </a>
