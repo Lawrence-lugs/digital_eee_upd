@@ -8,7 +8,7 @@ format:
 ::: {.vcc-nav}
 [Overview](index.qmd) | [Foundations](00-fundamentals.qmd) | [Combinational](01-combinational.qmd) | [Sequential](02-sequential.qmd) | [Verification](03-verification.qmd) | [Practices](04-practices.qmd) | [Extras](05-extras.qmd)
 :::
-## Module 111: Best Coding Practices and Wrap-up
+# Module 111: Best Coding Practices and Wrap-up
 
 We're at the end of this crash course. Let's summarize what we have covered so far. This module distills the habits that keep your “algorithm → single `always @(posedge clk)` block” designs readable, predictable, and bug-resistant: clear names, the golden assignment rule, reset priority, width discipline, no double drivers, and keeping simulation-only tricks in the testbench. Think of these as the guardrails that let you prototype fast **without** stepping on classic HDL landmines like accidental latches, off-by-one flags, or hidden truncations. We’ll illustrate each rule with small, descriptive examples and call out the pitfalls they prevent, so your first-pass hardware works more like your mental model, with fewer surprises later.
 
@@ -16,11 +16,11 @@ We're at the end of this crash course. Let's summarize what we have covered so f
 
 Good names make your algorithm read like a story. Prefer full words, consistent casing/underscores, and `localparam` state names instead of raw binaries.
 
-##### **❌Bad:**
+### **❌Bad:**
 
 ---
 
-```
+```verilog
 module m(input c, input s, input r, output y);
     reg [1:0] st;
     ...
@@ -29,11 +29,11 @@ endmodule
 
 ---
 
-##### **✅Better:**
+### **✅Better:**
 
 ---
 
-```
+```verilog
 module controller(
     input  clk,
     input  start,
@@ -59,11 +59,11 @@ endmodule
   This keeps your mental model
   aligned with **concurrency** and avoids subtle timing bugs. No need to dive into semantics here, just stick to the rule.
 
-##### ✅Example (sequential):
+### ✅Example (sequential):
 
 ---
 
-```
+```verilog
 always @(posedge clk) begin
     if (reset)
         count <= 0;
@@ -74,11 +74,11 @@ end
 
 ---
 
-##### ✅Example (combinational):
+### ✅Example (combinational):
 
 ---
 
-```
+```verilog
 always @(*) begin
     if (sel)
         y = a;
@@ -89,11 +89,13 @@ end
 
 ---
 
- ⚠️⚠️⚠️
-**Don't ever mix assignments! Always follow the golden rule.** One more time for emphasis:
+::: {.callout-warning}
+**Don't ever mix assignments. Always follow the golden rule.** One more time for emphasis:
 
-- Inside `always @(posedge clk)`: **use `<=`** .
-- Inside `always @(*)`: **use `=`** .
+- Inside `always @(posedge clk)`: **use `<=`**.
+- Inside `always @(*)`: **use `=`**.
+
+:::
 
 ## 3) Remember: hardware is concurrent
 
@@ -104,7 +106,7 @@ Swap example (both update on the same edge):
 
 ---
 
-```
+```verilog
 always @(posedge clk) begin
     a <= b;  // gets old b
     b <= a;  // gets old a
@@ -117,7 +119,7 @@ That will have the same hardware as this:
 
 ---
 
-```
+```verilog
 always @(posedge clk) begin    b <= a;  // gets old a
     a <= b;  // gets old b
 end
@@ -129,7 +131,7 @@ end
 
 The order of the statements inside the block **does not change the hardware**. Each line creates a register, and all registers are updated together on the clock edge.
 
-##### ℹ️Key Points
+### Key Points
 
 - **Every assignment in an `always@(posedge clk)` block infers a register.**
   Each `<=` line
@@ -146,7 +148,7 @@ The order of the statements inside the block **does not change the hardware**. E
 
 ---
 
-```
+```verilog
 always @(posedge clk) begin
     if (reset) begin
         // reset logic only
@@ -160,11 +162,11 @@ end
 
 - Either synchronous or asynchronous is fine; be consistent in a project.
 
-##### Synchronous Reset
+### Synchronous Reset
 
 ---
 
-```
+```verilog
 module counter_with_reset(
     input clk,
     input reset,
@@ -183,11 +185,11 @@ endmodule
 
 ---
 
-##### Asynchronous Reset
+### Asynchronous Reset
 
 ---
 
-```
+```verilog
 always @(posedge clk or posedge reset) begin
     if (reset)
         count <= 4'b0000;
@@ -206,7 +208,7 @@ Size your constants and watch truncation/extension. Prefer explicit slices when 
 
 ---
 
-```
+```verilog
 reg  [7:0] wide;
 wire [3:0] narrow;
 
@@ -222,13 +224,13 @@ assign wide = 8'hA5;
 
 ---
 
-## 5) Avoid combinational loops
+## 6) Avoid combinational loops
 
 Avoid creating **combinational loops** (signals feeding back through purely combinational logic), because they can oscillate, produce unknown `X` values in simulation, and confuse synthesis/timing tools, often leading to unstable hardware. The assignment where the output depends on the same signal, such as **count = count + 1;****should not**be done in the combinational logic domain (when using `always@(*)`), as this would infer a combinational loop, which is not realizable in hardware.
 
 ---
 
-```
+```verilog
 always @(*) begin
     count = count + 1; // bad: combinational loop
 end
@@ -242,7 +244,7 @@ If you truly need feedback, **break the loop with a register** (use a clocked `a
 
 ---
 
-```
+```verilog
 always @(posedge clk) begin
     if (reset)
         count <= 0;
@@ -255,14 +257,14 @@ end
 
 ---
 
-## 6) Avoid inferred latches in combinational logic
+## 7) Avoid inferred latches in combinational logic
 
 In `always @(*)`, **cover all branches** (include an `else` or `default`)
 so outputs are defined for every input combination. Uncovered paths infer latches (usually a bug).
 
 ---
 
-```
+```verilog
 always @(*) begin
     if (sel == 0)
         y = a;
@@ -278,7 +280,7 @@ The fix: **always cover all cases**.
 
 ---
 
-```
+```verilog
 always @(*) begin
     if (sel == 0)
         y = a;
@@ -295,7 +297,7 @@ Or add a `default` in a `case`:
 
 ---
 
-```
+```verilog
 case (sel)
     2'b00: y = a;
     2'b01: y = b;
@@ -313,7 +315,7 @@ In `always @(posedge clk)`, omitting an `else` simply **keeps the register value
 
 ---
 
-```
+```verilog
 always @(posedge clk) begin
     if (enable)
         q <= d;
@@ -325,15 +327,15 @@ end
 
 ---
 
-## 7) One driver per signal (no double drivers)
+## 8) One driver per signal (no double drivers)
 
 A net/register should be assigned in exactly **one** `assign` or **one** `always` block, not multiple places. Double drivers create conflicts and synthesis errors.
 
-##### ❌Bad:
+### ❌Bad:
 
 ---
 
-```
+```verilog
 always @(*) x = a & b;
 always @(*) x = a | b;  // conflict
 
@@ -343,11 +345,11 @@ always @(*) x = a | b;  // conflict
 
 ---
 
-##### ✅Good:
+### ✅Good:
 
 ---
 
-```
+```verilog
 // GOOD: one block owns 'x' and decides based on 'sel'always @(*) begin    if (sel)
         x = (a & b);
     else
@@ -359,9 +361,11 @@ end
 
 ---
 
- ℹ️Always think about **mutual exclusivity**.**All assignments to the same signal must always be mutually exclusive!** At any given time, no two assignments to the same signal must take place. Use `else`to ensure mutual exclusivity.
+::: {.callout-note}
+Always think about **mutual exclusivity**. **All assignments to the same signal must always be mutually exclusive.** At any given time, no two assignments to the same signal must take place. Use `else` to ensure mutual exclusivity.
+:::
 
-## 8) Keep non-synthesizable constructs in the testbench
+## 9) Keep non-synthesizable constructs in the testbench
 
 `initial`, `#delay`, `$display`, `$finish`, file I/O (`$fopen`, `$fscanf`, `$feof`, `$fclose`) are **for simulation only**.
 Use them in testbenches, not in the DUT.
@@ -370,7 +374,7 @@ Testbench snippet:
 
 ---
 
-```
+```verilog
     initial begin
         // Initialize signals
         reset = 1;
@@ -392,19 +396,22 @@ Testbench snippet:
 
 ---
 
-⚠️⚠️⚠️**These are non-synthesizable constructs (i.e., no hardware equivalent)!**
+::: {.callout-warning}
+**These are non-synthesizable constructs (i.e., no hardware equivalent).**
 
-- **You can't tell the hardware to delay an output at exactly x nanoseconds.** Logic gates have delays due to their non-idealities, but you can't specifically assign a delay for them!
+- **You can't tell the hardware to delay an output at exactly x nanoseconds.** Logic gates have delays due to their non-idealities, but you can't specifically assign a delay for them.
 - **You can't tell the hardware to print out messages** (where is it going to print out anyway?).
 - **Hardware always runs.** It is a circuit. You can't just halt it.
 
-## 9) Prefer `localparam` for states and special constants
+:::
+
+## 10) Prefer `localparam` for states and special constants
 
 Use descriptive names for states and key constants. This improves readability, minimizes errors when refactoring, and provides self-documenting code.
 
 ---
 
-```
+```verilog
     localparam IDLE    = 2'b00,
                COUNT   = 2'b01,
                SIGNAL  = 2'b10;
@@ -449,7 +456,7 @@ Use descriptive names for states and key constants. This improves readability, m
 
 ---
 
-## 10) Practical timing tip (when you see “one-cycle late” flags)
+## 11) Practical timing tip (when you see “one-cycle late” flags)
 
 Staying in the **single `always @(posedge clk)` style** is fine. However, note that in sequential logic, registers only update after the clock edge. That means:
 
@@ -490,7 +497,7 @@ Fix A: Quick patch inside the clocked block:
 
 ---
 
-```
+```verilog
 always @(posedge clk) begin
     if (reset) begin
         out <= 0;
@@ -511,7 +518,7 @@ Fix B: Cleaner (separate tiny combinational check just for the flag):
 
 ---
 
-```
+```verilog
 always @(posedge clk) begin
     if (reset)
         out <= 0;
@@ -532,42 +539,42 @@ end
 
 ![midpoint7_timing](./Course_ Verilog Crash Course_files/midpoint7_timing.png)
 
-# Course Wrap-Up
+## Course Wrap-Up
 
 **✅Where you are now:** you’ve built a solid, fast-prototyping path from an algorithm in your head to working Verilog. You can sketch steps, map them to states, write clean HDL, and verify it—quickly. Here’s
 what we covered so far (000–111) and what each piece unlocked for you.
 
 - **000 — Basic Structure and Syntax**
-   ℹ️You learned the shape of a Verilog design: `module … endmodule`, ports, vectors,
+    You learned the shape of a Verilog design: `module … endmodule`, ports, vectors,
   comments, and clean instantiation (by name/order). The focus: readable modules with legal, descriptive names.
 - **001 — Writing Combinational Logic**
-   ℹ️You described logic with `assign`, sized constants (`'b`,
+    You described logic with `assign`, sized constants (`'b`,
   `'d`, `'h`), common operators, concatenation `{}`, and slices `[hi:lo]`.
   Big idea: **concurrency**—the order of `assign`s doesn’t matter; hardware evaluates in parallel.
 - **010 — Advanced Combinational Logic**
-   ℹ️You shifted to `always @(*)` for richer logic, expressed choices with `if/else` and `case`, and learned two pitfalls to avoid: **double drivers** and **inferred latches** in combinational code (cover all branches or give defaults).
+    You shifted to `always @(*)` for richer logic, expressed choices with `if/else` and `case`, and learned two pitfalls to avoid: **double drivers** and **inferred latches** in combinational code (cover all branches or give defaults).
 - **011 — Writing Sequential Logic**
-   ℹ️You moved time into the picture with `always @(posedge clk)`. The **golden rule**: use `<=` in clocked blocks (and `=` in `@(*)`).
+    You moved time into the picture with `always @(posedge clk)`. The **golden rule**: use `<=` in clocked blocks (and `=` in `@(*)`).
   You built counters, added resets (top-priority), and internalized that **all registers update together** on a clock edge.
 - **100 — Advanced Sequential Logic**
-   ℹ️Algorithms → **FSMs**: states as steps, one step per clock (the clocked block
+    Algorithms → **FSMs**: states as steps, one step per clock (the clocked block
   as an “infinite loop”). You named states with `localparam`, handled transitions, and saw the **one-cycle update nature** of registers
   (condition checks use old values; updates land after the edge).
 - **101 — Testbench Basics and Verification**
-   ℹ️You wrapped designs in a simulation harness: UUT instantiation, clock generation, `initial` blocks, delays, `$display/$finish`, and wave dumps—**testbench-only constructs** that help you see and debug behavior.
+    You wrapped designs in a simulation harness: UUT instantiation, clock generation, `initial` blocks, delays, `$display/$finish`, and wave dumps—**testbench-only constructs** that help you see and debug behavior.
 - **110 — Advanced Verification Ideas**
-   ℹ️You leveled up to **self-checking**: reusable `task`-based
+    You leveled up to **self-checking**: reusable `task`-based
   tests, multiple cases, and **file-driven** verification via `$fopen/$fscanf/$feof` powered by a Python “golden model” to generate
   inputs/expected outputs—scalable verification without staring at waveforms.
 - **111 — Best Coding Practices (here)**
-   ℹ️You collected guardrails for rapid, reliable prototyping: clear names, the golden assignment rule, reset priority, no
+    You collected guardrails for rapid, reliable prototyping: clear names, the golden assignment rule, reset priority, no
   combinational loops, no double drivers, no latches in combinational logic (but holding is fine in sequential), and keeping simulation tricks out of the DUT. Quick timing tip for “one-cycle-late” flags: either anticipate in the condition or
   derive a tiny combinational flag from a registered value.
 
 **Mindset to carry forward:** think in **steps** (states), respect **concurrency**, size and name things explicitly,
 and let the **clock** be the timeline. Prototype fast, verify faster.
 
-# What’s Next: Extra Modules for Extra Learning
+## What’s Next: Extra Modules for Extra Learning
 
 You’ve now got a fast path from **algorithm → Verilog** using a clean, single `always @(posedge clk)` style, plus the verification skills to prove it works. For learners
 who pass all assessments and want to architect **larger, more complex systems**, two optional modules are available. They introduce higher-level styles and syntax that trade simplicity for scalability.
@@ -575,7 +582,7 @@ These are meant for advanced Verilog coders and are already beyond the original 
 
 ---
 
-## Extra Module 00 — Structural Coding Style
+### Extra Module 00 — Structural Coding Style
 
 **Goal:** Learn to scale designs by **structuring** them: separate concerns, give each register a single point of ownership, and make big datapaths readable and
 maintainable.
@@ -590,7 +597,7 @@ maintainable.
 
 ---
 
-## Extra Module 01 — Advanced Verilog Constructs
+### Extra Module 01 — Advanced Verilog Constructs
 
 **Goal:** Build confidence with higher-level syntax that speeds up **regular structure**: multi-dimensional arrays, `for` loops (for init/reset in *sequential* blocks), and `generate` constructs for clean replication and parameterization.
 

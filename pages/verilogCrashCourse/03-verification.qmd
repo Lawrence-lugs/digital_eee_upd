@@ -8,7 +8,7 @@ format:
 ::: {.vcc-nav}
 [Overview](index.qmd) | [Foundations](00-fundamentals.qmd) | [Combinational](01-combinational.qmd) | [Sequential](02-sequential.qmd) | [Verification](03-verification.qmd) | [Practices](04-practices.qmd) | [Extras](05-extras.qmd)
 :::
-## Module 101: Testbench Basics and Verification
+# Module 101: Testbench Basics and Verification
 
 So far, we’ve been writing synthesizable Verilog — the kind that represents hardware. But before we ever put a design on an FPGA or chip, we **must test it in simulation**. That’s where **testbenches** come in.
 
@@ -28,13 +28,13 @@ A testbench usually has three parts:
 
 Let’s walk through these step by step.
 
-##### Timescale
+### Timescale
 
 At the top of the testbench file, we write a **timescale directive**:
 
 ---
 
-```
+```verilog
 `timescale 1ns/1ps
 ```
 
@@ -45,7 +45,7 @@ This means:
 - 1 time unit = 1 nanosecond. We’ll use this to define delays (e.g., `#10` means wait 10 ns). More on this later.
 - Simulation precision (how granular the logic gate delays would be represented) = 1 picosecond.
 
-##### Instantiating the Design Under Test (DUT)
+### Instantiating the Design Under Test (DUT)
 
 For this part, let's say we want to simulate and verify the **multiplication via repeated addition** FSM that we have implemented in the previous module.
 
@@ -53,7 +53,7 @@ First, we declare signals for the testbench to drive:
 
 ---
 
-```
+```verilog
 module tb_multiplier;         // module declaration. A testbench does not have explicit input and output ports!
     // declare internal signals that will be used by the testbench    // these are the input and output ports of the design we are planning to test
     reg clk;
@@ -77,19 +77,20 @@ module tb_multiplier;         // module declaration. A testbench does not have e
 
 ---
 
- ℹ️
-**Take note of the following when writing testbenches:**
+::: {.callout-note title="Take note of the following when writing testbenches"}
 
 - `reg` is used for inputs (since testbench drives them).
 - `wire` is used for outputs (since DUT drives them).
 
-##### Clock Generation
+:::
+
+### Clock Generation
 
 We need a free-running clock. We can make one by toggling clk, which was declared as `reg`, every 5 ns:
 
 ---
 
-```
+```verilog
     // Clock generation: 10 ns period (100 MHz)
     initial clk = 0;
     always #5 clk = ~clk;
@@ -97,19 +98,21 @@ We need a free-running clock. We can make one by toggling clk, which was declare
 
 ---
 
-ℹ️Here:
+::: {.callout-note title="Here"}
 
 - `initial` sets `clk = 0` at time 0.
 - `always #5` toggles `clk` every 5 ns. We are using nanoseconds because that is what was defined in the **timescale** directive earlier.
 - So the clock period that will be provided to clock our design is 10 ns.
 
-##### Stimulus with `initial begin`
+:::
+
+### Stimulus with `initial begin`
 
 To control inputs, we use an `initial begin ... end` block:
 
 ---
 
-```
+```verilog
     initial begin
         // Initialize signals
         reset = 1;
@@ -139,19 +142,23 @@ To control inputs, we use an `initial begin ... end` block:
 
 ---
 
-ℹ️**We introduced three new Verilog keywords here:**
+::: {.callout-note title="We introduced three new Verilog keywords here"}
 
 - **`#delay`**: Wait a given amount of simulation time (non-synthesizable). Time units are defined using the **timescale** directive.
 - **`$display`**: Print messages during simulation (like `printf`). This message shows up in the console.
 - **`$finish`**: End the simulation.
 
-⚠️⚠️⚠️**These are non-synthesizable constructs (i.e., no hardware equivalent)!**
+:::
 
-- **You can't tell the hardware to delay an output at exactly x nanoseconds.** Logic gates have delays due to their non-idealities, but you can't specifically assign a delay for them!
+::: {.callout-warning}
+**These are non-synthesizable constructs (i.e., no hardware equivalent).**
+
+- **You can't tell the hardware to delay an output at exactly x nanoseconds.** Logic gates have delays due to their non-idealities, but you can't specifically assign a delay for them.
 - **You can't tell the hardware to print out messages** (where is it going to print out anyway?).
 - **Hardware always runs.** It is a circuit. You can't just halt it.
 
-**They only exist in the simulator, and that’s perfectly fine for a testbench.**
+They only exist in the simulator, and that is perfectly fine for a testbench.
+:::
 
 ## Putting It All Together
 
@@ -159,7 +166,7 @@ Here’s the complete testbench for the multiplier FSM:
 
 ---
 
-```
+```verilog
 `timescale 1ns/1ps             // timescale directive for time units
 module tb_multiplier;          // module declaration. A testbench does not have explicit input and output ports!
 
@@ -218,7 +225,7 @@ Most simulators let you save signals into a **waveform file** (like `.vcd`) that
 
 ---
 
-```
+```verilog
 initial begin
     $dumpfile("tb_multiplier.vcd");
     $dumpvars(0, tb_multiplier);
@@ -238,9 +245,11 @@ If you insert the code above into the testbench for the multiplier FSM and run i
 
 ![simulation](./Course_ Verilog Crash Course_files/simulation (1).png).png)
 
-ℹ️For Verilog simulations using Vivado, you don't need to add these lines anymore, as Vivado automatically sets up the waveform viewer using your testbench signals.
+::: {.callout-note}
+For Verilog simulations using Vivado, you don't need to add these lines anymore, as Vivado automatically sets up the waveform viewer using your testbench signals.
+:::
 
-## Module 110: Advanced Verification Ideas
+# Module 110: Advanced Verification Ideas
 
 The previous module introduced a basic testbench setup that allows you to verify your designs. If you want to thoroughly test your design, you would need more test cases. You can, in fact, scale up the previous testbench module to cover more tests. However, as designs get more complex. testbenches also get complex. Let's now make **more flexible and self-checking** testbenches to simplify our verification tasks.
 
@@ -259,7 +268,7 @@ So now we introduce:
 - **Tasks**: reusable “subroutines” in Verilog testbenches.
 - **Self-checking testbenches**: testbench automatically compares DUT outputs to expected values.
 
-##### Using Tasks for Reusable Tests
+### Using Tasks for Reusable Tests
 
 A **task** in Verilog is like a **mini-subroutine**:
 
@@ -273,7 +282,7 @@ Here’s our **task definition** for running one multiplication test:
 
 ---
 
-```
+```verilog
     // Define a reusable test "subroutine"
     task run_test;
         input [3:0] a_in, b_in;    // the test inputs
@@ -303,13 +312,13 @@ Here’s our **task definition** for running one multiplication test:
 
 ---
 
-##### How to Call the Task
+### How to Call the Task
 
 Calling a task looks just like calling a function in C:
 
 ---
 
-```
+```verilog
     // Example calls inside the testbench
     run_test(3, 5, 15);   // expect 3 * 5 = 15
     run_test(2, 4, 8);    // expect 2 * 4 = 8
@@ -325,8 +334,9 @@ Each call:
 3. Waits for the DUT to finish.
 4. Prints PASS/FAIL automatically.
 
-ℹ️Without tasks, you’d have to copy-paste the same dozen lines of code every time you want to test a new input pair. With tasks, you just call `run_test(...)`. This keeps the testbench shorter, clearer, and
-easier to maintain.
+::: {.callout-note}
+Without tasks, you’d have to copy-paste the same dozen lines of code every time you want to test a new input pair. With tasks, you just call `run_test(...)`. This keeps the testbench shorter, clearer, and easier to maintain.
+:::
 
 ### Running more test cases using `task`
 
@@ -334,7 +344,7 @@ Now let’s build a testbench that runs **several multiplications automatically*
 
 ---
 
-```
+```verilog
 `timescale 1ns/1ps
 module tb_multiplier;
     reg clk;
@@ -405,7 +415,7 @@ endmodule
 
 ---
 
-##### ℹ️Key Ideas in This Testbench
+### Key Ideas in This Testbench
 
 - **Tasks** simplify code: instead of repeating “set inputs, pulse start, wait, check result” for each test, we just call `run_test(...)`.
 - **Self-checking**: the testbench decides **PASS** or **FAIL** automatically by comparing
@@ -437,7 +447,7 @@ Here’s a simple loop that reads test vectors from a file:
 
 ---
 
-```
+```verilog
 integer fd;            // file descriptor (handle for opened file)
 integer scan_status;   // will hold the return status of fscanf
 reg [3:0] a_in, b_in;  // inputs read from file
@@ -476,7 +486,7 @@ end
 - `$feof(fd)` → checks for end of file.
 - `$fclose(fd)` → closes the file.
 
-##### Python Test Vector Generator
+### Python Test Vector Generator
 
 To make test vectors, let’s write a small Python program.
 
@@ -527,7 +537,7 @@ Now our testbench:
 3. Calls `run_test(a, b, expected)`.
 4. Prints PASS/FAIL for each case.
 
-##### Key Takeaways
+### Key Takeaways
 
 - File-driven testbenches let you scale to **large numbers of test cases**.
 - You can generate inputs/outputs from a **software reference model** and reuse them in hardware simulation.
@@ -539,7 +549,7 @@ Now, we can write a full testbench that utilizes all the concepts introduced so 
 
 ---
 
-```
+```verilog
 `timescale 1ns/1ps
 module tb_multiplier;
     // Testbench signals
@@ -645,13 +655,15 @@ This combined testbench demonstrates:
 
 ![](./Course_ Verilog Crash Course_files/console_automated.png)
 
-### End of Module Recap
+::: {.callout-note title="Summary"}
 
-✅By the end of this module, students can now:
+By the end of this module, students can now:
 
 - Write **self-checking testbenches** with tasks.
 - Automate testing by **reading from files**.
 - Understand the connection between **software models** (Python) and hardware verification.
+
+:::
 
 ### Module Activity : The Coding Environment
 

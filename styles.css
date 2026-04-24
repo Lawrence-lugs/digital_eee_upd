@@ -8,3 +8,7 @@
 	overflow-y: auto;
 	z-index: 100;
 }
+img {
+  max-width: 75% !important;
+  height: auto; /* Maintains aspect ratio */
+}

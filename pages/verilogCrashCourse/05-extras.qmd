@@ -8,11 +8,11 @@ format:
 ::: {.vcc-nav}
 [Overview](index.qmd) | [Foundations](00-fundamentals.qmd) | [Combinational](01-combinational.qmd) | [Sequential](02-sequential.qmd) | [Verification](03-verification.qmd) | [Practices](04-practices.qmd) | [Extras](05-extras.qmd)
 :::
-## Extra Module 00: Structural Verilog Coding
+# Extra Module 00: Structural Verilog Coding
 
 Up to now, you’ve been prototyping quickly with a **single `always @(posedge clk)`** that reads like your algorithm. That’s great for small/medium blocks. As designs grow, teams often shift to a **structural style** that mirrors real digital methodology: **each register has a single point of ownership** (its own clocked block), with tiny combinational helpers to express “next” intent. This improves readability, timing clarity, and scalability, without abandoning your algorithmic flow.
 
-Design Problem: Stream 8 Samples, Report Sum/Min/Max
+# Design Problem: Stream 8 Samples, Report Sum/Min/Max
 
 Design a synchronous module that **ingests exactly eight 8-bit samples** from a stream (gated by a valid signal), then produces their **sum**, **minimum**, and **maximum**, along with a **one-cycle `done` pulse** indicating the results are
 ready. The design must be clocked and reset synchronously.
@@ -23,7 +23,7 @@ We will implement it in two styles:
 2. **Structural**: split responsibilities so that **each register has a single point of ownership** (one clocked block per register), with small combinational
    helpers as needed.
 
-##### Inputs
+## Inputs
 
 - `clk` : Clock. All sequential logic triggers on the **rising** edge.
 - `rst` : Synchronous, active-high **reset**. When asserted, all internal state and outputs must return to defined reset values.
@@ -33,7 +33,7 @@ We will implement it in two styles:
 - `sample_in[7:0]` : The current sample value on the input stream.
 - `sample_valid` : When `1`, indicates `sample_in` holds a **new** sample that should be **accepted this cycle** if the module is currently busy collecting.
 
-##### Outputs
+## Outputs
 
 - `busy` : When `1`, the module is in the middle of collecting samples (i.e., after a valid `start` until the
   8th sample is accepted).
@@ -45,7 +45,7 @@ We will implement it in two styles:
 > Outputs (`sum_out`, `min_out`, `max_out`) must update **once per batch**,
 > on the **same cycle that `done` is asserted**, and remain unchanged until the next batch completes.
 
-## Monolithic style (single `always@` block)
+# Monolithic style (single `always@` block)
 
 A single `always @(posedge clk)` owns the state machine, counters, accumulators, outputs, and pulses. This is close to our earlier “algorithm-in-one-block” style, presented in the previous modules. (*This is also affectionally referred to as Adel-style coding, reflecting his preferred way of describing algorithms, enabling very rapid, 'in-just-one-sitting' implementations)*
 
@@ -53,7 +53,7 @@ A single `always @(posedge clk)` owns the state machine, counters, accumulators,
 
 ---
 
-```
+```verilog
 module stats8_monolithic (
     input  clk,
     input  rst,           // sync, active-high
@@ -147,7 +147,7 @@ and makes timing/dataflow explicit. (*This, on the other hand, is referred to as
 
 ---
 
-```
+```verilog
 // stats8_structured
 // Each register gets its own always block (single point of ownership).
 // Small combinational helpers express intent and timing clearly.
@@ -300,7 +300,7 @@ endmodule
 
 **❌Limits:**as logic grows, the number of lines in the code can get very long; people coming from a programming background may struggle to understand the intended algorithm due to block separation.
 
-## How to refactor from monolithic → structured (recipe)
+# How to refactor from monolithic → structured (recipe)
 
 1. **List the registers** you see in the monolithic block (`busy`, `count_reg`, `sum_reg`,
    `min_reg`, `max_reg`, and output latches).
@@ -314,7 +314,7 @@ endmodule
 4. **Latch outputs** where appropriate (often when a final condition becomes true).
 5. Keep **pulses** (like `done`) in their **own** register block to avoid accidental stretching.
 
-## Benefits of the structural approach (becoming a true digital designer)
+# Benefits of the structural approach (becoming a true digital designer)
 
 - **✅Single point of ownership** per register → eliminates accidental double drivers and clarifies responsibility.
 - **✅Timing intent is explicit**: readers see exactly when and why each register updates; easier to reason about one-cycle “old/new” behavior.
@@ -327,13 +327,17 @@ endmodule
 
 ## Pitfalls & guardrails (structural style)
 
-- **⚠️Don’t multi-drive** a reg: one owner block per reg, period.
-- **⚠️Keep helpers combinational** (simple `assign` or `wire` expressions). Don’t hide state in helpers.
-- **⚠️Reset semantics must match** across owners (use the same reset polarity/priority in the module).
-- **⚠️Mind the one-cycle rule**: cross-block dependencies still use **old** registered values until the next edge; design helpers like `last_sample` to make that explicit.
-- **⚠️Name consistently**: `*_reg` for owned regs, `*_out` for outputs, `*_next` only if you introduce next-value combinational signals.
+::: {.callout-warning}
 
-## Extra Module 01: Advanced Verilog Syntax
+- **Don't multi-drive** a reg: one owner block per reg, period.
+- **Keep helpers combinational** (simple `assign` or `wire` expressions). Don't hide state in helpers.
+- **Reset semantics must match** across owners (use the same reset polarity/priority in the module).
+- **Mind the one-cycle rule**: cross-block dependencies still use **old** registered values until the next edge; design helpers like `last_sample` to make that explicit.
+- **Name consistently**: `*_reg` for owned regs, `*_out` for outputs, `*_next` only if you introduce next-value combinational signals.
+
+:::
+
+# Extra Module 01: Advanced Verilog Syntax
 
 This module gives you higher-level tools for building **bigger, more reusable** blocks without losing the “algorithm → HDL” mindset. We’ll cover parameters, arrays, `for` loops in clocked blocks, file-driven initialization (simulation), `generate`/`genvar`, and conditional compilation. These topics complement the “fast prototype → verify” flow you’ve been using and build on ideas already introduced.
 
@@ -341,11 +345,11 @@ This module gives you higher-level tools for building **bigger, more reusable** 
 
 **Why:** One module, many sizes. Parameters let you change bus widths, depths, and timing constants from the **top module** without editing the internals.
 
-##### Example: Parameterized counter (width + terminal count)
+### Example: Parameterized counter (width + terminal count)
 
 ---
 
-```
+```verilog
 module flex_counter #(
     parameter WIDTH = 8,           // number of bits in counter
     parameter MAX   = 8'd200       // terminal count value (sized to WIDTH)
@@ -377,11 +381,11 @@ endmodule
 
 ---
 
-##### Top-level overrides (redefine from the instantiation site):
+## Top-level overrides (redefine from the instantiation site):
 
 ---
 
-```
+```verilog
 module top (
     input clk,    input rst,    input en,    output [15:0] c16,
     output        t16,
@@ -404,18 +408,20 @@ endmodule
 
 ---
 
-ℹ️Parameters let **top-level design** make decisions (bus sizes, memory depth) without touching module code.
+::: {.callout-note}
+Parameters let **top-level design** make decisions (bus sizes, memory depth) without touching module code.
+:::
 
 ## Multi-dimensional arrays (register files, tiles, small memories)
 
 **Why:** Natural way to model matrices, register files, or multi-lane buffers. Start with **declaring and indexing**; we’ll add resets/initialization with
 `for` later.
 
-##### Example: 3×5 byte matrix (rows=3, cols=5). Indexing: `[row][col]`
+### Example: 3×5 byte matrix (rows=3, cols=5). Indexing: `[row][col]`
 
 ---
 
-```
+```verilog
 module matrix_3x5(
     input        clk,
     input        reset,
@@ -444,17 +450,19 @@ endmodule
 
 ---
 
-ℹ️Tip: keep indices well-sized (2 bits for 0..3, 3 bits for 0..7) so synthesis knows the bounds.
+::: {.callout-note}
+Tip: keep indices well-sized (2 bits for 0..3, 3 bits for 0..7) so synthesis knows the bounds.
+:::
 
 ## `for` loops in **clocked** blocks to reset/initialize arrays
 
 **Why:** When resetting or clearing arrays, a `for` loop describes **repeat structure**; synthesis **unrolls** it into parallel hardware. Use it for resets/initial fills inside `@(posedge clk)`—it’s clean and scalable.
 
-##### Example A: Zeroing a 4×8 on reset (two nested `for` loops)
+### Example A: Zeroing a 4×8 on reset (two nested `for` loops)
 
 ---
 
-```
+```verilog
 module matrix_clear_4x8(
     input clk, reset, load,
     input [1:0] row, input [2:0] col,
@@ -481,7 +489,7 @@ endmodule
 
 ---
 
-##### Example B: Initialize from a **file** (simulation-time) using `$fopen/$fscanf`
+### Example B: Initialize from a **file** (simulation-time) using `$fopen/$fscanf`
 
 Note: File I/O is **simulation-only** (testbench or non-synthesizable code). It’s great to preload memories for verification. We’ll show a TB snippet that writes into the DUT over cycles.
 
@@ -489,7 +497,7 @@ Testbench snippet driving a DUT’s write port from a file:
 
 ---
 
-```
+```verilog
 `timescale 1ns/1ps
 module tb_init_from_file;
     reg clk=0, reset=1, we=0;
@@ -541,18 +549,19 @@ endmodule
 
 ---
 
-ℹ️Alternative: `$readmemh/$readmemb` can bulk-load **1-D memories** (classic ROM/RAM initialization). For 2-D, many flows flatten to 1-D or stream values via a
-TB like above. (Keep file I/O in TBs; it’s non-synthesizable.)
+::: {.callout-note}
+Alternative: `$readmemh/$readmemb` can bulk-load **1-D memories** (classic ROM/RAM initialization). For 2-D, many flows flatten to 1-D or stream values via a TB like above. (Keep file I/O in TBs; it's non-synthesizable.)
+:::
 
 ## `generate`/`genvar` to replicate logic or modules at scale
 
 **Why:** When you need N repeated lanes/slices, `generate` keeps code compact and consistent. Combine with parameters for configurable replication.
 
-##### Example A: Replicate N identical lanes of an adder slice
+### Example A: Replicate N identical lanes of an adder slice
 
 ---
 
-```
+```verilog
 module lane_adder #(parameter WIDTH=8)(
     input  [WIDTH-1:0] a, b,
     output [WIDTH-1:0] y
@@ -583,11 +592,11 @@ endmodule
 
 ---
 
-##### Example B: Generate replicated **register slices**
+### Example B: Generate replicated **register slices**
 
 ---
 
-```
+```verilog
 module reg_slice #(parameter WIDTH=8)(
     input                  clk, reset, load,
     input  [WIDTH-1:0]     din,
@@ -630,11 +639,11 @@ endmodule
 
 Define a macro at compile time: `+define+DEBUG` (simulator) or `-DDEBUG` (toolchain dependent).
 
-##### Example A: Optional debug printing (simulation)
+### Example A: Optional debug printing (simulation)
 
 ---
 
-```
+```verilog
 module datapath(
     input        clk, reset, en,
     input  [7:0] a, b,
@@ -654,11 +663,11 @@ endmodule
 
 ---
 
-##### Example B: Feature flag changes width and adds a port
+### Example B: Feature flag changes width and adds a port
 
 ---
 
-```
+```verilog
 // If WIDE_MODE is defined, we use 16-bit datapath; else 8-bit.
 `ifdef WIDE_MODE
     `define DW 16
@@ -693,7 +702,7 @@ Use `ifndef` to provide defaults when a macro isn’t set:
 
 ---
 
-```
+```verilog
 `ifndef DW
     `define DW 8
 `endif
@@ -701,7 +710,7 @@ Use `ifndef` to provide defaults when a macro isn’t set:
 
 ---
 
-## Credits: About the team
+# Credits: About the team
 
 This project started from my own frustration with how Verilog is often taught and, more importantly, from a very real gap in our own Microelectronics laboratory. The truth is simple but pressing: there are too few truly capable digital designers in the lab: designers who can take any realizable algorithm and implement it in hardware *in a day*. Without that skill base, our ability to explore higher-level, research-worthy architectures is severely limited. We end up circling back to standard processor designs and simple protocols, rather than pushing the boundaries of what’s possible.
 
@@ -711,25 +720,25 @@ None of this would have been possible without the small team that rallied around
 
 - Adel
 
-### The Digiboys™
+# The Digiboys™
 
-### Adelson Chua
+## Adelson Chua
 
-##### Course Vision and Content Development
+### Course Vision and Content Development
 
 ![](./Course_ Verilog Crash Course_files/347409833_2550246041820970_4016644941828545081_n.jpg)
 
-### Fredrick Angelo Galapon
+## Fredrick Angelo Galapon
 
-##### Visual Design
+### Visual Design
 
 ![](./Course_ Verilog Crash Course_files/fred.jpg)
 
-### Lawrence Roman Quizon
+## Lawrence Roman Quizon
 
-##### Assessment Development
+### Assessment Development
 
-![](./Course_ Verilog Crash Course_files/image (1).png).png)
+![](./Course_ Verilog Crash Course_files/image (1).png)
 
 Previous: [Practices](04-practices.qmd)
 Back to: [Overview](index.qmd)

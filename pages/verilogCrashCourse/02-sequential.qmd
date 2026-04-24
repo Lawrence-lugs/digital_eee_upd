@@ -8,7 +8,7 @@ format:
 ::: {.vcc-nav}
 [Overview](index.qmd) | [Foundations](00-fundamentals.qmd) | [Combinational](01-combinational.qmd) | [Sequential](02-sequential.qmd) | [Verification](03-verification.qmd) | [Practices](04-practices.qmd) | [Extras](05-extras.qmd)
 :::
-## Module 011: Writing Sequential Logic
+# Module 011: Writing Sequential Logic
 
 The previous module already covered how we can implement *complex* combinational logic. Now, move from **combinational logic** (no memory, outputs depend only on inputs) into **sequential logic** (where outputs depend on both current inputs and stored past values). This is where we introduce **flip-flops**, **registers**, and the all-important **clock**. We will use a similar-looking construct from the previous module: the **`always @(posedge clk)` block**.
 
@@ -20,14 +20,15 @@ this is described with the **`always @(posedge clk)` block**, which means: “Ru
 Whenever
 we have a logic element that gets evaluated only during the edge of a signal, we are modelling a flip-flop, the basic storage element in sequential circuits.
 
-ℹ️`posedge` is a keyword indicating the sensitivity to the rising edge of the signal named after the keyword (in this case, `clk`). `negedge` is also another keyword that can be used to signify sensitivity to the falling
-edge of the same signal.
+::: {.callout-note}
+`posedge` is a keyword indicating the sensitivity to the rising edge of the signal named after the keyword (in this case, `clk`). `negedge` is also another keyword that can be used to signify sensitivity to the falling edge of the same signal.
+:::
 
 Example: Simple Register
 
 ---
 
-```
+```verilog
 module dff(
     input clk,
     input d,
@@ -43,19 +44,23 @@ endmodule
 
 ---
 
-ℹ️Notice two things:
+::: {.callout-note title="Notice two things"}
 
 - `q` is declared as `reg` (because it is being assigned inside an always block).
 - We use `<=` instead of `=` for the signal assignment.
+
+:::
 
 ### `<=` vs. `=` Assignments
 
 Inside a sequential (`always @(posedge clk)`) block, we use a different assignment (`<=`).
 
-ℹ️ℹ️ℹ️**Rule to remember:**
+::: {.callout-note title="Rule to remember"}
 
 - Use `<=` in **sequential** (`always @(posedge clk)`) blocks.
 - Use `=` in **combinational** (`always @(*)`) blocks.
+
+:::
 
 You could *technically* use the assignments interchangeably; however, there are intricate details regarding how assignments are evaluated that differentiate the two forms. For this crash course, to keep things simple and to maintain the concurrent
 timing model, just **follow the guidelines above as the golden rule. No exemptions**.
@@ -70,7 +75,7 @@ Here’s an **up-down counter**:
 
 ---
 
-```
+```verilog
 module updown_counter(
     input clk,
     input up,                      // 1 = count up, 0 = count down
@@ -93,14 +98,17 @@ For every positive edge of the clock, the module updates the `count` output by +
 Since the update happens on every positive edge of the clock,
 flip-flops are inferred by the module description.
 
-ℹ️Since we are now in the sequential logic domain, assignments such as **count <= count + 1;** where the same signal appears in both the left (output) and right (input) side, are possible. Loops within sequential logic are possible because
-the path propagation is being controlled by the clock trigger.
+::: {.callout-note}
+Since we are now in the sequential logic domain, assignments such as **count <= count + 1;** where the same signal appears in both the left (output) and right (input) side, are possible. Loops within sequential logic are possible because the path propagation is being controlled by the clock trigger.
+:::
 
-⚠️On the contrary, **count = count + 1; should not** be done in the combinational logic domain (when using `always@(*)`), as this would infer a combinational loop, which is not realizable in hardware.
+::: {.callout-warning}
+On the contrary, **count = count + 1; should not** be done in the combinational logic domain (when using `always@(*)`), as this would infer a combinational loop, which is not realizable in hardware.
+:::
 
 ![combinational_loop](./Course_ Verilog Crash Course_files/combinational_loop(1).png).png)
 
-### Inferred Latches in Sequential Logic
+## Inferred Latches in Sequential Logic
 
 In **combinational logic** (`always @(*)`), forgetting to assign a signal in all cases leads to an inferred latch, as described in Module 0x2. This is usually
 **unintentional and dangerous** because latches can create feedback loops and unpredictable timing. Combinational feedback loops should not exist in a properly designed digital system.
@@ -108,11 +116,11 @@ In **combinational logic** (`always @(*)`), forgetting to assign a signal in all
 But in **sequential logic** (`always @(posedge clk)`), **holding the old value is expected behavior**. In fact, it’s
 how registers naturally work! Typical registers have *write enable* ports that allow them to either capture new data or hold the previous value every clock trigger. This can be properly modeled in Verilog.
 
-##### Example A: Implicit Register Hold (Inferred Latch)
+**Example A: Implicit Register Hold (Inferred Latch)**
 
 ---
 
-```
+```verilog
 always @(posedge clk) begin
     if (enable)
         q <= d;
@@ -128,11 +136,11 @@ Even though `q` is not assigned in the `else`, this is **fine** in sequential lo
 
 - If `enable` is 0, the register `q` simply doesn’t update — it keeps its old value.
 
-##### Example B: Explicit Register Hold
+**Example B: Explicit Register Hold**
 
 ---
 
-```
+```verilog
 always @(posedge clk) begin
     if (enable)
         q <= d;
@@ -147,10 +155,12 @@ This synthesizes to the **same hardware** as Example A.
  In sequential logic, both versions are correct and safe, because registers naturally remember their value across
 clock cycles.
 
-ℹ️ The key difference:
+::: {.callout-note title="The key difference"}
 
 - In **combinational logic**, missing assignments → unintended latches (bad).
-- In **sequential logic**, missing assignments → “hold register value” (fine).
+- In **sequential logic**, missing assignments → "hold register value" (fine).
+
+:::
 
 ## Resetting Values
 
@@ -162,11 +172,11 @@ We usually add a **reset input** that forces signals to known values.
  This can be done **synchronously** (with the clock)
 or **asynchronously** (immediately).
 
-##### Example: Synchronous Reset
+### Example: Synchronous Reset
 
 ---
 
-```
+```verilog
 module counter_with_reset(
     input clk,
     input reset,
@@ -185,11 +195,11 @@ endmodule
 
 ---
 
-##### Example: Asynchronous Reset
+### Example: Asynchronous Reset
 
 ---
 
-```
+```verilog
 always @(posedge clk or posedge reset) begin
     if (reset)
         count <= 4'b0000;
@@ -202,16 +212,16 @@ end
 
 ---
 
-ℹ️Always put reset at the **top** of the `if-else` hierarchy, so it takes the highest priority. In sequential `always @(posedge clk)` blocks, put the reset check at the top (**and alone,** that is, no other logic should be present aside from reset) of the `if-else` hierarchy: write `if (reset)` to initialize state, and place **all** other behavior
-under the
-`else` (nest further `if/else` as needed). This makes reset dominant and prevents any peer logic at the top level.
+::: {.callout-note}
+Always put reset at the **top** of the `if-else` hierarchy, so it takes the highest priority. In sequential `always @(posedge clk)` blocks, put the reset check at the top (**and alone,** that is, no other logic should be present aside from reset) of the `if-else` hierarchy: write `if (reset)` to initialize state, and place **all** other behavior under the `else` (nest further `if/else` as needed). This makes reset dominant and prevents any peer logic at the top level.
+:::
 
 Here's the up/down counter from the previous
 section with the additional asynchronous reset to illustrate the described reset hierarchy.
 
 **---
 
-```
+```verilog
 module updown_counter(
     input clk,    input nrst,                         // low-asserted reset
     input up,                           // 1 = count up, 0 = count down
@@ -234,7 +244,7 @@ endmodule
 
 ---**
 
-## ℹ️Concurrency Reminder
+## Concurrency Reminder
 
 When we write an `always @(posedge clk)` block, every assignment inside that block **describes a register**. Each of those registers updates its value **once per clock edge**. Since the positive edge of the clock is a single time instant, therefore, all the registers will update at the same time.
 
@@ -242,7 +252,7 @@ Consider the following example:
 
 ---
 
-```
+```verilog
 always @(posedge clk) begin
     a <= b;
     b <= a;
@@ -274,7 +284,7 @@ Because of concurrency in the evaluation of assignments
 
 ---
 
-```
+```verilog
 always @(posedge clk) begin
     a <= b;
     b <= a;
@@ -297,7 +307,7 @@ end
 
 The order of the statements inside the block **does not change the hardware**. Each line creates a register, and all registers are updated together on the clock edge.
 
-##### ℹ️Key Points
+### Key Points
 
 - **Every assignment in an `always@(posedge clk)` block infers a register.**
    Each `<=` line creates a
@@ -313,7 +323,7 @@ Here’s a complete example demonstrating pipelined multiplication, combining ev
 
 ---
 
-```
+```verilog
 module pipelined_mult4 (
     input  clk,
     input  rst,         // synchronous, active-high
@@ -405,21 +415,25 @@ endmodule
 
 ---
 
-ℹ️**C****ombinational blocks (**`always @(*)`**)** are always assigned with '`=`'
-ℹ️
-**Sequential blocks (**`always @(posedge clk)`**)** are always assigned with '`<=`'**.** Every assignment will create a flipflop.
-ℹ️**Note that all assignments are happening****concurrently**!
-We are describing hardware in Verilog, and we are merely describing the interconnections between wires and the logic happening between those wires.
+::: {.callout-note}
+**Combinational blocks (`always @(*)`)** are always assigned with `=`.
 
-### End of Module Recap
+**Sequential blocks (`always @(posedge clk)`)** are always assigned with `<=`. Every assignment will create a flipflop.
 
-✅In this module, we learned:
+**Note that all assignments are happening concurrently.** We are describing hardware in Verilog, and we are merely describing the interconnections between wires and the logic happening between those wires.
+:::
+
+::: {.callout-note title="Summary"}
+
+In this module, we learned:
 
 - `always @(posedge clk)` for sequential logic.
 - Use `<=` inside sequential blocks (Golden Rule).
 - Registers need reset values.
 - If-else chains work for sequential decisions.
 - All registers update **together** on the clock edge (concurrency still holds!).
+
+:::
 
 ### Module Activity : The LFSR
 
@@ -430,7 +444,7 @@ In programming, we usually take randomness for granted. It is simple to use prog
 
 In this activity, your task is to implement a 4-bit Galois-type LFSR using the knowledge you've gained about writing sequential logic.
 
-## Module 100: Advanced Sequential Logic
+# Module 100: Advanced Sequential Logic
 
 In the last module, we built registers and counters, then capped it off with a pipelined multiplier design. Such designs are very structural, meaning we can already imagine what the hardware would look like; we are merely describing the hardware connections.
 But what if we want to implement a whole **algorithm**?
@@ -438,7 +452,7 @@ But what if we want to implement a whole **algorithm**?
 Algorithms are made of **steps**, executed in order. In hardware, we capture this by introducing the idea of **states**. Each state represents one step of the algorithm.
 At every clock cycle, we can move from one state to another, just like advancing through the steps of a sequence. We will now be writing **Finite State Machines (FSMs)**.
 
-### Code readability tip: Naming states using `localparam`
+## Code readability tip: Naming states using `localparam`
 
 Whenever we implement FSMs, we typically have descriptive names to help us determine which state we are in at a given clock cycle. To make our code readable, we can give states **names** instead of raw binary
 numbers.
@@ -458,10 +472,11 @@ localparam IDLE = 2'b00,
 
 This way, instead of writing `if (state == 2'b01)`, we can write `if (state == STEP1)`, which is much clearer.
 
-ℹ️This is not limited to states! `localparam` can be used to assign meaningful names to constants, improving code readability. The name is not required to be written in all capital letters, like in the example above, but this is a highly preferred
-coding practice to easily distinguish constants defined using `localparam.`
+::: {.callout-note}
+This is not limited to states. `localparam` can be used to assign meaningful names to constants, improving code readability. The name is not required to be written in all capital letters, like in the example above, but this is a highly preferred coding practice to easily distinguish constants defined using `localparam`.
+:::
 
-### FSM Design Example 1: Pattern detector
+## FSM Design Example 1: Pattern detector
 
 Suppose we want to detect the bit pattern `101`. Whenever the pattern breaks, we have to start all over. The algorithm is:
 
@@ -533,13 +548,15 @@ Key points:
 - On each clock edge, we update `state` and possibly set outputs.
 - Using `localparam` makes the code easier to read.
 
-ℹ️A useful analogy:
+::: {.callout-note title="A useful analogy"}
 
 - Think of `always @(posedge clk)` as an **infinite loop**.
 - On each clock tick, you do **one step** of the algorithm (based on the current state).
-- You can only be in one state at a time (per clock cycle).  So you only evaluate assignments under that state.
+- You can only be in one state at a time (per clock cycle). So you only evaluate assignments under that state.
 
-## ⚠️Common Pitfalls⚠️
+:::
+
+## Common Pitfalls
 
 In sequential logic, registers only update **after** the clock edge. That means:
 
@@ -581,13 +598,13 @@ endmodule
 
 ---
 
-⚠️At first glance, it looks like `midpoint` should become `1` exactly when `out` equals 7. But in simulation (and hardware), you’ll find `midpoint` actually goes high when `out` reaches **8** instead of
-7 when counting up (`up_down` = 1). When counting down (`up_down` = 0),  `midpoint` actually goes high when `out` reaches
-**6** instead of 7.
+::: {.callout-warning}
+At first glance, it looks like `midpoint` should become `1` exactly when `out` equals 7. But in simulation (and hardware), you’ll find `midpoint` actually goes high when `out` reaches **8** instead of 7 when counting up (`up_down` = 1). When counting down (`up_down` = 0), `midpoint` actually goes high when `out` reaches **6** instead of 7.
+:::
 
 ![midpoint7_timing_wrong](./Course_ Verilog Crash Course_files/midpoint7_timing_wrong.png)
 
-##### ℹ️Why Does This Happen?
+### Why Does This Happen?
 
 Let’s say `out = 7` and `up_down = 1`. On the next clock edge:
 
@@ -605,7 +622,7 @@ So by the time you observe signals after the clock, `out = 8` and `midpoint = 1`
 
 This is the **one-cycle delay of registers**.
 
-##### Fix 1: Adjust the condition
+### Fix 1: Adjust the condition
 
 One way to fix it is to adjust the `if` checks to anticipate the update:
 
@@ -638,7 +655,7 @@ end
 
 ![midpoint7_timing](./Course_ Verilog Crash Course_files/midpoint7_timing.png)
 
-##### Fix 2: Separate Combinational Check
+### Fix 2: Separate Combinational Check
 
 A cleaner approach is to decouple the `midpoint` logic from the clocked process. Instead of updating `midpoint` inside the sequential block, we derive it in a
 **combinational block**:
@@ -671,12 +688,12 @@ end
 
 ![midpoint7_timing](./Course_ Verilog Crash Course_files/midpoint7_timing.png)
 
-### FSM Design Example 2: Multiplication by Repeated Addition
+## FSM Design Example 2: Multiplication by Repeated Addition
 
 Let's try implementing an arithmetic-style FSM algorithm. A nice starter would be **multiplication via repeated addition**. It’s simple, algorithmic, and shows off the FSM style of design. We can start
 describing the algorithm in pseudocode fashion, so we can get an idea of how to capture the algorithm steps into states.
 
-##### Step 1. Algorithm (software style)
+### Step 1. Algorithm (software style)
 
 Suppose we want to compute `result = a * b`.
  One simple algorithm is:
@@ -693,7 +710,7 @@ repeat b times:
 
 That’s an iterative algorithm, perfect to map into hardware as a state machine.
 
-##### Step 2. Define the Steps as States
+### Step 2. Define the Steps as States
 
 We can capture this with states:
 
@@ -704,7 +721,7 @@ We can capture this with states:
 
 ![mult_asm](./Course_ Verilog Crash Course_files/mult_asm.png)
 
-##### Step 3. Verilog Implementation
+### Step 3. Verilog Implementation
 
 Now, we can start writing the FSM implementation in Verilog, following the algorithm steps that we have defined earlier. Here's the formal problem description of the module that we are trying to implement.
 
@@ -939,9 +956,9 @@ endmodule
 
 ---
 
-### End of Module Recap
+::: {.callout-note title="Summary"}
 
-✅In this module, we learned:
+In this module, we learned:
 
 - Algorithms can be modeled as **state machines** in hardware.
 - `always @(posedge clk)` is like an **infinite loop**, advancing one step each clock.
@@ -950,6 +967,8 @@ endmodule
 - Registers update **after** the clock, so outputs often appear one cycle later (delayed response).
 
 This forms the basis for implementing *any algorithm in hardware*.
+
+:::
 
 ### Module Activity : The Stack
 

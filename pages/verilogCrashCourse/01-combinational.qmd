@@ -8,7 +8,7 @@ format:
 ::: {.vcc-nav}
 [Overview](index.qmd) | [Foundations](00-fundamentals.qmd) | [Combinational](01-combinational.qmd) | [Sequential](02-sequential.qmd) | [Verification](03-verification.qmd) | [Practices](04-practices.qmd) | [Extras](05-extras.qmd)
 :::
-## Module 010: Advanced Combinational Logic
+# Module 010: Advanced Combinational Logic
 
 So far, we’ve used `assign` to build combinational logic. That works great for simple expressions, but as soon as you want more complicated *conditional statements* (`if`, `else`, `case`), you’ll need another construct: the **`always @(*)` block**.
 
@@ -20,15 +20,16 @@ That’s where the **`always @(*)` block** comes in.
 
 - It is used to describe **combinational logic.**
 - The `(*)` means “whenever any input changes, reevaluate all statements inside the block.”
-- **ℹ️Note that any assignments done inside the `always` block must have a datatype `reg` instead of `wire`.**As the module input and output
-  ports are, by default, `wire`s, adding a modifier `reg` will allow the port name to be assigned inside the `always` block. This can be seen in the example
-  below.
+
+::: {.callout-note}
+Note that any assignments done inside the `always` block must have a datatype `reg` instead of `wire`. As the module input and output ports are, by default, `wire`s, adding a modifier `reg` will allow the port name to be assigned inside the `always` block. This can be seen in the example below.
+:::
 
 Example: Rewriting Assign with Always
 
 ---
 
-```
+```verilog
 module and_gate_assign(
     input a,
     input b,
@@ -60,7 +61,7 @@ The difference:
 - `always @(*)` → more flexible, lets us use more complicated (and hierarchical) conditional logic. Again, the port being assigned must be declared as a `reg`, if it is assigned inside the
   `always` block.
 
-### ℹ️Concurrency Reminder!
+### Concurrency Reminder
 
 Just like with `assign`, **all `always @(*)` blocks run at the same time**.
 
@@ -68,7 +69,7 @@ Example:
 
 ---
 
-```
+```verilog
 module concurrent_blocks(
     input a, b, c,
     output reg x, y
@@ -93,7 +94,7 @@ Example:
 
 ---
 
-```
+```verilog
 module separate_always_blocks(
     input a, b, c,
     output reg x, y
@@ -126,7 +127,7 @@ Example: 2-to-1 Multiplexer
 
 ---
 
-```
+```verilog
 module mux_if(
     input a,
     input b,
@@ -150,7 +151,7 @@ This describes the same as:
 
 ---
 
-```
+```verilog
 assign y = (sel == 0) ? a : b;
 ```
 
@@ -164,7 +165,7 @@ Example: 4-to-1 Multiplexer
 
 ---
 
-```
+```verilog
 module mux_case(
     input [1:0] sel,
     input a, b, c, d,
@@ -187,7 +188,7 @@ Compare with the equivalent `if-else` chain:
 
 ---
 
-```
+```verilog
 always @(*) begin
     if (sel == 2'b00) begin           // Note: if there are multiple assignments per case, put a begin...end enclosure
         y = a;
@@ -201,17 +202,19 @@ always @(*) begin
 
 ---
 
-ℹ️ Both `if-else` and `case-endcase` variants would map to the same hardware. Whichever you use is a matter of readability.
+::: {.callout-note}
+Both `if-else` and `case-endcase` variants would map to the same hardware. Whichever you use is a matter of readability.
+:::
 
 ![conditional_case](./Course_ Verilog Crash Course_files/conditional_case.png)
 
-## ⚠️ Avoid combinational loops ⚠️
+## Avoid combinational loops
 
 Avoid creating **combinational loops** (signals feeding back through purely combinational logic), because they can oscillate, produce unknown `X` values in simulation, and confuse synthesis/timing tools, often leading to unstable hardware. The assignment where the output depends on the same signal, such as **count = count + 1;****should not**be done in the combinational logic domain (when using `always@(*)`), as this would infer a combinational loop, which is not realizable in hardware.
 
 ---
 
-```
+```verilog
 always @(*) begin
     count = count + 1; // bad: combinational loop
 end
@@ -221,7 +224,7 @@ end
 
 ---
 
-## ⚠️Common Pitfalls⚠️
+## Common Pitfalls
 
 Now that you’re writing combinational logic, there are **two major mistakes beginners make**.
 
@@ -233,7 +236,7 @@ it creates a **latch** (unintended memory element).
 
 ---
 
-```
+```verilog
 always @(*) begin
     if (sel == 0)
         y = a;
@@ -249,7 +252,7 @@ The fix: **always cover all cases**.
 
 ---
 
-```
+```verilog
 always @(*) begin
     if (sel == 0)
         y = a;
@@ -266,7 +269,7 @@ Or add a `default` in a `case`:
 
 ---
 
-```
+```verilog
 case (sel)
     2'b00: y = a;
     2'b01: y = b;
@@ -278,19 +281,23 @@ endcase
 
 ---
 
-**ℹ️**Inferred latches might be fine for sequential logic (more about this in the next module), as memory that holds the previous value can be safely inferred using flip-flops. However, in the combinational logic domain, there is no place for memory. **Therefore, the rule of thumb is to always fully cover all possible cases when assigning signals for combinational logic.** This can be done either through the `else` statement for `if-else` constructs, or the `default` statement for `case-endcase` constructs.
+::: {.callout-note}
+Inferred latches might be fine for sequential logic (more about this in the next module), as memory that holds the previous value can be safely inferred using flip-flops. However, in the combinational logic domain, there is no place for memory. **Therefore, the rule of thumb is to always fully cover all possible cases when assigning signals for combinational logic.** This can be done either through the `else` statement for `if-else` constructs, or the `default` statement for `case-endcase` constructs.
+:::
 
 ### Double Drivers (Illegal)
 
 If you drive the same signal in two places, the resulting hardware equivalent can be unpredictable.
-⚠️**The simulation tool may or may not warn you about double driver issues.** Sometimes, it will just consider the last assignment
-done on the signal towards the end of the file. Sometimes, it will consider the assignment that will lead to a simpler hardware implementation. **Therefore, avoid double drivers as much as possible!**
+
+::: {.callout-warning}
+The simulation tool may or may not warn you about double driver issues. Sometimes, it will just consider the last assignment done on the signal towards the end of the file. Sometimes, it will consider the assignment that will lead to a simpler hardware implementation. **Therefore, avoid double drivers as much as possible!**
+:::
 
 Example:
 
 ---
 
-```
+```verilog
 always @(*) begin
     x = a & b;
 end
@@ -304,15 +311,16 @@ end
 
 ---
 
-**ℹ️**Always remember the simple rule:
- A signal should only be assigned in **one `assign` OR one `always` block**,
-never both.
+::: {.callout-note}
+Always remember the simple rule:
+A signal should only be assigned in **one `assign` OR one `always` block**, never both.
+:::
 
 Double driver issues can happen in different ways, particularly when writing the code in a programming mindset. Consider the following example.
 
 ---
 
-```
+```verilog
 // Problematic: conditional overwrites inside one always block
 module conditional_overwrite_example (
     input  [7:0] a, b,
@@ -333,16 +341,20 @@ endmodule
 
 ---
 
-⚠️⚠️⚠️There are a bunch of double-driver problems in this code! While it may look fine in a programming mindset (where every line is sequentially executing), this is problematic if we're thinking in the hardware domain.
+::: {.callout-warning}
+There are a bunch of double-driver problems in this code. While it may look fine in a programming mindset (where every line is sequentially executing), this is problematic if we're thinking in the hardware domain.
 
 - The assignment **x = 8'h00** that is not inside any conditional statement is problematic since it basically says "*No matter what happens, **x** is fixed to **8'h00***".
 - The assignment **if (use_and) x = a & b;** assigns **x** to something else if the condition is met. However, remember that the previous statement says that **x** is always fixed to **8'h00**.
-  What happens now? Double driver issue!
+    What happens now? Double driver issue!
 - The assignment **if (use_or) x = a | b;** assigns **x** to another thing if a separate, non-related condition is met. As with the previous one, this conflicts with the **8'h00** assignment earlier.
-  Moreover, what happens if **use_and** and **use_or** both become 1? That's another double driver issue!
+    Moreover, what happens if **use_and** and **use_or** both become 1? That's another double driver issue!
 
-ℹ️A better solution is to think about **mutual exclusivity**. **All assignments to the same signal must always be mutually exclusive!** A fixed version of the previous code that guarantees mutual exclusivity (with
-explicit priority) is shown below.
+:::
+
+::: {.callout-note}
+A better solution is to think about **mutual exclusivity**. **All assignments to the same signal must always be mutually exclusive!** A fixed version of the previous code that guarantees mutual exclusivity (with explicit priority) is shown below.
+:::
 
 ---
 
@@ -361,7 +373,7 @@ Here’s a complete example demonstrating a simple arithmetic and logic unit (AL
 
 ---
 
-```
+```verilog
 module alu_demo_conditional (
     input  [7:0] a,
     input  [7:0] b,
@@ -385,21 +397,23 @@ endmodule
 
 ---
 
-ℹ️Just like in programming, you can create nests of conditional logic. You can even combine `if-else` and `case-endcase` statements if you prefer. But remember to always aim for code readability!
-ℹ️You
-can flatten nested `if-else` chains by combining guards with logical operators (e.g., `if (en && (mode==ADD) && (a>b)) ...` instead
-of
-`if(en) if(mode==ADD) if(a>b) ...`), which reduces indentation and nesting of conditional statements, but can hurt code readability as expressions grow.
+::: {.callout-note}
+Just like in programming, you can create nests of conditional logic. You can even combine `if-else` and `case-endcase` statements if you prefer. But remember to always aim for code readability.
 
-ℹ️Note how we avoided the common pitfalls. All assignments to `y` are mutually exclusive (no double driver issues), covering all possible values of the 3-bit `op` signal (no inferred latch problems).
+You can flatten nested `if-else` chains by combining guards with logical operators (e.g., `if (en && (mode==ADD) && (a>b)) ...` instead of `if(en) if(mode==ADD) if(a>b) ...`), which reduces indentation and nesting of conditional statements, but can hurt code readability as expressions grow.
 
-### End of Module Recap
+Note how we avoided the common pitfalls. All assignments to `y` are mutually exclusive (no double driver issues), covering all possible values of the 3-bit `op` signal (no inferred latch problems).
+:::
 
-✅ By the end of this module, you should understand:
+::: {.callout-note title="Summary"}
+
+By the end of this module, you should understand:
 
 - How `always @(*)` is a more flexible alternative to `assign`
 - Using `if-else` and `case-endcase` for conditional combinational logic
 - Pitfalls: double drivers and inferred latches, and how to avoid them
+
+:::
 
 ### Module Activity : The Reg ALU
 

@@ -8,7 +8,7 @@ format:
 ::: {.vcc-nav}
 [Overview](index.qmd) | [Foundations](00-fundamentals.qmd) | [Combinational](01-combinational.qmd) | [Sequential](02-sequential.qmd) | [Verification](03-verification.qmd) | [Practices](04-practices.qmd) | [Extras](05-extras.qmd)
 :::
-## Module 000: Basic Structure and Syntax
+# Module 000: Basic Structure and Syntax
 
 In this first module, we’ll set the foundation for writing Verilog code. Just like every program in a traditional language begins with a certain structure (e.g., `main()` in C), every Verilog design starts
 with a **module definition**.
@@ -22,7 +22,7 @@ Example:
 
 ---
 
-```
+```verilog
 module my_first_module(
     input a,
     input b,
@@ -38,11 +38,13 @@ endmodule
 
 ---
 
-ℹ️**Additional notes when naming modules:**
+::: {.callout-note title="Additional notes when naming modules"}
 
 - Names are **case-sensitive**: `A` and `a` are different signals.
 - You may use underscores (`_`), but not spaces.
 - Names **cannot** begin with a number. For example, `data1` is valid, but `1data` is not.
+
+:::
 
 ## Comments
 
@@ -55,7 +57,7 @@ Example:
 
 ---
 
-```
+```verilog
 // This is a single-line comment
 /*
    This is a
@@ -65,7 +67,9 @@ Example:
 
 ---
 
-ℹ️**Always put comments on your code for better readability and portability!**
+::: {.callout-note}
+Always put comments on your code for better readability and portability.
+:::
 
 ## Declaring Wires and Vectors
 
@@ -74,7 +78,7 @@ By default, all inputs and outputs are **wires** (a wire is a connection between
 
 ---
 
-```
+```verilog
 wire my_signal;
 ```
 
@@ -84,19 +88,21 @@ For multiple-bit signals, we use vectors:
 
 ---
 
-```
+```verilog
 wire [7:0] data_bus;   // 8 bits wide: from bit 7 down to bit 0
 ```
 
 ---
 
-> ℹ️*While `[0:7]` is also legal, the common and recommended practice is `[7:0]` so that the most significant bit (MSB) is written first.*
+::: {.callout-note}
+While `[0:7]` is also legal, the common and recommended practice is `[7:0]` so that the most significant bit (MSB) is written first.
+:::
 
 You can also declare multiple wires and vectors in a single line for code compactness:
 
 ---
 
-```
+```verilog
 wire my_signal1, my_signal2;
 wire [3:0] data_bus1, data_bus2, data_bus3;
 ```
@@ -117,7 +123,7 @@ Consider the example below, where one module is instantiated inside another modu
 
 ---
 
-```
+```verilog
 module adder(
     input a,
     input b,
@@ -146,7 +152,7 @@ endmodule
 
 ---
 
-```
+```verilog
 module adder(
     input a,
     input b,
@@ -177,7 +183,9 @@ endmodule
 
 ---
 
-ℹ️**Named connections make your code easier to read and maintain, especially if modules have many ports. You can easily keep track of which wires connect to the submodule ports straight from the module instantiation.**
+::: {.callout-note}
+Named connections make your code easier to read and maintain, especially if modules have many ports. You can easily keep track of which wires connect to the submodule ports straight from the module instantiation.
+:::
 
 ## Putting It All Together
 
@@ -185,7 +193,7 @@ Here’s a complete example demonstrating a very simple logic unit, combining ev
 
 ---
 
-```
+```verilog
 module simple_logic_unit(
     input  [7:0] input1,    // 8-bit input vector input1
     input  [7:0] input2,    // 8-bit input vector input2
@@ -270,14 +278,16 @@ This Verilog code would have a corresponding hardware equivalent as shown below.
 Notice how we needed to declare internal wires for the **bitwise_and** and **bitwise_or** module outputs to be later connected to the **mux2** module. As the number of submodules to be instantiated increases, more
 internal wires needs to be declared. Always be careful when assigning wires to ports, as they need to be of the same size to avoid unintentional truncation problems!
 
-### End of Module Recap
+::: {.callout-note title="Summary"}
 
-✅ At this point, you should understand:
+At this point, you should understand:
 
 - How to define a module with `module ... endmodule`
 - How to write comments
 - Declaring inputs, outputs, and wires
 - How to instantiate modules (by order or by name)
+
+:::
 
 ### Module Activity : The Structural ALU
 
@@ -286,7 +296,7 @@ This module's activity is in this **[Jupyter Notebook](https://colab.research.go
 ALUs perform operations on inputs A and B, but you can choose which operation to perform by choosing the **opcode** input**.**
 Your task in this activity is to implement an ALU (Arithmetic Logic Unit) with structural instantiation of the existing modules.
 
-## Module 001: Writing Combinational Logic
+# Module 001: Writing Combinational Logic
 
 In programming, you often write a sequence of instructions that run in order. In hardware, however, **combinational logic evaluates everything at the same time**. Verilog models this with the `assign` keyword and logical/arithmetic operators.
 
@@ -312,10 +322,12 @@ endmodule
 
 ---
 
-ℹ️Note on modeling combinational logic behavior:
+::: {.callout-note title="Note on modeling combinational logic behavior"}
 
 - The value of `y` updates immediately whenever `a` or `b` changes. You are describing combinational logic here, and
-  the output will always be reevaluated for every change in inputs.
+    the output will always be reevaluated for every change in inputs.
+
+:::
 
 ## Operators
 
@@ -340,9 +352,11 @@ assign twice = a * 2;  // multiply by constant ![arithmetic_mult](./Course_ Veri
 
 ---
 
-⚠️Note regarding the use of `*` (multiplication) operator:
+::: {.callout-warning title="Note regarding the use of `*` (multiplication) operator"}
 
 - **This is typically not recommended to be used by beginners for module definitions.** This is because a multiplier might not be available for the target hardware implementation. The operator is typically used in testbenches (more on this in Module 0x5) where hardware mapping is not a concern. A typical exercise for beginners is to implement multiplication algorithms using only basic operations to guarantee hardware translation.
+
+:::
 
 ### Bitwise
 
@@ -433,7 +447,9 @@ endmodule
 
 ---
 
-> ℹ️This saves you a line of code per merged assignment. Use your best judgement whether this approach still makes your code readable.
+::: {.callout-note}
+This saves you a line of code per merged assignment. Use your best judgement whether this approach still makes your code readable.
+:::
 
 ## Constants and Number Formats
 
@@ -460,10 +476,12 @@ Examples:
 
 ---
 
-> ℹ️Note regarding constants:
->
-> - If you don’t specify a size, Verilog assumes 32 bits. **Typically, when you perform an operation with mismatched widths (for example, a 4-bit vector with a 32-bit constant), the upper bits of the longer vector (in this case, the constant) are truncated.** This
->   is usually fine if you know what you are doing. It does not hurt to always declare constant sizes explicitly.
+::: {.callout-note title="Note regarding constants"}
+
+- If you don’t specify a size, Verilog assumes 32 bits. **Typically, when you perform an operation with mismatched widths (for example, a 4-bit vector with a 32-bit constant), the upper bits of the longer vector (in this case, the constant) are truncated.** This
+    is usually fine if you know what you are doing. It does not hurt to always declare constant sizes explicitly.
+
+:::
 
 ---
 
@@ -475,7 +493,7 @@ wire [3:0] sum_1, sum_2, a;assign sum_1 = a + 4'b1;    // adds 4-bit vector a to
 
 ## Concatenation, Replication, and Bit Slicing
 
-#### Concatenation
+### Concatenation
 
 Verilog provides a powerful `{}` operator for **joining signals together**.
 
@@ -493,7 +511,7 @@ assign byte = {nibble1, nibble2}; // byte = 10101100
 
 ---
 
-#### Replication
+### Replication
 
 You can replicate 1-bit signals into several bits using the `{multiplier{signal}}` syntax. When combined with the concatenation operation from earlier, this is especially helpful for sign-extending vectors (extending/replicating the sign-bit
 to fix a desired vector length)
@@ -514,7 +532,7 @@ assign neg1_8b = {sign_4b, neg1_4b}; // concatenate the 4-bit sign with the 4-bi
 
 ---
 
-#### Bit Slicing
+### Bit Slicing
 
 You can also **take slices** of vectors:
 
@@ -544,8 +562,10 @@ assign narrow = wide; // Danger! Mismatched widths. Only the bottom 4 bits are k
 
 ---
 
-⚠️**This is legal, but may not be what you intended. Only do so if you know what you are doing!**
+::: {.callout-warning}
+This is legal, but may not be what you intended. Only do so if you know what you are doing.
 The best practice is to explicitly slice:
+:::
 
 ---
 
@@ -577,8 +597,10 @@ endmodule
 
 ---
 
-ℹ️Whether you write `assign x` before `assign y`, or flip them, **the hardware is identical**.
- This is the essence of **concurrency**.
+::: {.callout-note}
+Whether you write `assign x` before `assign y`, or flip them, **the hardware is identical**.
+This is the essence of **concurrency**.
+:::
 
 To *really see* concurrency, let’s make one wire depend on another:
 
@@ -617,7 +639,9 @@ The result is exactly the same hardware. Both assignments are always active, so 
 
 ![concurrency](./Course_ Verilog Crash Course_files/concurrency.png)
 
-**ℹ️This is different from software**, where order defines execution. In hardware, assignments represent physical connections that exist all at once.
+::: {.callout-note}
+This is different from software, where order defines execution. In hardware, assignments represent physical connections that exist all at once.
+:::
 
 ## Putting It All Together
 
@@ -676,20 +700,22 @@ This Verilog code would have a corresponding hardware equivalent as shown below.
 Our module is getting bigger and more complex! Notice how there are different assignments happening within the single module. All arithmetic and logic were declared, and all of the corresponding outputs would connect to a final multiplexer (declared as
 a ternary `(condition) ? (true) : (false)` operation).
 
-ℹ️**Note that all assignments are happening** **concurrently**! We are describing hardware in Verilog, and we are merely describing the interconnections between wires and the logic happening between those wires.
+::: {.callout-note}
+**Note that all assignments are happening concurrently.** We are describing hardware in Verilog, and we are merely describing the interconnections between wires and the logic happening between those wires.
+:::
 
-### End of Module Recap
+::: {.callout-note title="Summary"}
 
-✅ Now you’ve seen:
+Now you've seen:
 
 - How to use `assign` to describe combinational logic
 - Common operators (`+`, `-`, `&`, `|`,
   `^`, `? :`, `<<`, `>>`)
-
 - How to write constants in different formats
-
 - How to concatenate and slice vectors safely
-- How **concurrency** means order of `assign` doesn’t matter
+- How **concurrency** means order of `assign` doesn't matter
+
+:::
 
 ### Module Activity : The Assign ALU
 
