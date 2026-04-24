@@ -4,7 +4,7 @@ project:
     - "*.qmd"
     - pages/*.qmd
   resources:
-    - "digital_eee_upd/static_apps/FSM_simulatEEE.html"
+    - "static_apps/FSM_simulatEEE.html"
 
 website:
   title: "EEE Digital"
@@ -24,7 +24,7 @@ website:
         text: Verilog Crash Course
       - href: kmapgameee
         text: kmap-gamEEE
-      - href: digital_eee_upd/static_apps/FSM_simulatEEE.html
+      - href: static_apps/FSM_simulatEEE.html
         text: FSMsimulatEEE
   
 format:
