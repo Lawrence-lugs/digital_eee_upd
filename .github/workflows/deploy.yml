@@ -9,25 +9,28 @@ jobs:
     runs-on: [self-hosted,digitaleee]
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      # - name: Checkout repo
+      #   uses: actions/checkout@v4
 
-      - uses: mamba-org/setup-micromamba@v2
-        with:
-          environment-file: env.yml
-          environment-name: digital_eee_upd
-          cache-environment: true
-          post-cleanup: all
-          download-micromamba: false
-          micromamba-binary-path: /home/runnerman/micromamba-bin/micromamba
+      # - uses: mamba-org/setup-micromamba@v2
+      #   with:
+      #     environment-file: env.yml
+      #     environment-name: digital_eee_upd
+      #     cache-environment: true
+      #     post-cleanup: all
+      #     download-micromamba: false
+      #     micromamba-binary-path: /home/runnerman/micromamba-bin/micromamba
 
-      - name: Render Quarto site
-        shell: bash -l {0}
-        run: |
-          quarto render
+      # - name: Render Quarto site
+      #   shell: bash -l {0}
+      #   run: |
+      #     quarto render
 
-      - name: Rebuild and restart containers
-        run: | 
-          docker compose down
-          docker compose up -d
-          docker system prune -f
+      # The above sequence has been deprecated upon the use of a unified root deployment script
+      # It now handles the git submodule updates and rendering by itself, so we just need to trigger it.
+
+      - name: Trigger Unified Root Deployment
+              run: |
+                # Execute the root script as the workspace owner.
+                # The deploy.sh will handle git submodule updates and the compose graph.
+                sudo -u lawrence /home/lawrence/workspace/deploy.sh
