@@ -32,14 +32,14 @@ format:
   html:
     theme:
       - cosmo
-      - brand
+      - custom.scss
       # - darkly
     css: styles.css
     toc: true
     code-overflow: wrap
     code-block-bg: true
     code-line-numbers: true
-    # code-block-border-left: "#31BAE9"
+    code-block-border-left: "#6B0D1A"
 
 
 

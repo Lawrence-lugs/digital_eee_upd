@@ -13,6 +13,8 @@ include-in-header:
       </script>
       <style>
         #quarto-content { padding: 0 !important; }
+        #quarto-content > * { margin-top: 0 !important; padding-top: 0 !important; }
+        main.content { margin-top: 0 !important; padding-top: 0 !important; }
         .quarto-title-block, #title-block-header { display: none !important; }
         #tw-root a { text-decoration: none; }
         #tw-root img { max-width: 100% !important; height: auto; }
@@ -24,28 +26,30 @@ include-in-header:
 ::: {}
 ```{=html}
 <!-- ─── HERO ──────────────────────────────────────────────────────────────── -->
-<section style="background: linear-gradient(135deg, #6B0D1A 0%, #9B1B2E 60%, #7A0F20 100%);"
-         class="text-white py-24 px-8">
-  <div class="max-w-5xl mx-auto">
-    <p class="text-red-300 text-xs font-mono mb-3 tracking-widest uppercase">
+<section style="background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(107,13,26,0.08) 0%, rgba(107,13,26,0.03) 50%, #ffffff 80%);"
+         class="text-gray-900 py-28 px-8 text-center">
+  <div class="max-w-4xl mx-auto flex flex-col items-center">
+    <img src="pogi.png" alt="EEE Digital logo"
+         style="width: 88px; height: 88px; margin-bottom: 1.25rem;">
+    <p class="text-xs font-mono mb-4 tracking-widest uppercase" style="color: #6B0D1A;">
       Digitals &nbsp;·&nbsp; UP EEEi
     </p>
-    <h1 class="text-5xl font-bold mb-5 leading-tight" style="color: white;">
+    <h1 class="text-6xl font-extrabold mb-6 leading-tight text-gray-950">
       Digital Design Resources
     </h1>
-    <p class="text-xl mb-10 max-w-2xl leading-relaxed" style="color: #fecaca;">
+    <p class="text-xl mb-12 max-w-2xl leading-relaxed text-gray-600">
       Course materials, interactive simulation tools, and open-source hardware
       from the digital design group at the University of the Philippines Diliman.
     </p>
-    <div class="flex gap-4 flex-wrap">
+    <div class="flex gap-4 flex-wrap justify-center">
       <a href="pages/verilogCrashCourse/index.html"
-         class="inline-block font-semibold px-6 py-3 rounded-lg transition-colors"
-         style="background: white; color: #7B0D1E;">
+         class="inline-block font-semibold px-6 py-3 rounded-lg transition-colors border border-transparent"
+         style="background: #6B0D1A; color: white;">
         Verilog Crash Course
       </a>
       <a href="FSM_simulatEEE.html"
-         class="inline-block font-semibold px-6 py-3 rounded-lg transition-colors"
-         style="border: 1px solid rgba(255,255,255,0.5); color: white;">
+         class="inline-block font-semibold px-6 py-3 rounded-lg transition-colors border"
+         style="border-color: #6B0D1A; color: #6B0D1A;">
         Try FSM Simulator
       </a>
     </div>
@@ -142,14 +146,7 @@ include-in-header:
               hover:shadow-md hover:border-red-300 transition-all overflow-hidden group">
       <div class="flex flex-col md:flex-row">
         <div class="p-8 flex-1">
-          <div class="flex flex-wrap gap-2 mb-4">
-            <span class="text-xs font-mono px-2 py-1 rounded"
-                  style="background: #fee2e2; color: #7B0D1E;">Verilog</span>
-            <span class="text-xs font-mono bg-gray-100 text-gray-600 px-2 py-1 rounded">HDL</span>
-            <span class="text-xs font-mono bg-gray-100 text-gray-600 px-2 py-1 rounded">Digital Logic</span>
-            <span class="text-xs font-mono bg-gray-100 text-gray-600 px-2 py-1 rounded">FSM</span>
-            <span class="text-xs font-mono bg-gray-100 text-gray-600 px-2 py-1 rounded">Verification</span>
-          </div>
+          <p class="text-xs font-mono tracking-widest uppercase mb-3" style="color: #6B0D1A;">Course Material &nbsp;·&nbsp; 6 Modules</p>
           <h3 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-red-800 transition-colors">
             Verilog Crash Course
           </h3>
@@ -178,8 +175,8 @@ include-in-header:
 <!-- ─── OPEN SOURCE HARDWARE ──────────────────────────────────────────────── -->
 <section class="py-16 px-8 bg-gray-50">
   <div class="max-w-5xl mx-auto">
-    <h2 class="text-2xl font-bold text-gray-800 mb-1">Open Source Hardware</h2>
-    <p class="text-gray-500 mb-8 text-sm">Processors and tools we've built and open-sourced</p>
+    <h2 class="text-2xl font-bold text-gray-800 mb-1">Hardware Resources</h2>
+    <p class="text-gray-500 mb-8 text-sm">RTL we've built and open-sourced</p>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
       <!-- AllenCore -->
@@ -187,13 +184,9 @@ include-in-header:
          target="_blank" rel="noopener noreferrer"
          class="block bg-white rounded-xl border border-gray-200 p-6
                 hover:shadow-md hover:border-red-300 transition-all group">
-        <div class="flex items-start justify-between mb-4">
-          <div class="flex flex-wrap gap-2">
-            <span class="text-xs font-mono bg-gray-100 text-gray-600 px-2 py-1 rounded">RISC-V</span>
-            <span class="text-xs font-mono bg-gray-100 text-gray-600 px-2 py-1 rounded">RV32IMC</span>
-            <span class="text-xs font-mono bg-gray-100 text-gray-600 px-2 py-1 rounded">Pipeline</span>
-          </div>
-          <svg class="w-4 h-4 flex-shrink-0 ml-2 mt-0.5 text-gray-400 group-hover:text-red-800 transition-colors"
+        <div class="flex items-start justify-between mb-3">
+          <p class="text-xs font-mono tracking-widest uppercase" style="color: #6B0D1A;">Open Source &nbsp;·&nbsp; GitLab</p>
+          <svg class="w-4 h-4 flex-shrink-0 ml-2 text-gray-400 group-hover:text-red-800 transition-colors"
                fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
@@ -213,13 +206,9 @@ include-in-header:
          target="_blank" rel="noopener noreferrer"
          class="block bg-white rounded-xl border border-gray-200 p-6
                 hover:shadow-md hover:border-red-300 transition-all group">
-        <div class="flex items-start justify-between mb-4">
-          <div class="flex flex-wrap gap-2">
-            <span class="text-xs font-mono bg-gray-100 text-gray-600 px-2 py-1 rounded">ASIC</span>
-            <span class="text-xs font-mono bg-gray-100 text-gray-600 px-2 py-1 rounded">sky130</span>
-            <span class="text-xs font-mono bg-gray-100 text-gray-600 px-2 py-1 rounded">Teaching</span>
-          </div>
-          <svg class="w-4 h-4 flex-shrink-0 ml-2 mt-0.5 text-gray-400 group-hover:text-red-800 transition-colors"
+        <div class="flex items-start justify-between mb-3">
+          <p class="text-xs font-mono tracking-widest uppercase" style="color: #6B0D1A;">Open Source &nbsp;·&nbsp; GitHub</p>
+          <svg class="w-4 h-4 flex-shrink-0 ml-2 text-gray-400 group-hover:text-red-800 transition-colors"
                fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>

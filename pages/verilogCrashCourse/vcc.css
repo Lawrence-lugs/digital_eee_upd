@@ -2,8 +2,8 @@
 .vcc-nav {
   margin: 0 0 1rem 0;
   padding: 0.75rem 1rem;
-  background: #f4f9ff;
-  border-left: 4px solid #0a5ea8;
+  background: #fdf5f6;
+  border-left: 4px solid #6B0D1A;
   border-radius: 6px;
 }
 
@@ -23,7 +23,7 @@
 }
 
 .vcc-card {
-  border: 1px solid #dbe7f3;
+  border: 1px solid #f0d0d4;
   border-radius: 8px;
   padding: 0.9rem 1rem;
   background: #ffffff;
@@ -32,12 +32,12 @@
 .vcc-nextprev {
   margin-top: 2rem;
   padding-top: 0.75rem;
-  border-top: 1px solid #d9e4ef;
+  border-top: 1px solid #f0d0d4;
 }
 
 .vcc-small {
   font-size: 0.95rem;
-  color: #3e4f61;
+  color: #6B0D1A;
 }
 
 .vcc-section {
@@ -47,7 +47,7 @@
 .vcc-block {
   margin: 0.9rem 0;
   padding: 0.9rem 1rem;
-  border: 1px solid #e5ebf2;
+  border: 1px solid #6B0D1A;
   border-radius: 8px;
   background: #ffffff;
 }
