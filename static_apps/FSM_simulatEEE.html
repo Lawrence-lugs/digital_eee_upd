@@ -1,0 +1,2212 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FSM Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#0d0f14; --bg2:#141720; --bg3:#1c2030; --bg4:#242840;
+  --border:#2a2f45; --border2:#3a4060;
+  --text:#e2e4f0; --text2:#8890b0; --text3:#555e80;
+  --accent:#4f9eff; --accent2:#2d7dd2;
+  --green:#3ecf8e; --amber:#f5a623; --red:#ff5c5c; --purple:#a78bfa;
+  --mono:'JetBrains Mono',monospace; --sans:'Space Grotesk',sans-serif;
+}
+body { font-family:var(--sans); background:var(--bg); color:var(--text); height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+
+/* ── App body wrapper ─────────────────────────────────── */
+#appBody { flex:1; display:flex; flex-direction:column; overflow:hidden; min-height:0; }
+body.light {
+  --bg:#f7f8fc; --bg2:#ffffff; --bg3:#f2f4fa; --bg4:#e9edf7;
+  --border:#d6dbea; --border2:#c1c7db;
+  --text:#151b2c; --text2:#3f4a63; --text3:#6f7890;
+  --accent:#2563eb; --accent2:#1d4ed8;
+  --green:#128a58; --amber:#c16a00; --red:#d83a3a; --purple:#6d28d9;
+}
+body.light .output-bit-val,
+body.light .input-bit-btn { color:#000; }
+body.light .state-drag.moore,
+body.light .state-drag.mealy { color:#000; }
+
+header { height:84px; background:var(--bg2); border-bottom:1px solid var(--border); display:flex; align-items:center; padding:0 18px; gap:12px; flex-shrink:0; z-index:100; }
+.logo { font-family:var(--mono); font-weight:700; font-size:20px; color:var(--accent); letter-spacing:2px; }
+.logo span { color:var(--text2); font-weight:400; }
+.header-sep { flex:1; }
+.sim-controls { display:flex; align-items:center; gap:6px; }
+
+.btn { font-family:var(--sans); font-size:16px; font-weight:500; padding:8px 14px; border-radius:8px; border:1px solid var(--border2); background:var(--bg3); color:var(--text); cursor:pointer; transition:all .15s; display:flex; align-items:center; gap:6px; white-space:nowrap; }
+.btn:hover { background:var(--bg4); border-color:var(--accent); color:var(--accent); }
+.btn.primary { background:var(--accent2); border-color:var(--accent); color:#fff; }
+.btn.primary:hover { background:var(--accent); }
+.btn.danger { border-color:var(--red); color:var(--red); }
+.btn.danger:hover { background:rgba(255,92,92,.1); }
+.btn.success { background:rgba(62,207,142,.15); border-color:var(--green); color:var(--green); }
+.btn.success:hover { background:rgba(62,207,142,.25); }
+.btn.sm { font-size:13px; padding:5px 10px; }
+
+.step-counter { font-family:var(--mono); font-size:16px; color:var(--text2); padding:8px 14px; background:var(--bg3); border:1px solid var(--border); border-radius:8px; min-width:110px; text-align:center; }
+
+
+
+.main { flex:1; display:flex; overflow:hidden; min-height:0; }
+
+/* ── Bottom expand panel ──────────────────────────────── */
+.bottom-resize-handle { height:6px; background:var(--bg2); cursor:row-resize; border-top:1px solid var(--border); position:relative; flex-shrink:0; display:none; }
+.bottom-resize-handle::after { content:''; position:absolute; left:50%; top:1px; transform:translateX(-50%); width:40px; height:3px; background:var(--border2); border-radius:2px; }
+.bottom-resize-handle:hover::after { background:var(--accent); }
+.bottom-panel { display:none; background:var(--bg2); border-top:1px solid var(--border); flex-direction:column; flex-shrink:0; height:340px; min-height:120px; max-height:80vh; }
+.bottom-panel.open { display:flex; }
+.bottom-resize-handle.open { display:block; }
+
+.bottom-header { display:flex; align-items:center; gap:0; border-bottom:1px solid var(--border); flex-shrink:0; background:var(--bg3); }
+.bottom-tab { padding:10px 16px; font-size:12px; font-weight:600; color:var(--text2); cursor:pointer; border-bottom:2px solid transparent; letter-spacing:.5px; transition:all .15s; white-space:nowrap; flex-shrink:0; }
+.bottom-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+.bottom-tab-sep { width:1px; height:20px; background:var(--border); margin:0 4px; align-self:center; }
+.bottom-header-title { font-family:var(--mono); font-size:12px; font-weight:700; color:var(--accent); padding:10px 14px; letter-spacing:1px; }
+.bottom-header-right { flex:1; display:flex; justify-content:flex-end; align-items:center; padding:0 10px; gap:8px; }
+.bottom-close-btn { font-family:var(--sans); font-size:11px; font-weight:600; padding:4px 10px; border-radius:6px; border:1px solid var(--border2); background:var(--bg4); color:var(--text2); cursor:pointer; transition:all .15s; }
+.bottom-close-btn:hover { border-color:var(--red); color:var(--red); }
+.bottom-body { flex:1; display:flex; overflow:hidden; min-height:0; }
+
+/* Split panes inside bottom panel */
+.bottom-pane { flex:1; overflow-y:auto; overflow-x:auto; padding:12px 14px; min-width:0; }
+.bottom-pane-divider { width:1px; background:var(--border); flex-shrink:0; }
+.bottom-pane-label { font-size:11px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--text3); margin-bottom:10px; padding-bottom:6px; border-bottom:1px solid var(--border); font-family:var(--mono); }
+
+/* FF ref panel in bottom */
+.ff-ref-grid-bottom { display:flex; gap:10px; flex-wrap:wrap; }
+.ff-ref-box { background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:10px; flex-shrink:0; }
+.ff-ref-title { font-family:var(--mono); font-size:11px; font-weight:700; color:var(--accent); margin-bottom:6px; }
+.ff-ref-table { border-collapse:collapse; font-family:var(--mono); font-size:10px; }
+.ff-ref-table th { background:var(--bg4); color:var(--text3); padding:3px 7px; border:1px solid var(--border2); }
+.ff-ref-table td { padding:3px 7px; border:1px solid var(--border2); text-align:center; color:var(--text2); }
+.ff-ref-table td.v1 { color:var(--green); font-weight:700; }
+.ff-ref-table td.vx { color:var(--amber); }
+
+.info-panel { width:420px; background:var(--bg2); border-right:1px solid var(--border); display:flex; flex-direction:column; flex-shrink:0; overflow-y:auto; }
+.info-section { padding:18px; border-bottom:1px solid var(--border); }
+.info-title { font-size:16px; font-weight:600; color:var(--text3); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:12px; }
+.info-text { font-size:18px; color:var(--text2); line-height:1.85; }
+.state-drag-wrap { display:flex; gap:12px; flex-wrap:wrap; }
+.state-drag { width:110px; text-align: center; height:110px; border-radius:999px; display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:16px; font-weight:600; cursor:grab; user-select:none; border:2px solid transparent; }
+.state-drag:active { cursor:grabbing; }
+.state-drag.moore { background:rgba(79,158,255,.16); border-color:#4f9eff; color:#cfe2ff; }
+.state-drag.mealy { background:rgba(79,158,255,.16); border-color:#4f9eff; color:#cfe2ff; }
+
+.canvas-wrap { flex:1; position:relative; overflow:hidden; background:var(--bg); background-image:radial-gradient(circle, var(--border) 1px, transparent 1px); background-size:24px 24px; }
+#canvas { position:absolute; top:0; left:0; width:100%; height:100%; cursor:default; }
+
+.io-panels { position:absolute; top:12px; right:12px; display:flex; gap:10px; z-index:10; }
+.input-panel { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:12px 14px; min-width:220px; box-shadow:0 8px 18px rgba(0,0,0,.18); }
+.output-panel { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:12px 14px; min-width:240px; box-shadow:0 8px 18px rgba(0,0,0,.18); }
+.panel-title { font-size:15px; font-weight:600; letter-spacing:1.2px; text-transform:uppercase; color:var(--text3); margin-bottom:8px; }
+.output-bits { display:flex; flex-wrap:wrap; gap:6px; }
+.output-bit-box { display:flex; align-items:center; gap:6px; background:var(--bg4); border:1px solid var(--border2); border-radius:8px; padding:4px 6px; }
+.output-bit-box.active { border-color:var(--accent); box-shadow:0 0 0 1px rgba(79,158,255,.35); }
+.output-bit-label { font-family:var(--mono); font-size:14px; color:var(--text3); }
+.output-bit-val { min-width:28px; height:28px; border-radius:6px; border:1px solid var(--border2); background:var(--bg2); color:var(--text); font-family:var(--mono); font-size:13px; display:flex; align-items:center; justify-content:center; }
+.output-bit-box.active .output-bit-val { background:var(--accent2); border-color:var(--accent); color:#fff; }
+
+.input-bits-grid { display:flex; flex-wrap:wrap; gap:6px; }
+.input-bit-box { display:flex; align-items:center; gap:6px; background:var(--bg4); border:1px solid var(--border2); border-radius:8px; padding:4px 6px; }
+.input-bit-box.active { border-color:var(--accent); box-shadow:0 0 0 1px rgba(79,158,255,.35); }
+.input-bit-label { font-family:var(--mono); font-size:14px; color:var(--text3); }
+.input-bit-btn { min-width:28px; height:28px; border-radius:6px; border:1px solid var(--border2); background:var(--bg2); color:var(--text); font-family:var(--mono); font-size:13px; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+.input-bit-box.active .input-bit-btn { background:var(--accent2); border-color:var(--accent); color:#fff; }
+
+.editor-panel { padding:18px; }
+.editor-title { font-size:16px; font-weight:600; color:var(--text3); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px; }
+.editor-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+.editor-label { font-size:18px; color:var(--text); min-width:110px; }
+.editor-input { width:100%; background:var(--bg3); border:1px solid var(--border); border-radius:6px; color:var(--text); font-family:var(--mono); font-size:19px; padding:8px 10px; outline:none; transition:border-color .15s; }
+.editor-input:focus { border-color:var(--accent); }
+.editor-hint { font-size:15px; color:var(--text3); margin-top:8px; font-family:var(--mono); line-height:1.5; white-space:pre-wrap; max-width: 300px; overflow-wrap: break-word;}
+
+.output-bit-row { display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
+.output-bit-btn { min-width:32px; height:30px; border-radius:6px; border:1px solid var(--border2); background:var(--bg3); color:var(--text); font-family:var(--mono); font-size:13px; cursor:pointer; }
+.output-bit-btn.active { background:var(--accent2); border-color:var(--accent); color:#fff; }
+.tiny-bit-btn { min-width:26px; height:26px; font-size:12px; padding:0 4px; }
+
+.right-panel { width:560px; background:var(--bg2); border-left:1px solid var(--border); display:flex; flex-direction:column; flex-shrink:0; }
+.panel-tabs { display:flex; border-bottom:1px solid var(--border); overflow-x:auto; flex-shrink:0; }
+.panel-tabs::-webkit-scrollbar { height:3px; }
+.panel-tab { flex-shrink:0; padding:12px 14px; text-align:center; font-size:13px; font-weight:600; color:var(--text2); cursor:pointer; letter-spacing:.5px; transition:all .15s; border-bottom:2px solid transparent; white-space:nowrap; }
+.panel-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+.panel-content { flex:1; overflow-y:auto; padding:14px; }
+
+.var-row { display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border); font-size:18px; gap:6px; }
+.var-name { font-family:var(--mono); color:var(--purple); }
+.var-val { font-family:var(--mono); color:var(--green); font-weight:500; }
+
+.log-entry { font-family:var(--mono); font-size:16px; padding:6px 0; border-bottom:1px solid var(--border); color:var(--text2); display:flex; gap:8px; }
+.log-entry .log-step { color:var(--text3); min-width:28px; flex-shrink:0; }
+.log-entry.input { color:var(--green); }
+.log-entry.step { color:var(--amber); }
+
+.resize-handle { width:8px; background:var(--bg2); cursor:col-resize; position:relative; z-index:5; }
+.resize-handle::after { content:''; position:absolute; top:0; bottom:0; left:3px; width:2px; background:var(--border); }
+.resize-handle:hover::after { background:var(--accent); }
+
+/* ── Table styles ─────────────────────────────────────── */
+.table-wrap { overflow-x:auto; }
+.table-grid { border:1px solid var(--border); border-radius:8px; overflow:hidden; min-width:max-content; }
+.table-row { display:grid; border-bottom:1px solid var(--border); }
+.table-row:last-child { border-bottom:none; }
+.table-head { background:var(--bg3); font-weight:600; }
+.table-cell { padding:7px 10px; border-right:1px solid var(--border); font-family:var(--mono); font-size:12px; white-space:nowrap; }
+.table-cell:last-child { border-right:none; }
+.table-cell select { background:var(--bg4); border:1px solid var(--border2); border-radius:5px; color:var(--text); font-family:var(--mono); font-size:11px; padding:2px 4px; cursor:pointer; outline:none; }
+.table-cell select:focus { border-color:var(--accent); }
+.table-row:nth-child(even):not(.table-head) { background:rgba(79,158,255,.04); }
+.table-active { outline:2px solid var(--accent); background:rgba(79,158,255,.18) !important; }
+
+/* ── Kmap styles ───────────────────────────────────────── */
+.kmap-section { margin-bottom:24px; padding:14px; background:var(--bg3); border:1px solid var(--border); border-radius:10px; }
+.kmap-title { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--accent); margin-bottom:10px; }
+.kmap-expr { font-family:var(--mono); font-size:12px; color:var(--green); margin-bottom:10px; padding:8px 10px; background:var(--bg4); border-radius:6px; border:1px solid var(--border2); word-break:break-all; }
+.kmap-expr .expr-label { color:var(--text3); margin-right:6px; }
+.kmap-table { border-collapse:collapse; font-family:var(--mono); font-size:12px; }
+.kmap-table th, .kmap-table td { border:1px solid var(--border2); padding:5px 10px; text-align:center; min-width:32px; }
+.kmap-table th { background:var(--bg4); color:var(--text3); font-weight:600; }
+.kmap-table td { background:var(--bg2); color:var(--text); }
+.kmap-table td.k1 { color:var(--green); font-weight:700; background:rgba(62,207,142,.12); }
+.kmap-table td.kx { color:var(--amber); }
+.kmap-header-row th { background:var(--bg3); }
+.kmap-corner { background:var(--bg3) !important; color:var(--text3) !important; font-size:10px; }
+.kmap-axis-label { font-size:11px; color:var(--text3); margin-bottom:4px; }
+
+/* ── FF Excitation reference table ─────────────────────── */
+.ff-ref-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+.ff-ref-box { background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:12px; }
+.ff-ref-title { font-family:var(--mono); font-size:12px; font-weight:700; color:var(--accent); margin-bottom:8px; }
+.ff-ref-table { border-collapse:collapse; font-family:var(--mono); font-size:11px; width:100%; }
+.ff-ref-table th { background:var(--bg4); color:var(--text3); padding:4px 8px; border:1px solid var(--border2); }
+.ff-ref-table td { padding:4px 8px; border:1px solid var(--border2); text-align:center; color:var(--text2); }
+.ff-ref-table td.v1 { color:var(--green); font-weight:700; }
+.ff-ref-table td.vx { color:var(--amber); }
+
+.name-input { width:140px; background:var(--bg3); border:1px solid var(--border); border-radius:6px; color:var(--text); font-family:var(--mono); font-size:15px; padding:4px 6px; outline:none; }
+.name-input:focus { border-color:var(--accent); }
+
+.state-badge { display:inline-block; padding:4px 8px; border-radius:6px; background:rgba(79,158,255,.15); border:1px solid rgba(79,158,255,.4); font-family:var(--mono); font-size:16px; color:var(--accent); }
+
+.conn-handle { fill:#0d0f14; stroke:#4f9eff; stroke-width:1.5; cursor:move; }
+.conn-handle.end { fill:#4f9eff; }
+.conn-handle.start { fill:#93a0c8; }
+
+.mode-switch { display:flex; align-items:center; gap:8px; font-size:14px; color:var(--text2); }
+.switch { position:relative; display:inline-block; width:44px; height:24px; }
+.switch input { opacity:0; width:0; height:0; }
+.slider { position:absolute; cursor:pointer; inset:0; background:var(--border2); border-radius:999px; transition:.2s; }
+.slider:before { position:absolute; content:''; height:18px; width:18px; left:3px; top:3px; background:white; border-radius:50%; transition:.2s; }
+.switch input:checked + .slider { background:var(--accent2); }
+.switch input:checked + .slider:before { transform:translateX(20px); }
+
+.modal-backdrop { position:fixed; inset:0; background:rgba(6,8,12,.72); display:none; align-items:center; justify-content:center; z-index:200; }
+.modal { width:min(520px, 92vw); background:var(--bg2); border:1px solid var(--border2); border-radius:12px; padding:18px; box-shadow:0 20px 50px rgba(0,0,0,.5); }
+.modal h2 { font-size:16px; margin-bottom:10px; color:var(--text); }
+.modal p { font-size:12px; color:var(--text2); line-height:1.7; margin-bottom:12px; }
+.modal .meta { font-family:var(--mono); font-size:11px; color:var(--text3); }
+.modal-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:14px; }
+
+body.hide-sidebars .info-panel,
+body.hide-sidebars .right-panel { display:none; }
+body.hide-sidebars .resize-handle { display:none; }
+
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border2); border-radius:4px; }
+
+.section-divider { height:1px; background:var(--border); margin:14px 0; }
+.info-badge { display:inline-block; padding:2px 7px; border-radius:4px; font-family:var(--mono); font-size:11px; }
+.info-badge.green { background:rgba(62,207,142,.15); color:var(--green); border:1px solid rgba(62,207,142,.3); }
+.info-badge.amber { background:rgba(245,166,35,.15); color:var(--amber); border:1px solid rgba(245,166,35,.3); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">FSM<span> // SIMULATOR</span></div>
+  <div class="header-sep"></div>
+  <button class="btn" onclick="addBit()">+ Input Bit</button>
+  <button class="btn" onclick="removeBit()">- Input Bit</button>
+  <div style="width:1px;height:24px;background:var(--border);margin:0 2px"></div>
+  <button class="btn" onclick="addOutputBit()">+ Output Bit</button>
+  <button class="btn" onclick="removeOutputBit()">- Output Bit</button>
+  <div style="width:1px;height:24px;background:var(--border);margin:0 2px"></div>
+  <div class="mode-switch">
+    <span id="modeSwitchLabel">All Moore</span>
+    <label class="switch">
+      <input type="checkbox" id="modeSwitch" onchange="setAllModesFromSwitch(this.checked)">
+      <span class="slider"></span>
+    </label>
+  </div>
+  <div style="width:1px;height:24px;background:var(--border);margin:0 2px"></div>
+  <div class="sim-controls">
+    <div class="step-counter" id="stepCounter">STEP 0</div>
+    <button class="btn" onclick="resetSim()">Reset</button>
+    <button class="btn" onclick="stepSim()">Step</button>
+    <button class="btn success" id="btnRun" onclick="runSim()">Run</button>
+    <div style="width:1px;height:24px;background:var(--border);margin:0 2px"></div>
+    <button class="btn" onclick="saveJSON()">Save</button>
+    <button class="btn" onclick="document.getElementById('fileInput').click()">Load</button>
+    <input type="file" id="fileInput" accept=".json" style="display:none" onchange="loadJSON(event)">
+    <button class="btn" onclick="openAbout()">About</button>
+    <button class="btn" id="btnSimplify" onclick="toggleSimplify()">Simplify</button>
+    <button class="btn" onclick="toggleSidebars()">Sidebars</button>
+    <button class="btn" onclick="toggleTheme()">Light/Dark</button>
+  </div>
+</header>
+
+<div id="appBody">
+<div class="main">
+  <div class="info-panel" id="leftPanel">
+    <div class="info-section">
+      <div class="info-title">Quick Actions</div>
+      <div class="state-drag-wrap">
+        <div class="state-drag moore" draggable="true" ondragstart="dragStateStart(event,'moore')">Add Moore State</div>
+        <div class="state-drag mealy" draggable="true" ondragstart="dragStateStart(event,'mealy')">Add Mealy State</div>
+        <button class="btn" id="btnForce" onclick="toggleForceLayout()">Force Layout: OFF</button>
+      </div>
+    </div>
+    <div class="info-section">
+      <div class="info-title">Tips</div>
+      <div class="info-text">
+        • Drag states around the grid<br>
+        • Click a state to edit transitions<br>
+        • Drag curve handles to reroute arrows<br>
+        • Drag arrow heads to change target state<br>
+        • Left-click drag on canvas to pan<br>
+        • Toggle input bits on the top right<br>
+        • Light mode will flashbang you LMAO<br>
+        • Output bits can be edited in the editor per state
+      </div>
+    </div>
+    <div class="info-section">
+      <div class="info-title">Legend</div>
+      <div class="info-text">
+        • Blue ring = active state<br>
+        • Blue arrow = chosen transition<br>
+        • Dots = curve handles
+      </div>
+    </div>
+    <div class="info-section">
+      <div class="editor-panel" id="editorPanel"></div>
+    </div>
+  </div>
+
+  <div class="resize-handle" id="leftResizer"></div>
+  <div class="canvas-wrap" id="canvasWrap">
+    <svg id="canvas" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="io-panels">
+      <div class="input-panel" id="inputPanel"></div>
+      <div class="output-panel" id="outputPanel"></div>
+    </div>
+  </div>
+
+  <div class="resize-handle" id="rightResizer"></div>
+  <div class="right-panel" id="rightPanel">
+    <div class="panel-tabs" id="panelTabs">
+      <div class="panel-tab active" id="tabVars" onclick="switchTab('vars')">VARS</div>
+      <div class="panel-tab" id="tabLog" onclick="switchTab('log')">LOG</div>
+      <div class="panel-tab" id="tabTable" onclick="switchTab('table')">TABLE</div>
+    </div>
+    <div class="panel-content" id="panelContent"></div>
+  </div>
+</div>
+
+<!-- Bottom expand panel: Excitation Table (left) + Kmap (right) -->
+<div class="bottom-resize-handle" id="bottomResizer"></div>
+<div class="bottom-panel" id="bottomPanel">
+  <div class="bottom-header">
+    <div class="bottom-header-title">EXCITATION ANALYSIS</div>
+    <div class="bottom-tab-sep"></div>
+    <div class="bottom-tab active" id="btabExc" onclick="setBottomTab('exc')">EXCITATION TABLE + KMAP</div>
+    <div class="bottom-tab" id="btabRef" onclick="setBottomTab('ref')">FF REFERENCE</div>
+    <div class="bottom-header-right">
+      <span id="bottomInfo" style="font-size:11px;color:var(--text3);font-family:var(--mono)"></span>
+      <button class="bottom-close-btn" onclick="closeBottomPanel()">✕ Close</button>
+    </div>
+  </div>
+  <div class="bottom-body" id="bottomBody">
+    <div class="bottom-pane" id="bottomLeft"></div>
+    <div class="bottom-pane-divider"></div>
+    <div class="bottom-pane" id="bottomRight"></div>
+  </div>
+</div>
+</div><!-- #appBody -->
+
+<div class="modal-backdrop" id="aboutModal" onclick="closeAbout(event)">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle" onclick="event.stopPropagation()">
+    <h2 id="aboutTitle">About Me</h2>
+    <p>
+      Conceptualized and designed by Adelson Chua and Isaac Sy. Development is on-going, feedback is appreciated! Will continue to update as the sem goes along.
+    </p>
+    <p>
+      From EEEI, UP Diliman for EEE 143 students
+    </p>
+    <div class="meta">Feel free to download and modify the HTML file! AI was also used in its development.</div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeAbout()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════════════
+let states = [];
+let transitions = {};
+let selectedStateId = null;
+let activeStateId = null;
+let simStep = 0;
+let simLog = [];
+let showInputLogs = true;
+let simplifyOn = false;
+let undoStack = [];
+const UNDO_LIMIT = 80;
+let isRunning = false;
+let runInterval = null;
+let idCounter = 1;
+let inputBitsCount = 1;
+let inputBits = [1];
+let inputNames = ['b0'];
+let outputBitsCount = 1;
+let outputBits = [0];
+let outputNames = ['y0'];
+let activeTab = 'vars';
+
+// Expand mode (excitation table / kmap)
+let expandMode = false;
+let expandTab = 'excitation'; // 'excitation' | 'ffref' | 'kmap'
+let flipFlopTypes = []; // per-FF type: 'D'|'T'|'SR'|'JK'
+
+let svgEl, canvasWrap;
+let view = { x: 0, y: 0, scale: 1.5 };
+let endPreview = null;
+
+// ── Force layout ────────────────────────────────────────────────
+let forceActive = false;
+let forceAnimId = null;
+let forceTimeoutId = null;
+let forcePinnedId = null;
+const forceVel = {};
+const FORCE_REPEL  = 18000;
+const FORCE_IDEAL  = 220;
+const FORCE_ATTRACT = 0.055;
+const FORCE_DAMP   = 0.78;
+const FORCE_THRESH = 0.15;
+const FORCE_MAX_SPEED = 10;
+const FORCE_PADDING = 60;
+const FORCE_CURVE_LERP = 0.12;
+
+// ══════════════════════════════════════════════════════════════════
+//  FLIP-FLOP EXCITATION LOGIC
+// ══════════════════════════════════════════════════════════════════
+
+/**
+ * Returns excitation input values given flip-flop type and current→next bit.
+ * For D:  returns [D]
+ * For T:  returns [T]
+ * For SR: returns [S, R]
+ * For JK: returns [J, K]
+ * Values: '0', '1', 'X' (don't-care)
+ */
+function getFFExcitation(type, curr, next) {
+  curr = +curr; next = +next;
+  if (type === 'D') {
+    return [String(next)];
+  }
+  if (type === 'T') {
+    return [curr === next ? '0' : '1'];
+  }
+  if (type === 'SR') {
+    if (curr === 0 && next === 0) return ['0', 'X'];
+    if (curr === 0 && next === 1) return ['1', '0'];
+    if (curr === 1 && next === 0) return ['0', '1'];
+    if (curr === 1 && next === 1) return ['X', '0'];
+  }
+  if (type === 'JK') {
+    if (curr === 0 && next === 0) return ['0', 'X'];
+    if (curr === 0 && next === 1) return ['1', 'X'];
+    if (curr === 1 && next === 0) return ['X', '1'];
+    if (curr === 1 && next === 1) return ['X', '0'];
+  }
+  return ['?'];
+}
+
+/** Returns column header labels for a given FF type */
+function getFFLabels(type, ffIndex) {
+  const n = flipFlopTypes.length > 1 ? String(ffIndex) : '';
+  if (type === 'D') return [`D${n}`];
+  if (type === 'T') return [`T${n}`];
+  if (type === 'SR') return [`S${n}`, `R${n}`];
+  if (type === 'JK') return [`J${n}`, `K${n}`];
+  return [type + n];
+}
+
+/** How many excitation columns does a FF type produce? */
+function ffColCount(type) {
+  return (type === 'SR' || type === 'JK') ? 2 : 1;
+}
+
+/** Given a state id, return its binary encoding (MSB first) with numFF bits */
+function getStateBinary(stateId, numFF) {
+  const idx = states.findIndex(s => s.id === stateId);
+  return (idx < 0 ? 0 : idx).toString(2).padStart(numFF, '0');
+}
+
+/** Number of flip-flops needed */
+function numFFForStates() {
+  return Math.max(1, Math.ceil(Math.log2(Math.max(states.length, 2))));
+}
+
+/** Ensure flipFlopTypes array is synced */
+function syncFFTypes() {
+  const n = numFFForStates();
+  while (flipFlopTypes.length < n) flipFlopTypes.push('D');
+  flipFlopTypes = flipFlopTypes.slice(0, n);
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  QUINE-McCLUSKEY MINIMIZATION
+// ══════════════════════════════════════════════════════════════════
+
+function quineMcCluskey(minterms, dontCares, numVars) {
+  if (numVars === 0) return minterms.length > 0 ? '1' : '0';
+  const all = [...new Set([...minterms, ...dontCares])].sort((a, b) => a - b);
+  if (all.length === 0) return '0';
+  if (minterms.length === (1 << numVars)) return '1';
+  if (minterms.length === 0) return '0';
+
+  function toBin(n) { return n.toString(2).padStart(numVars, '0'); }
+  function countOnes(s) { return s.split('').filter(c => c === '1').length; }
+  function tryMerge(binA, binB) {
+    let diff = -1, count = 0;
+    for (let i = 0; i < binA.length; i++) {
+      if (binA[i] === '-' && binB[i] === '-') continue;
+      if (binA[i] !== binB[i]) { diff = i; count++; }
+    }
+    if (count !== 1) return null;
+    return binA.split('').map((c, i) => i === diff ? '-' : c).join('');
+  }
+
+  // Build initial groups
+  let groups = {};
+  all.forEach(m => {
+    const b = toBin(m);
+    const k = countOnes(b);
+    if (!groups[k]) groups[k] = [];
+    groups[k].push({ terms: [m], bin: b, used: false, dc: dontCares.includes(m) });
+  });
+
+  let primeImplicants = [];
+
+  while (true) {
+    const newGroups = {};
+    let anyCombined = false;
+    const keys = Object.keys(groups).map(Number).sort((a, b) => a - b);
+
+    for (let i = 0; i < keys.length - 1; i++) {
+      const g1 = groups[keys[i]] || [];
+      const g2 = groups[keys[i + 1]] || [];
+      for (const a of g1) {
+        for (const b of g2) {
+          const merged = tryMerge(a.bin, b.bin);
+          if (!merged) continue;
+          a.used = true; b.used = true;
+          const k = countOnes(merged.replace(/-/g, '0'));
+          if (!newGroups[k]) newGroups[k] = [];
+          const newTerms = [...new Set([...a.terms, ...b.terms])].sort((x, y) => x - y);
+          const exists = newGroups[k].some(x => x.bin === merged);
+          if (!exists) newGroups[k].push({ terms: newTerms, bin: merged, used: false, dc: a.dc && b.dc });
+          anyCombined = true;
+        }
+      }
+    }
+
+    keys.forEach(k => {
+      (groups[k] || []).forEach(g => {
+        if (!g.used && !g.dc) primeImplicants.push(g);
+      });
+    });
+
+    if (!anyCombined) break;
+    groups = newGroups;
+  }
+
+  // Petrick's method (essential PI cover)
+  const covered = new Set();
+  const selected = [];
+
+  // Find essential PIs
+  for (const m of minterms) {
+    const covering = primeImplicants.filter(pi => pi.terms.includes(m));
+    if (covering.length === 1 && !selected.includes(covering[0])) {
+      selected.push(covering[0]);
+      covering[0].terms.forEach(t => covered.add(t));
+    }
+  }
+
+  // Greedy cover for remaining
+  let remaining = minterms.filter(m => !covered.has(m));
+  while (remaining.length > 0) {
+    let best = null, bestCount = 0;
+    for (const pi of primeImplicants) {
+      if (selected.includes(pi)) continue;
+      const c = remaining.filter(m => pi.terms.includes(m)).length;
+      if (c > bestCount) { best = pi; bestCount = c; }
+    }
+    if (!best) break;
+    selected.push(best);
+    best.terms.forEach(t => covered.add(t));
+    remaining = minterms.filter(m => !covered.has(m));
+  }
+
+  if (selected.length === 0) return '0';
+
+  // Format as Boolean expression
+  // Variable names: input bits first (MSB→LSB), then state bits (MSB→LSB)
+  // We'll use generic var names passed as varNames
+  return { pis: selected, numVars };
+}
+
+function formatBoolExpr(qmResult, varNames) {
+  if (typeof qmResult === 'string') return qmResult;
+  const { pis, numVars } = qmResult;
+  if (!pis || pis.length === 0) return '0';
+
+  const terms = pis.map(pi => {
+    const literals = [];
+    for (let i = 0; i < pi.bin.length; i++) {
+      const vn = varNames[i] || `v${i}`;
+      if (pi.bin[i] === '1') literals.push(vn);
+      else if (pi.bin[i] === '0') literals.push(vn + "'");
+    }
+    return literals.length === 0 ? '1' : literals.join('·');
+  });
+  return terms.join(' + ');
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  KMAP RENDERING
+// ══════════════════════════════════════════════════════════════════
+
+// Gray code order
+const GRAY = [0, 1, 3, 2];
+
+/**
+ * Render an HTML kmap for numVars variables.
+ * minterms: array of minterm indices where function = 1
+ * dontCares: array of indices where function = X
+ * varNames: array of variable name strings (MSB first)
+ */
+function renderKmapHTML(minterms, dontCares, varNames, numVars) {
+  const mintermSet = new Set(minterms);
+  const dcSet = new Set(dontCares);
+  const total = 1 << numVars;
+
+  if (numVars === 1) {
+    // 1-var: 1×2
+    const rowVars = [varNames[0]];
+    const colVars = [];
+    return render1VarKmap(minterms, dontCares, varNames);
+  }
+  if (numVars === 2) {
+    return render2VarKmap(minterms, dontCares, varNames);
+  }
+  if (numVars === 3) {
+    return render3VarKmap(minterms, dontCares, varNames);
+  }
+  if (numVars === 4) {
+    return render4VarKmap(minterms, dontCares, varNames);
+  }
+  if (numVars === 5) {
+    return render5VarKmap(minterms, dontCares, varNames);
+  }
+  if (numVars === 6) {
+    return render6VarKmap(minterms, dontCares, varNames);
+  }
+  return `<p style="color:var(--text3);font-size:12px">Kmap not supported for ${numVars} variables</p>`;
+}
+
+function cellClass(idx, mintermSet, dcSet) {
+  if (mintermSet.has(idx)) return 'k1';
+  if (dcSet.has(idx)) return 'kx';
+  return '';
+}
+function cellVal(idx, mintermSet, dcSet) {
+  if (mintermSet.has(idx)) return '1';
+  if (dcSet.has(idx)) return 'X';
+  return '0';
+}
+
+function render1VarKmap(minterms, dontCares, varNames) {
+  const ms = new Set(minterms), dc = new Set(dontCares);
+  const v = varNames[0] || 'A';
+  return `<table class="kmap-table">
+    <tr><th>${v}'</th><th>${v}</th></tr>
+    <tr><td class="${cellClass(0,ms,dc)}">${cellVal(0,ms,dc)}</td><td class="${cellClass(1,ms,dc)}">${cellVal(1,ms,dc)}</td></tr>
+  </table>`;
+}
+
+function render2VarKmap(minterms, dontCares, varNames) {
+  const ms = new Set(minterms), dc = new Set(dontCares);
+  const [A, B] = varNames;
+  // Rows: A=0,1  Cols: B=0,1
+  const colGray = GRAY.slice(0,2); // [0,1]
+  let rows = '';
+  for (let r = 0; r < 2; r++) {
+    let cells = '';
+    for (let c = 0; c < 2; c++) {
+      const idx = (r << 1) | c;
+      cells += `<td class="${cellClass(idx,ms,dc)}">${cellVal(idx,ms,dc)}</td>`;
+    }
+    rows += `<tr><th>${A}=${r}</th>${cells}</tr>`;
+  }
+  return `<table class="kmap-table">
+    <tr class="kmap-header-row"><th class="kmap-corner">${A}\\${B}</th><th>${B}=0</th><th>${B}=1</th></tr>
+    ${rows}
+  </table>`;
+}
+
+function render3VarKmap(minterms, dontCares, varNames) {
+  const ms = new Set(minterms), dc = new Set(dontCares);
+  const [A, B, C] = varNames;
+  // Rows: A (1 var), Cols: BC (2 vars, gray coded)
+  const colGray = [0,1,3,2]; // BC: 00,01,11,10
+  let headerCols = colGray.map(g => `<th>${B}${C}=${g.toString(2).padStart(2,'0')}</th>`).join('');
+  let rows = '';
+  for (let r = 0; r < 2; r++) {
+    let cells = '';
+    for (const c of colGray) {
+      const idx = (r << 2) | c;
+      cells += `<td class="${cellClass(idx,ms,dc)}">${cellVal(idx,ms,dc)}</td>`;
+    }
+    rows += `<tr><th>${A}=${r}</th>${cells}</tr>`;
+  }
+  return `<table class="kmap-table">
+    <tr class="kmap-header-row"><th class="kmap-corner">${A}\\${B}${C}</th>${headerCols}</tr>
+    ${rows}
+  </table>`;
+}
+
+function render4VarKmap(minterms, dontCares, varNames) {
+  const ms = new Set(minterms), dc = new Set(dontCares);
+  const [A, B, C, D] = varNames;
+  const gray2 = [0,1,3,2];
+  let headerCols = gray2.map(g => `<th>${C}${D}=${g.toString(2).padStart(2,'0')}</th>`).join('');
+  let rows = '';
+  for (const r of gray2) {
+    let cells = '';
+    for (const c of gray2) {
+      const idx = (r << 2) | c;
+      cells += `<td class="${cellClass(idx,ms,dc)}">${cellVal(idx,ms,dc)}</td>`;
+    }
+    rows += `<tr><th>${A}${B}=${r.toString(2).padStart(2,'0')}</th>${cells}</tr>`;
+  }
+  return `<table class="kmap-table">
+    <tr class="kmap-header-row"><th class="kmap-corner">${A}${B}\\${C}${D}</th>${headerCols}</tr>
+    ${rows}
+  </table>`;
+}
+
+function render5VarKmap(minterms, dontCares, varNames) {
+  // Split into two 4-var kmaps: one for A=0, one for A=1
+  const [A, B, C, D, E] = varNames;
+  const sub4vars = [B, C, D, E];
+  const ms0 = minterms.filter(m => !(m & 16)).map(m => m & 15);
+  const dc0 = dontCares.filter(m => !(m & 16)).map(m => m & 15);
+  const ms1 = minterms.filter(m => !!(m & 16)).map(m => m & 15);
+  const dc1 = dontCares.filter(m => !!(m & 16)).map(m => m & 15);
+  return `<div style="display:flex;gap:16px;flex-wrap:wrap">
+    <div><div class="kmap-axis-label">${A}=0</div>${render4VarKmap(ms0, dc0, sub4vars)}</div>
+    <div><div class="kmap-axis-label">${A}=1</div>${render4VarKmap(ms1, dc1, sub4vars)}</div>
+  </div>`;
+}
+
+function render6VarKmap(minterms, dontCares, varNames) {
+  // Split into four 4-var kmaps
+  const [A, B, C, D, E, F] = varNames;
+  const sub4vars = [C, D, E, F];
+  const parts = [[0,0],[0,1],[1,0],[1,1]];
+  let html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">';
+  for (const [aVal, bVal] of parts) {
+    const mask = (aVal << 5) | (bVal << 4);
+    const check = (aVal << 5) | (bVal << 4);
+    const ms = minterms.filter(m => (m >> 4) === ((aVal<<1)|bVal)).map(m => m & 15);
+    const dc = dontCares.filter(m => (m >> 4) === ((aVal<<1)|bVal)).map(m => m & 15);
+    html += `<div><div class="kmap-axis-label">${A}=${aVal}, ${B}=${bVal}</div>${render4VarKmap(ms, dc, sub4vars)}</div>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  BUILD EXCITATION TABLE DATA
+// ══════════════════════════════════════════════════════════════════
+
+/**
+ * Returns array of row objects for the expanded excitation table.
+ * Each row: { inputBin, currentName, currentBin, nextName, nextBin, excitations[], outputBin, isActive }
+ */
+function buildExcitationRows() {
+  syncFFTypes();
+  const numFF = flipFlopTypes.length;
+  const curInput = getInputIndex();
+  const curActive = states.find(s => s.id === activeStateId);
+  const rows = [];
+
+  states.forEach(s => {
+    const sBin = getStateBinary(s.id, numFF);
+    for (let i = 0; i < (1 << inputBitsCount); i++) {
+      const t = transitions[s.id]?.[i];
+      const nextState = t ? states.find(st => st.id === t.to) : null;
+      const nextBin = nextState ? getStateBinary(nextState.id, numFF) : '0'.repeat(numFF);
+
+      // Build excitation columns for each FF
+      const excCols = [];
+      for (let ff = 0; ff < numFF; ff++) {
+        const curr = parseInt(sBin[ff] || '0');
+        const nxt = parseInt(nextBin[ff] || '0');
+        const vals = getFFExcitation(flipFlopTypes[ff], curr, nxt);
+        excCols.push(...vals);
+      }
+
+      // Output bits
+      const outBits = s.mode === 'mealy'
+        ? (t ? normalizeTransitionOutputs(t).out : Array(outputBitsCount).fill(0))
+        : (s.outputs || Array(outputBitsCount).fill(0));
+
+      const isActive = (s.id === activeStateId) && (i === curInput);
+
+      rows.push({
+        inputBin: i.toString(2).padStart(inputBitsCount, '0'),
+        currentName: s.name || s.id,
+        currentBin: sBin,
+        nextName: nextState ? nextState.name : '-',
+        nextBin: nextBin,
+        excitations: excCols,
+        outputBin: bitsToString(outBits),
+        isActive
+      });
+    }
+  });
+  return rows;
+}
+
+/**
+ * Build minterm/don't-care sets for each excitation column (and each output bit).
+ * Variables: [input bits MSB→LSB, state bits MSB→LSB]
+ * numVars = inputBitsCount + numFF
+ */
+function buildExcitationMinterms() {
+  syncFFTypes();
+  const numFF = flipFlopTypes.length;
+  const numVars = inputBitsCount + numFF;
+
+  // Column labels
+  const colLabels = [];
+  for (let ff = 0; ff < numFF; ff++) {
+    const labels = getFFLabels(flipFlopTypes[ff], ff);
+    colLabels.push(...labels);
+  }
+
+  // For each column, collect minterms (value='1') and don't-cares (value='X')
+  const numCols = colLabels.length;
+  const mintermSets = Array.from({ length: numCols }, () => []);
+  const dcSets = Array.from({ length: numCols }, () => []);
+
+  // Also for each output bit
+  const outMinterms = Array.from({ length: outputBitsCount }, () => []);
+  const outDCs = Array.from({ length: outputBitsCount }, () => []);
+
+  states.forEach(s => {
+    const sBin = getStateBinary(s.id, numFF);
+    for (let i = 0; i < (1 << inputBitsCount); i++) {
+      const t = transitions[s.id]?.[i];
+      const nextState = t ? states.find(st => st.id === t.to) : null;
+      const nextBin = nextState ? getStateBinary(nextState.id, numFF) : '0'.repeat(numFF);
+
+      // Build variable index: input bits (MSB first) then state bits (MSB first)
+      const inputBin = i.toString(2).padStart(inputBitsCount, '0');
+      const varBin = inputBin + sBin; // full variable assignment MSB→LSB
+      const varIdx = parseInt(varBin, 2);
+
+      // Excitation values for this row
+      let colIdx = 0;
+      for (let ff = 0; ff < numFF; ff++) {
+        const curr = parseInt(sBin[ff] || '0');
+        const nxt = parseInt(nextBin[ff] || '0');
+        const vals = getFFExcitation(flipFlopTypes[ff], curr, nxt);
+        for (const v of vals) {
+          if (v === '1') mintermSets[colIdx].push(varIdx);
+          else if (v === 'X') dcSets[colIdx].push(varIdx);
+          colIdx++;
+        }
+      }
+
+      // Output bits
+      const outBits = s.mode === 'mealy'
+        ? (t ? normalizeTransitionOutputs(t).out : Array(outputBitsCount).fill(0))
+        : (s.outputs || Array(outputBitsCount).fill(0));
+      for (let ob = 0; ob < outputBitsCount; ob++) {
+        if (outBits[ob] === 1) outMinterms[ob].push(varIdx);
+      }
+    }
+  });
+
+  return { colLabels, mintermSets, dcSets, numVars, outMinterms, outDCs };
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  RENDER PANELS
+// ══════════════════════════════════════════════════════════════════
+
+function renderExcitationPanel() {
+  syncFFTypes();
+  const numFF = flipFlopTypes.length;
+  const rows = buildExcitationRows();
+
+  // Build column headers
+  const excHeaders = [];
+  for (let ff = 0; ff < numFF; ff++) {
+    const type = flipFlopTypes[ff];
+    const labels = getFFLabels(type, ff);
+    const typeOptions = ['D','T','SR','JK'].map(t =>
+      `<option value="${t}" ${t === type ? 'selected' : ''}>${t}</option>`
+    ).join('');
+    // For multi-col types, merge-style header
+    if (labels.length === 2) {
+      excHeaders.push(`<div class="table-cell" style="grid-column:span 2"><select onchange="changeFFType(${ff},this.value)">${typeOptions}</select> ${labels[0]}/${labels[1]}</div>`);
+    } else {
+      excHeaders.push(`<div class="table-cell"><select onchange="changeFFType(${ff},this.value)">${typeOptions}</select>${labels[0]}</div>`);
+    }
+  }
+
+  // Sub-headers for SR/JK
+  const subHeaders = [];
+  for (let ff = 0; ff < numFF; ff++) {
+    const labels = getFFLabels(flipFlopTypes[ff], ff);
+    for (const l of labels) subHeaders.push(`<div class="table-cell">${h(l)}</div>`);
+  }
+
+  const numExcCols = rows[0]?.excitations.length || 0;
+  const numOutCols = outputBitsCount;
+  const totalCols = 1 + 1 + 1 + numExcCols + numOutCols; // input + present + next + exc + out
+  const gridCols = `repeat(${totalCols}, auto)`;
+
+  // Header row 1
+  const header1 = `<div class="table-row table-head" style="grid-template-columns:${gridCols}">
+    <div class="table-cell">${h(inputNames.slice().reverse().join(','))}</div>
+    <div class="table-cell">Present State</div>
+    <div class="table-cell">Next State</div>
+    ${excHeaders.join('')}
+    ${outputNames.slice().reverse().map(n=>`<div class="table-cell">${h(n)}</div>`).join('')}
+  </div>`;
+
+  // Sub-header row 2 (input pattern, binary encodings, individual exc labels, out names)
+  const inputSubHead = `<div class="table-cell" style="font-size:10px;color:var(--text3)">${inputNames.slice().reverse().join(' ')}</div>`;
+  const presSubHead = `<div class="table-cell" style="font-size:10px;color:var(--text3)">Q${'n'.repeat(numFF>1?1:0)}</div>`;
+  const nextSubHead = `<div class="table-cell" style="font-size:10px;color:var(--text3)">Q${'n+1'.repeat(1)}</div>`;
+  const header2 = `<div class="table-row table-head" style="grid-template-columns:${gridCols}">
+    ${inputSubHead}${presSubHead}${nextSubHead}
+    ${subHeaders.join('')}
+    ${outputNames.slice().reverse().map(n=>`<div class="table-cell" style="font-size:10px;color:var(--text3)">${h(n)}</div>`).join('')}
+  </div>`;
+
+  const dataRows = rows.map(r => {
+    const excCells = r.excitations.map(v => {
+      const cls = v === '1' ? 'style="color:var(--green);font-weight:700"' : v === 'X' ? 'style="color:var(--amber)"' : '';
+      return `<div class="table-cell" ${cls}>${v}</div>`;
+    }).join('');
+    const outCells = outputNames.slice().reverse().map((n, bi) => {
+      const idx = outputBitsCount - 1 - bi;
+      const bits = r.outputBin.split('');
+      const val = r.outputBin[bi] || '0';
+      return `<div class="table-cell" ${val === '1' ? 'style="color:var(--green)"' : ''}>${val}</div>`;
+    }).join('');
+    return `<div class="table-row${r.isActive ? ' table-active' : ''}" style="grid-template-columns:${gridCols}">
+      <div class="table-cell">${h(r.inputBin)}</div>
+      <div class="table-cell">${h(r.currentName)} (${r.currentBin})</div>
+      <div class="table-cell">${h(r.nextName)} (${r.nextBin})</div>
+      ${excCells}${outCells}
+    </div>`;
+  }).join('');
+
+  document.getElementById('panelContent').innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <div class="editor-title" style="margin:0">Excitation Table</div>
+      <button class="btn sm" onclick="exitExpandMode()">← Back</button>
+      <span style="font-size:11px;color:var(--text3);font-family:var(--mono)">${numFF} FF · ${states.length} states · ${inputBitsCount} input bit${inputBitsCount>1?'s':''}</span>
+    </div>
+    <div class="table-wrap">
+      <div class="table-grid">${header1}${header2}${dataRows}</div>
+    </div>
+  `;
+}
+
+function renderFFRefPanel() {
+  const types = ['D','T','SR','JK'];
+  const defs = {
+    D: {
+      desc: 'D (Data) Flip-Flop: output follows input',
+      cols: ['Q(t)','Q(t+1)','D'],
+      rows: [['0','0','0'],['0','1','1'],['1','0','0'],['1','1','1']]
+    },
+    T: {
+      desc: 'T (Toggle) Flip-Flop: toggles on T=1',
+      cols: ['Q(t)','Q(t+1)','T'],
+      rows: [['0','0','0'],['0','1','1'],['1','0','1'],['1','1','0']]
+    },
+    SR: {
+      desc: 'SR Flip-Flop: Set/Reset (SR=11 invalid)',
+      cols: ['Q(t)','Q(t+1)','S','R'],
+      rows: [['0','0','0','X'],['0','1','1','0'],['1','0','0','1'],['1','1','X','0']]
+    },
+    JK: {
+      desc: 'JK Flip-Flop: universal, no invalid state',
+      cols: ['Q(t)','Q(t+1)','J','K'],
+      rows: [['0','0','0','X'],['0','1','1','X'],['1','0','X','1'],['1','1','X','0']]
+    }
+  };
+
+  const boxesHTML = types.map(type => {
+    const d = defs[type];
+    const thead = d.cols.map(c => `<th>${c}</th>`).join('');
+    const tbody = d.rows.map(r =>
+      `<tr>${r.map(v => `<td class="${v==='1'?'v1':v==='X'?'vx':''}">${v}</td>`).join('')}</tr>`
+    ).join('');
+    return `<div class="ff-ref-box">
+      <div class="ff-ref-title">${type} Flip-Flop</div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:6px;font-family:var(--mono)">${d.desc}</div>
+      <table class="ff-ref-table"><thead><tr>${thead}</tr></thead><tbody>${tbody}</tbody></table>
+    </div>`;
+  }).join('');
+
+  document.getElementById('panelContent').innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <div class="editor-title" style="margin:0">FF Excitation Reference</div>
+      <button class="btn sm" onclick="exitExpandMode()">← Back</button>
+    </div>
+    <div class="ff-ref-grid">${boxesHTML}</div>
+    <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.7">
+      <b style="color:var(--text2)">X</b> = don't care (either 0 or 1 produces correct transition)<br>
+      Use these tables to determine excitation inputs from present→next state transitions.
+    </div>
+  `;
+}
+
+function renderKmapPanel() {
+  syncFFTypes();
+  const numFF = flipFlopTypes.length;
+  const numVars = inputBitsCount + numFF;
+
+  if (numVars > 6) {
+    document.getElementById('panelContent').innerHTML = `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div class="editor-title" style="margin:0">Kmap Solver</div>
+        <button class="btn sm" onclick="exitExpandMode()">← Back</button>
+      </div>
+      <p style="color:var(--text3);font-size:12px;font-family:var(--mono)">
+        Kmap not supported for more than 6 variables.<br>
+        Current: ${numVars} vars (${inputBitsCount} input + ${numFF} state bits).
+      </p>`;
+    return;
+  }
+
+  const { colLabels, mintermSets, dcSets, outMinterms, outDCs } = buildExcitationMinterms();
+
+  // Variable names: input bits MSB→LSB, then state bits MSB→LSB
+  const varNames = [];
+  for (let i = inputBitsCount - 1; i >= 0; i--) varNames.push(inputNames[i] || `b${i}`);
+  for (let i = 0; i < numFF; i++) varNames.push(`Q${i}`);
+
+  let sectionsHTML = '';
+
+  // Excitation function Kmaps
+  colLabels.forEach((label, ci) => {
+    const ms = [...new Set(mintermSets[ci])];
+    const dc = [...new Set(dcSets[ci])];
+    const allZero = ms.length === 0;
+    const allOne = ms.length + dc.length === (1 << numVars) || ms.length === (1 << numVars);
+
+    let exprStr;
+    if (allZero && dc.length === 0) {
+      exprStr = '0';
+    } else if (ms.length === (1 << numVars)) {
+      exprStr = '1';
+    } else {
+      const result = quineMcCluskey(ms, dc, numVars);
+      exprStr = formatBoolExpr(result, varNames);
+    }
+
+    const kmapHTML = renderKmapHTML(ms, dc, varNames, numVars);
+    const mintermStr = ms.length > 0 ? `Σm(${ms.sort((a,b)=>a-b).join(',')})` : 'No minterms';
+    const dcStr = dc.length > 0 ? ` + d(${dc.sort((a,b)=>a-b).join(',')})` : '';
+
+    sectionsHTML += `<div class="kmap-section">
+      <div class="kmap-title">${h(label)}</div>
+      <div class="kmap-expr"><span class="expr-label">Expression:</span>${h(exprStr)}</div>
+      <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">${mintermStr}${dcStr}</div>
+      ${kmapHTML}
+    </div>`;
+  });
+
+  // Output Kmaps
+  outputNames.forEach((name, oi) => {
+    const ms = [...new Set(outMinterms[oi])];
+    const dc = [];
+    let exprStr;
+    if (ms.length === 0) {
+      exprStr = '0';
+    } else if (ms.length === (1 << numVars)) {
+      exprStr = '1';
+    } else {
+      const result = quineMcCluskey(ms, dc, numVars);
+      exprStr = formatBoolExpr(result, varNames);
+    }
+    const kmapHTML = renderKmapHTML(ms, dc, varNames, numVars);
+    const mintermStr = ms.length > 0 ? `Σm(${ms.sort((a,b)=>a-b).join(',')})` : 'No minterms';
+
+    sectionsHTML += `<div class="kmap-section">
+      <div class="kmap-title">Output: ${h(name)}</div>
+      <div class="kmap-expr"><span class="expr-label">Expression:</span>${h(exprStr)}</div>
+      <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">${mintermStr}</div>
+      ${kmapHTML}
+    </div>`;
+  });
+
+  const varNamesStr = varNames.join(', ');
+
+  document.getElementById('panelContent').innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <div class="editor-title" style="margin:0">Kmap Solver</div>
+      <button class="btn sm" onclick="exitExpandMode()">← Back</button>
+      <span style="font-size:11px;color:var(--text3);font-family:var(--mono)">${numVars} vars: ${varNamesStr}</span>
+    </div>
+    ${sectionsHTML}
+  `;
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  EXPAND MODE MANAGEMENT
+// ══════════════════════════════════════════════════════════════════
+
+// ── Bottom panel open/close ──────────────────────────────────────
+let bottomTab = 'exc'; // 'exc' | 'ref'
+
+function enterExpandMode() {
+  expandMode = true;
+  syncFFTypes();
+  const bp = document.getElementById('bottomPanel');
+  const br = document.getElementById('bottomResizer');
+  bp.classList.add('open');
+  br.classList.add('open');
+  renderBottomPanel();
+}
+
+function exitExpandMode() {
+  closeBottomPanel();
+}
+
+function closeBottomPanel() {
+  expandMode = false;
+  document.getElementById('bottomPanel').classList.remove('open');
+  document.getElementById('bottomResizer').classList.remove('open');
+  // Restore normal table view in sidebar so it shows the Expand button again
+  if (activeTab === 'table') renderNormalTablePanel();
+}
+
+function setBottomTab(tab) {
+  bottomTab = tab;
+  document.getElementById('btabExc').classList.toggle('active', tab === 'exc');
+  document.getElementById('btabRef').classList.toggle('active', tab === 'ref');
+  renderBottomPanel();
+}
+
+function changeFFType(ffIndex, type) {
+  syncFFTypes();
+  flipFlopTypes[ffIndex] = type;
+  renderBottomPanel();
+}
+
+function renderBottomPanel() {
+  syncFFTypes();
+  const numFF = flipFlopTypes.length;
+  const info = document.getElementById('bottomInfo');
+  if (info) info.textContent = `${numFF} FF · ${states.length} states · ${inputBitsCount} input bit${inputBitsCount>1?'s':''}`;
+
+  if (bottomTab === 'ref') {
+    renderBottomFFRef();
+  } else {
+    renderBottomExcAndKmap();
+  }
+}
+
+function renderBottomExcAndKmap() {
+  renderBottomExcitation();
+  renderBottomKmap();
+}
+
+function renderBottomExcitation() {
+  syncFFTypes();
+  const numFF = flipFlopTypes.length;
+  const rows = buildExcitationRows();
+
+  const excHeaders = [];
+  for (let ff = 0; ff < numFF; ff++) {
+    const type = flipFlopTypes[ff];
+    const labels = getFFLabels(type, ff);
+    const typeOptions = ['D','T','SR','JK'].map(t =>
+      `<option value="${t}" ${t === type ? 'selected' : ''}>${t}</option>`
+    ).join('');
+    if (labels.length === 2) {
+      excHeaders.push(`<div class="table-cell" style="grid-column:span 2"><select onchange="changeFFType(${ff},this.value)">${typeOptions}</select> ${labels[0]}/${labels[1]}</div>`);
+    } else {
+      excHeaders.push(`<div class="table-cell"><select onchange="changeFFType(${ff},this.value)">${typeOptions}</select> ${labels[0]}</div>`);
+    }
+  }
+
+  const subHeaders = [];
+  for (let ff = 0; ff < numFF; ff++) {
+    const labels = getFFLabels(flipFlopTypes[ff], ff);
+    for (const l of labels) subHeaders.push(`<div class="table-cell">${h(l)}</div>`);
+  }
+
+  const numExcCols = rows[0]?.excitations.length || 0;
+  const numOutCols = outputBitsCount;
+  const totalCols = 1 + 1 + 1 + numExcCols + numOutCols;
+  const gridCols = `repeat(${totalCols}, auto)`;
+
+  const header1 = `<div class="table-row table-head" style="grid-template-columns:${gridCols}">
+    <div class="table-cell">${h(inputNames.slice().reverse().join(','))}</div>
+    <div class="table-cell">Present State</div>
+    <div class="table-cell">Next State</div>
+    ${excHeaders.join('')}
+    ${outputNames.slice().reverse().map(n=>`<div class="table-cell">${h(n)}</div>`).join('')}
+  </div>`;
+
+  const header2 = `<div class="table-row table-head" style="grid-template-columns:${gridCols}">
+    <div class="table-cell" style="font-size:10px;color:var(--text3)">${inputNames.slice().reverse().join(' ')}</div>
+    <div class="table-cell" style="font-size:10px;color:var(--text3)">Qn (bin)</div>
+    <div class="table-cell" style="font-size:10px;color:var(--text3)">Qn+1 (bin)</div>
+    ${subHeaders.join('')}
+    ${outputNames.slice().reverse().map(n=>`<div class="table-cell" style="font-size:10px;color:var(--text3)">${h(n)}</div>`).join('')}
+  </div>`;
+
+  const dataRows = rows.map(r => {
+    const excCells = r.excitations.map(v => {
+      const cls = v==='1'?'style="color:var(--green);font-weight:700"':v==='X'?'style="color:var(--amber)"':'';
+      return `<div class="table-cell" ${cls}>${v}</div>`;
+    }).join('');
+    const outCells = outputNames.slice().reverse().map((n, bi) => {
+      const val = r.outputBin[bi] || '0';
+      return `<div class="table-cell" ${val==='1'?'style="color:var(--green)"':''}>${val}</div>`;
+    }).join('');
+    return `<div class="table-row${r.isActive?' table-active':''}" style="grid-template-columns:${gridCols}">
+      <div class="table-cell">${h(r.inputBin)}</div>
+      <div class="table-cell">${h(r.currentName)} (${r.currentBin})</div>
+      <div class="table-cell">${h(r.nextName)} (${r.nextBin})</div>
+      ${excCells}${outCells}
+    </div>`;
+  }).join('');
+
+  document.getElementById('bottomLeft').innerHTML = `
+    <div class="bottom-pane-label">Excitation Table</div>
+    <div class="table-wrap">
+      <div class="table-grid">${header1}${header2}${dataRows}</div>
+    </div>
+  `;
+}
+
+function renderBottomKmap() {
+  syncFFTypes();
+  const numFF = flipFlopTypes.length;
+  const numVars = inputBitsCount + numFF;
+
+  if (numVars > 6) {
+    document.getElementById('bottomRight').innerHTML = `
+      <div class="bottom-pane-label">Kmap Solver</div>
+      <p style="color:var(--text3);font-size:12px;font-family:var(--mono)">
+        Kmap not supported for more than 6 variables.<br>
+        Current: ${numVars} vars (${inputBitsCount} input + ${numFF} state bits).
+      </p>`;
+    return;
+  }
+
+  const { colLabels, mintermSets, dcSets, outMinterms, outDCs } = buildExcitationMinterms();
+
+  const varNames = [];
+  for (let i = inputBitsCount - 1; i >= 0; i--) varNames.push(inputNames[i] || `b${i}`);
+  for (let i = 0; i < numFF; i++) varNames.push(`Q${i}`);
+
+  let sectionsHTML = '';
+
+  colLabels.forEach((label, ci) => {
+    const ms = [...new Set(mintermSets[ci])];
+    const dc = [...new Set(dcSets[ci])];
+    let exprStr;
+    if (ms.length === 0) { exprStr = '0'; }
+    else if (ms.length === (1 << numVars)) { exprStr = '1'; }
+    else { exprStr = formatBoolExpr(quineMcCluskey(ms, dc, numVars), varNames); }
+    const kmapHTML = renderKmapHTML(ms, dc, varNames, numVars);
+    const mintermStr = ms.length > 0 ? `Σm(${ms.sort((a,b)=>a-b).join(',')})` : 'No minterms';
+    const dcStr = dc.length > 0 ? ` + d(${dc.sort((a,b)=>a-b).join(',')})` : '';
+    sectionsHTML += `<div class="kmap-section">
+      <div class="kmap-title">${h(label)}</div>
+      <div class="kmap-expr"><span class="expr-label">Expression:</span>${h(exprStr)}</div>
+      <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">${mintermStr}${dcStr}</div>
+      ${kmapHTML}
+    </div>`;
+  });
+
+  outputNames.forEach((name, oi) => {
+    const ms = [...new Set(outMinterms[oi])];
+    const dc = [];
+    let exprStr;
+    if (ms.length === 0) { exprStr = '0'; }
+    else if (ms.length === (1 << numVars)) { exprStr = '1'; }
+    else { exprStr = formatBoolExpr(quineMcCluskey(ms, dc, numVars), varNames); }
+    const kmapHTML = renderKmapHTML(ms, dc, varNames, numVars);
+    const mintermStr = ms.length > 0 ? `Σm(${ms.sort((a,b)=>a-b).join(',')})` : 'No minterms';
+    sectionsHTML += `<div class="kmap-section">
+      <div class="kmap-title">Output: ${h(name)}</div>
+      <div class="kmap-expr"><span class="expr-label">Expression:</span>${h(exprStr)}</div>
+      <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">${mintermStr}</div>
+      ${kmapHTML}
+    </div>`;
+  });
+
+  document.getElementById('bottomRight').innerHTML = `
+    <div class="bottom-pane-label">Kmap Solver <span style="font-weight:400;color:var(--text3)">(vars: ${varNames.join(', ')})</span></div>
+    ${sectionsHTML}
+  `;
+}
+
+function renderBottomFFRef() {
+  const types = ['D','T','SR','JK'];
+  const defs = {
+    D: { desc:'D (Data) FF: output follows input', cols:['Q(t)','Q(t+1)','D'], rows:[['0','0','0'],['0','1','1'],['1','0','0'],['1','1','1']] },
+    T: { desc:'T (Toggle) FF: toggles on T=1', cols:['Q(t)','Q(t+1)','T'], rows:[['0','0','0'],['0','1','1'],['1','0','1'],['1','1','0']] },
+    SR: { desc:'SR FF: Set/Reset (SR=11 invalid)', cols:['Q(t)','Q(t+1)','S','R'], rows:[['0','0','0','X'],['0','1','1','0'],['1','0','0','1'],['1','1','X','0']] },
+    JK: { desc:'JK FF: universal, no invalid state', cols:['Q(t)','Q(t+1)','J','K'], rows:[['0','0','0','X'],['0','1','1','X'],['1','0','X','1'],['1','1','X','0']] }
+  };
+  const boxesHTML = types.map(type => {
+    const d = defs[type];
+    const thead = d.cols.map(c=>`<th>${c}</th>`).join('');
+    const tbody = d.rows.map(r=>`<tr>${r.map(v=>`<td class="${v==='1'?'v1':v==='X'?'vx':''}">${v}</td>`).join('')}</tr>`).join('');
+    return `<div class="ff-ref-box"><div class="ff-ref-title">${type} Flip-Flop</div><div style="font-size:10px;color:var(--text3);margin-bottom:5px;font-family:var(--mono)">${d.desc}</div><table class="ff-ref-table"><thead><tr>${thead}</tr></thead><tbody>${tbody}</tbody></table></div>`;
+  }).join('');
+
+  // Span both panes
+  document.getElementById('bottomLeft').innerHTML = `
+    <div class="bottom-pane-label">Flip-Flop Excitation Reference</div>
+    <div class="ff-ref-grid-bottom">${boxesHTML}</div>
+    <div style="margin-top:12px;font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.7">
+      <b style="color:var(--text2)">X</b> = don't care — either 0 or 1 produces the correct transition.<br>
+      Use these tables to determine excitation inputs from present→next state transitions.
+    </div>
+  `;
+  document.getElementById('bottomRight').innerHTML = '';
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  FORCE LAYOUT
+// ══════════════════════════════════════════════════════════════════
+
+function toggleForceLayout() { setForceActive(!forceActive); }
+
+function setForceActive(on) {
+  forceActive = on;
+  const btn = document.getElementById('btnForce');
+  if (btn) btn.textContent = 'Force Layout: ' + (forceActive ? 'ON' : 'OFF');
+  if (forceActive) {
+    states.forEach(s => { if (!forceVel[s.id]) forceVel[s.id] = { vx:0, vy:0 }; });
+    if (forceTimeoutId) { clearTimeout(forceTimeoutId); forceTimeoutId = null; }
+    forceAnimId = requestAnimationFrame(forceTick);
+  } else {
+    if (forceAnimId) cancelAnimationFrame(forceAnimId);
+    if (forceTimeoutId) clearTimeout(forceTimeoutId);
+    forceAnimId = forceTimeoutId = null;
+  }
+}
+
+function forceTick() {
+  if (!forceActive) return;
+  states.forEach(s => { if (!forceVel[s.id]) forceVel[s.id] = { vx:0, vy:0 }; });
+  const force = {};
+  states.forEach(s => { force[s.id] = { fx:0, fy:0 }; });
+  for (let a = 0; a < states.length; a++) {
+    for (let b = a + 1; b < states.length; b++) {
+      const sa = states[a], sb = states[b];
+      const dx = sb.x - sa.x, dy = sb.y - sa.y;
+      const dist = Math.max(Math.hypot(dx, dy), 1);
+      const mag = FORCE_REPEL / (dist * dist);
+      const ux = dx/dist, uy = dy/dist;
+      force[sa.id].fx -= ux*mag; force[sa.id].fy -= uy*mag;
+      force[sb.id].fx += ux*mag; force[sb.id].fy += uy*mag;
+    }
+  }
+  const seen = new Set();
+  states.forEach(from => {
+    (transitions[from.id] || []).forEach(tr => {
+      if (tr.to === from.id) return;
+      const key = [from.id, tr.to].sort().join('|');
+      if (seen.has(key)) return;
+      seen.add(key);
+      const to = states.find(s => s.id === tr.to);
+      if (!to) return;
+      const dx = to.x - from.x, dy = to.y - from.y;
+      const dist = Math.max(Math.hypot(dx, dy), 1);
+      const stretch = dist - FORCE_IDEAL;
+      const mag = FORCE_ATTRACT * stretch;
+      const ux = dx/dist, uy = dy/dist;
+      force[from.id].fx += ux*mag; force[from.id].fy += uy*mag;
+      force[to.id].fx -= ux*mag; force[to.id].fy -= uy*mag;
+    });
+  });
+  let maxV = 0;
+  const bounds = getWorldBounds();
+  states.forEach(s => {
+    if (s.id === forcePinnedId) { forceVel[s.id] = { vx:0, vy:0 }; return; }
+    const v = forceVel[s.id];
+    v.vx = (v.vx + force[s.id].fx) * FORCE_DAMP;
+    v.vy = (v.vy + force[s.id].fy) * FORCE_DAMP;
+    const speed = Math.hypot(v.vx, v.vy);
+    if (speed > FORCE_MAX_SPEED) { v.vx = v.vx/speed*FORCE_MAX_SPEED; v.vy = v.vy/speed*FORCE_MAX_SPEED; }
+    s.x += v.vx; s.y += v.vy;
+    if (bounds) { s.x = Math.max(bounds.minX, Math.min(bounds.maxX, s.x)); s.y = Math.max(bounds.minY, Math.min(bounds.maxY, s.y)); }
+    maxV = Math.max(maxV, Math.hypot(v.vx, v.vy));
+  });
+  if (forcePinnedId || maxV > FORCE_THRESH) updateAutoCurves();
+  render();
+  if (forcePinnedId || maxV > FORCE_THRESH) {
+    forceAnimId = requestAnimationFrame(forceTick);
+  } else {
+    forceTimeoutId = setTimeout(() => {
+      forceTimeoutId = null;
+      if (forceActive) forceAnimId = requestAnimationFrame(forceTick);
+    }, 800);
+  }
+}
+
+function lerp(a, b, t) { return a + (b-a)*t; }
+function lerpAngle(a, b, t) { let d = ((b-a+Math.PI)%(2*Math.PI))-Math.PI; return a+d*t; }
+
+function updateAutoCurves() {
+  states.forEach(from => {
+    (transitions[from.id] || []).forEach((t, i) => {
+      const to = states.find(s => s.id === t.to);
+      if (!to || from.id === to.id) return;
+      const da = Math.atan2(to.y-from.y, to.x-from.x);
+      const dea = Math.atan2(from.y-to.y, from.x-to.x);
+      if (!t.userStart) t.startAngle = typeof t.startAngle==='number' ? lerpAngle(t.startAngle,da,FORCE_CURVE_LERP) : da;
+      if (!t.userEnd) t.endAngle = typeof t.endAngle==='number' ? lerpAngle(t.endAngle,dea,FORCE_CURVE_LERP) : dea;
+      const sx = from.x+Math.cos(t.startAngle??da)*(from.r+2);
+      const sy = from.y+Math.sin(t.startAngle??da)*(from.r+2);
+      const tx = to.x+Math.cos(t.endAngle??dea)*(to.r+4);
+      const ty = to.y+Math.sin(t.endAngle??dea)*(to.r+4);
+      const baseCp = getDefaultCP(sx,sy,tx,ty,i,(transitions[from.id]||[]).length);
+      if (!t.userCurve) {
+        if (typeof t.cdx!=='number'||typeof t.cdy!=='number') { t.cdx=0; t.cdy=0; }
+        else { t.cdx=lerp(t.cdx,0,FORCE_CURVE_LERP); t.cdy=lerp(t.cdy,0,FORCE_CURVE_LERP); }
+      } else if (typeof t.cx==='number'&&typeof t.cy==='number') {
+        t.cdx=t.cx-baseCp.x; t.cdy=t.cy-baseCp.y; delete t.cx; delete t.cy;
+      }
+    });
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  UTILITY / STATE MANAGEMENT
+// ══════════════════════════════════════════════════════════════════
+
+function addLog(type, msg) {
+  simLog.push({ step:simStep, type, msg });
+  if (simLog.length > 300) simLog.shift();
+}
+
+function formatNameValPairs(names, bits) {
+  return bits.map((b,i) => `${names[i]||`b${i}`}:${b}`).reverse().join(', ');
+}
+
+function patternWithX(indices) {
+  if (!indices.length) return '';
+  let out = '';
+  for (let j = inputBitsCount-1; j >= 0; j--) {
+    const first = (indices[0]>>j)&1;
+    const same = indices.every(k => ((k>>j)&1) === first);
+    out += same ? String(first) : 'X';
+  }
+  return out;
+}
+
+function captureState() {
+  return JSON.parse(JSON.stringify({ states, transitions, inputBitsCount, inputBits, inputNames, outputBitsCount, outputBits, outputNames, view, simStep, activeStateId, selectedStateId, idCounter }));
+}
+function pushUndo() { undoStack.push(captureState()); if (undoStack.length>UNDO_LIMIT) undoStack.shift(); }
+function applyState(data) {
+  states = data.states||[]; transitions = data.transitions||{};
+  inputBitsCount = data.inputBitsCount||1; inputBits = data.inputBits||[0];
+  inputNames = data.inputNames||[`b0`]; outputBitsCount = data.outputBitsCount||1;
+  outputBits = data.outputBits||[0]; outputNames = data.outputNames||['y0'];
+  view = data.view||{x:0,y:0,scale:1.5}; simStep = data.simStep||0;
+  activeStateId = data.activeStateId||(states[0]?.id||null);
+  selectedStateId = data.selectedStateId||(states[0]?.id||null);
+  idCounter = data.idCounter||(states.length+1);
+  states.forEach(s => {
+    if (!s.outputs) s.outputs = Array(outputBitsCount).fill(0);
+    if (!s.mode) s.mode='moore';
+    s.outputs = s.outputs.slice(0,outputBitsCount);
+    while (s.outputs.length<outputBitsCount) s.outputs.push(0);
+  });
+  Object.keys(transitions).forEach(sid => { transitions[sid]=(transitions[sid]||[]).map(t=>normalizeTransitionOutputs(t)); });
+  updateOutputsFromState();
+  document.getElementById('stepCounter').textContent=`STEP ${simStep}`;
+  renderInputs(); renderOutputsPanel(); render(); renderEditor();
+  if (expandMode) renderBottomPanel();
+  else if (activeTab==='log') renderLogPanel();
+  else if (activeTab==='table') renderNormalTablePanel();
+  else renderVarsPanel();
+  syncModeSwitch();
+}
+function undo() { if (!undoStack.length) return; applyState(undoStack.pop()); }
+
+// ══════════════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════════════
+
+window.addEventListener('DOMContentLoaded', () => {
+  svgEl = document.getElementById('canvas');
+  canvasWrap = document.getElementById('canvasWrap');
+
+  svgEl.addEventListener('click', e => { if (e.target===svgEl) { selectedStateId=null; render(); renderEditor(); } });
+  canvasWrap.addEventListener('contextmenu', e => e.preventDefault());
+  svgEl.addEventListener('mousedown', e => { if (e.button!==0||e.target!==svgEl) return; startPan(e); });
+  document.getElementById('leftResizer').addEventListener('mousedown', e => startResize(e,'left'));
+  document.getElementById('rightResizer').addEventListener('mousedown', e => startResize(e,'right'));
+  document.getElementById('bottomResizer').addEventListener('mousedown', e => startResizeBottom(e));
+  canvasWrap.addEventListener('wheel', e => {
+    e.preventDefault();
+    const r = canvasWrap.getBoundingClientRect();
+    const sx = e.clientX-r.left, sy = e.clientY-r.top;
+    const world = screenToWorld(sx,sy);
+    const dir = e.deltaY>0?0.9:1.1;
+    const next = Math.max(0.4,Math.min(2.5,view.scale*dir));
+    view.scale = next; view.x = world.x-sx/view.scale; view.y = world.y-sy/view.scale;
+    render();
+  }, {passive:false});
+  canvasWrap.addEventListener('dragover', e => e.preventDefault());
+  canvasWrap.addEventListener('drop', e => dropState(e));
+  window.addEventListener('keydown', e => {
+    const tag = document.activeElement?.tagName||'';
+    if (tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT') return;
+    if (e.ctrlKey&&(e.key==='z'||e.key==='Z')) { e.preventDefault(); undo(); return; }
+    if ((e.key==='Backspace'||e.key==='Delete')&&selectedStateId) { e.preventDefault(); removeState(selectedStateId); }
+    const panStep = (e.shiftKey?80:40)/view.scale;
+    if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d','W','A','S','D'].includes(e.key)) {
+      e.preventDefault();
+      if (e.key==='ArrowUp'||e.key==='w'||e.key==='W') view.y-=panStep;
+      if (e.key==='ArrowDown'||e.key==='s'||e.key==='S') view.y+=panStep;
+      if (e.key==='ArrowLeft'||e.key==='a'||e.key==='A') view.x-=panStep;
+      if (e.key==='ArrowRight'||e.key==='d'||e.key==='D') view.x+=panStep;
+      render();
+    }
+  });
+  initDefault();
+});
+
+function initDefault() {
+  states=[]; transitions={};
+  inputBitsCount=1; inputBits=[1]; inputNames=['b0'];
+  outputBitsCount=1; outputBits=[0]; outputNames=['y0'];
+  addStateAt(220,140,'S0'); addStateAt(460,140,'S1');
+  addStateAt(220,320,'S2'); addStateAt(460,320,'S3');
+  const [s0,s1,s2,s3]=states.map(s=>s.id);
+  transitions[s0]=[makeTransition(s1),makeTransition(s3)];
+  transitions[s1]=[makeTransition(s2),makeTransition(s0)];
+  transitions[s2]=[makeTransition(s3),makeTransition(s1)];
+  transitions[s3]=[makeTransition(s0),makeTransition(s2)];
+  states.forEach((s,i) => { s.outputs=Array.from({length:outputBitsCount},()=>(i%2)); });
+  seedInitialCurves();
+  activeStateId=states[0].id; selectedStateId=states[0].id;
+  updateOutputsFromState(); renderInputs(); renderOutputsPanel();
+  render(); renderEditor(); renderVarsPanel(); syncModeSwitch();
+}
+
+function makeTransition(to) { return { to, out:Array(outputBitsCount).fill(0) }; }
+function normalizeTransitionOutputs(t) {
+  if (!t.out) t.out=[];
+  t.out=t.out.slice(0,outputBitsCount);
+  while (t.out.length<outputBitsCount) t.out.push(0);
+  return t;
+}
+function bitsToString(bits) { return (bits||[]).slice().reverse().join(''); }
+
+function seedInitialCurves() {
+  states.forEach(from => {
+    const list = transitions[from.id]||[];
+    list.forEach((t,i) => {
+      const to = states.find(s=>s.id===t.to);
+      if (!to) return;
+      if (from.id===to.id) {
+        const angle = Math.random()*Math.PI*2;
+        const radius = from.r+30+Math.random()*20;
+        t.loopDx=Math.cos(angle)*radius; t.loopDy=Math.sin(angle)*radius;
+      } else {
+        const dx=to.x-from.x, dy=to.y-from.y;
+        const dist=Math.hypot(dx,dy)||1;
+        const ux=dx/dist, uy=dy/dist;
+        const sx=from.x+ux*(from.r+2), sy=from.y+uy*(from.r+2);
+        const dea=Math.atan2(from.y-to.y,from.x-to.x);
+        const tx=to.x+Math.cos(dea)*(to.r+4), ty=to.y+Math.sin(dea)*(to.r+4);
+        t.cdx=(Math.random()-0.5)*36; t.cdy=(Math.random()-0.5)*36;
+      }
+    });
+  });
+}
+
+function addStateAt(x,y,name,mode) {
+  const id='s'+(idCounter++);
+  states.push({id,name:name||('S'+states.length),x,y,r:46,outputs:Array(outputBitsCount).fill(0),mode:mode||'moore'});
+  const count=2**inputBitsCount;
+  transitions[id]=Array.from({length:count},()=>makeTransition(id));
+  return id;
+}
+
+function removeState(id) {
+  pushUndo();
+  states=states.filter(s=>s.id!==id); delete transitions[id];
+  Object.keys(transitions).forEach(sid => { transitions[sid]=transitions[sid].map(t=>(t.to===id?{...t,to:sid}:t)); });
+  if (!states.length) { activeStateId=null; selectedStateId=null; }
+  else { if (activeStateId===id) activeStateId=states[0].id; if (selectedStateId===id) selectedStateId=states[0].id; }
+  updateOutputsFromState(); render(); renderEditor();
+  updateRightPanelAfterChange(); renderOutputsPanel();
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  RENDER
+// ══════════════════════════════════════════════════════════════════
+
+function render() {
+  svgEl.innerHTML=''; updateViewBox(); updateSimplifyButton();
+  const defs=ns('defs');
+  [['norm','#3a4060'],['active','#4f9eff'],['sel','#f5a623']].forEach(([k,col]) => {
+    const m=ns('marker'); setA(m,{id:'arr_'+k,markerWidth:10,markerHeight:10,refX:8,refY:3,orient:'auto'});
+    const p=ns('path'); setA(p,{d:'M0,0 L7,3 L0,6',fill:'none',stroke:col,'stroke-width':1.5});
+    m.appendChild(p); defs.appendChild(m);
+  });
+  svgEl.appendChild(defs);
+  drawConnections(); states.forEach(drawState);
+}
+
+function updateViewBox() {
+  const w=canvasWrap.clientWidth, h=canvasWrap.clientHeight;
+  svgEl.setAttribute('viewBox',`${view.x} ${view.y} ${w/view.scale} ${h/view.scale}`);
+}
+function screenToWorld(sx,sy) { return {x:view.x+sx/view.scale,y:view.y+sy/view.scale}; }
+function getWorldBounds() {
+  if (!canvasWrap) return null;
+  const w=canvasWrap.clientWidth/view.scale, h=canvasWrap.clientHeight/view.scale;
+  return {minX:view.x+FORCE_PADDING,minY:view.y+FORCE_PADDING,maxX:view.x+w-FORCE_PADDING,maxY:view.y+h-FORCE_PADDING};
+}
+
+function drawState(s) {
+  const g=ns('g');
+  const isActive=activeStateId===s.id, isSel=selectedStateId===s.id;
+  const fill=isActive?'rgba(79,158,255,.18)':(isSel?'rgba(245,166,35,.12)':'rgba(79,158,255,.08)');
+  const stroke=isActive?'#4f9eff':(isSel?'#f5a623':'#1e3a5c');
+  const sw=(isActive||isSel)?2:1.5;
+  const circle=sv('circle',{cx:s.x,cy:s.y,r:s.r,fill,stroke,'stroke-width':sw});
+  if (isActive&&isSel) circle.setAttribute('filter','drop-shadow(0 0 6px rgba(245,166,35,0.9))');
+  g.appendChild(circle);
+  const label=s.mode==='moore'?`${s.name}/${bitsToString(s.outputs)}`:s.name;
+  g.appendChild(txt(s.x,s.y,label,'var(--text)',12,'600'));
+  g.style.cursor='move';
+  g.addEventListener('mousedown',e=>startDragState(e,s.id));
+  g.addEventListener('click',e=>{e.stopPropagation();selectedStateId=s.id;render();renderEditor();});
+  svgEl.appendChild(g);
+}
+
+function drawConnections() {
+  const inputIndex=getInputIndex();
+  states.forEach(from => {
+    const list=transitions[from.id]||[];
+    const groups={};
+    list.forEach((t,i)=>{
+      const toId=t.to;
+      const outKey=from.mode==='mealy'?bitsToString(normalizeTransitionOutputs(t).out):bitsToString(from.outputs||[]);
+      const key=`${toId}|${outKey}`;
+      if (!groups[key]) groups[key]={toId,outKey,indices:[],rep:t};
+      groups[key].indices.push(i);
+    });
+    const drawList=simplifyOn?Object.values(groups):list.map((t,i)=>({indices:[i],rep:t,toId:t.to,outKey:bitsToString(normalizeTransitionOutputs(t).out)}));
+    drawList.forEach(g=>{
+      const t=g.rep;
+      const to=states.find(s=>s.id===g.toId);
+      if (!to) return;
+      const isActive=from.id===activeStateId&&g.indices.includes(inputIndex);
+      const isSel=from.id===selectedStateId;
+      const col=isSel?'#f5a623':(isActive?'#4f9eff':'#3a4060');
+      const sw=isActive?2.4:1.4;
+      const marker=isSel?'url(#arr_sel)':(isActive?'url(#arr_active)':'url(#arr_norm)');
+      let label=simplifyOn?patternWithX(g.indices):formatInput(g.indices[0]);
+      if (from.mode==='mealy') label=`${label}/${simplifyOn?g.outKey:bitsToString(normalizeTransitionOutputs(t).out)}`;
+
+      if (from.id===to.id) {
+        const loop=getLoopHandle(from,t);
+        const dist=Math.max(from.r+16,Math.hypot(loop.dx,loop.dy));
+        const angle=Math.atan2(loop.dy,loop.dx);
+        const startA=angle-1.2, endA=angle+1.2;
+        const sx=from.x+Math.cos(startA)*from.r, sy=from.y+Math.sin(startA)*from.r;
+        const ex=from.x+Math.cos(endA)*from.r, ey=from.y+Math.sin(endA)*from.r;
+        const path=`M ${sx} ${sy} A ${dist} ${dist} 0 1 1 ${ex} ${ey}`;
+        svgEl.appendChild(sv('path',{d:path,fill:'none',stroke:col,'stroke-width':sw,'marker-end':marker}));
+        svgEl.appendChild(txt(from.x+Math.cos(angle)*(dist+12),from.y+Math.sin(angle)*(dist+12),label,'#e2e4f0',9.5,'500'));
+        if (isSel) {
+          const hx=from.x+loop.dx, hy=from.y+loop.dy;
+          const handle=sv('circle',{cx:hx,cy:hy,r:7,class:'conn-handle'});
+          handle.addEventListener('mousedown',e=>startDragLoop(e,from.id,g.indices));
+          svgEl.appendChild(handle);
+          const endHandle=sv('circle',{cx:ex,cy:ey,r:6.5,class:'conn-handle end'});
+          endHandle.addEventListener('mousedown',e=>startDragEnd(e,from.id,g.indices,{x:sx,y:sy}));
+          svgEl.appendChild(endHandle);
+        }
+      } else {
+        const da=Math.atan2(to.y-from.y,to.x-from.x);
+        const startAngle=typeof t.startAngle==='number'?t.startAngle:da;
+        const sx=from.x+Math.cos(startAngle)*(from.r+2), sy=from.y+Math.sin(startAngle)*(from.r+2);
+        const dea=Math.atan2(from.y-to.y,from.x-to.x);
+        const endAngle=typeof t.endAngle==='number'?t.endAngle:dea;
+        const tx=to.x+Math.cos(endAngle)*(to.r+4), ty=to.y+Math.sin(endAngle)*(to.r+4);
+        const baseCp=getDefaultCP(sx,sy,tx,ty,g.indices[0],list.length);
+        const cp=getCurvePoint(t,baseCp);
+        const path=`M ${sx} ${sy} Q ${cp.x} ${cp.y} ${tx} ${ty}`;
+        svgEl.appendChild(sv('path',{d:path,fill:'none',stroke:col,'stroke-width':sw,'marker-end':marker}));
+        svgEl.appendChild(txt(cp.x,cp.y-4,label,'#e2e4f0',9.5,'500'));
+        if (isSel) {
+          const sh=sv('circle',{cx:sx,cy:sy,r:6.5,class:'conn-handle start'});
+          sh.addEventListener('mousedown',e=>startDragStart(e,from.id,g.indices));
+          svgEl.appendChild(sh);
+          const ch=sv('circle',{cx:cp.x,cy:cp.y,r:7,class:'conn-handle'});
+          ch.addEventListener('mousedown',e=>startDragCurve(e,from.id,g.indices));
+          svgEl.appendChild(ch);
+          const eh=sv('circle',{cx:tx,cy:ty,r:6.5,class:'conn-handle end'});
+          eh.addEventListener('mousedown',e=>startDragEnd(e,from.id,g.indices,{x:sx,y:sy}));
+          svgEl.appendChild(eh);
+        }
+      }
+    });
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  DRAG HANDLERS
+// ══════════════════════════════════════════════════════════════════
+
+function startDragEnd(e,fromId,indexOrList,startPoint) {
+  e.preventDefault(); e.stopPropagation(); pushUndo();
+  const r=canvasWrap.getBoundingClientRect();
+  const indices=Array.isArray(indexOrList)?indexOrList:[indexOrList];
+  indices.forEach(idx=>{const t=transitions[fromId]?.[idx];if(t)t.userEnd=true;});
+  if(!endPreview){endPreview=sv('line',{x1:startPoint.x,y1:startPoint.y,x2:startPoint.x,y2:startPoint.y,stroke:'#4f9eff','stroke-width':1.4,'stroke-dasharray':'4 4'});svgEl.appendChild(endPreview);}
+  const move=ev=>{const world=screenToWorld(ev.clientX-r.left,ev.clientY-r.top);endPreview.setAttribute('x2',world.x);endPreview.setAttribute('y2',world.y);};
+  const up=ev=>{
+    document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);
+    if(endPreview&&endPreview.parentNode)endPreview.parentNode.removeChild(endPreview);endPreview=null;
+    const world=screenToWorld(ev.clientX-r.left,ev.clientY-r.top);
+    const target=findStateAt(world.x,world.y);
+    indices.forEach(idx=>{
+      const t=transitions[fromId]?.[idx];if(!t)return;
+      if(target){t.to=target.id;t.endAngle=Math.atan2(world.y-target.y,world.x-target.x);}
+      else{const ct=states.find(s=>s.id===t.to);if(ct)t.endAngle=Math.atan2(world.y-ct.y,world.x-ct.x);}
+    });
+    render();if(expandMode)renderBottomPanel();if(activeTab==='table')renderNormalTablePanel();else if(activeTab==='log')switchTab('vars');
+  };
+  document.addEventListener('mousemove',move);document.addEventListener('mouseup',up);
+}
+
+function getDefaultCP(sx,sy,tx,ty,i,len) {
+  const mx=(sx+tx)/2,my=(sy+ty)/2,dx=tx-sx,dy=ty-sy;
+  const dist=Math.hypot(dx,dy)||1;
+  const nx=-dy/dist,ny=dx/dist;
+  const offset=(i-(len-1)/2)*10;
+  return {x:mx+nx*offset,y:my+ny*offset};
+}
+function getCurvePoint(t,baseCp) {
+  if(typeof t.cdx==='number'||typeof t.cdy==='number') return {x:baseCp.x+(t.cdx||0),y:baseCp.y+(t.cdy||0)};
+  if(typeof t.cx==='number'&&typeof t.cy==='number'){t.cdx=t.cx-baseCp.x;t.cdy=t.cy-baseCp.y;delete t.cx;delete t.cy;return{x:baseCp.x+t.cdx,y:baseCp.y+t.cdy};}
+  return baseCp;
+}
+function getLoopHandle(state,t) {
+  if(typeof t.loopDx!=='number'||typeof t.loopDy!=='number'){t.loopDx=state.r+40;t.loopDy=-state.r-40;}
+  return {dx:t.loopDx,dy:t.loopDy};
+}
+
+function startDragCurve(e,fromId,indexOrList) {
+  e.preventDefault();e.stopPropagation();pushUndo();
+  const r=canvasWrap.getBoundingClientRect();
+  const indices=Array.isArray(indexOrList)?indexOrList:[indexOrList];
+  indices.forEach(idx=>{const t=transitions[fromId]?.[idx];if(t)t.userCurve=true;});
+  const move=ev=>{
+    const world=screenToWorld(ev.clientX-r.left,ev.clientY-r.top);
+    indices.forEach(idx=>{
+      const t=transitions[fromId]?.[idx];if(!t)return;
+      const to=states.find(s=>s.id===t.to),from=states.find(s=>s.id===fromId);if(!to||!from)return;
+      const da=Math.atan2(to.y-from.y,to.x-from.x);
+      const startAngle=typeof t.startAngle==='number'?t.startAngle:da;
+      const sx=from.x+Math.cos(startAngle)*(from.r+2),sy=from.y+Math.sin(startAngle)*(from.r+2);
+      const dea=Math.atan2(from.y-to.y,from.x-to.x);
+      const endAngle=typeof t.endAngle==='number'?t.endAngle:dea;
+      const tx=to.x+Math.cos(endAngle)*(to.r+4),ty=to.y+Math.sin(endAngle)*(to.r+4);
+      const baseCp=getDefaultCP(sx,sy,tx,ty,idx,(transitions[fromId]||[]).length);
+      t.cdx=world.x-baseCp.x;t.cdy=world.y-baseCp.y;
+    });
+    render();
+  };
+  const up=()=>{document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);};
+  document.addEventListener('mousemove',move);document.addEventListener('mouseup',up);
+}
+
+function startDragLoop(e,fromId,indexOrList) {
+  e.preventDefault();e.stopPropagation();pushUndo();
+  const r=canvasWrap.getBoundingClientRect();
+  const s=states.find(st=>st.id===fromId);
+  const indices=Array.isArray(indexOrList)?indexOrList:[indexOrList];
+  indices.forEach(idx=>{const t=transitions[fromId]?.[idx];if(t)t.userLoop=true;});
+  const move=ev=>{
+    const world=screenToWorld(ev.clientX-r.left,ev.clientY-r.top);
+    indices.forEach(idx=>{const t=transitions[fromId]?.[idx];if(!t||!s)return;t.loopDx=world.x-s.x;t.loopDy=world.y-s.y;});
+    render();
+  };
+  const up=()=>{document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);};
+  document.addEventListener('mousemove',move);document.addEventListener('mouseup',up);
+}
+
+function startDragState(e,id) {
+  e.preventDefault();pushUndo();
+  const s=states.find(st=>st.id===id);if(!s)return;
+  forcePinnedId=id;
+  const r=canvasWrap.getBoundingClientRect();
+  const start=screenToWorld(e.clientX-r.left,e.clientY-r.top);
+  const ox=start.x-s.x,oy=start.y-s.y;
+  const move=ev=>{const world=screenToWorld(ev.clientX-r.left,ev.clientY-r.top);s.x=world.x-ox;s.y=world.y-oy;render();};
+  const up=()=>{document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);forcePinnedId=null;};
+  document.addEventListener('mousemove',move);document.addEventListener('mouseup',up);
+}
+
+function startDragStart(e,fromId,indexOrList) {
+  e.preventDefault();e.stopPropagation();pushUndo();
+  const r=canvasWrap.getBoundingClientRect();
+  const from=states.find(s=>s.id===fromId);
+  const indices=Array.isArray(indexOrList)?indexOrList:[indexOrList];
+  indices.forEach(idx=>{const t=transitions[fromId]?.[idx];if(t)t.userStart=true;});
+  const move=ev=>{
+    const world=screenToWorld(ev.clientX-r.left,ev.clientY-r.top);
+    indices.forEach(idx=>{const t=transitions[fromId]?.[idx];if(!t||!from)return;t.startAngle=Math.atan2(world.y-from.y,world.x-from.x);});
+    render();
+  };
+  const up=()=>{document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);if(expandMode)renderBottomPanel();if(activeTab==='table')renderNormalTablePanel();};
+  document.addEventListener('mousemove',move);document.addEventListener('mouseup',up);
+}
+
+function startPan(e) {
+  let lx=e.clientX,ly=e.clientY;
+  const move=ev=>{view.x-=(ev.clientX-lx)/view.scale;view.y-=(ev.clientY-ly)/view.scale;lx=ev.clientX;ly=ev.clientY;render();};
+  const up=()=>{document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);};
+  document.addEventListener('mousemove',move);document.addEventListener('mouseup',up);
+}
+
+function startResize(e,side) {
+  e.preventDefault();
+  const main=document.querySelector('.main');
+  const leftPanel=document.getElementById('leftPanel');
+  const rightPanel=document.getElementById('rightPanel');
+  const mainRect=main.getBoundingClientRect();
+  const move=ev=>{
+    if(side==='left'){let nl=ev.clientX-mainRect.left;nl=Math.max(240,Math.min(mainRect.width-rightPanel.offsetWidth-360,nl));leftPanel.style.width=`${nl}px`;}
+    else{let nr=mainRect.right-ev.clientX;nr=Math.max(380,Math.min(mainRect.width-leftPanel.offsetWidth-360,nr));rightPanel.style.width=`${nr}px`;}
+  };
+  const up=()=>{document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);};
+  document.addEventListener('mousemove',move);document.addEventListener('mouseup',up);
+}
+
+function startResizeBottom(e) {
+  e.preventDefault();
+  const appBody = document.getElementById('appBody');
+  const bottomPanel = document.getElementById('bottomPanel');
+  const appBodyRect = appBody.getBoundingClientRect();
+  const startY = e.clientY;
+  const startHeight = bottomPanel.offsetHeight;
+  
+  const move = (ev) => {
+    const deltaY = ev.clientY - startY;
+    let newHeight = startHeight - deltaY;
+    newHeight = Math.max(120, Math.min(0.8 * appBodyRect.height, newHeight));
+    bottomPanel.style.height = `${newHeight}px`;
+  };
+  
+  const up = () => {
+    document.removeEventListener('mousemove', move);
+    document.removeEventListener('mouseup', up);
+  };
+  
+  document.addEventListener('mousemove', move);
+  document.addEventListener('mouseup', up);
+}
+
+function dragStateStart(e,mode) { e.dataTransfer.setData('stateMode',mode); }
+function dropState(e) {
+  e.preventDefault();
+  const mode=e.dataTransfer.getData('stateMode');if(!mode)return;
+  pushUndo();
+  const r=canvasWrap.getBoundingClientRect();
+  const world=screenToWorld(e.clientX-r.left,e.clientY-r.top);
+  addStateAt(world.x,world.y,'S'+states.length,mode);
+  render();renderEditor();updateRightPanelAfterChange();
+}
+function findStateAt(x,y) {
+  for(let i=states.length-1;i>=0;i--){const s=states[i];if(Math.hypot(x-s.x,y-s.y)<=s.r*1.1)return s;}return null;
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  INPUT / OUTPUT PANELS
+// ══════════════════════════════════════════════════════════════════
+
+function renderInputs() {
+  const panel=document.getElementById('inputPanel');
+  panel.innerHTML=`<div class="panel-title">Inputs</div><div class="input-bits-grid">
+    ${inputBits.slice().reverse().map((b,bi)=>{
+      const idx=inputBits.length-1-bi;
+      const name=inputNames[idx]||`b${idx}`;
+      return `<div class="input-bit-box${b?' active':''}"><span class="input-bit-label">${h(name)}</span><button class="input-bit-btn" onclick="toggleBit(${idx})">${b}</button></div>`;
+    }).join('')}
+  </div>`;
+}
+
+function renderOutputsPanel() {
+  const panel=document.getElementById('outputPanel');
+  panel.innerHTML=`<div class="panel-title">Outputs</div><div class="output-bits">
+    ${outputBits.slice().reverse().map((b,bi)=>{
+      const idx=outputBits.length-1-bi;
+      const name=outputNames[idx]||`y${idx}`;
+      return `<div class="output-bit-box${b?' active':''}"><span class="output-bit-label">${h(name)}</span><span class="output-bit-val">${b}</span></div>`;
+    }).join('')}
+  </div>`;
+}
+
+function toggleBit(i) {
+  inputBits[i]=inputBits[i]?0:1;
+  updateOutputsFromState(); renderInputs(); render(); renderOutputsPanel();
+  const cur=states.find(s=>s.id===activeStateId);
+  addLog('input',`Input (${formatNameValPairs(inputNames,inputBits)}), Current State ${cur?cur.name:'-'}, Output (${formatNameValPairs(outputNames,outputBits)})`);
+  if(expandMode)renderBottomPanel();if(activeTab==='vars')renderVarsPanel();else if(activeTab==='log')renderLogPanel();else renderNormalTablePanel();
+}
+
+function addBit() {
+  pushUndo();
+  const oldCount=2**inputBitsCount; inputBitsCount++; inputBits.push(0); inputNames.push(`b${inputBitsCount-1}`);
+  const newCount=2**inputBitsCount;
+  states.forEach(s=>{
+    const old=transitions[s.id]||[];
+    const next=Array.from({length:newCount},()=>makeTransition(s.id));
+    for(let i=0;i<Math.min(old.length,oldCount);i++) next[i]=normalizeTransitionOutputs(old[i]);
+    transitions[s.id]=next;
+  });
+  renderInputs();render();renderEditor();updateRightPanelAfterChange();
+}
+function removeBit() {
+  if(inputBitsCount<=1)return;pushUndo();
+  inputBitsCount--;inputBits.pop();inputNames.pop();
+  const newCount=2**inputBitsCount;
+  states.forEach(s=>{
+    transitions[s.id]=(transitions[s.id]||[]).slice(0,newCount).map(t=>normalizeTransitionOutputs(t));
+    while(transitions[s.id].length<newCount)transitions[s.id].push(makeTransition(s.id));
+  });
+  renderInputs();render();renderEditor();updateRightPanelAfterChange();
+}
+function addOutputBit() {
+  pushUndo();outputBitsCount++;outputBits.push(0);outputNames.push(`y${outputBitsCount-1}`);
+  states.forEach(s=>{if(!s.outputs)s.outputs=[];s.outputs.push(0);});
+  Object.keys(transitions).forEach(sid=>{transitions[sid]=transitions[sid].map(t=>normalizeTransitionOutputs(t));});
+  updateOutputsFromState();render();renderOutputsPanel();renderEditor();updateRightPanelAfterChange();
+}
+function removeOutputBit() {
+  if(outputBitsCount<=1)return;pushUndo();outputBitsCount--;outputBits.pop();outputNames.pop();
+  states.forEach(s=>{if(s.outputs&&s.outputs.length)s.outputs.pop();});
+  Object.keys(transitions).forEach(sid=>{transitions[sid]=transitions[sid].map(t=>normalizeTransitionOutputs(t));});
+  updateOutputsFromState();render();renderOutputsPanel();renderEditor();updateRightPanelAfterChange();
+}
+
+function getInputIndex() { return inputBits.reduce((acc,b,i)=>acc+(b?(1<<i):0),0); }
+function formatInput(i) { return i.toString(2).padStart(inputBitsCount,'0'); }
+function formatInputKV(index) {
+  const parts=[];
+  for(let j=inputBitsCount-1;j>=0;j--){const name=inputNames[j]||`b${j}`;const bit=(index>>j)&1;parts.push(`${h(name)}:${bit}`);}
+  return parts.join(' ');
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  EDITOR PANEL
+// ══════════════════════════════════════════════════════════════════
+
+function renderEditor() {
+  const panel=document.getElementById('editorPanel');
+  const selected=states.find(s=>s.id===selectedStateId);
+  const current=states.find(s=>s.id===activeStateId);
+  if(!selected){
+    panel.innerHTML=`<div class="editor-title">Editor</div><div style="color:var(--text3);font-size:12px">Click a state circle to edit transitions and outputs.</div><div class="editor-hint" style="margin-top:10px">Tip: Drag the dots to reroute arrows or move arrow heads.</div>`;
+    return;
+  }
+  const sortedStates=[...states].sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+  const list=(transitions[selected.id]||[]).map((t,i)=>{
+    const out=normalizeTransitionOutputs(t).out;
+    const outBits=selected.mode==='mealy'?`<div style="margin-top:6px"><div class="editor-hint" style="margin-top:0;margin-bottom:4px">Mealy Outputs</div><div class="output-bit-row" style="justify-content:flex-start;gap:4px">${out.slice().reverse().map((b,bi)=>{const idx=out.length-1-bi;const name=outputNames[idx]||`y${idx}`;return`<button class="output-bit-btn tiny-bit-btn ${b?'active':''}" title="${h(name)}" onclick="toggleTransitionOutput('${selected.id}',${i},${idx})">${h(name)}:${b}</button>`;}).join('')}</div></div>`:'';
+    return `<div class="editor-row"><div class="editor-label">${formatInputKV(i)}</div><div style="flex:1"><select class="editor-input" onchange="setTransition('${selected.id}',${i},this.value)">${sortedStates.map(s=>`<option value="${s.id}" ${s.id===t.to?'selected':''}>${h(s.name)}</option>`).join('')}</select>${outBits}</div></div>`;
+  }).join('');
+  const outIndices=selected.outputs.map((_,i)=>i).reverse();
+  panel.innerHTML=`
+    <div class="editor-title">Editor</div>
+    <div class="editor-row"><div class="editor-label">Selected</div><div class="state-badge">${h(selected.name)}</div><div style="flex:1"></div><button class="btn danger" onclick="removeState('${selected.id}')">Delete</button></div>
+    <div class="editor-row"><div class="editor-label">Name</div><input class="editor-input" value="${h(selected.name)}" oninput="renameState('${selected.id}',this.value)"></div>
+    <div class="editor-row"><div class="editor-label">Current</div><div class="state-badge">${current?h(current.name):'-'}</div><div style="flex:1"></div><button class="btn" onclick="setCurrentState('${selected.id}')">Set Current</button></div>
+    <div class="editor-row"><div class="editor-label">Type</div><select class="editor-input" onchange="setStateMode('${selected.id}',this.value)"><option value="moore" ${selected.mode==='moore'?'selected':''}>Moore</option><option value="mealy" ${selected.mode==='mealy'?'selected':''}>Mealy</option></select></div>
+    <div class="editor-row"><div class="editor-label">Outputs</div>${selected.mode==='moore'?`<div class="output-bit-row">${outIndices.map(i=>{const b=selected.outputs[i];const name=outputNames[i]||`y${i}`;return`<button class="output-bit-btn ${b?'active':''}" title="${h(name)}" onclick="toggleOutputBit('${selected.id}',${i})">${h(name)}:${b}</button>`;}).join('')}</div>`:`<div class="editor-hint">Mealy outputs are set per transition.</div>`}</div>
+    <div class="editor-hint">Current input pattern (MSB→LSB): ${formatInput(getInputIndex())}</div>
+    ${list||'<div style="color:var(--text3);font-size:12px">No transitions</div>'}
+  `;
+}
+
+function toggleOutputBit(stateId,index) {
+  const s=states.find(st=>st.id===stateId);if(!s||!s.outputs)return;pushUndo();
+  s.outputs[index]=s.outputs[index]?0:1;
+  if(stateId===activeStateId)updateOutputsFromState();
+  render();renderOutputsPanel();renderEditor();updateRightPanelAfterChange();
+}
+function toggleTransitionOutput(stateId,transIndex,bitIndex) {
+  const t=transitions[stateId]?.[transIndex];if(!t)return;pushUndo();
+  normalizeTransitionOutputs(t);t.out[bitIndex]=t.out[bitIndex]?0:1;
+  updateOutputsFromState();render();renderOutputsPanel();renderEditor();updateRightPanelAfterChange();
+}
+function setCurrentState(stateId) {
+  pushUndo();activeStateId=stateId;if(simStep===0)simStep=1;
+  updateOutputsFromState();document.getElementById('stepCounter').textContent=`STEP ${simStep}`;
+  render();renderOutputsPanel();renderEditor();updateRightPanelAfterChange();
+}
+function renameInput(index,value) {
+  pushUndo();inputNames[index]=value||`b${index}`;renderInputs();renderOutputsPanel();
+  if(expandMode)renderBottomPanel();if(activeTab==='table')renderNormalTablePanel();else if(activeTab==='log')switchTab('vars');
+}
+function renameOutput(index,value) {
+  pushUndo();outputNames[index]=value||`y${index}`;renderOutputsPanel();renderInputs();
+  if(expandMode)renderBottomPanel();if(activeTab==='table')renderNormalTablePanel();else if(activeTab==='log')switchTab('vars');
+}
+function setStateMode(stateId,mode) {
+  const s=states.find(st=>st.id===stateId);if(!s)return;pushUndo();
+  s.mode=mode==='mealy'?'mealy':'moore';updateOutputsFromState();renderOutputsPanel();
+  render();renderEditor();updateRightPanelAfterChange();syncModeSwitch();
+}
+function setAllModesFromSwitch(isMealy) {
+  pushUndo();const next=isMealy?'mealy':'moore';states.forEach(s=>{s.mode=next;});
+  updateOutputsFromState();renderOutputsPanel();render();renderEditor();updateRightPanelAfterChange();syncModeSwitch();
+}
+function syncModeSwitch() {
+  const allMealy=states.length&&states.every(s=>s.mode==='mealy');
+  const sw=document.getElementById('modeSwitch');const label=document.getElementById('modeSwitchLabel');
+  if(!sw||!label)return;sw.checked=allMealy;
+  label.textContent=allMealy?'All Mealy':(states.every(s=>s.mode!=='mealy')?'All Moore':'Mixed');
+}
+function renameState(id,name) { const s=states.find(st=>st.id===id);if(!s)return;s.name=name||s.name;render(); }
+function setTransition(fromId,index,toId) {
+  if(!transitions[fromId])return;pushUndo();
+  transitions[fromId][index]={...transitions[fromId][index],to:toId};
+  render();updateRightPanelAfterChange();
+}
+function updateOutputsFromState() {
+  const s=states.find(st=>st.id===activeStateId);
+  if(!s){outputBits=Array(outputBitsCount).fill(0);}
+  else if(s.mode==='mealy'){
+    const idx=getInputIndex();const t=transitions[s.id]?.[idx];
+    const out=t?normalizeTransitionOutputs(t).out:[];
+    outputBits=out.slice(0,outputBitsCount);
+  } else {
+    outputBits=(s.outputs||[]).slice(0,outputBitsCount);
+  }
+  while(outputBits.length<outputBitsCount)outputBits.push(0);
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  TAB SWITCHING
+// ══════════════════════════════════════════════════════════════════
+
+function switchTab(tab) {
+  activeTab = tab;
+  document.getElementById('tabVars').classList.toggle('active', tab==='vars');
+  document.getElementById('tabLog').classList.toggle('active', tab==='log');
+  document.getElementById('tabTable').classList.toggle('active', tab==='table');
+  if(tab==='vars') renderVarsPanel();
+  else if(tab==='log') renderLogPanel();
+  else renderNormalTablePanel();
+}
+
+function updateRightPanelAfterChange() {
+  // Refresh bottom panel if open
+  if (expandMode) renderBottomPanel();
+  // Refresh sidebar
+  if (activeTab==='log') switchTab('vars');
+  else if (activeTab==='table') renderNormalTablePanel();
+  else renderVarsPanel();
+}
+
+function renderVarsPanel() {
+  const cur=states.find(s=>s.id===activeStateId);
+  const inputIndex=getInputIndex();
+  const nextId=activeStateId?transitions[activeStateId]?.[inputIndex]?.to:null;
+  const nextState=states.find(s=>s.id===nextId);
+  document.getElementById('panelContent').innerHTML=`
+    <div class="editor-title" style="margin-bottom:6px">Inputs</div>
+    ${inputBits.map((b,i)=>`<div class="var-row"><input class="name-input" value="${h(inputNames[i]||`b${i}`)}" oninput="renameInput(${i},this.value)"><span class="var-val">${b}</span></div>`).join('')}
+    <div class="editor-title" style="margin:12px 0 6px">Outputs</div>
+    ${outputBits.slice().reverse().map((b,bi)=>{const idx=outputBits.length-1-bi;return`<div class="var-row"><input class="name-input" value="${h(outputNames[idx]||`y${idx}`)}" oninput="renameOutput(${idx},this.value)"><span class="var-val">${b}</span></div>`;}).join('')}
+    <div class="editor-title" style="margin:12px 0 6px">State</div>
+    <div class="var-row"><span class="var-name">current</span><span class="var-val">${cur?h(cur.name):'-'}</span></div>
+    <div class="var-row"><span class="var-name">next</span><span class="var-val">${nextState?h(nextState.name):'-'}</span></div>
+  `;
+}
+
+function renderLogPanel() {
+  const filtered=showInputLogs?simLog:simLog.filter(e=>e.type!=='input');
+  const header=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div class="editor-title" style="margin:0">Log</div><label class="mode-switch" style="gap:6px"><span>Show Input Logs</span><label class="switch"><input type="checkbox" ${showInputLogs?'checked':''} onchange="toggleInputLogs(this.checked)"><span class="slider"></span></label></label></div>`;
+  const body=filtered.length?filtered.map(e=>`<div class="log-entry ${e.type||''}"><span class="log-step">${e.step}</span><span>${h(e.msg)}</span></div>`).join(''):'<div style="font-size:12px;color:var(--text3);padding:20px 0;text-align:center">Run steps to see log</div>';
+  document.getElementById('panelContent').innerHTML=header+body;
+}
+
+function renderNormalTablePanel() {
+  const rows=[];
+  states.forEach(s=>{
+    for(let i=0;i<(2**inputBitsCount);i++){
+      const t=transitions[s.id]?.[i];
+      const next=t?states.find(st=>st.id===t.to):null;
+      const outBits=s.mode==='mealy'?(t?normalizeTransitionOutputs(t).out:Array(outputBitsCount).fill(0)):(s.outputs||Array(outputBitsCount).fill(0));
+      rows.push({input:formatInput(i),current:s.name||s.id,next:next?next.name:'-',output:bitsToString(outBits)});
+    }
+  });
+  const cur=states.find(s=>s.id===activeStateId);
+  const curInput=getInputIndex();
+  document.getElementById('panelContent').innerHTML=`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <div class="editor-title" style="margin:0">State Transition Table</div>
+      <button class="btn sm" onclick="enterExpandMode()">Expand →</button>
+    </div>
+    <div class="table-wrap"><div class="table-grid" style="">
+      <div class="table-row table-head" style="grid-template-columns:1.2fr 1fr 1fr 1.2fr">
+        <div class="table-cell">${h(inputNames.slice().reverse().join(', '))}</div>
+        <div class="table-cell">Current State</div>
+        <div class="table-cell">Next State</div>
+        <div class="table-cell">${h(outputNames.slice().reverse().join(', '))}</div>
+      </div>
+      ${rows.map(r=>`<div class="table-row${r.current===(cur?cur.name:'')&&r.input===formatInput(curInput)?' table-active':''}" style="grid-template-columns:1.2fr 1fr 1fr 1.2fr"><div class="table-cell">${h(r.input)}</div><div class="table-cell">${h(r.current)}</div><div class="table-cell">${h(r.next)}</div><div class="table-cell">${h(r.output)}</div></div>`).join('')}
+    </div></div>
+  `;
+}
+
+function toggleInputLogs(checked) { showInputLogs=checked; if(activeTab==='log')renderLogPanel(); }
+function toggleSidebars() { document.body.classList.toggle('hide-sidebars'); }
+function toggleTheme() { document.body.classList.toggle('light'); }
+function toggleSimplify() { simplifyOn=!simplifyOn; updateSimplifyButton(); render(); if(expandMode)renderBottomPanel();if(activeTab==='table')renderNormalTablePanel(); }
+function updateSimplifyButton() { const btn=document.getElementById('btnSimplify');if(btn)btn.textContent=simplifyOn?'Unsimplify':'Simplify'; }
+
+// ══════════════════════════════════════════════════════════════════
+//  SIMULATION
+// ══════════════════════════════════════════════════════════════════
+
+function resetSim() {
+  clearInterval(runInterval);isRunning=false;
+  document.getElementById('btnRun').textContent='Run';document.getElementById('btnRun').className='btn success';
+  simStep=0;simLog=[];activeStateId=states[0]?.id||null;
+  updateOutputsFromState();document.getElementById('stepCounter').textContent='STEP 0';
+  render();renderOutputsPanel();renderEditor();
+  if(expandMode)renderBottomPanel();if(activeTab==='log')renderLogPanel();else if(activeTab==='table')renderNormalTablePanel();else renderVarsPanel();
+}
+
+function stepSim() {
+  if(!states.length)return;
+  const prevState=states.find(s=>s.id===activeStateId);
+  if(simStep===0){activeStateId=states[0].id;const idx=getInputIndex();activeStateId=transitions[activeStateId]?.[idx]?.to||activeStateId;simStep=1;}
+  else{const idx=getInputIndex();activeStateId=transitions[activeStateId]?.[idx]?.to||activeStateId;simStep++;}
+  updateOutputsFromState();
+  const nextState=states.find(s=>s.id===activeStateId);
+  addLog('step',`Input (${formatNameValPairs(inputNames,inputBits)}), State ${prevState?prevState.name:'?'} -> ${nextState?nextState.name:'?'}, Output (${formatNameValPairs(outputNames,outputBits)})`);
+  document.getElementById('stepCounter').textContent=`STEP ${simStep}`;
+  render();renderOutputsPanel();renderEditor();
+  if(expandMode)renderBottomPanel();if(activeTab==='log')renderLogPanel();else if(activeTab==='table')renderNormalTablePanel();else renderVarsPanel();
+}
+
+function runSim() {
+  if(isRunning){clearInterval(runInterval);isRunning=false;document.getElementById('btnRun').textContent='Run';document.getElementById('btnRun').className='btn success';return;}
+  if(!states.length)return;
+  if(simStep===0)activeStateId=states[0].id;
+  isRunning=true;document.getElementById('btnRun').textContent='Stop';document.getElementById('btnRun').className='btn danger';
+  runInterval=setInterval(()=>{
+    const prevState=states.find(s=>s.id===activeStateId);
+    const idx=getInputIndex();activeStateId=transitions[activeStateId]?.[idx]?.to||activeStateId;simStep++;
+    updateOutputsFromState();const nextState=states.find(s=>s.id===activeStateId);
+    addLog('step',`Input (${formatNameValPairs(inputNames,inputBits)}), State ${prevState?prevState.name:'?'} -> ${nextState?nextState.name:'?'}, Output (${formatNameValPairs(outputNames,outputBits)})`);
+    document.getElementById('stepCounter').textContent=`STEP ${simStep}`;
+    render();renderOutputsPanel();renderEditor();
+    if(expandMode)renderBottomPanel();if(activeTab==='log')renderLogPanel();else if(activeTab==='table')renderNormalTablePanel();else renderVarsPanel();
+  },650);
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  SAVE / LOAD
+// ══════════════════════════════════════════════════════════════════
+
+function saveJSON() {
+  const data={version:1,states,transitions,inputBitsCount,inputBits,inputNames,outputBitsCount,outputBits,outputNames,view,simStep,activeStateId,selectedStateId,idCounter,simplifyOn,flipFlopTypes};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  let name=prompt('Save as file name:','fsm_diagram.json');
+  if(name===null)return;name=String(name).trim()||'fsm_diagram.json';
+  if(!/\.json$/i.test(name))name+='.json';
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href);
+}
+
+function loadJSON(e) {
+  const file=e.target.files[0];if(!file)return;
+  const rd=new FileReader();
+  rd.onload=ev=>{
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(!data.states||!data.transitions)throw new Error('Not a valid FSM file');
+      if(data.flipFlopTypes)flipFlopTypes=data.flipFlopTypes;
+      applyState(data);
+      simplifyOn=!!data.simplifyOn;updateSimplifyButton();
+    }catch(err){alert('Load failed: '+err.message);}
+  };
+  rd.readAsText(file);e.target.value='';
+}
+
+function openAbout(){document.getElementById('aboutModal').style.display='flex';}
+function closeAbout(e){if(e&&e.target&&e.target.id!=='aboutModal')return;document.getElementById('aboutModal').style.display='none';}
+
+// ══════════════════════════════════════════════════════════════════
+//  SVG HELPERS
+// ══════════════════════════════════════════════════════════════════
+
+function ns(tag){return document.createElementNS('http://www.w3.org/2000/svg',tag);}
+function setA(el,attrs){for(const[k,v]of Object.entries(attrs))el.setAttribute(k,String(v));return el;}
+function sv(tag,attrs){return setA(ns(tag),attrs);}
+function txt(x,y,str,fill,size,weight){
+  const t=ns('text');
+  setA(t,{x,y,'text-anchor':'middle','dominant-baseline':'central',fill,'font-size':size,'font-weight':weight,'font-family':"'JetBrains Mono',monospace"});
+  t.textContent=str;return t;
+}
+function h(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+</script>
+</body>
+</html>
