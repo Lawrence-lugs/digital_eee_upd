@@ -237,6 +237,7 @@ include-in-header:
   <div class="max-w-5xl mx-auto text-center text-sm text-gray-400">
     <p>Digitals | Electrical and Electronics Engineering Institute</p>
     <p class="mt-1">University of the Philippines Diliman</p>
+    <p class="mt-3 text-xs">&copy; 2026 Lawrence Quizon</p>
   </div>
 </footer>
 ```
