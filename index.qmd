@@ -237,11 +237,7 @@ include-in-header:
   <div class="max-w-5xl mx-auto text-center text-sm text-gray-400">
     <p>Digitals | Electrical and Electronics Engineering Institute</p>
     <p class="mt-1">University of the Philippines Diliman</p>
-<<<<<<< HEAD
-    <p class="mt-3 text-xs text-gray-300">&copy; 2026 Lawrence Quizon</p>
-=======
     <p class="mt-3 text-xs">&copy; 2026 Lawrence Quizon</p>
->>>>>>> 70989967867572603c2bc9b0ebd948408fa14014
   </div>
 </footer>
 ```
