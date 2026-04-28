@@ -47,10 +47,10 @@ include-in-header:
          style="background: #6B0D1A; color: white;">
         Verilog Crash Course
       </a>
-      <a href="FSM_simulatEEE.html"
+      <a href="kmapgameee"
          class="inline-block font-semibold px-6 py-3 rounded-lg transition-colors border"
          style="border-color: #6B0D1A; color: #6B0D1A;">
-        Try FSM Simulator
+        Try the KMap Game
       </a>
     </div>
   </div>
