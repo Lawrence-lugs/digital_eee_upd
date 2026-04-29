@@ -2,7 +2,7 @@
 title: "Module 100: Advanced Sequential Logic"
 format:
   html:
-    css: vcc.css
+    css: vcc-v2.css
 ---
 
 ::: {.vcc-nav}
