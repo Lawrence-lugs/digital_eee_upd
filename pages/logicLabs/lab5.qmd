@@ -6,7 +6,7 @@ format:
 ---
 
 ::: {.lab-nav}
-[Logic Labs](index.qmd) | [Lab 1](lab1.qmd) | [Lab 2](lab2.qmd) | [Lab 3](lab3.qmd) | [Lab 4](lab4.qmd) | [Lab 5](lab5.qmd) | [Lab 6](lab6.qmd)
+[Logic Labs](index.qmd) | [Logisim Tutorial](logisim-tutorial.qmd) | [Lab 1](lab1.qmd) | [Lab 2](lab2.qmd) | [Lab 3](lab3.qmd) | [Lab 4](lab4.qmd) | [Lab 5](lab5.qmd) | [Lab 6](lab6.qmd)
 :::
 
 ## Background
@@ -33,12 +33,14 @@ Your activity for this lab is to implement the sequential controller of a moving
 
 You may use your previous lab submissions to implement this lab.
 
-1. Download the **Lab 4 template** in UVLe.
+1. Download the <a href="export/templates/lab5_143_2s2425_template.circ" download>Lab 5 template</a>.
 2. Enter the xyTracker block provided in Logisim.
 3. Implement the xyTracker block via Regular Synthesis. Submit in UVLe in the Logisim Lab 5A - Regular Synthesis submission box.
 4. Implement the xyTracker block via One-hot Synthesis. Submit in UVLe in the Logisim Lab 5B - Onehot Synthesis submission box.
 
-**IMPORTANT NOTE: PLEASE CONNECT THE RST INPUT TO YOUR FLIP-FLOPS. TO R IF DESIRED RESET STATE IS 0, TO S IF DESIRED RESET STATE IS 1. FOR CLASSICAL SYNTHESIS, CONNECT ALL RST TO R. FOR ONE-HOT, CONNECT THE INITIAL STATE FLIPFLOP'S S TO RST AND THE REST CONNECT R TO RST.**
+::: {.callout-warning}
+PLEASE CONNECT THE RST INPUT TO YOUR FLIP-FLOPS. TO R IF DESIRED RESET STATE IS 0, TO S IF DESIRED RESET STATE IS 1. FOR CLASSICAL SYNTHESIS, CONNECT ALL RST TO R. FOR ONE-HOT, CONNECT THE INITIAL STATE FLIPFLOP'S S TO RST AND THE REST CONNECT R TO RST.
+:::
 
 In detail, the xyTracker performs the following:
 
@@ -50,9 +52,13 @@ In detail, the xyTracker performs the following:
 
 ## Hint
 
-"The specs basically tell me to synthesize a massive 1024-row truth table based on the required 4 inputs (two 2-bits) and 6 states (3 for each xPos and yPos). However, this is too long! I can't keep track of such a massive table even with Excel. This problem is massive! The lab is impossible!" - *Level 1 Digital Designer Noob*
+> "The specs basically tell me to synthesize a massive 1024-row truth table based on the required 4 inputs (two 2-bits) and 6 states (3 for each xPos and yPos). However, this is too long! I can't keep track of such a massive table even with Excel. This problem is massive! The lab is impossible!" 
+>
+>--- *Level 1 Digital Designer Noob*
 
-"When faced with a massive problem, we should always cut it into smaller problems. Since the X-position only depends on whether the joystick is pointing left or right, and the Y-position only depends on whether the joystick is pointing up or down, then maybe we can get away with synthesizing two smaller sequential circuits instead...?" - *Level 100 Digital Design Demigod*
+> "When faced with a massive problem, we should always cut it into smaller problems. Since the X-position only depends on whether the joystick is pointing left or right, and the Y-position only depends on whether the joystick is pointing up or down, then maybe we can get away with synthesizing two smaller sequential circuits instead...?" 
+>
+>--- *Level 100 Digital Design Demigod*
 
 ## Notes
 

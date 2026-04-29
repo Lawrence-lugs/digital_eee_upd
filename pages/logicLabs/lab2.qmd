@@ -6,7 +6,7 @@ format:
 ---
 
 ::: {.lab-nav}
-[Logic Labs](index.qmd) | [Lab 1](lab1.qmd) | [Lab 2](lab2.qmd) | [Lab 3](lab3.qmd) | [Lab 4](lab4.qmd) | [Lab 5](lab5.qmd) | [Lab 6](lab6.qmd)
+[Logic Labs](index.qmd) | [Logisim Tutorial](logisim-tutorial.qmd) | [Lab 1](lab1.qmd) | [Lab 2](lab2.qmd) | [Lab 3](lab3.qmd) | [Lab 4](lab4.qmd) | [Lab 5](lab5.qmd) | [Lab 6](lab6.qmd)
 :::
 
 ## Background
@@ -25,7 +25,7 @@ However, some analog sticks, like the one that can be found in Logisim, have a d
 
 Your assignment is as follows:
 
-1. Download the **logisim template** in UVLe.
+1. Download the <a href="export/templates/lab2_143_2s2425_template.circ" download>logisim template</a>.
 2. Translate the encoding of the Logisim joystick **as shown in the GIF in this page with the ABCD input order** into the U(p) D(own) L(eft) R(ight) encoding with a truth table.
 3. Translate the truth tables of the U/D/L/R outputs into K-Maps.
 4. Obtain minimal SOP and POS expressions for the U/D/L/R outputs using the K-Maps.

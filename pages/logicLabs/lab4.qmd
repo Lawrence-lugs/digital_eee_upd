@@ -6,7 +6,7 @@ format:
 ---
 
 ::: {.lab-nav}
-[Logic Labs](index.qmd) | [Lab 1](lab1.qmd) | [Lab 2](lab2.qmd) | [Lab 3](lab3.qmd) | [Lab 4](lab4.qmd) | [Lab 5](lab5.qmd) | [Lab 6](lab6.qmd)
+[Logic Labs](index.qmd) | [Logisim Tutorial](logisim-tutorial.qmd) | [Lab 1](lab1.qmd) | [Lab 2](lab2.qmd) | [Lab 3](lab3.qmd) | [Lab 4](lab4.qmd) | [Lab 5](lab5.qmd) | [Lab 6](lab6.qmd)
 :::
 
 ## Background
@@ -60,7 +60,7 @@ To change the frequency of the continuous triggering, go to Simulation > Auto-ti
 
 Due to the fact that flip-flops only need to be able to switch between 1 and 0 to be able to implement any logic, it is possible to create any flip-flop flavor from any other flip-flop flavor. For this assignment, you are asked to implement D flip-flops using the three other flavors of flip-flops.
 
-1. Download the **Lab 4 template** in UVLe.
+1. Download the <a href="export/templates/lab4_143_2s2425_template.circ" download>Lab 4 template</a>.
 2. Inside the *dffButJK* block, implement a D flip-flop with a JK flip-flop adding only logic gates.
 3. Inside the *dffButT* block, implement a D flip-flop with a T flip-flop adding only logic gates.
 4. Inside the *dffButSR* block, implement a D flip-flop with a SR flip-flop adding only logic gates.

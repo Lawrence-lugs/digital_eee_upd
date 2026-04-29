@@ -53,4 +53,91 @@
   border-radius: 8px;
   padding: 0.9rem 1rem;
   background: #ffffff;
+  position: relative;
+}
+
+/* === Version badge === */
+.lab-version {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: #6B0D1A;
+  color: #ffffff;
+  border-radius: 4px;
+  padding: 0.15rem 0.45rem;
+  margin-bottom: 0.5rem;
+  font-family: monospace;
+}
+
+/* === Tutorial callout on index === */
+.tutorial-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: #fdf5f6;
+  border: 2px solid #6B0D1A;
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  margin: 0 0 1.5rem 0;
+}
+
+.tutorial-callout-icon {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.tutorial-callout-body {
+  font-size: 0.9375rem;
+}
+
+.tutorial-callout-body strong {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  color: #6B0D1A;
+}
+
+/* === Tutorial intro banner (on the tutorial page itself) === */
+.tutorial-intro {
+  background: #fdf5f6;
+  border-left: 4px solid #6B0D1A;
+  border-radius: 0 8px 8px 0;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9375rem;
+}
+
+/* === Component grid (used on tutorial page) === */
+.component-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin: 0.75rem 0 1rem 0;
+}
+
+.component-card {
+  border: 1px solid #f0d0d4;
+  border-radius: 8px;
+  padding: 0.75rem 0.9rem;
+  background: #ffffff;
+  font-size: 0.9rem;
+}
+
+.component-card strong {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: #6B0D1A;
+}
+
+/* === Debug note === */
+.debug-note {
+  background: #fffbea;
+  border: 1px solid #e0c060;
+  border-radius: 6px;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.875rem;
+  margin: 0.75rem 0;
 }
