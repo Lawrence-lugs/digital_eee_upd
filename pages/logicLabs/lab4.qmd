@@ -1,5 +1,8 @@
 ---
 title: "Lab 4: Flip-flop Flavors"
+format:
+  html:
+    css: lab.css
 ---
 
 ::: {.lab-nav}

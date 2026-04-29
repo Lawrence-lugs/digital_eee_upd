@@ -437,5 +437,6 @@ Like in the previous activity, we'll be implementing an ALU. But this time, **NO
 
 Good luck!
 
-Previous: [M000](00-fundamentals.qmd)
-Next: [M010](01-combinational.qmd)
+::: {.vcc-nextprev}
+[← M000](00-fundamentals.qmd){.vcc-prev} [M010 →](01-combinational.qmd){.vcc-next}
+:::

@@ -443,5 +443,6 @@ In this activity, you'll be
 The rest of the instructions for this activity are written on the Github page itself (scroll down from there).
 
 
-Previous: [M101](03-verification.qmd)
-Next: [M111](04-practices.qmd)
+::: {.vcc-nextprev}
+[← M101](03-verification.qmd){.vcc-prev} [M111 →](04-practices.qmd){.vcc-next}
+:::

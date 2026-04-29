@@ -296,5 +296,6 @@ This module's activity is in this **[Jupyter Notebook](https://colab.research.go
 ALUs perform operations on inputs A and B, but you can choose which operation to perform by choosing the **opcode** input**.**
 Your task in this activity is to implement an ALU (Arithmetic Logic Unit) with structural instantiation of the existing modules.
 
-Previous: [Overview](index.qmd)
-Next: [M001](001-combinational.qmd)
+::: {.vcc-nextprev}
+[← Overview](index.qmd){.vcc-prev} [M001 →](001-combinational.qmd){.vcc-next}
+:::

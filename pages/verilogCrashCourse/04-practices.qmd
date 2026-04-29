@@ -706,5 +706,6 @@ The rest of the instructions for this activity are written on the Github page it
 
 ### [Module 111: Best Coding Practices](https://uvle.upd.edu.ph/course/view.php?id=23162&section=8&singlesec=8)
 
-Previous: [M110](110-advanced-verification.qmd)
-Next: [Extras](05-extras.qmd)
+::: {.vcc-nextprev}
+[← M110](110-advanced-verification.qmd){.vcc-prev} [Extras →](05-extras.qmd){.vcc-next}
+:::

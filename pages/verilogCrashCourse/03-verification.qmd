@@ -249,5 +249,6 @@ If you insert the code above into the testbench for the multiplier FSM and run i
 For Verilog simulations using Vivado, you don't need to add these lines anymore, as Vivado automatically sets up the waveform viewer using your testbench signals.
 :::
 
-Previous: [M100](100-advanced-sequential.qmd)
-Next: [M110](110-advanced-verification.qmd)
+::: {.vcc-nextprev}
+[← M100](100-advanced-sequential.qmd){.vcc-prev} [M110 →](110-advanced-verification.qmd){.vcc-next}
+:::

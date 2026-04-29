@@ -542,5 +542,6 @@ A **[stack](https://en.wikipedia.org/wiki/Stack_(abstract_data_type))** is a pro
 
 In this activity, your task is to implement **a stack** using advanced sequential logic. As a guide, remember to use a *finite state machine* to model the behavior of a stack before writing your code.
 
-Previous: [M011](02-sequential.qmd)
-Next: [M101](03-verification.qmd)
+::: {.vcc-nextprev}
+[← M011](02-sequential.qmd){.vcc-prev} [M101 →](03-verification.qmd){.vcc-next}
+:::

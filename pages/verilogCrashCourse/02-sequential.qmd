@@ -444,5 +444,6 @@ In programming, we usually take randomness for granted. It is simple to use prog
 
 In this activity, your task is to implement a 4-bit Galois-type LFSR using the knowledge you've gained about writing sequential logic.
 
-Previous: [M010](01-combinational.qmd)
-Next: [M100](100-advanced-sequential.qmd)
+::: {.vcc-nextprev}
+[← M010](01-combinational.qmd){.vcc-prev} [M100 →](100-advanced-sequential.qmd){.vcc-next}
+:::

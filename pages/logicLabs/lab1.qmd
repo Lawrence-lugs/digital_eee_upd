@@ -1,5 +1,8 @@
 ---
 title: "Lab 1: Say my Student Number"
+format:
+  html:
+    css: lab.css
 ---
 
 ::: {.lab-nav}

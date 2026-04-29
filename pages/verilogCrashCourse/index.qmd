@@ -46,4 +46,6 @@ Eight modules (numbered 000 all the way to 111) that teach you all the fundament
 
 If you have completed the assessments, you will gain access to a hidden set of modules focusing on advanced Verilog constructs and coding styles, meant for advanced users who want to create more complicated architectures.
 
-Next: [M000: Basic Structure and Syntax](00-fundamentals.qmd)
+::: {.vcc-nextprev}
+[M000: Basic Structure and Syntax →](00-fundamentals.qmd){.vcc-next}
+:::

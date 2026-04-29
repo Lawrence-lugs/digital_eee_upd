@@ -1,10 +1,44 @@
 /* Verilog Crash Course mini-site styles */
+
+/* === Top nav – Tailwind-inspired pill buttons === */
 .vcc-nav {
-  margin: 0 0 1rem 0;
-  padding: 0.75rem 1rem;
+  margin: 0 0 1.5rem 0;
+  padding: 0.5rem 0.75rem;
   background: #fdf5f6;
-  border-left: 4px solid #6B0D1A;
-  border-radius: 6px;
+  border: 1px solid #e9c0c5;
+  border-radius: 10px;
+}
+
+.vcc-nav > p {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem;
+  margin: 0;
+  font-size: 0;       /* collapses the bare | separator text nodes */
+  line-height: 1;
+}
+
+.vcc-nav a {
+  font-size: 0.8125rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.275rem 0.7rem;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: #6B0D1A;
+  border: 1px solid #d4a0a8;
+  text-decoration: none !important;
+  font-weight: 500;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.vcc-nav a:hover {
+  background-color: #6B0D1A;
+  color: #ffffff !important;
+  border-color: #6B0D1A;
 }
 
 .vcc-callout {
@@ -29,10 +63,58 @@
   background: #ffffff;
 }
 
+/* === Bottom prev/next nav – Tailwind-inspired === */
 .vcc-nextprev {
-  margin-top: 2rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid #f0d0d4;
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.vcc-nextprev > p {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.vcc-prev,
+.vcc-next {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1.125rem;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-decoration: none !important;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  white-space: nowrap;
+}
+
+/* Previous: outline button, left-anchored */
+.vcc-prev {
+  background: #ffffff;
+  color: #6B0D1A;
+  border: 1px solid #d4a0a8;
+}
+
+.vcc-prev:hover {
+  background: #fdf5f6;
+  border-color: #6B0D1A;
+  color: #6B0D1A !important;
+  text-decoration: none !important;
+}
+
+/* Next: filled maroon button, pushed to the right */
+.vcc-next {
+  background: #6B0D1A;
+  color: #ffffff !important;
+  border: 1px solid #6B0D1A;
+  margin-left: auto;
+}
+
+.vcc-next:hover {
+  background: #5a0b16;
+  border-color: #5a0b16;
+  text-decoration: none !important;
 }
 
 .vcc-small {

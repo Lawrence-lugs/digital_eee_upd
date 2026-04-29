@@ -423,5 +423,7 @@ Again, we're implementing an ALU. **I promise this is the last time.**
 However, we have another twist this time. This time, you will have to implement the ALU with the **outputs defined as reg!** The **reg** statement is, in fact, incompatible with **assign** statements. Hence, you'll have to use an **always** block.
 
 Good luck!
-Previous: [M001](001-combinational.qmd)
-Next: [M011](02-sequential.qmd)
+
+::: {.vcc-nextprev}
+[← M001](001-combinational.qmd){.vcc-prev} [M011 →](02-sequential.qmd){.vcc-next}
+:::

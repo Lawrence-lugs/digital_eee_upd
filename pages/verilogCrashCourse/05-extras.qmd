@@ -711,5 +711,6 @@ Use `ifndef` to provide defaults when a macro isn’t set:
 ---
 
 
-Previous: [M111](04-practices.qmd)
-Back to: [Overview](index.qmd)
+::: {.vcc-nextprev}
+[← M111](04-practices.qmd){.vcc-prev} [Overview](index.qmd){.vcc-next}
+:::
