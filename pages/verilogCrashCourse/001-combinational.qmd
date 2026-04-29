@@ -30,7 +30,7 @@ module simple_and(
 endmodule
 ```
 
-![assign](./Course_ Verilog Crash Course_files/assign_v2.png)
+![assign](./Course_ Verilog Crash Course_files/assign_v2.png){width=55%}
 
 ---
 
@@ -51,16 +51,21 @@ Verilog supports many operators that can be used for `assign` statements. Here a
 
 ```
 assign sum = a + b;    // addition
-
 ```
 
-![arithmetic_add](./Course_ Verilog Crash Course_files/arithmetic_add (1).png)
+![arithmetic_add](./Course_ Verilog Crash Course_files/arithmetic_add (1).png){width=40%}
 
+```
 assign diff = a - b;   // subtraction
+```
 
-![arithmetic_sub](./Course_ Verilog Crash Course_files/arithmetic_sub (1).png).png)
+![arithmetic_sub](./Course_ Verilog Crash Course_files/arithmetic_sub (1).png){width=40%}
 
-assign twice = a * 2;  // multiply by constant ![arithmetic_mult](./Course_ Verilog Crash Course_files/arithmetic_mult.png)
+```
+assign twice = a * 2;  // multiply by constant
+```
+
+![arithmetic_mult](./Course_ Verilog Crash Course_files/arithmetic_mult.png){width=40%}
 
 ---
 
@@ -76,22 +81,27 @@ assign twice = a * 2;  // multiply by constant ![arithmetic_mult](./Course_ Veri
 
 ```
 assign and_bits = a & b;  // bitwise AND
-
 ```
 
-![bitwise_and](./Course_ Verilog Crash Course_files/bitwise_and (2).png)
+![bitwise_and](./Course_ Verilog Crash Course_files/bitwise_and (2).png){width=40%}
 
+```
 assign or_bits  = a | b;  // bitwise OR
+```
 
-![bitwise_or](./Course_ Verilog Crash Course_files/bitwise_or (2).png).png)
+![bitwise_or](./Course_ Verilog Crash Course_files/bitwise_or (2).png){width=40%}
 
+```
 assign xor_bits = a ^ b;  // bitwise XOR
+```
 
-![bitwise_xor](./Course_ Verilog Crash Course_files/bitwise_xor (2).png).png)
+![bitwise_xor](./Course_ Verilog Crash Course_files/bitwise_xor (2).png){width=40%}
 
+```
 assign not_a    = ~a;     // bitwise NOT (inverts every bit)
+```
 
-![bitwise_not](./Course_ Verilog Crash Course_files/bitwise_not (2).png).png)
+![bitwise_not](./Course_ Verilog Crash Course_files/bitwise_not (2).png){width=40%}
 
 ---
 
@@ -110,9 +120,13 @@ If `a = 4'b1100` and `b = 4'b1010`:
 assign left_shift  = a << 1; // shifts left by 1 (like multiply by 2); 0 padding, upper bit(s) truncated
 ```
 
-![shift_left](./Course_ Verilog Crash Course_files/shift_left (3).png)
+![shift_left](./Course_ Verilog Crash Course_files/shift_left (3).png){width=65%}
 
-assign right_shift = a >> 2; // shifts right by 2 (like divide by 4); 0 padding, lower bit(s) truncated![shift_right](./Course_ Verilog Crash Course_files/shift_right (2).png).png)
+```
+assign right_shift = a >> 2; // shifts right by 2 (like divide by 4); 0 padding, lower bit(s) truncated
+```
+
+![shift_right](./Course_ Verilog Crash Course_files/shift_right (2).png){width=65%}
 
 ---
 
@@ -133,7 +147,7 @@ assign max = (a > b) ? a : b;
 
 Reads: “If `a > b`, then max = a; otherwise, max = b.” This is similar to a multiplexer-type behavior, where the selector value depends on the condition inside the parentheses.
 
-![conditional](./Course_ Verilog Crash Course_files/conditional (1).png).png)
+![conditional](./Course_ Verilog Crash Course_files/conditional (1).png){width=38%}
 
 ## Tip: Assignment upon Declaration
 
@@ -155,7 +169,7 @@ module example_block (
 endmodule
 ```
 
-![assignment_declaration](./Course_ Verilog Crash Course_files/assignment_declaration.png)
+![assignment_declaration](./Course_ Verilog Crash Course_files/assignment_declaration.png){width=55%}
 
 ---
 
@@ -219,7 +233,7 @@ wire [7:0] byte;
 assign byte = {nibble1, nibble2}; // byte = 10101100
 ```
 
-![concat](./Course_ Verilog Crash Course_files/concat.png)
+![concat](./Course_ Verilog Crash Course_files/concat.png){width=60%}
 
 ---
 
@@ -240,7 +254,7 @@ assign neg1_8b = {sign_4b, neg1_4b}; // concatenate the 4-bit sign with the 4-bi
 
 ```
 
-![replication](./Course_ Verilog Crash Course_files/replication.png)
+![replication](./Course_ Verilog Crash Course_files/replication.png){width=75%}
 
 ---
 
@@ -257,7 +271,7 @@ wire [3:0] upper = data[7:4]; // top 4 bits
 wire [3:0] lower = data[3:0]; // bottom 4 bits
 ```
 
-![slice](./Course_ Verilog Crash Course_files/slice.png)
+![slice](./Course_ Verilog Crash Course_files/slice.png){width=55%}
 
 ---
 
@@ -349,7 +363,7 @@ assign x = a & b;
 
 The result is exactly the same hardware. Both assignments are always active, so `y` is always the NOT of the AND of `a` and `b`.
 
-![concurrency](./Course_ Verilog Crash Course_files/concurrency.png)
+![concurrency](./Course_ Verilog Crash Course_files/concurrency.png){width=45%}
 
 ::: {.callout-note}
 This is different from software, where order defines execution. In hardware, assignments represent physical connections that exist all at once.
@@ -407,7 +421,7 @@ endmodule
 
 This Verilog code would have a corresponding hardware equivalent as shown below.
 
-![all_together](./Course_ Verilog Crash Course_files/all_together(1).png).png)
+![all_together](./Course_ Verilog Crash Course_files/all_together(1).png){width=100%}
 
 Our module is getting bigger and more complex! Notice how there are different assignments happening within the single module. All arithmetic and logic were declared, and all of the corresponding outputs would connect to a final multiplexer (declared as
 a ternary `(condition) ? (true) : (false)` operation).

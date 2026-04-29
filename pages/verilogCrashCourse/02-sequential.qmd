@@ -40,7 +40,7 @@ module dff(
 endmodule
 ```
 
-![dff](./Course_ Verilog Crash Course_files/dff.png)
+![dff](./Course_ Verilog Crash Course_files/dff.png){width=30%}
 
 ---
 
@@ -90,7 +90,7 @@ module updown_counter(
 endmodule
 ```
 
-![counter_updown_v2](./Course_ Verilog Crash Course_files/counter_updown.png)
+![counter_updown_v2](./Course_ Verilog Crash Course_files/counter_updown.png){width=70%}
 
 ---
 
@@ -106,7 +106,7 @@ Since we are now in the sequential logic domain, assignments such as **count <= 
 On the contrary, **count = count + 1; should not** be done in the combinational logic domain (when using `always@(*)`), as this would infer a combinational loop, which is not realizable in hardware.
 :::
 
-![combinational_loop](./Course_ Verilog Crash Course_files/combinational_loop(1).png).png)
+![combinational_loop](./Course_ Verilog Crash Course_files/combinational_loop(1).png){width=45%}
 
 ## Inferred Latches in Sequential Logic
 
@@ -128,7 +128,7 @@ always @(posedge clk) begin
 end
 ```
 
-![](./Course_ Verilog Crash Course_files/dff_enable.png)
+![](./Course_ Verilog Crash Course_files/dff_enable.png){width=45%}
 
 ---
 
@@ -191,7 +191,7 @@ module counter_with_reset(
 endmodule
 ```
 
-![timing_sync](./Course_ Verilog Crash Course_files/timing_sync.png)
+![timing_sync](./Course_ Verilog Crash Course_files/timing_sync.png){width=70%}
 
 ---
 
@@ -208,7 +208,7 @@ always @(posedge clk or posedge reset) begin
 end
 ```
 
-![timing_async](./Course_ Verilog Crash Course_files/timing_async.png)
+![timing_async](./Course_ Verilog Crash Course_files/timing_async.png){width=70%}
 
 ---
 
@@ -219,7 +219,7 @@ Always put reset at the **top** of the `if-else` hierarchy, so it takes the high
 Here's the up/down counter from the previous
 section with the additional asynchronous reset to illustrate the described reset hierarchy.
 
-**---
+---
 
 ```verilog
 module updown_counter(
@@ -240,9 +240,9 @@ module updown_counter(
 endmodule
 ```
 
-![counter_updown_reset](./Course_ Verilog Crash Course_files/counter_updown_reset.png)
+![counter_updown_reset](./Course_ Verilog Crash Course_files/counter_updown_reset.png){width=70%}
 
----**
+---
 
 ## Concurrency Reminder
 
@@ -259,7 +259,7 @@ always @(posedge clk) begin
 end
 ```
 
-![concurrency](./Course_ Verilog Crash Course_files/concurrency(1).png)
+![concurrency](./Course_ Verilog Crash Course_files/concurrency(1).png){width=40%}
 
 ---
 
@@ -411,7 +411,7 @@ endmodule
 
 ```
 
-![all_together](./Course_ Verilog Crash Course_files/all_together(3).png)
+![all_together](./Course_ Verilog Crash Course_files/all_together(3).png){width=100%}
 
 ---
 

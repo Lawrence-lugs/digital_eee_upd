@@ -181,9 +181,9 @@ endmodule
   `result` with the expected product.
 - **Multiple test cases**: we can run as many as we like, quickly.
 
-![simulation_manual](./Course_ Verilog Crash Course_files/simulation_manual (1).png).png)
+![simulation_manual](./Course_ Verilog Crash Course_files/simulation_manual (1).png){width=100%}
 
-![](./Course_ Verilog Crash Course_files/console_manual.png)
+![](./Course_ Verilog Crash Course_files/console_manual.png){width=45%}
 
 ## Software vs Hardware Models
 
@@ -410,9 +410,9 @@ This combined testbench demonstrates:
 - **Reusable task** (`run_test`) to avoid repeated code.
 - **File-driven verification** so you can easily scale up testing with hundreds of test vectors, possibly generated from a Python “golden model.”
 
-![simulation_automated](./Course_ Verilog Crash Course_files/simulation_automated.png)
+![simulation_automated](./Course_ Verilog Crash Course_files/simulation_automated.png){width=100%}
 
-![](./Course_ Verilog Crash Course_files/console_automated.png)
+![](./Course_ Verilog Crash Course_files/console_automated.png){width=40%}
 
 ::: {.callout-note title="Summary"}
 

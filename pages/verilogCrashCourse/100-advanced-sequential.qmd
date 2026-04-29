@@ -51,7 +51,7 @@ Suppose we want to detect the bit pattern `101`. Whenever the pattern breaks, we
 3. **At state GOT10:**If we then see a `0`, the pattern is broken, go back to **IDLE**. If we see a `1`,
    the pattern is complete, assert output (set it to 1), and go back to **IDLE** to start all over again.
 
-![pattern_detector](./Course_ Verilog Crash Course_files/pattern_detector.png)
+![pattern_detector](./Course_ Verilog Crash Course_files/pattern_detector.png){width=40%}
 
 Let’s implement it.
 
@@ -166,7 +166,7 @@ endmodule
 At first glance, it looks like `midpoint` should become `1` exactly when `out` equals 7. But in simulation (and hardware), you’ll find `midpoint` actually goes high when `out` reaches **8** instead of 7 when counting up (`up_down` = 1). When counting down (`up_down` = 0), `midpoint` actually goes high when `out` reaches **6** instead of 7.
 :::
 
-![midpoint7_timing_wrong](./Course_ Verilog Crash Course_files/midpoint7_timing_wrong.png)
+![midpoint7_timing_wrong](./Course_ Verilog Crash Course_files/midpoint7_timing_wrong.png){width=70%}
 
 ### Why Does This Happen?
 
@@ -217,7 +217,7 @@ end
 - When counting down: if `out == 8`, then after decrement, `out` will become 7.
 - This works correctly, but feels a little inelegant since the logic has to be “shifted” to match the update timing. It can make the code harder to interpret by eye.
 
-![midpoint7_timing](./Course_ Verilog Crash Course_files/midpoint7_timing.png)
+![midpoint7_timing](./Course_ Verilog Crash Course_files/midpoint7_timing.png){width=70%}
 
 ### Fix 2: Separate Combinational Check
 
@@ -250,7 +250,7 @@ end
 - But `midpoint` is evaluated in a separate **combinational block**, so it immediately reflects whether `out` is equal to 7, without waiting an extra clock cycle.
 - This makes the code cleaner and separates **storage (sequential)** from **logic (combinational)**. It can make the code easier to interpret by eye.
 
-![midpoint7_timing](./Course_ Verilog Crash Course_files/midpoint7_timing.png)
+![midpoint7_timing](./Course_ Verilog Crash Course_files/midpoint7_timing.png){width=70%}
 
 ## FSM Design Example 2: Multiplication by Repeated Addition
 
@@ -283,7 +283,7 @@ We can capture this with states:
 - **ADD (state = 10)**: Add `a` to `result`, decrement counter.
 - **DONE (state = 11)**: When counter = 0, raise `done` flag and return to IDLE.
 
-![mult_asm](./Course_ Verilog Crash Course_files/mult_asm.png)
+![mult_asm](./Course_ Verilog Crash Course_files/mult_asm.png){width=55%}
 
 ### Step 3. Verilog Implementation
 
@@ -382,7 +382,7 @@ Here’s a complete example demonstrating a Hamming weight counter using a **con
 
 This is the **last design** that we will be covering for this crash course! Take your time to trace how the **controller (FSM)** communicates with the **datapath**: the controller issues registered control signals on each clock edge, and the datapath responds on the **next** edge with register updates. Notice we keep them in **two separate `always @(posedge clk)` blocks:**one for the FSM, one for the datapath, to make responsibilities crystal clear. This “controller + datapath” pattern is how **larger digital systems** are built: CPUs, accelerators, and I/O engines are essentially many small datapaths steered by coordinating FSMs. If you can follow the handshakes (start/busy/done), control signals (load/shift/add/etc.), and the timing of when values become valid, you’re reading the same blueprint used in real-world designs. Take it slow and step through a few clock cycles; you’ll see the whole machine come alive.
 
-![](./Course_ Verilog Crash Course_files/datapath_control.png)
+![](./Course_ Verilog Crash Course_files/datapath_control.png){width=75%}
 
 ---
 
@@ -516,7 +516,7 @@ module hamming_weight (
 endmodule
 ```
 
-![all_together](./Course_ Verilog Crash Course_files/all_together(4).png)
+![all_together](./Course_ Verilog Crash Course_files/all_together(4).png){width=100%}
 
 ---
 
