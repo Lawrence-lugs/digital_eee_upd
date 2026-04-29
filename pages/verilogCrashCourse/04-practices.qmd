@@ -1,12 +1,12 @@
 ---
-title: "Best Practices and Wrap-Up: Module 111 + Assessments"
+title: "Module 111: Best Practices and Wrap-Up"
 format:
   html:
     css: vcc.css
 ---
 
 ::: {.vcc-nav}
-[Overview](index.qmd) | [Foundations](00-fundamentals.qmd) | [Combinational](01-combinational.qmd) | [Sequential](02-sequential.qmd) | [Verification](03-verification.qmd) | [Practices](04-practices.qmd) | [Extras](05-extras.qmd)
+[Overview](index.qmd) | [M000](00-fundamentals.qmd) | [M001](001-combinational.qmd) | [M010](01-combinational.qmd) | [M011](02-sequential.qmd) | [M100](100-advanced-sequential.qmd) | [M101](03-verification.qmd) | [M110](110-advanced-verification.qmd) | [M111](04-practices.qmd) | [Extras](05-extras.qmd) | [Credits](credits.qmd)
 :::
 # Module 111: Best Coding Practices and Wrap-up
 
@@ -706,5 +706,5 @@ The rest of the instructions for this activity are written on the Github page it
 
 ### [Module 111: Best Coding Practices](https://uvle.upd.edu.ph/course/view.php?id=23162&section=8&singlesec=8)
 
-Previous: [Verification](03-verification.qmd)
+Previous: [M110](110-advanced-verification.qmd)
 Next: [Extras](05-extras.qmd)

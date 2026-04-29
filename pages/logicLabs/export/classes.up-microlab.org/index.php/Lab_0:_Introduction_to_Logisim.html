@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<title>Lab 0: Introduction to Logisim - Microlab Classes</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"Lab_0:_Introduction_to_Logisim","wgTitle":"Lab 0: Introduction to Logisim","wgCurRevisionId":4435,"wgRevisionId":4435,"wgArticleId":756,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgBreakFrames":!1,"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgMonthNamesShort":["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"wgRelevantPageName":"Lab_0:_Introduction_to_Logisim","wgRelevantArticleId":756,"wgRequestId":"afGYks-LBbCntmb4dhN6awAAAkY","wgCSPNonce":!1,"wgIsProbablyEditable":!1,
+"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[],"wgMediaViewerOnClick":!0,"wgMediaViewerEnabledByDefault":!0};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":"ready","user.tokens":"loading","mediawiki.legacy.shared":"ready","mediawiki.legacy.commonPrint":"ready","mediawiki.toc.styles":"ready","mediawiki.skinning.interface":"ready","skins.vector.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","mediawiki.searchSuggest","mmv.head","mmv.bootstrap.autostart","skins.vector.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.tokens@tffin",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"editToken":"+\\","patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="../load.php%3Flang=en&amp;modules=mediawiki.legacy.commonPrint,shared|mediawiki.skinning.interface|mediawiki.toc.styles|skins.vector.styles&amp;only=styles&amp;skin=vector.css"/>
+<script async="" src="../load.php%3Flang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.34.1"/>
+<link rel="shortcut icon" href="https://www.up-microlab.org/classes/favicon2.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="https://classes.up-microlab.org/opensearch_desc.php" title="Microlab Classes (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="https://classes.up-microlab.org/api.php?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="Microlab Classes Atom feed" href="https://classes.up-microlab.org/index.php?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Lab_0_Introduction_to_Logisim rootpage-Lab_0_Introduction_to_Logisim skin-vector action-view">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	
+	<div class="mw-indicators mw-body-content">
+</div>
+
+	<h1 id="firstHeading" class="firstHeading" lang="en">Lab 0: Introduction to Logisim</h1>
+	
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From Microlab Classes</div>
+		<div id="contentSub"></div>
+		
+		
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="./Lab_0:_Introduction_to_Logisim.html#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="./Lab_0:_Introduction_to_Logisim.html#p-search">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><div id="toc" class="toc"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2>Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="./Lab_0:_Introduction_to_Logisim.html#Quick_Logisim_Tutorial"><span class="tocnumber">1</span> <span class="toctext">Quick Logisim Tutorial</span></a>
+<ul>
+<li class="toclevel-2 tocsection-2"><a href="./Lab_0:_Introduction_to_Logisim.html#Setting_up"><span class="tocnumber">1.1</span> <span class="toctext">Setting up</span></a></li>
+<li class="toclevel-2 tocsection-3"><a href="./Lab_0:_Introduction_to_Logisim.html#Navigating_Logisim"><span class="tocnumber">1.2</span> <span class="toctext">Navigating Logisim</span></a></li>
+<li class="toclevel-2 tocsection-4"><a href="./Lab_0:_Introduction_to_Logisim.html#Navigation_tips"><span class="tocnumber">1.3</span> <span class="toctext">Navigation tips</span></a></li>
+<li class="toclevel-2 tocsection-5"><a href="./Lab_0:_Introduction_to_Logisim.html#Debugging_common_problems"><span class="tocnumber">1.4</span> <span class="toctext">Debugging common problems</span></a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+<h1><span class="mw-headline" id="Quick_Logisim_Tutorial">Quick Logisim Tutorial</span></h1>
+<div class="thumb tright"><div class="thumbinner" style="width:1143px;"><a href="https://classes.up-microlab.org/index.php/File:Logisim_tutorial.gif" class="image"><img alt="Logisim tutorial.gif" src="../images/0/0c/Logisim_tutorial.gif" decoding="async" width="1141" height="849" class="thumbimage" data-file-width="1141" data-file-height="849" /></a>  <div class="thumbcaption"></div></div></div>
+<h2><span class="mw-headline" id="Setting_up">Setting up</span></h2>
+<p>1) Download Logisim evolution <a rel="nofollow" class="external free" href="https://github.com/logisim-evolution/logisim-evolution/releases/tag/v3.8.0">https://github.com/logisim-evolution/logisim-evolution/releases/tag/v3.8.0</a> Get the
+3.8 .jar version, as shown in the figure.
+</p><p>Note: Use the 3.8 JAR version if you cannot run the 3.9 version.
+</p>
+<div class="thumb tright"><div class="thumbinner" style="width:302px;"><a href="https://classes.up-microlab.org/index.php/File:Logisim_download_versions.png" class="image"><img alt="" src="../images/thumb/5/52/Logisim_download_versions.png/300px-Logisim_download_versions.png" decoding="async" width="300" height="103" class="thumbimage" srcset="../images/thumb/5/52/Logisim_download_versions.png/450px-Logisim_download_versions.png 1.5x, ../images/thumb/5/52/Logisim_download_versions.png/600px-Logisim_download_versions.png 2x" data-file-width="1196" data-file-height="412" /></a>  <div class="thumbcaption"><div class="magnify"><a href="https://classes.up-microlab.org/index.php/File:Logisim_download_versions.png" class="internal" title="Enlarge"></a></div>Available versions of Logisim-evolution to download</div></div></div>
+<p>2) For you to able to run the JAR file, you must install Java 16 or higher. We recommend installing the
+Adoptium OpenJDK 17 <a rel="nofollow" class="external free" href="https://adoptium.net/temurin/releases/">https://adoptium.net/temurin/releases/</a>
+For Windows, get the .msi installer.
+For MacOS, get the .pkg installer.
+</p><p>3) That's it. Once Java is installed, you should be able to run the JAR file by just double-clicking on it. As long
+as the Logisim JAR file that you have downloaded came straight from the source (as linked above), it can
+be trusted (in case your operating system complains about the JAR file being run).
+</p>
+<h2><span class="mw-headline" id="Navigating_Logisim">Navigating Logisim</span></h2>
+<p>When you open Logisim, you should be able to see the following window:
+</p>
+<div class="thumb tright"><div class="thumbinner" style="width:1500px;"><a href="https://classes.up-microlab.org/index.php/File:LogisimScreen.png" class="image"><img alt="LogisimScreen.png" src="../images/f/fb/LogisimScreen.png" decoding="async" width="1498" height="888" class="thumbimage" data-file-width="1498" data-file-height="888" /></a>  <div class="thumbcaption"></div></div></div>
+<p>Along the top, you will see some buttons. The one on the left (finger pointer), allows you to click
+circuit elements to change their values (i.e. change an input from 0 to 1 or 1 to 0). It also allows you to inspect the wire
+values during the simulation, which is helpful when trying to see what is happening as the simulation proceeds. The
+one on the right (cursor pointer), is mainly used to manipulate circuit elements around the space, as well as create wire
+connections between different circuit elements in your design.
+</p><p>Along the left side, you will see different selections for your circuit elements. Under the Wiring folder, the most
+used elements are the first 4 options. Just click on one of them and put it in the space in the middle to create one.
+</p>
+<div class="thumb tright"><div class="thumbinner" style="width:302px;"><a href="https://classes.up-microlab.org/index.php/File:Tunnels.png" class="image"><img alt="" src="../images/thumb/b/b4/Tunnels.png/300px-Tunnels.png" decoding="async" width="300" height="169" class="thumbimage" srcset="../images/thumb/b/b4/Tunnels.png/450px-Tunnels.png 1.5x, ../images/thumb/b/b4/Tunnels.png/600px-Tunnels.png 2x" data-file-width="974" data-file-height="550" /></a>  <div class="thumbcaption"><div class="magnify"><a href="https://classes.up-microlab.org/index.php/File:Tunnels.png" class="internal" title="Enlarge"></a></div>Wiring tab, attributes, and sample usage.</div></div></div>
+<p>There are different options when you click on an element, showing on the lower left portion of the Logisim
+window. The common option that you change when creating circuit elements is the Data Bits, which controls how many
+bits the circuit element has on its input/output, and Facing, which allows you to rotate the circuit element to make the
+connections more concise.
+</p><p>These are the corresponding options for the circuit elements above for your reference:
+</p><p>In this diagram, we have 3 8-bit input pins connected to an 8-bit 3-input AND gate. The output of the AND
+gate (which is 8 bits) is probed and is connected to an 8-bit NOT gate. The output of the NOT gate (which is also 8 bits)
+is connected to a probe for output checking. Try replicating the same circuit diagram!
+</p>
+<div class="thumb tright"><div class="thumbinner" style="width:302px;"><a href="https://classes.up-microlab.org/index.php/File:Gates.png" class="image"><img alt="" src="../images/thumb/f/f6/Gates.png/300px-Gates.png" decoding="async" width="300" height="137" class="thumbimage" srcset="../images/thumb/f/f6/Gates.png/450px-Gates.png 1.5x, ../images/thumb/f/f6/Gates.png/600px-Gates.png 2x" data-file-width="1308" data-file-height="598" /></a>  <div class="thumbcaption"><div class="magnify"><a href="https://classes.up-microlab.org/index.php/File:Gates.png" class="internal" title="Enlarge"></a></div>Gates tab, attributes, and sample usage.</div></div></div>
+<p>A splitter allows you to combine or split wires since wires in Logisim can represent multiple
+bits, depending on which elements are connected to them.
+</p><p>A pin allows you to introduce inputs to your logic gates/blocks. This is what you click with
+the finger pointer to change to 0 or 1 to interact with your circuit.
+</p><p>A probe allows you to check the wire values anywhere in your circuit. It can display the
+values of multi-bit wires.
+</p><p>A tunnel allows you to create 'portals' so that more complex circuits won't have a lot of
+crisscrossing wires in them. The names of the tunnels should match to make the connection.
+</p><p>In this diagram, we had an 8-bit input pin that is connected to an 8-bit
+splitter that splits the 8-bit signal into a 6-bit and 2-bit wires. You
+can configure the splitter, also using the options panel on the lower
+right of the Logisim window, on how the splitting should happen. For
+multi-bit wires, the MSB (leftmost bit) is always the bit position
+having the higher number. The lower 6 bits (labeled 5-0) are directly
+connected to a probe. The upper 2 bits (labeled 7-6) are connected
+to a 4-bit tunnel named A. A copy of that tunnel (having the same
+name) connects to a probe. Try playing around with the options of
+these circuit elements to replicate the same circuit diagram!
+</p><p>The logic gates are available under the Gates folder. You can simply create logic gates from
+this selection. Just like the circuit elements before, you can configure the options of these
+gates, specifically the number of bits for their inputs and outputs (through the Data Bits
+option) and the number of input ports that the logic gates have (through the Number of
+Inputs option). Just like every circuit element in Logisim, you can change where the logic
+gates are facing to make the wiring more concise if ever.
+</p><p>There are other blocks available in Logisim that you can play around with. Play around with different interfaces
+inside the Input/Output folder! Implement some logic to interact with them. Have fun!
+</p><p>More complex logic blocks are inside the Plexers (multiplexers, demultiplexers, and
+decoders) and Arithmetic (adders, subtractors, and comparators) folder. For the Plexers
+blocks, you can configure how many select bits there are which will determine the number
+of inputs the block will have. This the circuit diagram below, the multiplexer has 4-bit
+inputs and 2-bit selector. Since it has 2 selector bits, it would then correspond to 4 4-bit
+inputs to select from.
+</p>
+<div class="thumb tright"><div class="thumbinner" style="width:302px;"><a href="https://classes.up-microlab.org/index.php/File:Muxes.png" class="image"><img alt="" src="../images/thumb/5/54/Muxes.png/300px-Muxes.png" decoding="async" width="300" height="178" class="thumbimage" srcset="../images/thumb/5/54/Muxes.png/450px-Muxes.png 1.5x, ../images/thumb/5/54/Muxes.png/600px-Muxes.png 2x" data-file-width="1122" data-file-height="664" /></a>  <div class="thumbcaption"><div class="magnify"><a href="https://classes.up-microlab.org/index.php/File:Muxes.png" class="internal" title="Enlarge"></a></div>Muxes tab, attributes, and sample usage.</div></div></div>
+<p>The flipflops and registers are contained inside the Memory folder.
+Most of the time, we will be using Registers since they allow for
+multiple bits as inputs and outputs. Of course, these circuit elements
+need a 1-bit input pin for the clock. The circuit on the right is a 4-bit
+register. The positive edge of the clock has already arrived that's why
+the output is copying the input value. The WE input of the register,
+which defaults to 1 if not connected, determines whether the
+register updates every positive edge of the clock (if WE = 1), or if it
+ignores the clock and just holds the current value (if WE = 0).
+</p><p>Inside the same Memory folder, we see the RAM (random access memory)
+and ROM (read-only memory) blocks. They are useful for processor
+designs. Both of these memories are addressable, and the contents can be
+preset by the user. Just like the other blocks, the number of address bits
+and data bits can be set. The circuit on the left is an 8-bit address and 16-
+bit data ROM, with preset values of 0xADE1 and 0xB055 in address 0 and
+1 respectively. The input address is currently set to 1, that's why the data
+output shows 0xB055.
+</p>
+<div class="thumb tright"><div class="thumbinner" style="width:302px;"><a href="https://classes.up-microlab.org/index.php/File:Memory.png" class="image"><img alt="" src="../images/thumb/e/eb/Memory.png/300px-Memory.png" decoding="async" width="300" height="215" class="thumbimage" srcset="../images/thumb/e/eb/Memory.png/450px-Memory.png 1.5x, ../images/thumb/e/eb/Memory.png/600px-Memory.png 2x" data-file-width="908" data-file-height="651" /></a>  <div class="thumbcaption"><div class="magnify"><a href="https://classes.up-microlab.org/index.php/File:Memory.png" class="internal" title="Enlarge"></a></div>ROM, Memory Tab, DFF, and Hex editor for ROM</div></div></div>
+<p>To preset the values of the memory, simply right-click the RAM/ROM
+module and click on Edit Contents... A new window will pop up that will
+allow the user to type in the contents (in hexadecimal format) of the
+memory. Once the memory values are set, the window can simply be
+closed and the contents should reflect on the RAM/ROM already.
+</p><p>This is the window where you can
+change the memory contents.
+You can also Save the contents of
+the memory to a file if you wish.
+Afterward, the same memory
+contents can be loaded by right-
+clicking the memory and selecting
+Load Image...
+</p>
+<h2><span class="mw-headline" id="Navigation_tips">Navigation tips</span></h2>
+<ul><li>Logisim has almost infinite workspace. Feel free to zoom in and out of your circuit. The Zoom scrollbar is at the bottom left of the Logisim window. You can also do CTRL + scroll wheel of your mouse to zoom in and out.</li>
+<li>Don't forget to switch from the cursor tool (when creating/modifying circuits) to the pointer tool (when interacting with circuits) and vice versa!</li>
+<li>You can hover your mouse pointer over a pin of a relatively complex logic block to identify the purpose of that pin. For example, hover over the input pins of a multiplexer and you'll see a small pop-up describing what the purpose of that input is. Try doing this on larger blocks like registers and ROM/RAM to know how to use them.</li>
+<li>Save your designs every now and then, in case Logisim crashes for some reason.</li></ul>
+<h2><span class="mw-headline" id="Debugging_common_problems">Debugging common problems</span></h2>
+<p>Accessibility Note: In case you have a disability and find it difficult to identify these colors, please feel free to use a
+more convenient set of colors. To do this, go to File -&gt; Preferences -&gt; Simulation Tab.
+</p><p>Logisim utilizes several <b>colored wires</b> to indicate the state of the
+signal on that wire. If a wire is not a shade of green (0 or 1) or black (for
+multi-bit wires), then there is a problem with the connection. You cannot
+properly simulate a circuit if there is any other color than green or black.
+See the table below for the meaning of the different wire colors.
+</p><p>Here's the table formatted in MediaWiki syntax:
+</p>
+<table class="wikitable">
+<tbody><tr>
+<th>Color
+</th>
+<th>Meaning
+</th></tr>
+<tr>
+<td>Dark green
+</td>
+<td>1-bit wire has a value of 0
+</td></tr>
+<tr>
+<td>Bright green
+</td>
+<td>1-bit wire has a value of 1
+</td></tr>
+<tr>
+<td>Black
+</td>
+<td>Multi-bit wire (many components have bit width attributes which can be configured in the attributes menu on the bottom left)
+</td></tr>
+<tr>
+<td>Red (values with <code>EEEE</code>)
+</td>
+<td>The wire has multiple values on it (in this case, a <code>0</code> and <code>1</code> from the 2 inputs). Also, remember that a big circle appears at wire junctions.
+</td></tr>
+<tr>
+<td>Blue (values with <code>UUUU</code>)
+</td>
+<td>The wire is floating (i.e. has no known value)
+</td></tr>
+<tr>
+<td>Orange
+</td>
+<td>The wire is connected to components that have different bit widths. A simple example is a 1-bit input pin connected to a 2-bit output pin. In the shown example, there's a slightly hidden wire behind the <code>MUX</code> connecting the 2-bit lower data line to the 1-bit select line. Watch out for these!
+</td></tr></tbody></table>
+<div class="thumb tright"><div class="thumbinner" style="width:302px;"><a href="https://classes.up-microlab.org/index.php/File:Wire_colors.png" class="image"><img alt="" src="../images/thumb/4/46/Wire_colors.png/300px-Wire_colors.png" decoding="async" width="300" height="242" class="thumbimage" srcset="../images/thumb/4/46/Wire_colors.png/450px-Wire_colors.png 1.5x, ../images/thumb/4/46/Wire_colors.png/600px-Wire_colors.png 2x" data-file-width="865" data-file-height="699" /></a>  <div class="thumbcaption"><div class="magnify"><a href="https://classes.up-microlab.org/index.php/File:Wire_colors.png" class="internal" title="Enlarge"></a></div>Examples of incorrect wiring giving rise to different colors.</div></div></div>
+<p><b>Red wire</b> values are usually due to wires having different values being
+connected. Remember that in logic, a wire can only be either 0 or 1 but not both at the
+same time! When you accidentally connect two output ports, the red wire
+will appear. Output ports drive the wire value to either 0 or 1. If there's another output
+driving the same wire, that will cause a double-driver problem. In the image above, the
+red wire appears because the input pins are connected. The input pins drive the wire
+value to either 0 or 1. If there's a conflicting driver (one wants it 0 while the other wants
+it 1), then that will cause the problem. Always ensure that only one driver (the
+one that sets a value) is on the wire.
+</p><p><b>Blue wire</b> values simply mean they are floating. That is, nothing is driving their
+values. Make sure that there is one driver (the one that sets a value) on the wire, either
+an output port from a logic gate/block/register or an input pin.
+</p><p>As described in the table above, <b>orange wire</b> values happen when wires with
+two different widths are connected. Remember that in Logisim, a black wire would imply
+a multi-bit wire (it is more than 1 bit). Therefore, you cannot connect two wires of
+different widths because of the mismatch. This can also happen when using tunnels since
+tunnels also define how many bits are being tunneled. Make sure that your tunnel widths
+are consistent with the wire widths being connected to them.
+</p>
+<!-- 
+NewPP limit report
+Cached time: 20260429024803
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.056 seconds
+Real time usage: 1.081 seconds
+Preprocessor visited node count: 21/1000000
+Preprocessor generated node count: 0/1000000
+Post‐expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Highest expansion depth: 2/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%    0.000      1 -total
+-->
+
+<!-- Saved in parser cache with key upmicrol_classes_db:pcache:idhash:756-0!canonical and timestamp 20260429024802 and revision id 4435
+ -->
+</div></div>
+		
+		<div class="printfooter">Retrieved from "<a dir="ltr" href="https://classes.up-microlab.org/index.php?title=Lab_0:_Introduction_to_Logisim&amp;oldid=4435">https://classes.up-microlab.org/index.php?title=Lab_0:_Introduction_to_Logisim&amp;oldid=4435</a>"</div>
+		
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+		<div class="visualClear"></div>
+		
+	</div>
+</div>
+
+
+		<div id="mw-navigation">
+			<h2>Navigation menu</h2>
+			<div id="mw-head">
+									<div id="p-personal" role="navigation" aria-labelledby="p-personal-label">
+						<h3 id="p-personal-label">Personal tools</h3>
+						<ul>
+							<li id="pt-login"><a href="https://classes.up-microlab.org/index.php?title=Special:UserLogin&amp;returnto=Lab+0%3A+Introduction+to+Logisim" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li>						</ul>
+					</div>
+									<div id="left-navigation">
+										<div id="p-namespaces" role="navigation" class="vectorTabs" aria-labelledby="p-namespaces-label">
+						<h3 id="p-namespaces-label">Namespaces</h3>
+						<ul>
+							<li id="ca-nstab-main" class="selected"><span><a href="./Lab_0:_Introduction_to_Logisim.html" title="View the content page [c]" accesskey="c">Page</a></span></li><li id="ca-talk" class="new"><span><a href="https://classes.up-microlab.org/index.php?title=Talk:Lab_0:_Introduction_to_Logisim&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></span></li>						</ul>
+					</div>
+										<div id="p-variants" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-variants-label">
+												<input type="checkbox" class="vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+						<h3 id="p-variants-label">
+							<span>Variants</span>
+						</h3>
+						<ul class="menu">
+													</ul>
+					</div>
+									</div>
+				<div id="right-navigation">
+										<div id="p-views" role="navigation" class="vectorTabs" aria-labelledby="p-views-label">
+						<h3 id="p-views-label">Views</h3>
+						<ul>
+							<li id="ca-view" class="collapsible selected"><span><a href="./Lab_0:_Introduction_to_Logisim.html">Read</a></span></li><li id="ca-viewsource" class="collapsible"><span><a href="https://classes.up-microlab.org/index.php?title=Lab_0:_Introduction_to_Logisim&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></span></li><li id="ca-history" class="collapsible"><span><a href="https://classes.up-microlab.org/index.php?title=Lab_0:_Introduction_to_Logisim&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></span></li>						</ul>
+					</div>
+										<div id="p-cactions" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-cactions-label">
+						<input type="checkbox" class="vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+						<h3 id="p-cactions-label"><span>More</span></h3>
+						<ul class="menu">
+													</ul>
+					</div>
+										<div id="p-search" role="search">
+						<h3>
+							<label for="searchInput">Search</label>
+						</h3>
+						<form action="https://classes.up-microlab.org/index.php" id="searchform">
+							<div id="simpleSearch">
+								<input type="search" name="search" placeholder="Search Microlab Classes" title="Search Microlab Classes [f]" accesskey="f" id="searchInput"/><input type="hidden" value="Special:Search" name="title"/><input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/><input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>							</div>
+						</form>
+					</div>
+									</div>
+			</div>
+			<div id="mw-panel">
+				<div id="p-logo" role="banner"><a class="mw-wiki-logo" href="https://classes.up-microlab.org/index.php/Main_Page" title="Visit the main page"></a></div>
+						<div class="portal" role="navigation" id="p-navigation" aria-labelledby="p-navigation-label">
+			<h3 id="p-navigation-label">Navigation</h3>
+			<div class="body">
+								<ul>
+					<li id="n-mainpage-description"><a href="https://classes.up-microlab.org/index.php/Main_Page" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="https://classes.up-microlab.org/index.php/Special:RecentChanges" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="https://classes.up-microlab.org/index.php/Special:Random" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li>				</ul>
+							</div>
+		</div>
+			<div class="portal" role="navigation" id="p-tb" aria-labelledby="p-tb-label">
+			<h3 id="p-tb-label">Tools</h3>
+			<div class="body">
+								<ul>
+					<li id="t-whatlinkshere"><a href="https://classes.up-microlab.org/index.php/Special:WhatLinksHere/Lab_0:_Introduction_to_Logisim" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="https://classes.up-microlab.org/index.php/Special:RecentChangesLinked/Lab_0:_Introduction_to_Logisim" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="https://classes.up-microlab.org/index.php/Special:SpecialPages" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="https://classes.up-microlab.org/index.php?title=Lab_0:_Introduction_to_Logisim&amp;printable=yes" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="https://classes.up-microlab.org/index.php?title=Lab_0:_Introduction_to_Logisim&amp;oldid=4435" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="https://classes.up-microlab.org/index.php?title=Lab_0:_Introduction_to_Logisim&amp;action=info" title="More information about this page">Page information</a></li><li id="t-cite"><a href="https://classes.up-microlab.org/index.php?title=Special:CiteThisPage&amp;page=Lab_0%3A_Introduction_to_Logisim&amp;id=4435" title="Information on how to cite this page">Cite this page</a></li>				</ul>
+							</div>
+		</div>
+				</div>
+		</div>
+				<div id="footer" role="contentinfo">
+						<ul id="footer-info">
+								<li id="footer-info-lastmod"> This page was last edited on 19 February 2025, at 15:32.</li>
+							</ul>
+						<ul id="footer-places">
+								<li id="footer-places-privacy"><a href="https://classes.up-microlab.org/index.php/Microlab_Classes:Privacy_policy" title="Microlab Classes:Privacy policy">Privacy policy</a></li>
+								<li id="footer-places-about"><a href="https://classes.up-microlab.org/index.php/Microlab_Classes:About" title="Microlab Classes:About">About Microlab Classes</a></li>
+								<li id="footer-places-disclaimer"><a href="https://classes.up-microlab.org/index.php/Microlab_Classes:General_disclaimer" title="Microlab Classes:General disclaimer">Disclaimers</a></li>
+							</ul>
+										<ul id="footer-icons" class="noprint">
+										<li id="footer-poweredbyico">
+						<a href="https://www.mediawiki.org/"><img src="../resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="../resources/assets/poweredby_mediawiki_132x47.png 1.5x, ../resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31"/></a>					</li>
+									</ul>
+						<div style="clear: both;"></div>
+		</div>
+		
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.056","walltime":"1.081","ppvisitednodes":{"value":21,"limit":1000000},"ppgeneratednodes":{"value":0,"limit":1000000},"postexpandincludesize":{"value":0,"limit":2097152},"templateargumentsize":{"value":0,"limit":2097152},"expansiondepth":{"value":2,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%    0.000      1 -total"]},"cachereport":{"timestamp":"20260429024803","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":357});});</script>
+</body>
+</html>

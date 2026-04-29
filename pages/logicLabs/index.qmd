@@ -1,0 +1,25 @@
+---
+title: "Logic Labs"
+format:
+  html:
+    css: lab.css
+---
+
+::: {.lab-nav}
+[Logic Labs](index.qmd) | [Lab 1](lab1.qmd) | [Lab 2](lab2.qmd) | [Lab 3](lab3.qmd) | [Lab 4](lab4.qmd) | [Lab 5](lab5.qmd) | [Lab 6](lab6.qmd)
+:::
+
+::: {.lab-grid}
+::: {.lab-card}
+### Combinational Logic
+- [Lab 1: Say my Student Number](lab1.qmd)
+- [Lab 2: Analog Sticks](lab2.qmd)
+- [Lab 3: ALU Flags](lab3.qmd)
+:::
+::: {.lab-card}
+### Sequential Logic
+- [Lab 4: Flip-flop Flavors](lab4.qmd)
+- [Lab 5: Moving Dot](lab5.qmd)
+- [Lab 6: Keyboard](lab6.qmd)
+:::
+:::

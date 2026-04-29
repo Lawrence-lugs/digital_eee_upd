@@ -1,0 +1,91 @@
+--2026-04-29 13:32:50--  https://classes.up-microlab.org/index.php/Lab_6:_Keyboard
+Reusing existing connection to classes.up-microlab.org:443.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Saving to: ‘classes.up-microlab.org/index.php/Lab_6:_Keyboard.html’
+
+     0K .......... .......... ..                               11.0M=0.002s
+
+2026-04-29 13:32:50 (11.0 MB/s) - ‘classes.up-microlab.org/index.php/Lab_6:_Keyboard.html’ saved [22705]
+
+--2026-04-29 13:32:53--  https://classes.up-microlab.org/images/2/25/Eee143lab6keyboard.gif
+Reusing existing connection to classes.up-microlab.org:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 1010080 (986K) [image/gif]
+Saving to: ‘classes.up-microlab.org/images/2/25/Eee143lab6keyboard.gif’
+
+     0K .......... .......... .......... .......... ..........  5% 10.9M 0s
+    50K .......... .......... .......... .......... .......... 10% 11.2M 0s
+   100K .......... .......... .......... .......... .......... 15% 8.29M 0s
+   150K .......... .......... .......... .......... .......... 20% 12.0M 0s
+   200K .......... .......... .......... .......... .......... 25% 10.4M 0s
+   250K .......... .......... .......... .......... .......... 30% 9.03M 0s
+   300K .......... .......... .......... .......... .......... 35% 7.80M 0s
+   350K .......... .......... .......... .......... .......... 40% 8.79M 0s
+   400K .......... .......... .......... .......... .......... 45% 9.68M 0s
+   450K .......... .......... .......... .......... .......... 50% 9.84M 0s
+   500K .......... .......... .......... .......... .......... 55% 14.4M 0s
+   550K .......... .......... .......... .......... .......... 60% 12.3M 0s
+   600K .......... .......... .......... .......... .......... 65% 10.5M 0s
+   650K .......... .......... .......... .......... .......... 70% 11.1M 0s
+   700K .......... .......... .......... .......... .......... 76% 11.9M 0s
+   750K .......... .......... .......... .......... .......... 81% 12.4M 0s
+   800K .......... .......... .......... .......... .......... 86%  427K 0s
+   850K .......... .......... .......... .......... .......... 91% 4.31M 0s
+   900K .......... .......... .......... .......... .......... 96% 8.62M 0s
+   950K .......... .......... .......... ......               100% 7.24M=0.2s
+
+2026-04-29 13:32:54 (4.50 MB/s) - ‘classes.up-microlab.org/images/2/25/Eee143lab6keyboard.gif’ saved [1010080/1010080]
+
+--2026-04-29 13:32:55--  https://classes.up-microlab.org/images/thumb/1/10/Lab6_graphicsController_wireframe.png/300px-Lab6_graphicsController_wireframe.png
+Reusing existing connection to classes.up-microlab.org:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 8707 (8.5K) [image/png]
+Saving to: ‘classes.up-microlab.org/images/thumb/1/10/Lab6_graphicsController_wireframe.png/300px-Lab6_graphicsController_wireframe.png’
+
+     0K ........                                              100% 9.81M=0.001s
+
+2026-04-29 13:32:55 (9.81 MB/s) - ‘classes.up-microlab.org/images/thumb/1/10/Lab6_graphicsController_wireframe.png/300px-Lab6_graphicsController_wireframe.png’ saved [8707/8707]
+
+--2026-04-29 13:32:57--  https://classes.up-microlab.org/images/thumb/1/10/Lab6_graphicsController_wireframe.png/450px-Lab6_graphicsController_wireframe.png
+Reusing existing connection to classes.up-microlab.org:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 14031 (14K) [image/png]
+Saving to: ‘classes.up-microlab.org/images/thumb/1/10/Lab6_graphicsController_wireframe.png/450px-Lab6_graphicsController_wireframe.png’
+
+     0K .......... ...                                        100% 15.2M=0.001s
+
+2026-04-29 13:32:57 (15.2 MB/s) - ‘classes.up-microlab.org/images/thumb/1/10/Lab6_graphicsController_wireframe.png/450px-Lab6_graphicsController_wireframe.png’ saved [14031/14031]
+
+--2026-04-29 13:33:00--  https://classes.up-microlab.org/images/thumb/1/10/Lab6_graphicsController_wireframe.png/600px-Lab6_graphicsController_wireframe.png
+Reusing existing connection to classes.up-microlab.org:443.
+HTTP request sent, awaiting response... 200 OK
+Length: 19810 (19K) [image/png]
+Saving to: ‘classes.up-microlab.org/images/thumb/1/10/Lab6_graphicsController_wireframe.png/600px-Lab6_graphicsController_wireframe.png’
+
+     0K .......... .........                                  100% 13.6M=0.001s
+
+2026-04-29 13:33:00 (13.6 MB/s) - ‘classes.up-microlab.org/images/thumb/1/10/Lab6_graphicsController_wireframe.png/600px-Lab6_graphicsController_wireframe.png’ saved [19810/19810]
+
+FINISHED --2026-04-29 13:33:00--
+Total wall clock time: 2m 46s
+Downloaded: 70 files, 17M in 5.3s (3.26 MB/s)
+Converting links in classes.up-microlab.org/index.php/Lab_4:_Flip-flop_Flavors.html... 39.
+16-23
+Converting links in classes.up-microlab.org/index.php/Lab_3a:_ALU_Flags.html... 48.
+20-28
+Converting links in classes.up-microlab.org/index.php/Lab_2:_Analog_Sticks.html... 36.
+12-24
+Converting links in classes.up-microlab.org/index.php/Lab_1:_Say_my_Student_Number.html... 32.
+10-22
+Converting links in classes.up-microlab.org/index.php/Lab_0:_Introduction_to_Logisim.html... 69.
+34-35
+Converting links in classes.up-microlab.org/index.php/Lab_5:_Moving_Dot.html... 36.
+14-22
+Converting links in classes.up-microlab.org/index.php/Lab_6:_Keyboard.html... 42.
+18-24
+Converting links in classes.up-microlab.org/load.php?lang=en&modules=mediawiki.legacy.commonPrint,shared|mediawiki.skinning.interface|skins.vector.styles&only=styles&skin=vector.css... 18.
+18-0
+Converting links in classes.up-microlab.org/load.php?lang=en&modules=mediawiki.legacy.commonPrint,shared|mediawiki.skinning.interface|mediawiki.toc.styles|skins.vector.styles&only=styles&skin=vector.css... 18.
+18-0
+Converted links in 9 files in 0.2 seconds.

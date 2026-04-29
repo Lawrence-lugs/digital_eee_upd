@@ -1,12 +1,12 @@
 ---
-title: "Advanced Combinational Logic: Module 010"
+title: "Module 010: Advanced Combinational Logic"
 format:
   html:
     css: vcc.css
 ---
 
 ::: {.vcc-nav}
-[Overview](index.qmd) | [Foundations](00-fundamentals.qmd) | [Combinational](01-combinational.qmd) | [Sequential](02-sequential.qmd) | [Verification](03-verification.qmd) | [Practices](04-practices.qmd) | [Extras](05-extras.qmd)
+[Overview](index.qmd) | [M000](00-fundamentals.qmd) | [M001](001-combinational.qmd) | [M010](01-combinational.qmd) | [M011](02-sequential.qmd) | [M100](100-advanced-sequential.qmd) | [M101](03-verification.qmd) | [M110](110-advanced-verification.qmd) | [M111](04-practices.qmd) | [Extras](05-extras.qmd) | [Credits](credits.qmd)
 :::
 # Module 010: Advanced Combinational Logic
 
@@ -423,5 +423,5 @@ Again, we're implementing an ALU. **I promise this is the last time.**
 However, we have another twist this time. This time, you will have to implement the ALU with the **outputs defined as reg!** The **reg** statement is, in fact, incompatible with **assign** statements. Hence, you'll have to use an **always** block.
 
 Good luck!
-Previous: [Foundations](00-fundamentals.qmd)
-Next: [Sequential](02-sequential.qmd)
+Previous: [M001](001-combinational.qmd)
+Next: [M011](02-sequential.qmd)

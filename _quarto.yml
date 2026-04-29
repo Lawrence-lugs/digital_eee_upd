@@ -19,6 +19,8 @@ website:
         text: Vercises
       - href: pages/verilogCrashCourse/index.qmd
         text: Verilog Crash Course
+      - href: pages/logicLabs/index.qmd
+        text: Logic Labs
       - href: kmapgameee
         text: kmap-gamEEE
       - href: FSM_simulatEEE.html
@@ -32,7 +34,7 @@ format:
       # - darkly
     css: styles.css
     toc: true
-    code-overflow: wrap
+    # code-overflow: wrap
     code-block-bg: true
     code-line-numbers: true
     code-block-border-left: "#6B0D1A"

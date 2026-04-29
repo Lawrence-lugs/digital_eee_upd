@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<title>Lab 2: Analog Sticks - Microlab Classes</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"Lab_2:_Analog_Sticks","wgTitle":"Lab 2: Analog Sticks","wgCurRevisionId":4466,"wgRevisionId":4466,"wgArticleId":775,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgBreakFrames":!1,"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgMonthNamesShort":["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"wgRelevantPageName":"Lab_2:_Analog_Sticks","wgRelevantArticleId":775,"wgRequestId":"afGZFMBlBpL1z8Utujb_0QAAAZM","wgCSPNonce":!1,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,
+"wgRestrictionEdit":[],"wgRestrictionMove":[],"wgMediaViewerOnClick":!0,"wgMediaViewerEnabledByDefault":!0};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":"ready","user.tokens":"loading","mediawiki.legacy.shared":"ready","mediawiki.legacy.commonPrint":"ready","mediawiki.skinning.interface":"ready","skins.vector.styles":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.searchSuggest","mmv.head","mmv.bootstrap.autostart","skins.vector.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.tokens@tffin",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"editToken":"+\\","patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="../load.php%3Flang=en&amp;modules=mediawiki.legacy.commonPrint,shared|mediawiki.skinning.interface|skins.vector.styles&amp;only=styles&amp;skin=vector.css"/>
+<script async="" src="../load.php%3Flang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.34.1"/>
+<link rel="shortcut icon" href="https://www.up-microlab.org/classes/favicon2.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="https://classes.up-microlab.org/opensearch_desc.php" title="Microlab Classes (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="https://classes.up-microlab.org/api.php?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="Microlab Classes Atom feed" href="https://classes.up-microlab.org/index.php?title=Special:RecentChanges&amp;feed=atom"/>
+<!--[if lt IE 9]><script src="/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Lab_2_Analog_Sticks rootpage-Lab_2_Analog_Sticks skin-vector action-view">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	
+	<div class="mw-indicators mw-body-content">
+</div>
+
+	<h1 id="firstHeading" class="firstHeading" lang="en">Lab 2: Analog Sticks</h1>
+	
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From Microlab Classes</div>
+		<div id="contentSub"></div>
+		
+		
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="./Lab_2:_Analog_Sticks.html#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="./Lab_2:_Analog_Sticks.html#p-search">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><h2><span class="mw-headline" id="Background">Background</span></h2>
+<p>Analog sticks or "joysticks" are input devices that encode a direction, like in game controllers. While aircraft had originally had rudder sticks that are purely mechanical in nature, the latest aircraft are too heavy to control via mechanical advantage alone and so such analog sticks also find use in them.
+</p>
+<div class="thumb tright"><div class="thumbinner" style="width:415px;"><a href="https://classes.up-microlab.org/index.php/File:AnalogStickk.gif" class="image"><img alt="" src="../images/b/b0/AnalogStickk.gif" decoding="async" width="413" height="200" class="thumbimage" data-file-width="413" data-file-height="200" /></a>  <div class="thumbcaption">Some of the first most popular video games started in and with analog sticks as input, like Street Fighter or Tekken. (Source: Core-A Gaming, "The Korean Backdash")</div></div></div>
+<p>Knowing the direction being output by an analog stick such as U(p) D(own) L(eft) R(ight) or any combination thereof is important for a lot of things, like knowing which sprite animation to give Mario.
+</p>
+<div class="thumb tright"><div class="thumbinner" style="width:527px;"><a href="https://classes.up-microlab.org/index.php/File:MarioSprites.gif" class="image"><img alt="" src="../images/8/81/MarioSprites.gif" decoding="async" width="525" height="305" class="thumbimage" data-file-width="525" data-file-height="305" /></a>  <div class="thumbcaption">The Mario sprite animations are simple combinational functions of the input directions</div></div></div>
+<p>However, some analog sticks, like the one that can be found in Logisim, have a different encoding that do not necessarily correspond to U/D/L/R. This is because they can encode more than just the direction but also the magnitude of the displacement along a specific direction.
+</p>
+<h2><span class="mw-headline" id="Instructions">Instructions</span></h2>
+<p>Your assignment is as follows:
+</p>
+<ol><li>Download the <b>logisim template</b> in UVLe.</li>
+<li>Translate the encoding of the Logisim joystick <b>as shown in the GIF in this page with the ABCD input order</b> into the U(p) D(own) L(eft) R(ight) encoding with a truth table.</li>
+<li>Translate the truth tables of the U/D/L/R outputs into K-Maps.</li>
+<li>Obtain minimal SOP and POS expressions for the U/D/L/R outputs using the K-Maps.</li>
+<li>Fill in the "udlrTranslation" subcircuit with a circuit that works.</li></ol>
+<p>Notes:
+</p>
+<ul><li>Your actual template is the "udlrTranslation" subcircuit! You need to change into it by double-clicking the chip icon beside the name in the <i>library panel</i>.</li>
+<li>Again, do not move any input or output pins in the udlrTranslation subcircuit.</li>
+<li>There are a bunch of impossible input combinations. Use <i>don't cares</i> for these. Otherwise, the circuits you create will be suboptimal and are wrong.</li></ul>
+<div class="thumb tright"><div class="thumbinner" style="width:1187px;"><a href="https://classes.up-microlab.org/index.php/File:UdlrTranslation.gif" class="image"><img alt="" src="../images/c/c0/UdlrTranslation.gif" decoding="async" width="1185" height="343" class="thumbimage" data-file-width="1185" data-file-height="343" /></a>  <div class="thumbcaption">Sample Work.</div></div></div>
+<!-- 
+NewPP limit report
+Cached time: 20260428164917
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.022 seconds
+Real time usage: 0.052 seconds
+Preprocessor visited node count: 8/1000000
+Preprocessor generated node count: 0/1000000
+Post‐expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Highest expansion depth: 2/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%    0.000      1 -total
+-->
+
+<!-- Saved in parser cache with key upmicrol_classes_db:pcache:idhash:775-0!canonical and timestamp 20260428164917 and revision id 4466
+ -->
+</div></div>
+		
+		<div class="printfooter">Retrieved from "<a dir="ltr" href="https://classes.up-microlab.org/index.php?title=Lab_2:_Analog_Sticks&amp;oldid=4466">https://classes.up-microlab.org/index.php?title=Lab_2:_Analog_Sticks&amp;oldid=4466</a>"</div>
+		
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+		<div class="visualClear"></div>
+		
+	</div>
+</div>
+
+
+		<div id="mw-navigation">
+			<h2>Navigation menu</h2>
+			<div id="mw-head">
+									<div id="p-personal" role="navigation" aria-labelledby="p-personal-label">
+						<h3 id="p-personal-label">Personal tools</h3>
+						<ul>
+							<li id="pt-login"><a href="https://classes.up-microlab.org/index.php?title=Special:UserLogin&amp;returnto=Lab+2%3A+Analog+Sticks" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li>						</ul>
+					</div>
+									<div id="left-navigation">
+										<div id="p-namespaces" role="navigation" class="vectorTabs" aria-labelledby="p-namespaces-label">
+						<h3 id="p-namespaces-label">Namespaces</h3>
+						<ul>
+							<li id="ca-nstab-main" class="selected"><span><a href="./Lab_2:_Analog_Sticks.html" title="View the content page [c]" accesskey="c">Page</a></span></li><li id="ca-talk" class="new"><span><a href="https://classes.up-microlab.org/index.php?title=Talk:Lab_2:_Analog_Sticks&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></span></li>						</ul>
+					</div>
+										<div id="p-variants" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-variants-label">
+												<input type="checkbox" class="vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+						<h3 id="p-variants-label">
+							<span>Variants</span>
+						</h3>
+						<ul class="menu">
+													</ul>
+					</div>
+									</div>
+				<div id="right-navigation">
+										<div id="p-views" role="navigation" class="vectorTabs" aria-labelledby="p-views-label">
+						<h3 id="p-views-label">Views</h3>
+						<ul>
+							<li id="ca-view" class="collapsible selected"><span><a href="./Lab_2:_Analog_Sticks.html">Read</a></span></li><li id="ca-viewsource" class="collapsible"><span><a href="https://classes.up-microlab.org/index.php?title=Lab_2:_Analog_Sticks&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></span></li><li id="ca-history" class="collapsible"><span><a href="https://classes.up-microlab.org/index.php?title=Lab_2:_Analog_Sticks&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></span></li>						</ul>
+					</div>
+										<div id="p-cactions" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-cactions-label">
+						<input type="checkbox" class="vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+						<h3 id="p-cactions-label"><span>More</span></h3>
+						<ul class="menu">
+													</ul>
+					</div>
+										<div id="p-search" role="search">
+						<h3>
+							<label for="searchInput">Search</label>
+						</h3>
+						<form action="https://classes.up-microlab.org/index.php" id="searchform">
+							<div id="simpleSearch">
+								<input type="search" name="search" placeholder="Search Microlab Classes" title="Search Microlab Classes [f]" accesskey="f" id="searchInput"/><input type="hidden" value="Special:Search" name="title"/><input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/><input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>							</div>
+						</form>
+					</div>
+									</div>
+			</div>
+			<div id="mw-panel">
+				<div id="p-logo" role="banner"><a class="mw-wiki-logo" href="https://classes.up-microlab.org/index.php/Main_Page" title="Visit the main page"></a></div>
+						<div class="portal" role="navigation" id="p-navigation" aria-labelledby="p-navigation-label">
+			<h3 id="p-navigation-label">Navigation</h3>
+			<div class="body">
+								<ul>
+					<li id="n-mainpage-description"><a href="https://classes.up-microlab.org/index.php/Main_Page" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="https://classes.up-microlab.org/index.php/Special:RecentChanges" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="https://classes.up-microlab.org/index.php/Special:Random" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li>				</ul>
+							</div>
+		</div>
+			<div class="portal" role="navigation" id="p-tb" aria-labelledby="p-tb-label">
+			<h3 id="p-tb-label">Tools</h3>
+			<div class="body">
+								<ul>
+					<li id="t-whatlinkshere"><a href="https://classes.up-microlab.org/index.php/Special:WhatLinksHere/Lab_2:_Analog_Sticks" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="https://classes.up-microlab.org/index.php/Special:RecentChangesLinked/Lab_2:_Analog_Sticks" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="https://classes.up-microlab.org/index.php/Special:SpecialPages" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="https://classes.up-microlab.org/index.php?title=Lab_2:_Analog_Sticks&amp;printable=yes" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="https://classes.up-microlab.org/index.php?title=Lab_2:_Analog_Sticks&amp;oldid=4466" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="https://classes.up-microlab.org/index.php?title=Lab_2:_Analog_Sticks&amp;action=info" title="More information about this page">Page information</a></li><li id="t-cite"><a href="https://classes.up-microlab.org/index.php?title=Special:CiteThisPage&amp;page=Lab_2%3A_Analog_Sticks&amp;id=4466" title="Information on how to cite this page">Cite this page</a></li>				</ul>
+							</div>
+		</div>
+				</div>
+		</div>
+				<div id="footer" role="contentinfo">
+						<ul id="footer-info">
+								<li id="footer-info-lastmod"> This page was last edited on 26 February 2025, at 12:46.</li>
+							</ul>
+						<ul id="footer-places">
+								<li id="footer-places-privacy"><a href="https://classes.up-microlab.org/index.php/Microlab_Classes:Privacy_policy" title="Microlab Classes:Privacy policy">Privacy policy</a></li>
+								<li id="footer-places-about"><a href="https://classes.up-microlab.org/index.php/Microlab_Classes:About" title="Microlab Classes:About">About Microlab Classes</a></li>
+								<li id="footer-places-disclaimer"><a href="https://classes.up-microlab.org/index.php/Microlab_Classes:General_disclaimer" title="Microlab Classes:General disclaimer">Disclaimers</a></li>
+							</ul>
+										<ul id="footer-icons" class="noprint">
+										<li id="footer-poweredbyico">
+						<a href="https://www.mediawiki.org/"><img src="../resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="../resources/assets/poweredby_mediawiki_132x47.png 1.5x, ../resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31"/></a>					</li>
+									</ul>
+						<div style="clear: both;"></div>
+		</div>
+		
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.022","walltime":"0.052","ppvisitednodes":{"value":8,"limit":1000000},"ppgeneratednodes":{"value":0,"limit":1000000},"postexpandincludesize":{"value":0,"limit":2097152},"templateargumentsize":{"value":0,"limit":2097152},"expansiondepth":{"value":2,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%    0.000      1 -total"]},"cachereport":{"timestamp":"20260428164917","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":935});});</script>
+</body>
+</html>

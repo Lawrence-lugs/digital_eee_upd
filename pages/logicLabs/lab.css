@@ -1,0 +1,22 @@
+/* Logic Labs mini-site styles */
+.lab-nav {
+  margin: 0 0 1rem 0;
+  padding: 0.75rem 1rem;
+  background: #fdf5f6;
+  border-left: 4px solid #6B0D1A;
+  border-radius: 6px;
+}
+
+.lab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0 1.5rem 0;
+}
+
+.lab-card {
+  border: 1px solid #f0d0d4;
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  background: #ffffff;
+}

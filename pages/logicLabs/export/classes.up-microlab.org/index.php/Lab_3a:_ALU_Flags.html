@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<title>Lab 3: ALU Flags - Microlab Classes</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":0,"wgPageName":"Lab_3:_ALU_Flags","wgTitle":"Lab 3: ALU Flags","wgCurRevisionId":4507,"wgRevisionId":4507,"wgArticleId":782,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":[],"wgBreakFrames":!1,"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgMonthNamesShort":["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"wgRelevantPageName":"Lab_3:_ALU_Flags","wgRelevantArticleId":782,"wgRequestId":"afGZJsBlBpL1z8UtujYA9wAAAcU","wgCSPNonce":!1,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":
+[],"wgRestrictionMove":[],"wgRedirectedFrom":"Lab_3a:_ALU_Flags","wgMediaViewerOnClick":!0,"wgMediaViewerEnabledByDefault":!0,"wgInternalRedirectTargetUrl":"/index.php/Lab_3:_ALU_Flags"};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":"ready","user.tokens":"loading","mediawiki.legacy.shared":"ready","mediawiki.legacy.commonPrint":"ready","mediawiki.toc.styles":"ready","mediawiki.skinning.interface":"ready","skins.vector.styles":"ready"};RLPAGEMODULES=["mediawiki.action.view.redirect","site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","mediawiki.searchSuggest","mmv.head","mmv.bootstrap.autostart","skins.vector.js"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.tokens@tffin",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"editToken":"+\\","patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="../load.php%3Flang=en&amp;modules=mediawiki.legacy.commonPrint,shared|mediawiki.skinning.interface|mediawiki.toc.styles|skins.vector.styles&amp;only=styles&amp;skin=vector.css"/>
+<script async="" src="../load.php%3Flang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="generator" content="MediaWiki 1.34.1"/>
+<link rel="shortcut icon" href="https://www.up-microlab.org/classes/favicon2.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="https://classes.up-microlab.org/opensearch_desc.php" title="Microlab Classes (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="https://classes.up-microlab.org/api.php?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="Microlab Classes Atom feed" href="https://classes.up-microlab.org/index.php?title=Special:RecentChanges&amp;feed=atom"/>
+<link rel="canonical" href="https://classes.up-microlab.org/index.php/Lab_3:_ALU_Flags"/>
+<!--[if lt IE 9]><script src="/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-0 ns-subject page-Lab_3_ALU_Flags rootpage-Lab_3_ALU_Flags skin-vector action-view">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	
+	<div class="mw-indicators mw-body-content">
+</div>
+
+	<h1 id="firstHeading" class="firstHeading" lang="en">Lab 3: ALU Flags</h1>
+	
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From Microlab Classes</div>
+		<div id="contentSub"><span class="mw-redirectedfrom">(Redirected from <a href="https://classes.up-microlab.org/index.php?title=Lab_3a:_ALU_Flags&amp;redirect=no" class="mw-redirect" title="Lab 3a: ALU Flags">Lab 3a: ALU Flags</a>)</span></div>
+		
+		
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="./Lab_3a:_ALU_Flags.html#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="./Lab_3a:_ALU_Flags.html#p-search">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><div id="toc" class="toc"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2>Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="./Lab_3a:_ALU_Flags.html#Background"><span class="tocnumber">1</span> <span class="toctext">Background</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="./Lab_3a:_ALU_Flags.html#Instructions:_Part_1"><span class="tocnumber">2</span> <span class="toctext">Instructions: Part 1</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="./Lab_3a:_ALU_Flags.html#Instructions:_Part_2"><span class="tocnumber">3</span> <span class="toctext">Instructions: Part 2</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="./Lab_3a:_ALU_Flags.html#Notes"><span class="tocnumber">4</span> <span class="toctext">Notes</span></a></li>
+</ul>
+</div>
+
+<h2><span class="mw-headline" id="Background">Background</span></h2>
+<p>Arithmetic Logic Units, or ALUs, are blocks in our computer processors that are the main components responsible for computing binary arithmetic. It isn't a stretch to say that ALUs are responsible for the most computations in the modern world.
+</p>
+<div class="thumb tright"><div class="thumbinner" style="width:302px;"><a href="https://classes.up-microlab.org/index.php/File:Alu_figma.png" class="image"><img alt="" src="../images/thumb/e/ef/Alu_figma.png/300px-Alu_figma.png" decoding="async" width="300" height="253" class="thumbimage" srcset="../images/thumb/e/ef/Alu_figma.png/450px-Alu_figma.png 1.5x, ../images/thumb/e/ef/Alu_figma.png/600px-Alu_figma.png 2x" data-file-width="1586" data-file-height="1340" /></a>  <div class="thumbcaption"><div class="magnify"><a href="https://classes.up-microlab.org/index.php/File:Alu_figma.png" class="internal" title="Enlarge"></a></div>ALU, with its inputs and outputs shown</div></div></div>
+<p>An ALU has three inputs: the two operands, and an operation type (ALU_OP in the Figure). The ALU_OP tells the ALU what to do to the operands, like add, subtract, multiply, or divide. It has one output which is the output of the ALU operation.
+</p><p>Additionally, the ALU has special outputs called flags (STATUS in the Figure). Some examples include:
+</p>
+<ul><li>Zero flag (Z): 1 if the result is zero.</li>
+<li>Negative flag (N): 1 if the result is negative.</li>
+<li>Carry flag (C): Carry out of the ALU operation. <i>Example: 1100 + 1001 will cause the carry flag to be set.</i></li>
+<li>Overflow flag (O): 1 if the result has an <b>overflow</b> or an <b>underflow</b>. That is, the binary output arithmetic is not correctly representable in the current bitwidth. <i>Example: 0111 (7) + 0001 (1) = 1000 (-8), or 1000 (-8) + 1110 (-2) = 0110 (6) will cause the overflow flag to be set.</i></li></ul>
+<h2><span class="mw-headline" id="Instructions:_Part_1">Instructions: Part 1</span></h2>
+<p>In the first part of the assignment, you must create a 4-bit ALU block. For this part, you may use any component under <i>Wiring, Gates, and Plexers</i>.
+</p>
+<ol><li>Download the <b>ALU template</b> in UVLe.</li>
+<li>Enter the alu block provided in Logisim.</li>
+<li>Implement a 4-bit ALU that can perform ADD, SUBTRACT, Bitwise AND, and Bitwise OR, depending on the input ALU_OP. Make sure it follows the table below.</li>
+<li>Implement the 4 flags Z, N, C, O.</li>
+<li>Note that the input to the ALU is <i>signed</i> but the inputs to main are <i>unsigned</i>. Design the ALU such that it works regardless.</li></ol>
+<table class="wikitable">
+
+<tbody><tr>
+<th>Operation</th>
+<th>ALU_OP</th>
+<th>Expression
+</th></tr>
+<tr>
+<td>ADD</td>
+<td>00</td>
+<td>RA + RB
+</td></tr>
+<tr>
+<td>SUB</td>
+<td>01</td>
+<td>RA - RB
+</td></tr>
+<tr>
+<td>Bitwise AND</td>
+<td>10</td>
+<td>RA &amp; RB
+</td></tr>
+<tr>
+<td>Bitwise OR</td>
+<td>11</td>
+<td>RB
+</td></tr></tbody></table>
+<h2><span class="mw-headline" id="Instructions:_Part_2">Instructions: Part 2</span></h2>
+<p>In the second part, you are to create the <i>double_dec_decoder</i> block. <i>You may use any components from Wiring, Gates, Plexers, and Arithmetic.</i> <b>Do NOT use anything from BFH mega functions.</b>
+</p><p>This decoder block decodes the 4-bit ALU output into a two-digit decimal 7-segment display.
+</p>
+<ol><li>Enter the double_dec_decoder block.</li>
+<li>You may use any decoders, arithmetic blocks, muxes, or logic gates to create the output.</li>
+<li>Use a splitter in reverse to merge the outputs you create into the decoded_top and decoded_bot signals. The decoded_top signals control the top segments of the 7-segment display, while the decoded_bot signals control the bottom segments. A toy double-digit seven segment is provided in the template file for you to play with and test which bits correspond to which segment. <a href="https://classes.up-microlab.org/index.php/File:DecodedTopandbot.png" class="image" title="segment correspondence of the decoded_top and decoded_bot bits."><img alt="segment correspondence of the decoded_top and decoded_bot bits." src="../images/thumb/b/bc/DecodedTopandbot.png/600px-DecodedTopandbot.png" decoding="async" width="600" height="430" srcset="../images/thumb/b/bc/DecodedTopandbot.png/900px-DecodedTopandbot.png 1.5x, ../images/thumb/b/bc/DecodedTopandbot.png/1200px-DecodedTopandbot.png 2x" data-file-width="1396" data-file-height="1000" /></a></li>
+<li>You may check if your circuit is correct by going back to the main circuit.</li>
+<li>You may leave the decimal points unconnected (as also shown in the sample Figure). decoded_bot[4] and decoded_bot[0] are the decimal points.</li>
+<li>Displayed numbers on the <i>seven-segment displays</i> will be as follows: "00, 01, 02, ..., 09, 10, 11, 12, ..., 15"</li></ol>
+<p><a href="https://classes.up-microlab.org/index.php/File:AluLab2.png" class="image" title="Sample working circuit. In the template, the blocks are empty so you need to fill them up as required in this labwork."><img alt="Sample working circuit. In the template, the blocks are empty so you need to fill them up as required in this labwork." src="../images/thumb/0/09/AluLab2.png/800px-AluLab2.png" decoding="async" width="800" height="206" srcset="../images/thumb/0/09/AluLab2.png/1200px-AluLab2.png 1.5x, ../images/thumb/0/09/AluLab2.png/1600px-AluLab2.png 2x" data-file-width="2658" data-file-height="686" /></a>
+</p>
+<h2><span class="mw-headline" id="Notes">Notes</span></h2>
+<ul><li>Again, do not move any input or output pins in the template.</li>
+<li>A bitwise OR example: 0011 | 1000 = 1011</li>
+<li>A bitwise AND example: 0111 &amp; 0101 = 0101</li></ul>
+<!-- 
+NewPP limit report
+Cached time: 20260429044023
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.036 seconds
+Real time usage: 0.399 seconds
+Preprocessor visited node count: 15/1000000
+Preprocessor generated node count: 0/1000000
+Post‐expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Highest expansion depth: 2/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 0/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%    0.000      1 -total
+-->
+
+<!-- Saved in parser cache with key upmicrol_classes_db:pcache:idhash:782-0!canonical and timestamp 20260429044023 and revision id 4507
+ -->
+</div></div>
+		
+		<div class="printfooter">Retrieved from "<a dir="ltr" href="https://classes.up-microlab.org/index.php?title=Lab_3:_ALU_Flags&amp;oldid=4507">https://classes.up-microlab.org/index.php?title=Lab_3:_ALU_Flags&amp;oldid=4507</a>"</div>
+		
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+		<div class="visualClear"></div>
+		
+	</div>
+</div>
+
+
+		<div id="mw-navigation">
+			<h2>Navigation menu</h2>
+			<div id="mw-head">
+									<div id="p-personal" role="navigation" aria-labelledby="p-personal-label">
+						<h3 id="p-personal-label">Personal tools</h3>
+						<ul>
+							<li id="pt-login"><a href="https://classes.up-microlab.org/index.php?title=Special:UserLogin&amp;returnto=Lab+3%3A+ALU+Flags" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li>						</ul>
+					</div>
+									<div id="left-navigation">
+										<div id="p-namespaces" role="navigation" class="vectorTabs" aria-labelledby="p-namespaces-label">
+						<h3 id="p-namespaces-label">Namespaces</h3>
+						<ul>
+							<li id="ca-nstab-main" class="selected"><span><a href="https://classes.up-microlab.org/index.php/Lab_3:_ALU_Flags" title="View the content page [c]" accesskey="c">Page</a></span></li><li id="ca-talk" class="new"><span><a href="https://classes.up-microlab.org/index.php?title=Talk:Lab_3:_ALU_Flags&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></span></li>						</ul>
+					</div>
+										<div id="p-variants" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-variants-label">
+												<input type="checkbox" class="vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+						<h3 id="p-variants-label">
+							<span>Variants</span>
+						</h3>
+						<ul class="menu">
+													</ul>
+					</div>
+									</div>
+				<div id="right-navigation">
+										<div id="p-views" role="navigation" class="vectorTabs" aria-labelledby="p-views-label">
+						<h3 id="p-views-label">Views</h3>
+						<ul>
+							<li id="ca-view" class="collapsible selected"><span><a href="https://classes.up-microlab.org/index.php/Lab_3:_ALU_Flags">Read</a></span></li><li id="ca-viewsource" class="collapsible"><span><a href="https://classes.up-microlab.org/index.php?title=Lab_3:_ALU_Flags&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></span></li><li id="ca-history" class="collapsible"><span><a href="https://classes.up-microlab.org/index.php?title=Lab_3:_ALU_Flags&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></span></li>						</ul>
+					</div>
+										<div id="p-cactions" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-cactions-label">
+						<input type="checkbox" class="vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+						<h3 id="p-cactions-label"><span>More</span></h3>
+						<ul class="menu">
+													</ul>
+					</div>
+										<div id="p-search" role="search">
+						<h3>
+							<label for="searchInput">Search</label>
+						</h3>
+						<form action="https://classes.up-microlab.org/index.php" id="searchform">
+							<div id="simpleSearch">
+								<input type="search" name="search" placeholder="Search Microlab Classes" title="Search Microlab Classes [f]" accesskey="f" id="searchInput"/><input type="hidden" value="Special:Search" name="title"/><input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/><input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>							</div>
+						</form>
+					</div>
+									</div>
+			</div>
+			<div id="mw-panel">
+				<div id="p-logo" role="banner"><a class="mw-wiki-logo" href="https://classes.up-microlab.org/index.php/Main_Page" title="Visit the main page"></a></div>
+						<div class="portal" role="navigation" id="p-navigation" aria-labelledby="p-navigation-label">
+			<h3 id="p-navigation-label">Navigation</h3>
+			<div class="body">
+								<ul>
+					<li id="n-mainpage-description"><a href="https://classes.up-microlab.org/index.php/Main_Page" title="Visit the main page [z]" accesskey="z">Main page</a></li><li id="n-recentchanges"><a href="https://classes.up-microlab.org/index.php/Special:RecentChanges" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="https://classes.up-microlab.org/index.php/Special:Random" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help-mediawiki"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents">Help about MediaWiki</a></li>				</ul>
+							</div>
+		</div>
+			<div class="portal" role="navigation" id="p-tb" aria-labelledby="p-tb-label">
+			<h3 id="p-tb-label">Tools</h3>
+			<div class="body">
+								<ul>
+					<li id="t-whatlinkshere"><a href="https://classes.up-microlab.org/index.php/Special:WhatLinksHere/Lab_3:_ALU_Flags" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="https://classes.up-microlab.org/index.php/Special:RecentChangesLinked/Lab_3:_ALU_Flags" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="https://classes.up-microlab.org/index.php/Special:SpecialPages" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="https://classes.up-microlab.org/index.php?title=Lab_3:_ALU_Flags&amp;printable=yes" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="https://classes.up-microlab.org/index.php?title=Lab_3:_ALU_Flags&amp;oldid=4507" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="https://classes.up-microlab.org/index.php?title=Lab_3:_ALU_Flags&amp;action=info" title="More information about this page">Page information</a></li><li id="t-cite"><a href="https://classes.up-microlab.org/index.php?title=Special:CiteThisPage&amp;page=Lab_3%3A_ALU_Flags&amp;id=4507" title="Information on how to cite this page">Cite this page</a></li>				</ul>
+							</div>
+		</div>
+				</div>
+		</div>
+				<div id="footer" role="contentinfo">
+						<ul id="footer-info">
+								<li id="footer-info-lastmod"> This page was last edited on 4 March 2025, at 21:06.</li>
+							</ul>
+						<ul id="footer-places">
+								<li id="footer-places-privacy"><a href="https://classes.up-microlab.org/index.php/Microlab_Classes:Privacy_policy" title="Microlab Classes:Privacy policy">Privacy policy</a></li>
+								<li id="footer-places-about"><a href="https://classes.up-microlab.org/index.php/Microlab_Classes:About" title="Microlab Classes:About">About Microlab Classes</a></li>
+								<li id="footer-places-disclaimer"><a href="https://classes.up-microlab.org/index.php/Microlab_Classes:General_disclaimer" title="Microlab Classes:General disclaimer">Disclaimers</a></li>
+							</ul>
+										<ul id="footer-icons" class="noprint">
+										<li id="footer-poweredbyico">
+						<a href="https://www.mediawiki.org/"><img src="../resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="../resources/assets/poweredby_mediawiki_132x47.png 1.5x, ../resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31"/></a>					</li>
+									</ul>
+						<div style="clear: both;"></div>
+		</div>
+		
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.036","walltime":"0.399","ppvisitednodes":{"value":15,"limit":1000000},"ppgeneratednodes":{"value":0,"limit":1000000},"postexpandincludesize":{"value":0,"limit":2097152},"templateargumentsize":{"value":0,"limit":2097152},"expansiondepth":{"value":2,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":0,"limit":5000000},"timingprofile":["100.00%    0.000      1 -total"]},"cachereport":{"timestamp":"20260429044023","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":286});});</script>
+</body>
+</html>

@@ -6,23 +6,26 @@ format:
 ---
 
 ::: {.vcc-nav}
-[Overview](index.qmd) | [Foundations](00-fundamentals.qmd) | [Combinational](01-combinational.qmd) | [Sequential](02-sequential.qmd) | [Verification](03-verification.qmd) | [Practices](04-practices.qmd) | [Extras](05-extras.qmd)
+[Overview](index.qmd) | [M000](00-fundamentals.qmd) | [M001](001-combinational.qmd) | [M010](01-combinational.qmd) | [M011](02-sequential.qmd) | [M100](100-advanced-sequential.qmd) | [M101](03-verification.qmd) | [M110](110-advanced-verification.qmd) | [M111](04-practices.qmd) | [Extras](05-extras.qmd) | [Credits](credits.qmd)
 :::
 ::: {.vcc-grid}
 ::: {.vcc-card}
 ### Start here
-- [Foundations](00-fundamentals.qmd)
-- [Combinational logic](01-combinational.qmd)
+- [M000: Basic Structure and Syntax](00-fundamentals.qmd)
+- [M001: Writing Combinational Logic](001-combinational.qmd)
+- [M010: Advanced Combinational Logic](01-combinational.qmd)
 :::
 ::: {.vcc-card}
 ### Continue
-- [Sequential logic](02-sequential.qmd)
-- [Verification ideas](03-verification.qmd)
+- [M011: Writing Sequential Logic](02-sequential.qmd)
+- [M100: Advanced Sequential Logic](100-advanced-sequential.qmd)
+- [M101: Testbench Basics and Verification](03-verification.qmd)
 :::
 ::: {.vcc-card}
 ### Finish strong
-- [Coding practices](04-practices.qmd)
-- [Extras and credits](05-extras.qmd)
+- [M110: Advanced Verification Ideas](110-advanced-verification.qmd)
+- [M111: Best Practices and Wrap-Up](04-practices.qmd)
+- [Extras and Credits](05-extras.qmd)
 :::
 :::
 ## Original Course Intro
@@ -43,4 +46,4 @@ Eight modules (numbered 000 all the way to 111) that teach you all the fundament
 
 If you have completed the assessments, you will gain access to a hidden set of modules focusing on advanced Verilog constructs and coding styles, meant for advanced users who want to create more complicated architectures.
 
-Next: [Foundations](00-fundamentals.qmd)
+Next: [M000: Basic Structure and Syntax](00-fundamentals.qmd)
