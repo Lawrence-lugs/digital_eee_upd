@@ -25,7 +25,7 @@ We use **`localparam`** for this. For example:
 
 ---
 
-```
+```verilog
 localparam IDLE = 2'b00,
            STEP1 = 2'b01,
            STEP2 = 2'b10,
@@ -57,7 +57,7 @@ Let’s implement it.
 
 ---
 
-```
+```verilog
 module pattern_detector(
     input clk,           // system clock
     input reset,         // system reset (high-asserted)
@@ -133,7 +133,7 @@ Consider the following Verilog code of an up-down counter with a midpoint indica
 
 ---
 
-```
+```verilog
 module counter (
     input clk,
     input nrst,
@@ -192,7 +192,7 @@ One way to fix it is to adjust the `if` checks to anticipate the update:
 
 ---
 
-```
+```verilog
 always @(posedge clk or negedge nrst) begin
     if (!nrst) begin
         out <= 4'b0000;
@@ -226,7 +226,7 @@ A cleaner approach is to decouple the `midpoint` logic from the clocked process.
 
 ---
 
-```
+```verilog
 always @(posedge clk or negedge nrst) begin
     if (!nrst)
         out <= 4'b0000;
@@ -264,7 +264,7 @@ Suppose we want to compute `result = a * b`.
 
 ---
 
-```
+```verilog
 result = 0;
 repeat b times:
     result = result + a;
@@ -305,7 +305,7 @@ The circuit should include the following signals:
 
 ---
 
-```
+```verilog
 module multiplier_fsm(
     input clk,               // system clock
     input reset,             // synchronous reset
@@ -386,7 +386,7 @@ This is the **last design** that we will be covering for this crash course! Take
 
 ---
 
-```
+```verilog
 // =====================================================================
 // hamming_weight
 // - Counts the number of '1' bits in a 16-bit word, one bit per cycle

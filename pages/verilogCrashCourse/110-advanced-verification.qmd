@@ -253,7 +253,7 @@ This script randomly generates input pairs `(a, b)`, computes `expected = a * b`
 
 ---
 
-```
+```python
 import random
 
 with open("test_vectors.txt", "w") as f:
@@ -270,7 +270,7 @@ Each line has three numbers:
 
 ---
 
-```
+```python
 a b expected
 ```
 
@@ -280,7 +280,7 @@ Example output:
 
 ---
 
-```
+```python
 6 9 54
 4 13 52
 11 12 132

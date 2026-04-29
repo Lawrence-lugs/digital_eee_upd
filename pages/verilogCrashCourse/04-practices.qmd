@@ -467,7 +467,7 @@ This often surprises beginners because it creates what looks like an “off-by-o
 
 ---
 
-```
+```verilog
 always @(posedge clk) begin
     if (reset) begin
         out <= 0;

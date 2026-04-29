@@ -297,7 +297,7 @@ is equivalent to:
 
 ---
 
-```
+```verilog
 always @(posedge clk) begin
     b <= a;    a <= b;
 end
