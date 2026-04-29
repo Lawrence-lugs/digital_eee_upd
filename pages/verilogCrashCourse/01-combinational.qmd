@@ -53,7 +53,7 @@ endmodule
 
 Both modules, **and_gate_assign** and **and_gate_always**, describe the same hardware.
 
-![assign](./Course_ Verilog Crash Course_files/assign.png)       ![always](./Course_ Verilog Crash Course_files/always.png)
+![assign](./Course_ Verilog Crash Course_files/assign.png){width=45%}       ![always](./Course_ Verilog Crash Course_files/always.png){width=45%}
 
 The difference:
 
@@ -81,7 +81,7 @@ module concurrent_blocks(
 endmodule
 ```
 
-![concurrent_blocks](./Course_ Verilog Crash Course_files/concurrent_blocks.png)
+![concurrent_blocks](./Course_ Verilog Crash Course_files/concurrent_blocks.png){width=70%}
 
 ---
 
@@ -109,7 +109,7 @@ module separate_always_blocks(
 endmodule
 ```
 
-![separate_always_blocks](./Course_ Verilog Crash Course_files/separate_always_blocks.png)
+![separate_always_blocks](./Course_ Verilog Crash Course_files/separate_always_blocks.png){width=70%}
 
 ---
 
@@ -143,7 +143,7 @@ module mux_if(
 endmodule
 ```
 
-![conditional_if](./Course_ Verilog Crash Course_files/conditional_if.png)
+![conditional_if](./Course_ Verilog Crash Course_files/conditional_if.png){width=35%}
 
 ---
 
@@ -206,7 +206,7 @@ always @(*) begin
 Both `if-else` and `case-endcase` variants would map to the same hardware. Whichever you use is a matter of readability.
 :::
 
-![conditional_case](./Course_ Verilog Crash Course_files/conditional_case.png)
+![conditional_case](./Course_ Verilog Crash Course_files/conditional_case.png){width=35%}
 
 ## Avoid combinational loops
 
@@ -220,7 +220,7 @@ always @(*) begin
 end
 ```
 
-![loop](./Course_ Verilog Crash Course_files/combinational_loop.png)
+![loop](./Course_ Verilog Crash Course_files/combinational_loop.png){width=45%}
 
 ---
 
@@ -244,7 +244,7 @@ always @(*) begin
 end
 ```
 
-![latch](./Course_ Verilog Crash Course_files/latch.png)
+![latch](./Course_ Verilog Crash Course_files/latch.png){width=40%}
 
 ---
 
@@ -261,7 +261,7 @@ always @(*) begin
 end
 ```
 
-![latch_soln](./Course_ Verilog Crash Course_files/latch_soln.png)
+![latch_soln](./Course_ Verilog Crash Course_files/latch_soln.png){width=35%}
 
 ---
 
@@ -277,7 +277,7 @@ case (sel)
 endcase
 ```
 
-![latch_soln_default](./Course_ Verilog Crash Course_files/latch_soln_default.png)
+![latch_soln_default](./Course_ Verilog Crash Course_files/latch_soln_default.png){width=35%}
 
 ---
 
@@ -307,7 +307,7 @@ always @(*) begin
 end
 ```
 
-![double_driver_ex1](./Course_ Verilog Crash Course_files/double_driver_ex1.png)
+![double_driver_ex1](./Course_ Verilog Crash Course_files/double_driver_ex1.png){width=50%}
 
 ---
 
@@ -337,7 +337,7 @@ module conditional_overwrite_example (
 endmodule
 ```
 
-![double_driver_ex2](./Course_ Verilog Crash Course_files/double_driver_ex2.png)
+![double_driver_ex2](./Course_ Verilog Crash Course_files/double_driver_ex2.png){width=60%}
 
 ---
 
@@ -365,7 +365,7 @@ A better solution is to think about **mutual exclusivity**. **All assignments to
     end
 ```
 
-![double_driver_soln](./Course_ Verilog Crash Course_files/double_driver_soln.png)
+![double_driver_soln](./Course_ Verilog Crash Course_files/double_driver_soln.png){width=60%}
 
 ## Putting It All Together
 
@@ -393,7 +393,7 @@ module alu_demo_conditional (
 endmodule
 ```
 
-![all_together](./Course_ Verilog Crash Course_files/all_together(2).png)
+![all_together](./Course_ Verilog Crash Course_files/all_together(2).png){width=100%}
 
 ---
 

@@ -49,7 +49,7 @@ We will implement it in two styles:
 
 A single `always @(posedge clk)` owns the state machine, counters, accumulators, outputs, and pulses. This is close to our earlier “algorithm-in-one-block” style, presented in the previous modules. (*This is also affectionally referred to as Adel-style coding, reflecting his preferred way of describing algorithms, enabling very rapid, 'in-just-one-sitting' implementations)*
 
-![asm](./Course_ Verilog Crash Course_files/asm.png)
+![asm](./Course_ Verilog Crash Course_files/asm.png){width=55%}
 
 ---
 
@@ -143,7 +143,7 @@ endmodule
 Here, **each register has its own `always @(posedge clk)`**; small wires express “next” intent cleanly. This clarifies **who owns what**,
 and makes timing/dataflow explicit. (*This, on the other hand, is referred to as Fred-style coding, reflecting his preferred way of describing digital systems like a true digital designer.)*
 
-![](./Course_ Verilog Crash Course_files/block_diagram.png)
+![](./Course_ Verilog Crash Course_files/block_diagram.png){width=100%}
 
 ---
 
@@ -404,7 +404,7 @@ module top (
 endmodule
 ```
 
-![parameter](./Course_ Verilog Crash Course_files/parameter.png)
+![parameter](./Course_ Verilog Crash Course_files/parameter.png){width=100%}
 
 ---
 
@@ -446,7 +446,7 @@ module matrix_3x5(
 endmodule
 ```
 
-![multidim_array](./Course_ Verilog Crash Course_files/multidim_array.png)
+![multidim_array](./Course_ Verilog Crash Course_files/multidim_array.png){width=75%}
 
 ---
 
@@ -588,7 +588,7 @@ module vector_add #(
 endmodule
 ```
 
-![generate_adder](./Course_ Verilog Crash Course_files/generate_adder.png)
+![generate_adder](./Course_ Verilog Crash Course_files/generate_adder.png){width=80%}
 
 ---
 
@@ -628,7 +628,7 @@ module reg_bank #(
 endmodule
 ```
 
-![generate_register](./Course_ Verilog Crash Course_files/generate_register.png)
+![generate_register](./Course_ Verilog Crash Course_files/generate_register.png){width=80%}
 
 ---
 

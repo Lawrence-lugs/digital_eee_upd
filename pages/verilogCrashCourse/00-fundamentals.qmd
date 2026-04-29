@@ -34,7 +34,7 @@ module my_first_module(
 endmodule
 ```
 
-![declaration](./Course_ Verilog Crash Course_files/declaration.png)
+![declaration](./Course_ Verilog Crash Course_files/declaration.png){width=90%}
 
 ---
 
@@ -117,7 +117,7 @@ Modules can be reused by instantiating them inside other modules. Think of this 
 
 Consider the example below, where one module is instantiated inside another module. Instantiation can be in **two ways**:
 
-![instantiation](./Course_ Verilog Crash Course_files/instantiation.png)
+![instantiation](./Course_ Verilog Crash Course_files/instantiation.png){width=80%}
 
 ### Ordered Port Connection
 
@@ -273,7 +273,7 @@ endmodule
 
 This Verilog code would have a corresponding hardware equivalent as shown below.
 
-![all_together](./Course_ Verilog Crash Course_files/all_together.png)
+![all_together](./Course_ Verilog Crash Course_files/all_together.png){width=100%}
 
 Notice how we needed to declare internal wires for the **bitwise_and** and **bitwise_or** module outputs to be later connected to the **mux2** module. As the number of submodules to be instantiated increases, more
 internal wires needs to be declared. Always be careful when assigning wires to ports, as they need to be of the same size to avoid unintentional truncation problems!

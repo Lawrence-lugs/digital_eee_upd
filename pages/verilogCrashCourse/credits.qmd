@@ -36,7 +36,7 @@ format:
 
 ### Assessment Development
 
-![](./Course_ Verilog Crash Course_files/image (1).png)
+![](./Course_ Verilog Crash Course_files/image (1).png){width=80%}
 
 
 [← Overview](index.qmd){.vcc-prev}

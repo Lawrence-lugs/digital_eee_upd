@@ -143,10 +143,3 @@
   overflow: visible;
 }
 
-/* Consistent image sizing across all content */
-article img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 0.75rem auto;
-}

@@ -127,7 +127,7 @@ end
 
 ---
 
-![concurrency](./Course_ Verilog Crash Course_files/concurrency(1).png)
+![concurrency](./Course_ Verilog Crash Course_files/concurrency(1).png){width=40%}
 
 The order of the statements inside the block **does not change the hardware**. Each line creates a register, and all registers are updated together on the clock edge.
 
@@ -181,7 +181,7 @@ module counter_with_reset(
 endmodule
 ```
 
-![timing_sync](./Course_ Verilog Crash Course_files/timing_sync.png)
+![timing_sync](./Course_ Verilog Crash Course_files/timing_sync.png){width=70%}
 
 ---
 
@@ -198,7 +198,7 @@ always @(posedge clk or posedge reset) begin
 end
 ```
 
-![timing_async](./Course_ Verilog Crash Course_files/timing_async.png)
+![timing_async](./Course_ Verilog Crash Course_files/timing_async.png){width=70%}
 
 ---
 
@@ -236,7 +236,7 @@ always @(*) begin
 end
 ```
 
-![](./Course_ Verilog Crash Course_files/combinational_loop.png)
+![](./Course_ Verilog Crash Course_files/combinational_loop.png){width=45%}
 
 ---
 
@@ -253,7 +253,7 @@ always @(posedge clk) begin
 end
 ```
 
-![sequential_loop](./Course_ Verilog Crash Course_files/sequential_loop.png)
+![sequential_loop](./Course_ Verilog Crash Course_files/sequential_loop.png){width=55%}
 
 ---
 
@@ -272,7 +272,7 @@ always @(*) begin
 end
 ```
 
-![latch](./Course_ Verilog Crash Course_files/latch.png)
+![latch](./Course_ Verilog Crash Course_files/latch.png){width=40%}
 
 ---
 
@@ -289,7 +289,7 @@ always @(*) begin
 end
 ```
 
-![latch_soln](./Course_ Verilog Crash Course_files/latch_soln.png)
+![latch_soln](./Course_ Verilog Crash Course_files/latch_soln.png){width=35%}
 
 ---
 
@@ -305,7 +305,7 @@ case (sel)
 endcase
 ```
 
-![latch_soln_default](./Course_ Verilog Crash Course_files/latch_soln_default(1).png)
+![latch_soln_default](./Course_ Verilog Crash Course_files/latch_soln_default(1).png){width=35%}
 
 ---
 
@@ -323,7 +323,7 @@ always @(posedge clk) begin
 end
 ```
 
-![latch_seq](./Course_ Verilog Crash Course_files/dff_enable.png)
+![latch_seq](./Course_ Verilog Crash Course_files/dff_enable.png){width=45%}
 
 ---
 
@@ -341,7 +341,7 @@ always @(*) x = a | b;  // conflict
 
 ```
 
-![double_driver_ex1](./Course_ Verilog Crash Course_files/double_driver_ex1.png)
+![double_driver_ex1](./Course_ Verilog Crash Course_files/double_driver_ex1.png){width=50%}
 
 ---
 
@@ -357,7 +357,7 @@ always @(*) x = a | b;  // conflict
 end
 ```
 
-![](./Course_ Verilog Crash Course_files/double_driver_soln(1).png)
+![](./Course_ Verilog Crash Course_files/double_driver_soln(1).png){width=55%}
 
 ---
 
@@ -482,7 +482,7 @@ always @(posedge clk) begin
 end
 ```
 
-![midpoint7_timing_wrong](./Course_ Verilog Crash Course_files/midpoint7_timing_wrong.png)
+![midpoint7_timing_wrong](./Course_ Verilog Crash Course_files/midpoint7_timing_wrong.png){width=70%}
 
 ---
 
@@ -537,7 +537,7 @@ end
 
  Use Fix B when the off-by-one would otherwise confuse readers or cascade timing surprises; it keeps the algorithm in one clocked block while correcting the observable timing of the flag.
 
-![midpoint7_timing](./Course_ Verilog Crash Course_files/midpoint7_timing.png)
+![midpoint7_timing](./Course_ Verilog Crash Course_files/midpoint7_timing.png){width=70%}
 
 ## Course Wrap-Up
 
