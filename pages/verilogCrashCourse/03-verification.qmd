@@ -239,11 +239,11 @@ This records all signals so you can open them in a waveform viewer.
 Waveforms let you see the step-by-step values of `a`, `b`, `result`, `state`,
 and `done`.
 
-![simulation_draw](./Course_ Verilog Crash Course_files/simulation_draw (2).png).png)
+![simulation_draw](./Course_ Verilog Crash Course_files/simulation_draw (2).png)
 
 If you insert the code above into the testbench for the multiplier FSM and run it on a simulator tool, you would see the following waveforms:
 
-![simulation](./Course_ Verilog Crash Course_files/simulation (1).png).png)
+![simulation](./Course_ Verilog Crash Course_files/simulation (1).png)
 
 ::: {.callout-note}
 For Verilog simulations using Vivado, you don't need to add these lines anymore, as Vivado automatically sets up the waveform viewer using your testbench signals.

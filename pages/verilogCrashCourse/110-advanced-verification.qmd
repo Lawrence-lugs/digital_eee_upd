@@ -181,7 +181,7 @@ endmodule
   `result` with the expected product.
 - **Multiple test cases**: we can run as many as we like, quickly.
 
-![simulation_manual](./Course_ Verilog Crash Course_files/simulation_manual (1).png).png)
+![simulation_manual](./Course_ Verilog Crash Course_files/simulation_manual (1).png)
 
 ![](./Course_ Verilog Crash Course_files/console_manual.png)
 

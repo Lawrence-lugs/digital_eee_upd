@@ -127,7 +127,7 @@ end
 
 ---
 
-![concurrency](./Course_ Verilog Crash Course_files/concurrency(1).png).png)
+![concurrency](./Course_ Verilog Crash Course_files/concurrency(1).png)
 
 The order of the statements inside the block **does not change the hardware**. Each line creates a register, and all registers are updated together on the clock edge.
 

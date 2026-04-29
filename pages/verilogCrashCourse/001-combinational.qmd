@@ -51,16 +51,21 @@ Verilog supports many operators that can be used for `assign` statements. Here a
 
 ```
 assign sum = a + b;    // addition
-
 ```
 
 ![arithmetic_add](./Course_ Verilog Crash Course_files/arithmetic_add (1).png)
 
+```
 assign diff = a - b;   // subtraction
+```
 
-![arithmetic_sub](./Course_ Verilog Crash Course_files/arithmetic_sub (1).png).png)
+![arithmetic_sub](./Course_ Verilog Crash Course_files/arithmetic_sub (1).png)
 
-assign twice = a * 2;  // multiply by constant ![arithmetic_mult](./Course_ Verilog Crash Course_files/arithmetic_mult.png)
+```
+assign twice = a * 2;  // multiply by constant
+```
+
+![arithmetic_mult](./Course_ Verilog Crash Course_files/arithmetic_mult.png)
 
 ---
 
@@ -76,22 +81,27 @@ assign twice = a * 2;  // multiply by constant ![arithmetic_mult](./Course_ Veri
 
 ```
 assign and_bits = a & b;  // bitwise AND
-
 ```
 
 ![bitwise_and](./Course_ Verilog Crash Course_files/bitwise_and (2).png)
 
+```
 assign or_bits  = a | b;  // bitwise OR
+```
 
-![bitwise_or](./Course_ Verilog Crash Course_files/bitwise_or (2).png).png)
+![bitwise_or](./Course_ Verilog Crash Course_files/bitwise_or (2).png)
 
+```
 assign xor_bits = a ^ b;  // bitwise XOR
+```
 
-![bitwise_xor](./Course_ Verilog Crash Course_files/bitwise_xor (2).png).png)
+![bitwise_xor](./Course_ Verilog Crash Course_files/bitwise_xor (2).png)
 
+```
 assign not_a    = ~a;     // bitwise NOT (inverts every bit)
+```
 
-![bitwise_not](./Course_ Verilog Crash Course_files/bitwise_not (2).png).png)
+![bitwise_not](./Course_ Verilog Crash Course_files/bitwise_not (2).png)
 
 ---
 
@@ -112,7 +122,11 @@ assign left_shift  = a << 1; // shifts left by 1 (like multiply by 2); 0 padding
 
 ![shift_left](./Course_ Verilog Crash Course_files/shift_left (3).png)
 
-assign right_shift = a >> 2; // shifts right by 2 (like divide by 4); 0 padding, lower bit(s) truncated![shift_right](./Course_ Verilog Crash Course_files/shift_right (2).png).png)
+```
+assign right_shift = a >> 2; // shifts right by 2 (like divide by 4); 0 padding, lower bit(s) truncated
+```
+
+![shift_right](./Course_ Verilog Crash Course_files/shift_right (2).png)
 
 ---
 
@@ -133,7 +147,7 @@ assign max = (a > b) ? a : b;
 
 Reads: “If `a > b`, then max = a; otherwise, max = b.” This is similar to a multiplexer-type behavior, where the selector value depends on the condition inside the parentheses.
 
-![conditional](./Course_ Verilog Crash Course_files/conditional (1).png).png)
+![conditional](./Course_ Verilog Crash Course_files/conditional (1).png)
 
 ## Tip: Assignment upon Declaration
 
@@ -407,7 +421,7 @@ endmodule
 
 This Verilog code would have a corresponding hardware equivalent as shown below.
 
-![all_together](./Course_ Verilog Crash Course_files/all_together(1).png).png)
+![all_together](./Course_ Verilog Crash Course_files/all_together(1).png)
 
 Our module is getting bigger and more complex! Notice how there are different assignments happening within the single module. All arithmetic and logic were declared, and all of the corresponding outputs would connect to a final multiplexer (declared as
 a ternary `(condition) ? (true) : (false)` operation).

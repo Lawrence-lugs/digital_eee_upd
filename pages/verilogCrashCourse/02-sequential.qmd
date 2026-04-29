@@ -106,7 +106,7 @@ Since we are now in the sequential logic domain, assignments such as **count <= 
 On the contrary, **count = count + 1; should not** be done in the combinational logic domain (when using `always@(*)`), as this would infer a combinational loop, which is not realizable in hardware.
 :::
 
-![combinational_loop](./Course_ Verilog Crash Course_files/combinational_loop(1).png).png)
+![combinational_loop](./Course_ Verilog Crash Course_files/combinational_loop(1).png)
 
 ## Inferred Latches in Sequential Logic
 
@@ -219,7 +219,7 @@ Always put reset at the **top** of the `if-else` hierarchy, so it takes the high
 Here's the up/down counter from the previous
 section with the additional asynchronous reset to illustrate the described reset hierarchy.
 
-**---
+---
 
 ```verilog
 module updown_counter(
@@ -242,7 +242,7 @@ endmodule
 
 ![counter_updown_reset](./Course_ Verilog Crash Course_files/counter_updown_reset.png)
 
----**
+---
 
 ## Concurrency Reminder
 
