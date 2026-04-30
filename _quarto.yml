@@ -5,6 +5,8 @@ project:
     - pages/**/*.qmd  
   post-render:
     - cp static_apps/FSM_simulatEEE.html _site/
+  resources:
+    - "googleba81d2991a90411e.html"
 
 website:
   title: "EEE Digital"
