@@ -12,3 +12,27 @@ img {
   max-width: 75% !important;
   height: auto; /* Maintains aspect ratio */
 }
+
+.hero {
+  position: relative;
+  overflow: visible; /* important */
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: -200px -200px 0 -200px; /* expand beyond edges */
+
+  margin-top: 200px;
+  
+  background-image:
+    radial-gradient(ellipse 60% 30% at 50% 25%, transparent 5%, white 100%),
+    url('oblation_generated.png');
+
+  background-size: 80% auto, 80% auto;
+  /* background-position: top, center top; */
+  background-position: center top, center top;
+  background-repeat: no-repeat;
+
+  z-index: -1;
+}
