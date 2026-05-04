@@ -13,6 +13,8 @@
   --text:#e2e4f0; --text2:#8890b0; --text3:#555e80;
   --accent:#4f9eff; --accent2:#2d7dd2;
   --green:#3ecf8e; --amber:#f5a623; --red:#ff5c5c; --purple:#a78bfa;
+  --state-stroke:#1e3a5c; --conn:#3a4060; --conn-label:#e2e4f0;
+  --handle-fill:#0d0f14; --handle-start-fill:#93a0c8;
   --mono:'JetBrains Mono',monospace; --sans:'Space Grotesk',sans-serif;
 }
 body { font-family:var(--sans); background:var(--bg); color:var(--text); height:100vh; display:flex; flex-direction:column; overflow:hidden; }
@@ -22,22 +24,25 @@ body { font-family:var(--sans); background:var(--bg); color:var(--text); height:
 body.light {
   --bg:#f7f8fc; --bg2:#ffffff; --bg3:#f2f4fa; --bg4:#e9edf7;
   --border:#d6dbea; --border2:#c1c7db;
-  --text:#151b2c; --text2:#3f4a63; --text3:#6f7890;
+  --text:#151b2c; --text2:#334155; --text3:#475569;
   --accent:#2563eb; --accent2:#1d4ed8;
   --green:#128a58; --amber:#c16a00; --red:#d83a3a; --purple:#6d28d9;
+  --state-stroke:#64748b; --conn:#64748b; --conn-label:#0f172a;
+  --handle-fill:#ffffff; --handle-start-fill:#94a3b8;
 }
 body.light .output-bit-val,
 body.light .input-bit-btn { color:#000; }
 body.light .state-drag.moore,
 body.light .state-drag.mealy { color:#000; }
 
-header { height:84px; background:var(--bg2); border-bottom:1px solid var(--border); display:flex; align-items:center; padding:0 18px; gap:12px; flex-shrink:0; z-index:100; }
-.logo { font-family:var(--mono); font-weight:700; font-size:20px; color:var(--accent); letter-spacing:2px; }
+header { min-height:96px; background:var(--bg2); border-bottom:1px solid var(--border); display:flex; align-items:center; align-content:center; flex-wrap:wrap; padding:12px 18px; gap:12px; flex-shrink:0; z-index:100; }
+.logo { font-family:var(--mono); font-weight:700; font-size:24px; color:var(--accent); letter-spacing:2px; }
 .logo span { color:var(--text2); font-weight:400; }
-.header-sep { flex:1; }
-.sim-controls { display:flex; align-items:center; gap:6px; }
+.header-sep { flex:1 1 auto; min-width:24px; }
+.sim-controls { display:flex; align-items:center; justify-content:flex-end; gap:6px; flex:1 1 320px; min-width:0; flex-wrap:wrap; }
+.sim-controls-spacer { flex:1; }
 
-.btn { font-family:var(--sans); font-size:16px; font-weight:500; padding:8px 14px; border-radius:8px; border:1px solid var(--border2); background:var(--bg3); color:var(--text); cursor:pointer; transition:all .15s; display:flex; align-items:center; gap:6px; white-space:nowrap; }
+.btn { font-family:var(--sans); font-size:18px; font-weight:500; padding:10px 16px; border-radius:8px; border:1px solid var(--border2); background:var(--bg3); color:var(--text); cursor:pointer; transition:all .15s; display:flex; align-items:center; gap:6px; white-space:nowrap; }
 .btn:hover { background:var(--bg4); border-color:var(--accent); color:var(--accent); }
 .btn.primary { background:var(--accent2); border-color:var(--accent); color:#fff; }
 .btn.primary:hover { background:var(--accent); }
@@ -45,9 +50,22 @@ header { height:84px; background:var(--bg2); border-bottom:1px solid var(--borde
 .btn.danger:hover { background:rgba(255,92,92,.1); }
 .btn.success { background:rgba(62,207,142,.15); border-color:var(--green); color:var(--green); }
 .btn.success:hover { background:rgba(62,207,142,.25); }
-.btn.sm { font-size:13px; padding:5px 10px; }
+.btn.active { background:var(--accent2); border-color:var(--accent); color:#fff; }
+.btn.active:hover { background:var(--accent); }
 
-.step-counter { font-family:var(--mono); font-size:16px; color:var(--text2); padding:8px 14px; background:var(--bg3); border:1px solid var(--border); border-radius:8px; min-width:110px; text-align:center; }
+.menu-bar { display:flex; align-items:center; gap:6px; }
+.menu { position:relative; }
+.menu-btn { font-family:var(--sans); font-size:17px; font-weight:500; padding:9px 13px; border-radius:8px; border:1px solid transparent; background:transparent; color:var(--text2); cursor:pointer; transition:all .15s; }
+.menu-btn:hover,
+.menu.open .menu-btn { background:var(--bg3); border-color:var(--border2); color:var(--text); }
+.menu-dropdown { position:absolute; top:calc(100% + 8px); left:0; min-width:220px; background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:8px; box-shadow:0 16px 36px rgba(0,0,0,.22); display:none; z-index:150; }
+.menu.open .menu-dropdown { display:block; }
+.menu-item { width:100%; display:flex; align-items:center; gap:10px; padding:10px 12px; border:none; border-radius:8px; background:transparent; color:var(--text); font-family:var(--sans); font-size:16px; text-align:left; cursor:pointer; }
+.menu-item:hover { background:var(--bg3); }
+.menu-item-check { width:16px; color:var(--accent); font-weight:700; text-align:center; flex-shrink:0; }
+.menu-divider { height:1px; background:var(--border); margin:6px 2px; }
+
+.step-counter { font-family:var(--mono); font-size:18px; color:var(--text2); padding:10px 16px; background:var(--bg3); border:1px solid var(--border); border-radius:8px; min-width:126px; text-align:center; }
 
 
 
@@ -62,25 +80,27 @@ header { height:84px; background:var(--bg2); border-bottom:1px solid var(--borde
 .bottom-resize-handle.open { display:block; }
 
 .bottom-header { display:flex; align-items:center; gap:0; border-bottom:1px solid var(--border); flex-shrink:0; background:var(--bg3); }
-.bottom-tab { padding:10px 16px; font-size:12px; font-weight:600; color:var(--text2); cursor:pointer; border-bottom:2px solid transparent; letter-spacing:.5px; transition:all .15s; white-space:nowrap; flex-shrink:0; }
+.bottom-tab { padding:12px 16px; font-size:18px; font-weight:600; color:var(--text2); cursor:pointer; border-bottom:2px solid transparent; letter-spacing:.5px; transition:all .15s; white-space:nowrap; flex-shrink:0; }
 .bottom-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
 .bottom-tab-sep { width:1px; height:20px; background:var(--border); margin:0 4px; align-self:center; }
-.bottom-header-title { font-family:var(--mono); font-size:12px; font-weight:700; color:var(--accent); padding:10px 14px; letter-spacing:1px; }
+.bottom-header-title { font-family:var(--mono); font-size:18px; font-weight:700; color:var(--accent); padding:12px 14px; letter-spacing:1px; }
 .bottom-header-right { flex:1; display:flex; justify-content:flex-end; align-items:center; padding:0 10px; gap:8px; }
-.bottom-close-btn { font-family:var(--sans); font-size:11px; font-weight:600; padding:4px 10px; border-radius:6px; border:1px solid var(--border2); background:var(--bg4); color:var(--text2); cursor:pointer; transition:all .15s; }
+.bottom-close-btn { font-family:var(--sans); font-size:16px; font-weight:600; padding:8px 12px; border-radius:6px; border:1px solid var(--border2); background:var(--bg4); color:var(--text2); cursor:pointer; transition:all .15s; }
 .bottom-close-btn:hover { border-color:var(--red); color:var(--red); }
 .bottom-body { flex:1; display:flex; overflow:hidden; min-height:0; }
 
 /* Split panes inside bottom panel */
-.bottom-pane { flex:1; overflow-y:auto; overflow-x:auto; padding:12px 14px; min-width:0; }
-.bottom-pane-divider { width:1px; background:var(--border); flex-shrink:0; }
-.bottom-pane-label { font-size:11px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--text3); margin-bottom:10px; padding-bottom:6px; border-bottom:1px solid var(--border); font-family:var(--mono); }
+.bottom-pane { flex:1 1 0; overflow-y:auto; overflow-x:auto; padding:12px 14px; min-width:0; }
+.bottom-pane-divider { width:8px; background:var(--bg2); flex-shrink:0; cursor:col-resize; position:relative; }
+.bottom-pane-divider::after { content:''; position:absolute; top:0; bottom:0; left:3px; width:2px; background:var(--border); }
+.bottom-pane-divider:hover::after { background:var(--accent); }
+.bottom-pane-label { font-size:18px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--text3); margin-bottom:10px; padding-bottom:6px; border-bottom:1px solid var(--border); font-family:var(--mono); }
 
 /* FF ref panel in bottom */
-.ff-ref-grid-bottom { display:flex; gap:10px; flex-wrap:wrap; }
-.ff-ref-box { background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:10px; flex-shrink:0; }
-.ff-ref-title { font-family:var(--mono); font-size:11px; font-weight:700; color:var(--accent); margin-bottom:6px; }
-.ff-ref-table { border-collapse:collapse; font-family:var(--mono); font-size:10px; }
+.ff-ref-grid,.ff-ref-grid-bottom { display:flex; gap:10px; flex-wrap:wrap;justify-content: center; align-items: center; }
+.ff-ref-box { background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:10px; flex-shrink:0; margin: 0 auto; }
+.ff-ref-title { font-family:var(--mono); font-size:18px; font-weight:700; color:var(--accent); margin-bottom:8px; }
+.ff-ref-table { border-collapse:collapse; font-family:var(--mono); font-size:18px; }
 .ff-ref-table th { background:var(--bg4); color:var(--text3); padding:3px 7px; border:1px solid var(--border2); }
 .ff-ref-table td { padding:3px 7px; border:1px solid var(--border2); text-align:center; color:var(--text2); }
 .ff-ref-table td.v1 { color:var(--green); font-weight:700; }
@@ -88,10 +108,10 @@ header { height:84px; background:var(--bg2); border-bottom:1px solid var(--borde
 
 .info-panel { width:420px; background:var(--bg2); border-right:1px solid var(--border); display:flex; flex-direction:column; flex-shrink:0; overflow-y:auto; }
 .info-section { padding:18px; border-bottom:1px solid var(--border); }
-.info-title { font-size:16px; font-weight:600; color:var(--text3); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:12px; }
-.info-text { font-size:18px; color:var(--text2); line-height:1.85; }
-.state-drag-wrap { display:flex; gap:12px; flex-wrap:wrap; }
-.state-drag { width:110px; text-align: center; height:110px; border-radius:999px; display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:16px; font-weight:600; cursor:grab; user-select:none; border:2px solid transparent; }
+.info-title { font-size:18px; font-weight:600; color:var(--text3); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:12px; }
+.info-text { font-size:20px; color:var(--text2); line-height:1.85; }
+.state-drag-wrap { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+.state-drag { width:122px; text-align: center; height:122px; border-radius:999px; display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:18px; font-weight:600; cursor:grab; user-select:none; border:2px solid transparent; }
 .state-drag:active { cursor:grabbing; }
 .state-drag.moore { background:rgba(79,158,255,.16); border-color:#4f9eff; color:#cfe2ff; }
 .state-drag.mealy { background:rgba(79,158,255,.16); border-color:#4f9eff; color:#cfe2ff; }
@@ -100,25 +120,25 @@ header { height:84px; background:var(--bg2); border-bottom:1px solid var(--borde
 #canvas { position:absolute; top:0; left:0; width:100%; height:100%; cursor:default; }
 
 .io-panels { position:absolute; top:12px; right:12px; display:flex; gap:10px; z-index:10; }
-.input-panel { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:12px 14px; min-width:220px; box-shadow:0 8px 18px rgba(0,0,0,.18); }
-.output-panel { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:12px 14px; min-width:240px; box-shadow:0 8px 18px rgba(0,0,0,.18); }
-.panel-title { font-size:15px; font-weight:600; letter-spacing:1.2px; text-transform:uppercase; color:var(--text3); margin-bottom:8px; }
-.output-bits { display:flex; flex-wrap:wrap; gap:6px; }
+.input-panel { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:12px 14px; min-width:110px; box-shadow:0 8px 18px rgba(0,0,0,.18); }
+.output-panel { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:12px 14px; min-width:110px; box-shadow:0 8px 18px rgba(0,0,0,.18); }
+.panel-title { font-size:17px; font-weight:600; letter-spacing:1.2px; text-transform:uppercase; color:var(--text3); margin-bottom:8px; }
+.output-bits { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; }
 .output-bit-box { display:flex; align-items:center; gap:6px; background:var(--bg4); border:1px solid var(--border2); border-radius:8px; padding:4px 6px; }
 .output-bit-box.active { border-color:var(--accent); box-shadow:0 0 0 1px rgba(79,158,255,.35); }
-.output-bit-label { font-family:var(--mono); font-size:14px; color:var(--text3); }
-.output-bit-val { min-width:28px; height:28px; border-radius:6px; border:1px solid var(--border2); background:var(--bg2); color:var(--text); font-family:var(--mono); font-size:13px; display:flex; align-items:center; justify-content:center; }
+.output-bit-label { font-family:var(--mono); font-size:16px; color:var(--text3); }
+.output-bit-val { min-width:34px; height:34px; border-radius:6px; border:1px solid var(--border2); background:var(--bg2); color:var(--text); font-family:var(--mono); font-size:16px; display:flex; align-items:center; justify-content:center; }
 .output-bit-box.active .output-bit-val { background:var(--accent2); border-color:var(--accent); color:#fff; }
 
-.input-bits-grid { display:flex; flex-wrap:wrap; gap:6px; }
+.input-bits-grid { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; }
 .input-bit-box { display:flex; align-items:center; gap:6px; background:var(--bg4); border:1px solid var(--border2); border-radius:8px; padding:4px 6px; }
 .input-bit-box.active { border-color:var(--accent); box-shadow:0 0 0 1px rgba(79,158,255,.35); }
-.input-bit-label { font-family:var(--mono); font-size:14px; color:var(--text3); }
-.input-bit-btn { min-width:28px; height:28px; border-radius:6px; border:1px solid var(--border2); background:var(--bg2); color:var(--text); font-family:var(--mono); font-size:13px; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+.input-bit-label { font-family:var(--mono); font-size:16px; color:var(--text3); }
+.input-bit-btn { min-width:34px; height:34px; border-radius:6px; border:1px solid var(--border2); background:var(--bg2); color:var(--text); font-family:var(--mono); font-size:16px; display:flex; align-items:center; justify-content:center; cursor:pointer; }
 .input-bit-box.active .input-bit-btn { background:var(--accent2); border-color:var(--accent); color:#fff; }
 
 .editor-panel { padding:18px; }
-.editor-title { font-size:16px; font-weight:600; color:var(--text3); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px; }
+.editor-title { font-size:18px; font-weight:600; color:var(--text3); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px; }
 .editor-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
 .editor-label { font-size:18px; color:var(--text); min-width:110px; }
 .editor-input { width:100%; background:var(--bg3); border:1px solid var(--border); border-radius:6px; color:var(--text); font-family:var(--mono); font-size:19px; padding:8px 10px; outline:none; transition:border-color .15s; }
@@ -133,7 +153,7 @@ header { height:84px; background:var(--bg2); border-bottom:1px solid var(--borde
 .right-panel { width:560px; background:var(--bg2); border-left:1px solid var(--border); display:flex; flex-direction:column; flex-shrink:0; }
 .panel-tabs { display:flex; border-bottom:1px solid var(--border); overflow-x:auto; flex-shrink:0; }
 .panel-tabs::-webkit-scrollbar { height:3px; }
-.panel-tab { flex-shrink:0; padding:12px 14px; text-align:center; font-size:13px; font-weight:600; color:var(--text2); cursor:pointer; letter-spacing:.5px; transition:all .15s; border-bottom:2px solid transparent; white-space:nowrap; }
+.panel-tab { flex-shrink:0; padding:12px 14px; text-align:center; font-size:18px; font-weight:600; color:var(--text2); cursor:pointer; letter-spacing:.5px; transition:all .15s; border-bottom:2px solid transparent; white-space:nowrap; }
 .panel-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
 .panel-content { flex:1; overflow-y:auto; padding:14px; }
 
@@ -141,7 +161,7 @@ header { height:84px; background:var(--bg2); border-bottom:1px solid var(--borde
 .var-name { font-family:var(--mono); color:var(--purple); }
 .var-val { font-family:var(--mono); color:var(--green); font-weight:500; }
 
-.log-entry { font-family:var(--mono); font-size:16px; padding:6px 0; border-bottom:1px solid var(--border); color:var(--text2); display:flex; gap:8px; }
+.log-entry { font-family:var(--mono); font-size:18px; padding:6px 0; border-bottom:1px solid var(--border); color:var(--text2); display:flex; gap:8px; }
 .log-entry .log-step { color:var(--text3); min-width:28px; flex-shrink:0; }
 .log-entry.input { color:var(--green); }
 .log-entry.step { color:var(--amber); }
@@ -156,46 +176,78 @@ header { height:84px; background:var(--bg2); border-bottom:1px solid var(--borde
 .table-row { display:grid; border-bottom:1px solid var(--border); }
 .table-row:last-child { border-bottom:none; }
 .table-head { background:var(--bg3); font-weight:600; }
-.table-cell { padding:7px 10px; border-right:1px solid var(--border); font-family:var(--mono); font-size:12px; white-space:nowrap; }
+.table-cell { padding:9px 12px; border-right:1px solid var(--border); font-family:var(--mono); font-size:18px; white-space:nowrap; }
 .table-cell:last-child { border-right:none; }
-.table-cell select { background:var(--bg4); border:1px solid var(--border2); border-radius:5px; color:var(--text); font-family:var(--mono); font-size:11px; padding:2px 4px; cursor:pointer; outline:none; }
+.table-head .table-cell { display:flex; align-items:center; justify-content:center; gap:6px; }
+.table-head .table-cell.subhead { justify-content:flex-start; }
+.ff-head { display:inline-flex; align-items:center; gap:6px; }
+.table-cell select { background:var(--bg4); border:1px solid var(--border2); border-radius:5px; color:var(--text); font-family:var(--mono); font-size:16px; padding:4px 6px; cursor:pointer; outline:none; }
 .table-cell select:focus { border-color:var(--accent); }
 .table-row:nth-child(even):not(.table-head) { background:rgba(79,158,255,.04); }
 .table-active { outline:2px solid var(--accent); background:rgba(79,158,255,.18) !important; }
 
+.state-table { width:100%; border-collapse:collapse; border:1px solid var(--border); border-radius:8px; overflow:hidden; font-family:var(--mono); font-size:18px; }
+.state-table th, .state-table td { padding:9px 12px; border-right:1px solid var(--border); border-bottom:1px solid var(--border); white-space:nowrap; }
+.state-table th { background:var(--bg3); font-weight:600; text-align:center; }
+.state-table td { text-align:center; }
+.state-table th:last-child, .state-table td:last-child { border-right:none; }
+.state-table tr:last-child td { border-bottom:none; }
+.state-table tr:nth-child(even) { background:rgba(79,158,255,.04); }
+.state-table tr.table-active { outline:2px solid var(--accent); background:rgba(79,158,255,.18) !important; }
+
+.exc-table-wrap { overflow:auto; border:1px solid var(--border); border-radius:8px; }
+.exc-table { width:max-content; min-width:100%; border-collapse:collapse; font-family:var(--mono); font-size:18px; }
+.exc-table th, .exc-table td { padding:9px 12px; border-right:1px solid var(--border); border-bottom:1px solid var(--border); white-space:nowrap; text-align:center; }
+.exc-table th:last-child, .exc-table td:last-child { border-right:none; }
+.exc-table thead th { background:var(--bg3); font-weight:600; }
+.exc-table thead tr:last-child th { font-size:16px; color:var(--text3); font-weight:500; }
+.exc-table tbody tr:nth-child(even) td { background:rgba(79,158,255,.04); }
+.exc-table tbody tr.active-row td { background:rgba(79,158,255,.18); }
+.exc-table tbody tr:last-child td { border-bottom:none; }
+
 /* ── Kmap styles ───────────────────────────────────────── */
 .kmap-section { margin-bottom:24px; padding:14px; background:var(--bg3); border:1px solid var(--border); border-radius:10px; }
-.kmap-title { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--accent); margin-bottom:10px; }
-.kmap-expr { font-family:var(--mono); font-size:12px; color:var(--green); margin-bottom:10px; padding:8px 10px; background:var(--bg4); border-radius:6px; border:1px solid var(--border2); word-break:break-all; }
+.kmap-title { font-family:var(--mono); font-size:18px; font-weight:700; color:var(--accent); margin-bottom:10px; }
+.kmap-expr { font-family:var(--mono); font-size:18px; color:var(--green); margin-bottom:10px; padding:10px 12px; background:var(--bg4); border-radius:6px; border:1px solid var(--border2); word-break:break-all; }
 .kmap-expr .expr-label { color:var(--text3); margin-right:6px; }
-.kmap-table { border-collapse:collapse; font-family:var(--mono); font-size:12px; }
-.kmap-table th, .kmap-table td { border:1px solid var(--border2); padding:5px 10px; text-align:center; min-width:32px; }
+.kmap-table { border-collapse:collapse; font-family:var(--mono); font-size:18px; }
+.kmap-table th, .kmap-table td { border:1px solid var(--border2); padding:8px 12px; text-align:center; min-width:42px; }
 .kmap-table th { background:var(--bg4); color:var(--text3); font-weight:600; }
 .kmap-table td { background:var(--bg2); color:var(--text); }
-.kmap-table td.k1 { color:var(--green); font-weight:700; background:rgba(62,207,142,.12); }
-.kmap-table td.kx { color:var(--amber); }
+.kmap-table td.k1,
+.kmap-table td.kx { color:var(--text); font-weight:700; background:var(--bg2); }
+.kmap-cell-inner { display:flex; flex-direction:column; align-items:center; gap:4px; min-height:30px; }
+.kmap-group-strip { display:flex; justify-content:center; gap:3px; min-height:8px; flex-wrap:wrap; }
+.kmap-group-dot { width:7px; height:7px; border-radius:999px; box-shadow:0 0 0 1px rgba(15,23,42,.25); }
+.kmap-groups { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+.kmap-group-item { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid var(--border2); border-radius:999px; background:var(--bg4); font-size:16px; color:var(--text2); }
+.kmap-group-swatch { width:9px; height:9px; border-radius:999px; flex-shrink:0; }
 .kmap-header-row th { background:var(--bg3); }
-.kmap-corner { background:var(--bg3) !important; color:var(--text3) !important; font-size:10px; }
-.kmap-axis-label { font-size:11px; color:var(--text3); margin-bottom:4px; }
+.kmap-corner { background:var(--bg3) !important; color:var(--text3) !important; font-size:16px; }
+.kmap-axis-label { font-size:16px; color:var(--text3); margin-bottom:6px; }
+.equation-card { margin-bottom:24px; padding:14px; background:var(--bg3); border:1px solid var(--border); border-radius:10px; }
+.equation-title { font-family:var(--mono); font-size:18px; font-weight:700; color:var(--accent); margin-bottom:10px; }
+.equation-body { font-family:var(--mono); font-size:18px; color:var(--green); line-height:1.7; word-break:break-word; }
+.equation-note { font-family:var(--mono); font-size:16px; color:var(--text3); line-height:1.7; }
 
 /* ── FF Excitation reference table ─────────────────────── */
 .ff-ref-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
 .ff-ref-box { background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:12px; }
-.ff-ref-title { font-family:var(--mono); font-size:12px; font-weight:700; color:var(--accent); margin-bottom:8px; }
-.ff-ref-table { border-collapse:collapse; font-family:var(--mono); font-size:11px; width:100%; }
+.ff-ref-title { font-family:var(--mono); font-size:18px; font-weight:700; color:var(--accent); margin-bottom:8px; }
+.ff-ref-table { border-collapse:collapse; font-family:var(--mono); font-size:18px; width:100%; }
 .ff-ref-table th { background:var(--bg4); color:var(--text3); padding:4px 8px; border:1px solid var(--border2); }
 .ff-ref-table td { padding:4px 8px; border:1px solid var(--border2); text-align:center; color:var(--text2); }
 .ff-ref-table td.v1 { color:var(--green); font-weight:700; }
 .ff-ref-table td.vx { color:var(--amber); }
 
-.name-input { width:140px; background:var(--bg3); border:1px solid var(--border); border-radius:6px; color:var(--text); font-family:var(--mono); font-size:15px; padding:4px 6px; outline:none; }
+.name-input { width:140px; background:var(--bg3); border:1px solid var(--border); border-radius:6px; color:var(--text); font-family:var(--mono); font-size:18px; padding:6px 8px; outline:none; }
 .name-input:focus { border-color:var(--accent); }
 
 .state-badge { display:inline-block; padding:4px 8px; border-radius:6px; background:rgba(79,158,255,.15); border:1px solid rgba(79,158,255,.4); font-family:var(--mono); font-size:16px; color:var(--accent); }
 
-.conn-handle { fill:#0d0f14; stroke:#4f9eff; stroke-width:1.5; cursor:move; }
+.conn-handle { fill:var(--handle-fill); stroke:var(--accent); stroke-width:1.5; cursor:move; }
 .conn-handle.end { fill:#4f9eff; }
-.conn-handle.start { fill:#93a0c8; }
+.conn-handle.start { fill:var(--handle-start-fill); }
 
 .mode-switch { display:flex; align-items:center; gap:8px; font-size:14px; color:var(--text2); }
 .switch { position:relative; display:inline-block; width:44px; height:24px; }
@@ -206,10 +258,11 @@ header { height:84px; background:var(--bg2); border-bottom:1px solid var(--borde
 .switch input:checked + .slider:before { transform:translateX(20px); }
 
 .modal-backdrop { position:fixed; inset:0; background:rgba(6,8,12,.72); display:none; align-items:center; justify-content:center; z-index:200; }
-.modal { width:min(520px, 92vw); background:var(--bg2); border:1px solid var(--border2); border-radius:12px; padding:18px; box-shadow:0 20px 50px rgba(0,0,0,.5); }
-.modal h2 { font-size:16px; margin-bottom:10px; color:var(--text); }
-.modal p { font-size:12px; color:var(--text2); line-height:1.7; margin-bottom:12px; }
-.modal .meta { font-family:var(--mono); font-size:11px; color:var(--text3); }
+.modal { width:min(820px, 92vw); max-height:88vh; overflow-y:auto; background:var(--bg2); border:1px solid var(--border2); border-radius:12px; padding:22px; box-shadow:0 20px 50px rgba(0,0,0,.5); }
+.modal h2 { font-size:24px; margin-bottom:12px; color:var(--text); }
+.modal p { font-size:17px; color:var(--text2); line-height:1.8; margin-bottom:14px; }
+.modal .meta { font-family:var(--mono); font-size:14px; color:var(--text3); }
+.modal ul { margin:0 0 20px 22px; color:var(--text2); font-size:17px; line-height:1.8; }
 .modal-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:14px; }
 
 body.hide-sidebars .info-panel,
@@ -230,12 +283,48 @@ body.hide-sidebars .resize-handle { display:none; }
 
 <header>
   <div class="logo">FSM<span> // SIMULATOR</span></div>
+  <div class="menu-bar">
+    <div class="menu" id="fileMenu">
+      <button class="menu-btn" type="button" onclick="toggleMenu('fileMenu')">File</button>
+      <div class="menu-dropdown">
+        <button class="menu-item" type="button" onclick="handleMenuAction(confirmNewWorkspace)">
+          <span class="menu-item-check"></span><span>New</span>
+        </button>
+        <button class="menu-item" type="button" onclick="handleMenuAction(openLoadDialog)">
+          <span class="menu-item-check"></span><span>Load from file</span>
+        </button>
+        <button class="menu-item" type="button" onclick="handleMenuAction(saveJSON)">
+          <span class="menu-item-check"></span><span>Save to file</span>
+        </button>
+        <button class="menu-item" type="button" onclick="handleMenuAction(confirmNewWorkspace);initDefault();">
+          <span class="menu-item-check"></span><span>Load Default</span>
+        </button>
+      </div>
+    </div>
+    <div class="menu" id="viewMenu">
+      <button class="menu-btn" type="button" onclick="toggleMenu('viewMenu')">View</button>
+      <div class="menu-dropdown">
+        <button class="menu-item" type="button" onclick="handleMenuAction(toggleSidebars)">
+          <span class="menu-item-check" id="menuCheckSidebars">✓</span><span>Sidebars</span>
+        </button>
+        <button class="menu-item" type="button" onclick="handleMenuAction(toggleTheme)">
+          <span class="menu-item-check" id="menuCheckTheme"></span><span>Light/Dark</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <input type="file" id="fileInput" accept=".json" style="display:none" onchange="loadJSON(event)">
+  <button class="menu-btn" onclick="openHelp()">Help</button>
+  <button class="menu-btn" onclick="openAbout()">About</button>
+  
   <div class="header-sep"></div>
-  <button class="btn" onclick="addBit()">+ Input Bit</button>
-  <button class="btn" onclick="removeBit()">- Input Bit</button>
+  <div>Input Bit</div>
+  <button class="btn" onclick="addBit()">+</button>
+  <button class="btn" onclick="removeBit()">-</button>
   <div style="width:1px;height:24px;background:var(--border);margin:0 2px"></div>
-  <button class="btn" onclick="addOutputBit()">+ Output Bit</button>
-  <button class="btn" onclick="removeOutputBit()">- Output Bit</button>
+  <div>Output Bit</div>
+  <button class="btn" onclick="addOutputBit()">+</button>
+  <button class="btn" onclick="removeOutputBit()">-</button>
   <div style="width:1px;height:24px;background:var(--border);margin:0 2px"></div>
   <div class="mode-switch">
     <span id="modeSwitchLabel">All Moore</span>
@@ -248,16 +337,11 @@ body.hide-sidebars .resize-handle { display:none; }
   <div class="sim-controls">
     <div class="step-counter" id="stepCounter">STEP 0</div>
     <button class="btn" onclick="resetSim()">Reset</button>
-    <button class="btn" onclick="stepSim()">Step</button>
+    <button class="btn" onclick="stepSim()">Step (clk trigger)</button>
     <button class="btn success" id="btnRun" onclick="runSim()">Run</button>
     <div style="width:1px;height:24px;background:var(--border);margin:0 2px"></div>
-    <button class="btn" onclick="saveJSON()">Save</button>
-    <button class="btn" onclick="document.getElementById('fileInput').click()">Load</button>
-    <input type="file" id="fileInput" accept=".json" style="display:none" onchange="loadJSON(event)">
-    <button class="btn" onclick="openAbout()">About</button>
-    <button class="btn" id="btnSimplify" onclick="toggleSimplify()">Simplify</button>
-    <button class="btn" onclick="toggleSidebars()">Sidebars</button>
-    <button class="btn" onclick="toggleTheme()">Light/Dark</button>
+    
+    
   </div>
 </header>
 
@@ -269,28 +353,8 @@ body.hide-sidebars .resize-handle { display:none; }
       <div class="state-drag-wrap">
         <div class="state-drag moore" draggable="true" ondragstart="dragStateStart(event,'moore')">Add Moore State</div>
         <div class="state-drag mealy" draggable="true" ondragstart="dragStateStart(event,'mealy')">Add Mealy State</div>
-        <button class="btn" id="btnForce" onclick="toggleForceLayout()">Force Layout: OFF</button>
-      </div>
-    </div>
-    <div class="info-section">
-      <div class="info-title">Tips</div>
-      <div class="info-text">
-        • Drag states around the grid<br>
-        • Click a state to edit transitions<br>
-        • Drag curve handles to reroute arrows<br>
-        • Drag arrow heads to change target state<br>
-        • Left-click drag on canvas to pan<br>
-        • Toggle input bits on the top right<br>
-        • Light mode will flashbang you LMAO<br>
-        • Output bits can be edited in the editor per state
-      </div>
-    </div>
-    <div class="info-section">
-      <div class="info-title">Legend</div>
-      <div class="info-text">
-        • Blue ring = active state<br>
-        • Blue arrow = chosen transition<br>
-        • Dots = curve handles
+        <button class="btn" id="btnForce" onclick="toggleForceLayout()">Force Layout</button>
+        <button class="btn" id="btnSimplify" onclick="toggleSimplify()">Simplify Arrows</button>
       </div>
     </div>
     <div class="info-section">
@@ -311,8 +375,11 @@ body.hide-sidebars .resize-handle { display:none; }
   <div class="right-panel" id="rightPanel">
     <div class="panel-tabs" id="panelTabs">
       <div class="panel-tab active" id="tabVars" onclick="switchTab('vars')">VARS</div>
-      <div class="panel-tab" id="tabLog" onclick="switchTab('log')">LOG</div>
+      
       <div class="panel-tab" id="tabTable" onclick="switchTab('table')">TABLE</div>
+       
+       <div class="panel-tab" id="synth" onclick="toggleExpandMode();">SYNTHESIZE</div>
+       <div class="panel-tab" id="tabLog" onclick="switchTab('log')">LOG</div>
     </div>
     <div class="panel-content" id="panelContent"></div>
   </div>
@@ -325,15 +392,16 @@ body.hide-sidebars .resize-handle { display:none; }
     <div class="bottom-header-title">EXCITATION ANALYSIS</div>
     <div class="bottom-tab-sep"></div>
     <div class="bottom-tab active" id="btabExc" onclick="setBottomTab('exc')">EXCITATION TABLE + KMAP</div>
-    <div class="bottom-tab" id="btabRef" onclick="setBottomTab('ref')">FF REFERENCE</div>
+    <div class="bottom-tab" id="btabOneHot" onclick="setBottomTab('onehot')">ONE-HOT ENCODING</div>
+    <div class="bottom-tab" id="btabRef" onclick="setBottomTab('ref')">FLIP-FLOP REFERENCE</div>
     <div class="bottom-header-right">
-      <span id="bottomInfo" style="font-size:11px;color:var(--text3);font-family:var(--mono)"></span>
+      <span id="bottomInfo" style="font-size:16px;color:var(--text3);font-family:var(--mono)"></span>
       <button class="bottom-close-btn" onclick="closeBottomPanel()">✕ Close</button>
     </div>
   </div>
   <div class="bottom-body" id="bottomBody">
     <div class="bottom-pane" id="bottomLeft"></div>
-    <div class="bottom-pane-divider"></div>
+    <div class="bottom-pane-divider" id="bottomPaneDivider"></div>
     <div class="bottom-pane" id="bottomRight"></div>
   </div>
 </div>
@@ -343,7 +411,14 @@ body.hide-sidebars .resize-handle { display:none; }
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle" onclick="event.stopPropagation()">
     <h2 id="aboutTitle">About Me</h2>
     <p>
-      Conceptualized and designed by Adelson Chua and Isaac Sy. Development is on-going, feedback is appreciated! Will continue to update as the sem goes along.
+      <i>"When I was a student, I never truly appreciated sequential circuits since we only relied on static images and hand-drawn diagrams. We never had the tools to properly interpret flip-flops and state diagrams; we only drew diagrams and wrote tables without fully visualizing what they meant. 
+        It's time to let the students clearly see what I never got to see. - Adel"</i>
+        <br><br>
+        Conceptualized by Adelson Chua and developed by Isaac Sy. 
+        <br><br>
+        Development is ongoing, feedback is appreciated!
+        <br><br>
+        Dedicated to the crazy ones, the ones who see things differently.
     </p>
     <p>
       From EEEI, UP Diliman for EEE 143 students
@@ -351,6 +426,95 @@ body.hide-sidebars .resize-handle { display:none; }
     <div class="meta">Feel free to download and modify the HTML file! AI was also used in its development.</div>
     <div class="modal-actions">
       <button class="btn" onclick="closeAbout()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="helpModal" onclick="closeHelp(event)">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle" onclick="event.stopPropagation()">
+    <h2 id="helpTitle">How to Use the FSM Simulator</h2>
+    <p>
+      The simulator is easiest to use on desktop. The layout is divided into a left control panel, a central canvas, a right analysis panel, and a bottom excitation-analysis panel.
+    </p>
+    <ul>
+      <li><strong>Quick Navigation</strong>
+        <ul>
+          <li>Drag states around the grid</li>
+          <li>Click a state to edit transitions</li>
+          <li>Drag curve handles to reroute arrows</li>
+          <li>Drag arrow heads to change target state</li>
+          <li>Left-click drag on canvas to pan</li>
+        </ul>
+        
+        <li><strong>Legend</strong>
+        <ul>
+        <li>Blue ring = active state</li>
+        <li>Blue arrow = chosen transition</li>
+        <li>Orange ring = state being edited</li>
+        <li>Orange arrow = transition being edited</li>
+        <li> Dots = curve handles</li>
+        </ul>
+      <li><strong>Top bar</strong>
+        <ul>
+          <li><strong>File</strong>: save, load, or manage your current FSM design.</li>
+          <li><strong>View</strong>: show or hide panels and switch between light and dark mode.</li>
+          <li><strong>About</strong>: opens project information and credits.</li>
+          <li><strong>Help</strong>: opens this guide.</li>
+          <li><strong>+ Input Bit</strong> / <strong>- Input Bit</strong>: add or remove input variables used by transitions.</li>
+          <li><strong>+ Output Bit</strong> / <strong>- Output Bit</strong>: add or remove output variables used by states.</li>
+          <li><strong>All Moore</strong>: toggles whether states behave as Moore-style output states.</li>
+          <li><strong>Step 0</strong>: shows the current simulation step count.</li>
+          <li><strong>Reset</strong>: returns the simulation to its initial condition and clears the current run state.</li>
+          <li><strong>Step</strong>: advances the FSM by one input evaluation.</li>
+          <li><strong>Run</strong>: runs the simulation continuously.</li>
+        </ul>
+      </li>
+      <li><strong>Left panel: quick actions and editor</strong>
+        <ul>
+          <li><strong>Add Moore State</strong>: drag this onto the canvas to create a Moore state.</li>
+          <li><strong>Add Mealy State</strong>: drag this onto the canvas to create a Mealy state.</li>
+          <li><strong>Force Layout</strong>: automatically repositions states to keep the graph organized.</li>
+          <li><strong>Simplify Arrows</strong>: merges or tidies overlapping transition arrows when possible.</li>
+          <li><strong>State editor</strong>: click a state on the canvas to edit its name, outputs, and transitions here.</li>
+        </ul>
+      </li>
+      <li><strong>Center canvas</strong>
+        <ul>
+          <li>Drag states to reposition them on the grid.</li>
+          <li>Click a state to select it and open its editor.</li>
+          <li>Drag the curve handle at the middle of a transition to reshape its path.</li>
+          <li>Drag an arrow head to retarget the transition to another state.</li>
+          <li>Left-click and drag on empty canvas space to pan around the diagram.</li>
+        </ul>
+      </li>
+      <li><strong>Top-right input and output boxes</strong>
+        <ul>
+          <li><strong>Inputs</strong>: click each input bit to toggle between 0 and 1 before stepping or running the machine.</li>
+          <li><strong>Outputs</strong>: shows the current output bits of the active state or transition behavior.</li>
+        </ul>
+      </li>
+      <li><strong>Right panel</strong>
+        <ul>
+          <li><strong>VARS</strong>: displays the current values of input bits, state bits, and related variables.</li>
+          
+          <li><strong>TABLE</strong>: shows the state transition table for the current FSM.</li>
+          <li><strong>SYNTHESIZE</strong> in the table view: opens the bottom panel with the excitation table and Karnaugh map analysis.</li>
+          <li><strong>LOG</strong>: records simulation events step by step.</li>
+        </ul>
+      </li>
+      <li><strong>Bottom excitation-analysis panel</strong>
+        <ul>
+          <li><strong>Excitation Table + KMap</strong>: shows flip-flop input requirements and simplified expressions.</li>
+          <li><strong>One-Hot Encoding</strong>: shows a one-hot encoded version of the state transition table.</li>
+          <li><strong>Flip-Flop Reference</strong>: displays the reference excitation tables for supported flip-flop types.</li>
+          
+          <li><strong>Close</strong>: hides the bottom analysis panel.</li>
+        </ul>
+      </li>
+    </ul>
+    <div class="meta">Tip: for cleaner manual layouts, turn Force Layout off before moving states around. You can then drag curve handles and arrow heads to fine-tune transition routes.</div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeHelp()">Close</button>
     </div>
   </div>
 </div>
@@ -374,20 +538,21 @@ let runInterval = null;
 let idCounter = 1;
 let inputBitsCount = 1;
 let inputBits = [1];
-let inputNames = ['b0'];
+let inputNames = ['x0'];
 let outputBitsCount = 1;
 let outputBits = [0];
-let outputNames = ['y0'];
+let outputNames = ['z0'];
 let activeTab = 'vars';
 
 // Expand mode (excitation table / kmap)
 let expandMode = false;
 let expandTab = 'excitation'; // 'excitation' | 'ffref' | 'kmap'
+let excitationSortMode = 'state'; // 'state' | 'input'
 let flipFlopTypes = []; // per-FF type: 'D'|'T'|'SR'|'JK'
+let bottomSplit = 0.5;
 
 let svgEl, canvasWrap;
 let view = { x: 0, y: 0, scale: 1.5 };
-let endPreview = null;
 
 // ── Force layout ────────────────────────────────────────────────
 let forceActive = false;
@@ -441,12 +606,121 @@ function getFFExcitation(type, curr, next) {
 
 /** Returns column header labels for a given FF type */
 function getFFLabels(type, ffIndex) {
-  const n = flipFlopTypes.length > 1 ? String(ffIndex) : '';
+  const n = flipFlopTypes.length > 1 ? String(flipFlopTypes.length - 1 - ffIndex) : '';
   if (type === 'D') return [`D${n}`];
   if (type === 'T') return [`T${n}`];
   if (type === 'SR') return [`S${n}`, `R${n}`];
   if (type === 'JK') return [`J${n}`, `K${n}`];
   return [type + n];
+}
+
+function getStateBitLabels(numFF) {
+  return Array.from({ length: numFF }, (_, i) => `Q${numFF - 1 - i}`);
+}
+
+function getExcitationSortLabel() {
+  return excitationSortMode === 'state' ? 'Sort: State First' : 'Sort: Input First';
+}
+
+function getExcitationSortButtonLabel() {
+  return excitationSortMode === 'state' ? 'Sort: Input First' : 'Sort: State First';
+}
+
+function toggleExcitationSort() {
+  pushUndo();
+  excitationSortMode = excitationSortMode === 'state' ? 'input' : 'state';
+  if (expandMode) renderBottomPanel();
+  if (activeTab === 'table') renderNormalTablePanel();
+}
+
+function sortExcitationRows(rows) {
+  const sorted = [...rows];
+  sorted.sort((a, b) => {
+    if (excitationSortMode === 'input') {
+      return a.inputIndex - b.inputIndex || a.stateIndex - b.stateIndex;
+    }
+    return a.stateIndex - b.stateIndex || a.inputIndex - b.inputIndex;
+  });
+  return sorted;
+}
+
+function renderFFHeaderCell(ffIndex, type, labels) {
+  const typeOptions = ['D','T','SR','JK'].map(t =>
+    `<option value="${t}" ${t === type ? 'selected' : ''}>${t}</option>`
+  ).join('');
+  const labelText = labels.length === 2 ? `${labels[0]}/${labels[1]}` : labels[0];
+  const colspan = labels.length === 2 ? 2 : 1;
+  return `<th colspan="${colspan}"><span class="ff-head"><select onchange="changeFFType(${ffIndex},this.value)">${typeOptions}</select><span>${h(labelText)}</span></span></th>`;
+}
+
+function renderExcitationTableHTML(rows, numFF, stateBitLabels) {
+  const excHeaders = [];
+  for (let ff = 0; ff < numFF; ff++) {
+    const type = flipFlopTypes[ff];
+    const labels = getFFLabels(type, ff);
+    excHeaders.push(renderFFHeaderCell(ff, type, labels));
+  }
+
+  const subHeaders = [];
+  for (let ff = 0; ff < numFF; ff++) {
+    const labels = getFFLabels(flipFlopTypes[ff], ff);
+    for (const l of labels) subHeaders.push(`<th>${h(l)}</th>`);
+  }
+
+  const header1 = `
+    <tr>
+      <th>Inputs</th>
+      <th>Present State</th>
+      <th>Next State</th>
+      ${excHeaders.join('')}
+      <th colspan="${outputNames.length}">Outputs</th>  
+    </tr>`;
+
+  const header2 = `
+    <tr>
+      <th>${inputNames.slice().reverse().join(' ')}</th>
+      <th>${stateBitLabels}</th>
+      <th>${stateBitLabels}</th>
+      ${subHeaders.join('')}
+      ${outputNames.slice().reverse().map(n=>`<th>${h(n)}</th>`).join('')}
+    </tr>`;
+
+  const bodyRows = rows.map(r => {
+    const excCells = r.excitations.map(v => {
+      const cls = v === '1' ? 'style="color:var(--green);font-weight:700"' : v === 'X' ? 'style="color:var(--amber)"' : '';
+      return `<td ${cls}>${v}</td>`;
+    }).join('');
+    const outCells = outputNames.slice().reverse().map((n, bi) => {
+      const val = r.outputBin[bi] || '0';
+      return `<td ${val === '1' ? 'style="color:var(--green)"' : ''}>${val}</td>`;
+    }).join('');
+    return `<tr class="${r.isActive ? 'active-row' : ''}">
+      <td>${h(r.inputBin)}</td>
+      <td>${h(r.currentName)} (${r.currentBin})</td>
+      <td>${h(r.nextName)} (${r.nextBin})</td>
+      ${excCells}${outCells}
+    </tr>`;
+  }).join('');
+
+  return `<div class="exc-table-wrap"><table class="exc-table"><thead>${header1}${header2}</thead><tbody>${bodyRows}</tbody></table></div>`;
+}
+
+function getSimplifiedInputPatterns(indices) {
+  if (!indices.length) return [];
+  const unique = [...new Set(indices)].sort((a, b) => a - b);
+  if (unique.length === (1 << inputBitsCount)) return ['X'.repeat(inputBitsCount)];
+  const result = quineMcCluskey(unique, [], inputBitsCount);
+  if (typeof result === 'string') {
+    if (result === '1') return ['X'.repeat(inputBitsCount)];
+    if (result === '0') return [];
+    return [result];
+  }
+  return result.pis.map(pi => pi.bin.replace(/-/g, 'X'));
+}
+
+function formatSimplifiedInputLabel(indices) {
+  const patterns = getSimplifiedInputPatterns(indices);
+  return patterns.length ? patterns.join(', ') : '';
 }
 
 /** How many excitation columns does a FF type produce? */
@@ -478,33 +752,54 @@ function syncFFTypes() {
 
 function quineMcCluskey(minterms, dontCares, numVars) {
   if (numVars === 0) return minterms.length > 0 ? '1' : '0';
-  const all = [...new Set([...minterms, ...dontCares])].sort((a, b) => a - b);
+  const uniqueMinterms = [...new Set(minterms)].sort((a, b) => a - b);
+  const dcSet = new Set(dontCares.filter(m => !uniqueMinterms.includes(m)));
+  const all = [...new Set([...uniqueMinterms, ...dcSet])].sort((a, b) => a - b);
   if (all.length === 0) return '0';
-  if (minterms.length === (1 << numVars)) return '1';
-  if (minterms.length === 0) return '0';
+  if (uniqueMinterms.length === (1 << numVars)) return '1';
+  if (uniqueMinterms.length === 0) return '0';
 
   function toBin(n) { return n.toString(2).padStart(numVars, '0'); }
   function countOnes(s) { return s.split('').filter(c => c === '1').length; }
+  function literalCount(bin) { return bin.split('').filter(c => c !== '-').length; }
   function tryMerge(binA, binB) {
-    let diff = -1, count = 0;
+    let diff = -1;
+    let count = 0;
     for (let i = 0; i < binA.length; i++) {
-      if (binA[i] === '-' && binB[i] === '-') continue;
-      if (binA[i] !== binB[i]) { diff = i; count++; }
+      if (binA[i] === binB[i]) continue;
+      if (binA[i] === '-' || binB[i] === '-') return null;
+      diff = i;
+      count++;
+      if (count > 1) return null;
     }
     if (count !== 1) return null;
-    return binA.split('').map((c, i) => i === diff ? '-' : c).join('');
+    return binA.slice(0, diff) + '-' + binA.slice(diff + 1);
+  }
+  function makeImplicant(terms, bin) {
+    const uniqueTerms = [...new Set(terms)].sort((a, b) => a - b);
+    return {
+      terms: uniqueTerms,
+      bin,
+      used: false,
+      coversMinterm: uniqueTerms.some(t => uniqueMinterms.includes(t))
+    };
+  }
+  function addGrouped(map, implicant) {
+    const key = countOnes(implicant.bin.replace(/-/g, '0'));
+    if (!map[key]) map[key] = [];
+    const existing = map[key].find(x => x.bin === implicant.bin);
+    if (existing) {
+      existing.terms = [...new Set([...existing.terms, ...implicant.terms])].sort((a, b) => a - b);
+      existing.coversMinterm = existing.coversMinterm || implicant.coversMinterm;
+      return existing;
+    }
+    map[key].push(implicant);
+    return implicant;
   }
 
-  // Build initial groups
   let groups = {};
-  all.forEach(m => {
-    const b = toBin(m);
-    const k = countOnes(b);
-    if (!groups[k]) groups[k] = [];
-    groups[k].push({ terms: [m], bin: b, used: false, dc: dontCares.includes(m) });
-  });
-
-  let primeImplicants = [];
+  all.forEach(m => addGrouped(groups, makeImplicant([m], toBin(m))));
+  const primeImplicants = [];
 
   while (true) {
     const newGroups = {};
@@ -518,12 +813,9 @@ function quineMcCluskey(minterms, dontCares, numVars) {
         for (const b of g2) {
           const merged = tryMerge(a.bin, b.bin);
           if (!merged) continue;
-          a.used = true; b.used = true;
-          const k = countOnes(merged.replace(/-/g, '0'));
-          if (!newGroups[k]) newGroups[k] = [];
-          const newTerms = [...new Set([...a.terms, ...b.terms])].sort((x, y) => x - y);
-          const exists = newGroups[k].some(x => x.bin === merged);
-          if (!exists) newGroups[k].push({ terms: newTerms, bin: merged, used: false, dc: a.dc && b.dc });
+          a.used = true;
+          b.used = true;
+          addGrouped(newGroups, makeImplicant([...a.terms, ...b.terms], merged));
           anyCombined = true;
         }
       }
@@ -531,7 +823,7 @@ function quineMcCluskey(minterms, dontCares, numVars) {
 
     keys.forEach(k => {
       (groups[k] || []).forEach(g => {
-        if (!g.used && !g.dc) primeImplicants.push(g);
+        if (!g.used && g.coversMinterm) primeImplicants.push(g);
       });
     });
 
@@ -539,39 +831,67 @@ function quineMcCluskey(minterms, dontCares, numVars) {
     groups = newGroups;
   }
 
-  // Petrick's method (essential PI cover)
-  const covered = new Set();
-  const selected = [];
+  if (primeImplicants.length === 0) return '0';
 
-  // Find essential PIs
-  for (const m of minterms) {
-    const covering = primeImplicants.filter(pi => pi.terms.includes(m));
-    if (covering.length === 1 && !selected.includes(covering[0])) {
-      selected.push(covering[0]);
-      covering[0].terms.forEach(t => covered.add(t));
-    }
+  const selected = [];
+  const selectedBins = new Set();
+  const covered = new Set();
+
+  function selectPI(pi) {
+    if (selectedBins.has(pi.bin)) return;
+    selected.push(pi);
+    selectedBins.add(pi.bin);
+    pi.terms.forEach(t => { if (uniqueMinterms.includes(t)) covered.add(t); });
   }
 
-  // Greedy cover for remaining
-  let remaining = minterms.filter(m => !covered.has(m));
-  while (remaining.length > 0) {
-    let best = null, bestCount = 0;
-    for (const pi of primeImplicants) {
-      if (selected.includes(pi)) continue;
-      const c = remaining.filter(m => pi.terms.includes(m)).length;
-      if (c > bestCount) { best = pi; bestCount = c; }
+  for (const m of uniqueMinterms) {
+    const covering = primeImplicants.filter(pi => pi.terms.includes(m));
+    if (covering.length === 1) selectPI(covering[0]);
+  }
+
+  const remaining = uniqueMinterms.filter(m => !covered.has(m));
+  if (remaining.length > 0) {
+    const candidates = primeImplicants.filter(pi => !selectedBins.has(pi.bin) && remaining.some(m => pi.terms.includes(m)));
+    const chart = remaining.map(m =>
+      candidates.map((pi, idx) => pi.terms.includes(m) ? idx : -1).filter(idx => idx >= 0)
+    );
+
+    function normalizeProduct(product) {
+      return [...new Set(product)].sort((a, b) => a - b);
     }
-    if (!best) break;
-    selected.push(best);
-    best.terms.forEach(t => covered.add(t));
-    remaining = minterms.filter(m => !covered.has(m));
+    function absorb(products) {
+      const normalized = products
+        .map(normalizeProduct)
+        .sort((a, b) => a.length - b.length || a.join(',').localeCompare(b.join(',')));
+      const result = [];
+      normalized.forEach(prod => {
+        const subsumed = result.some(existing => existing.every(v => prod.includes(v)));
+        if (!subsumed) result.push(prod);
+      });
+      return result;
+    }
+
+    let products = [[]];
+    for (const sum of chart) {
+      const nextProducts = [];
+      products.forEach(prod => {
+        sum.forEach(choice => nextProducts.push([...prod, choice]));
+      });
+      products = absorb(nextProducts);
+    }
+
+    const best = products.sort((a, b) => {
+      const aNorm = normalizeProduct(a);
+      const bNorm = normalizeProduct(b);
+      const aLit = aNorm.reduce((sum, idx) => sum + literalCount(candidates[idx].bin), 0);
+      const bLit = bNorm.reduce((sum, idx) => sum + literalCount(candidates[idx].bin), 0);
+      return aNorm.length - bNorm.length || aLit - bLit || aNorm.join(',').localeCompare(bNorm.join(','));
+    })[0] || [];
+
+    normalizeProduct(best).forEach(idx => selectPI(candidates[idx]));
   }
 
   if (selected.length === 0) return '0';
-
-  // Format as Boolean expression
-  // Variable names: input bits first (MSB→LSB), then state bits (MSB→LSB)
-  // We'll use generic var names passed as varNames
   return { pis: selected, numVars };
 }
 
@@ -592,6 +912,57 @@ function formatBoolExpr(qmResult, varNames) {
   return terms.join(' + ');
 }
 
+function formatProductTerm(bin, varNames) {
+  const literals = [];
+  for (let i = 0; i < bin.length; i++) {
+    const vn = varNames[i] || `v${i}`;
+    if (bin[i] === '1') literals.push(vn);
+    else if (bin[i] === '0') literals.push(vn + "'");
+  }
+  return literals.length === 0 ? '1' : literals.join('·');
+}
+
+function getKmapGroupColor(index) {
+  const palette = ['#22c55e', '#f59e0b', '#38bdf8', '#f97316', '#a78bfa', '#ef4444', '#14b8a6', '#eab308'];
+  return palette[index % palette.length];
+}
+
+function buildKmapGroups(qmResult, minterms, dontCares, varNames) {
+  if (!qmResult || typeof qmResult === 'string' || !qmResult.pis) return [];
+  const allowed = new Set([...minterms, ...dontCares]);
+  return qmResult.pis.map((pi, index) => {
+    const cells = [...new Set(pi.terms.filter(t => allowed.has(t)))].sort((a, b) => a - b);
+    return {
+      id: index,
+      color: getKmapGroupColor(index),
+      expr: formatProductTerm(pi.bin, varNames),
+      cells
+    };
+  }).filter(group => group.cells.length > 0);
+}
+
+function buildKmapGroupMap(groups) {
+  const map = new Map();
+  groups.forEach(group => {
+    group.cells.forEach(idx => {
+      if (!map.has(idx)) map.set(idx, []);
+      map.get(idx).push(group);
+    });
+  });
+  return map;
+}
+
+function renderKmapCell(localIdx, globalIdx, mintermSet, dcSet, groupMap) {
+  const groups = groupMap.get(globalIdx) || [];
+  const dots = groups.map(group => `<span class="kmap-group-dot" style="background:${group.color}" title="Group ${group.id + 1}: ${h(group.expr)}"></span>`).join('');
+  return `<td class="${cellClass(localIdx,mintermSet,dcSet)}"><div class="kmap-cell-inner"><span>${cellVal(localIdx,mintermSet,dcSet)}</span>${dots ? `<span class="kmap-group-strip">${dots}</span>` : '<span class="kmap-group-strip"></span>'}</div></td>`;
+}
+
+function renderKmapGroupLegend(groups) {
+  if (!groups.length) return '';
+  return `<div class="kmap-groups">${groups.map(group => `<div class="kmap-group-item" title="Cells: ${group.cells.join(', ')}"><span class="kmap-group-swatch" style="background:${group.color}"></span><span>G${group.id + 1}: ${h(group.expr)}</span></div>`).join('')}</div>`;
+}
+
 // ══════════════════════════════════════════════════════════════════
 //  KMAP RENDERING
 // ══════════════════════════════════════════════════════════════════
@@ -605,33 +976,30 @@ const GRAY = [0, 1, 3, 2];
  * dontCares: array of indices where function = X
  * varNames: array of variable name strings (MSB first)
  */
-function renderKmapHTML(minterms, dontCares, varNames, numVars) {
+function renderKmapHTML(minterms, dontCares, varNames, numVars, groups=[]) {
   const mintermSet = new Set(minterms);
   const dcSet = new Set(dontCares);
-  const total = 1 << numVars;
+  const groupMap = buildKmapGroupMap(groups);
 
   if (numVars === 1) {
-    // 1-var: 1×2
-    const rowVars = [varNames[0]];
-    const colVars = [];
-    return render1VarKmap(minterms, dontCares, varNames);
+    return render1VarKmap(minterms, dontCares, varNames, groupMap, groups);
   }
   if (numVars === 2) {
-    return render2VarKmap(minterms, dontCares, varNames);
+    return render2VarKmap(minterms, dontCares, varNames, groupMap, groups);
   }
   if (numVars === 3) {
-    return render3VarKmap(minterms, dontCares, varNames);
+    return render3VarKmap(minterms, dontCares, varNames, groupMap, groups);
   }
   if (numVars === 4) {
-    return render4VarKmap(minterms, dontCares, varNames);
+    return render4VarKmap(minterms, dontCares, varNames, groupMap, groups);
   }
   if (numVars === 5) {
-    return render5VarKmap(minterms, dontCares, varNames);
+    return render5VarKmap(minterms, dontCares, varNames, groupMap, groups);
   }
   if (numVars === 6) {
-    return render6VarKmap(minterms, dontCares, varNames);
+    return render6VarKmap(minterms, dontCares, varNames, groupMap, groups);
   }
-  return `<p style="color:var(--text3);font-size:12px">Kmap not supported for ${numVars} variables</p>`;
+  return `<p style="color:var(--text3);font-size:18px">Kmap not supported for ${numVars} variables</p>`;
 }
 
 function cellClass(idx, mintermSet, dcSet) {
@@ -645,39 +1013,36 @@ function cellVal(idx, mintermSet, dcSet) {
   return '0';
 }
 
-function render1VarKmap(minterms, dontCares, varNames) {
+function render1VarKmap(minterms, dontCares, varNames, groupMap, groups, globalIndexForCell=(idx=>idx)) {
   const ms = new Set(minterms), dc = new Set(dontCares);
   const v = varNames[0] || 'A';
   return `<table class="kmap-table">
     <tr><th>${v}'</th><th>${v}</th></tr>
-    <tr><td class="${cellClass(0,ms,dc)}">${cellVal(0,ms,dc)}</td><td class="${cellClass(1,ms,dc)}">${cellVal(1,ms,dc)}</td></tr>
-  </table>`;
+    <tr>${renderKmapCell(0,globalIndexForCell(0),ms,dc,groupMap)}${renderKmapCell(1,globalIndexForCell(1),ms,dc,groupMap)}</tr>
+  </table>${renderKmapGroupLegend(groups)}`;
 }
 
-function render2VarKmap(minterms, dontCares, varNames) {
+function render2VarKmap(minterms, dontCares, varNames, groupMap, groups, globalIndexForCell=(idx=>idx)) {
   const ms = new Set(minterms), dc = new Set(dontCares);
   const [A, B] = varNames;
-  // Rows: A=0,1  Cols: B=0,1
-  const colGray = GRAY.slice(0,2); // [0,1]
   let rows = '';
   for (let r = 0; r < 2; r++) {
     let cells = '';
     for (let c = 0; c < 2; c++) {
       const idx = (r << 1) | c;
-      cells += `<td class="${cellClass(idx,ms,dc)}">${cellVal(idx,ms,dc)}</td>`;
+      cells += renderKmapCell(idx,globalIndexForCell(idx),ms,dc,groupMap);
     }
     rows += `<tr><th>${A}=${r}</th>${cells}</tr>`;
   }
   return `<table class="kmap-table">
     <tr class="kmap-header-row"><th class="kmap-corner">${A}\\${B}</th><th>${B}=0</th><th>${B}=1</th></tr>
     ${rows}
-  </table>`;
+  </table>${renderKmapGroupLegend(groups)}`;
 }
 
-function render3VarKmap(minterms, dontCares, varNames) {
+function render3VarKmap(minterms, dontCares, varNames, groupMap, groups, globalIndexForCell=(idx=>idx)) {
   const ms = new Set(minterms), dc = new Set(dontCares);
   const [A, B, C] = varNames;
-  // Rows: A (1 var), Cols: BC (2 vars, gray coded)
   const colGray = [0,1,3,2]; // BC: 00,01,11,10
   let headerCols = colGray.map(g => `<th>${B}${C}=${g.toString(2).padStart(2,'0')}</th>`).join('');
   let rows = '';
@@ -685,17 +1050,17 @@ function render3VarKmap(minterms, dontCares, varNames) {
     let cells = '';
     for (const c of colGray) {
       const idx = (r << 2) | c;
-      cells += `<td class="${cellClass(idx,ms,dc)}">${cellVal(idx,ms,dc)}</td>`;
+      cells += renderKmapCell(idx,globalIndexForCell(idx),ms,dc,groupMap);
     }
     rows += `<tr><th>${A}=${r}</th>${cells}</tr>`;
   }
   return `<table class="kmap-table">
     <tr class="kmap-header-row"><th class="kmap-corner">${A}\\${B}${C}</th>${headerCols}</tr>
     ${rows}
-  </table>`;
+  </table>${renderKmapGroupLegend(groups)}`;
 }
 
-function render4VarKmap(minterms, dontCares, varNames) {
+function render4VarKmap(minterms, dontCares, varNames, groupMap, groups, globalIndexForCell=(idx=>idx)) {
   const ms = new Set(minterms), dc = new Set(dontCares);
   const [A, B, C, D] = varNames;
   const gray2 = [0,1,3,2];
@@ -705,18 +1070,17 @@ function render4VarKmap(minterms, dontCares, varNames) {
     let cells = '';
     for (const c of gray2) {
       const idx = (r << 2) | c;
-      cells += `<td class="${cellClass(idx,ms,dc)}">${cellVal(idx,ms,dc)}</td>`;
+      cells += renderKmapCell(idx,globalIndexForCell(idx),ms,dc,groupMap);
     }
     rows += `<tr><th>${A}${B}=${r.toString(2).padStart(2,'0')}</th>${cells}</tr>`;
   }
   return `<table class="kmap-table">
     <tr class="kmap-header-row"><th class="kmap-corner">${A}${B}\\${C}${D}</th>${headerCols}</tr>
     ${rows}
-  </table>`;
+  </table>${renderKmapGroupLegend(groups)}`;
 }
 
-function render5VarKmap(minterms, dontCares, varNames) {
-  // Split into two 4-var kmaps: one for A=0, one for A=1
+function render5VarKmap(minterms, dontCares, varNames, groupMap, groups) {
   const [A, B, C, D, E] = varNames;
   const sub4vars = [B, C, D, E];
   const ms0 = minterms.filter(m => !(m & 16)).map(m => m & 15);
@@ -724,26 +1088,24 @@ function render5VarKmap(minterms, dontCares, varNames) {
   const ms1 = minterms.filter(m => !!(m & 16)).map(m => m & 15);
   const dc1 = dontCares.filter(m => !!(m & 16)).map(m => m & 15);
   return `<div style="display:flex;gap:16px;flex-wrap:wrap">
-    <div><div class="kmap-axis-label">${A}=0</div>${render4VarKmap(ms0, dc0, sub4vars)}</div>
-    <div><div class="kmap-axis-label">${A}=1</div>${render4VarKmap(ms1, dc1, sub4vars)}</div>
-  </div>`;
+    <div><div class="kmap-axis-label">${A}=0</div>${render4VarKmap(ms0, dc0, sub4vars, groupMap, [], idx => idx)}</div>
+    <div><div class="kmap-axis-label">${A}=1</div>${render4VarKmap(ms1, dc1, sub4vars, groupMap, [], idx => 16 + idx)}</div>
+  </div>${renderKmapGroupLegend(groups)}`;
 }
 
-function render6VarKmap(minterms, dontCares, varNames) {
-  // Split into four 4-var kmaps
+function render6VarKmap(minterms, dontCares, varNames, groupMap, groups) {
   const [A, B, C, D, E, F] = varNames;
   const sub4vars = [C, D, E, F];
   const parts = [[0,0],[0,1],[1,0],[1,1]];
   let html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">';
   for (const [aVal, bVal] of parts) {
-    const mask = (aVal << 5) | (bVal << 4);
-    const check = (aVal << 5) | (bVal << 4);
+    const prefix = ((aVal << 1) | bVal) << 4;
     const ms = minterms.filter(m => (m >> 4) === ((aVal<<1)|bVal)).map(m => m & 15);
     const dc = dontCares.filter(m => (m >> 4) === ((aVal<<1)|bVal)).map(m => m & 15);
-    html += `<div><div class="kmap-axis-label">${A}=${aVal}, ${B}=${bVal}</div>${render4VarKmap(ms, dc, sub4vars)}</div>`;
+    html += `<div><div class="kmap-axis-label">${A}=${aVal}, ${B}=${bVal}</div>${render4VarKmap(ms, dc, sub4vars, groupMap, [], idx => prefix + idx)}</div>`;
   }
   html += '</div>';
-  return html;
+  return `${html}${renderKmapGroupLegend(groups)}`;
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -758,10 +1120,9 @@ function buildExcitationRows() {
   syncFFTypes();
   const numFF = flipFlopTypes.length;
   const curInput = getInputIndex();
-  const curActive = states.find(s => s.id === activeStateId);
   const rows = [];
 
-  states.forEach(s => {
+  states.forEach((s, stateIndex) => {
     const sBin = getStateBinary(s.id, numFF);
     for (let i = 0; i < (1 << inputBitsCount); i++) {
       const t = transitions[s.id]?.[i];
@@ -785,6 +1146,8 @@ function buildExcitationRows() {
       const isActive = (s.id === activeStateId) && (i === curInput);
 
       rows.push({
+        inputIndex: i,
+        stateIndex,
         inputBin: i.toString(2).padStart(inputBitsCount, '0'),
         currentName: s.name || s.id,
         currentBin: sBin,
@@ -870,83 +1233,18 @@ function buildExcitationMinterms() {
 function renderExcitationPanel() {
   syncFFTypes();
   const numFF = flipFlopTypes.length;
-  const rows = buildExcitationRows();
-
-  // Build column headers
-  const excHeaders = [];
-  for (let ff = 0; ff < numFF; ff++) {
-    const type = flipFlopTypes[ff];
-    const labels = getFFLabels(type, ff);
-    const typeOptions = ['D','T','SR','JK'].map(t =>
-      `<option value="${t}" ${t === type ? 'selected' : ''}>${t}</option>`
-    ).join('');
-    // For multi-col types, merge-style header
-    if (labels.length === 2) {
-      excHeaders.push(`<div class="table-cell" style="grid-column:span 2"><select onchange="changeFFType(${ff},this.value)">${typeOptions}</select> ${labels[0]}/${labels[1]}</div>`);
-    } else {
-      excHeaders.push(`<div class="table-cell"><select onchange="changeFFType(${ff},this.value)">${typeOptions}</select>${labels[0]}</div>`);
-    }
-  }
-
-  // Sub-headers for SR/JK
-  const subHeaders = [];
-  for (let ff = 0; ff < numFF; ff++) {
-    const labels = getFFLabels(flipFlopTypes[ff], ff);
-    for (const l of labels) subHeaders.push(`<div class="table-cell">${h(l)}</div>`);
-  }
-
-  const numExcCols = rows[0]?.excitations.length || 0;
-  const numOutCols = outputBitsCount;
-  const totalCols = 1 + 1 + 1 + numExcCols + numOutCols; // input + present + next + exc + out
-  const gridCols = `repeat(${totalCols}, auto)`;
-
-  // Header row 1
-  const header1 = `<div class="table-row table-head" style="grid-template-columns:${gridCols}">
-    <div class="table-cell">${h(inputNames.slice().reverse().join(','))}</div>
-    <div class="table-cell">Present State</div>
-    <div class="table-cell">Next State</div>
-    ${excHeaders.join('')}
-    ${outputNames.slice().reverse().map(n=>`<div class="table-cell">${h(n)}</div>`).join('')}
-  </div>`;
-
-  // Sub-header row 2 (input pattern, binary encodings, individual exc labels, out names)
-  const inputSubHead = `<div class="table-cell" style="font-size:10px;color:var(--text3)">${inputNames.slice().reverse().join(' ')}</div>`;
-  const presSubHead = `<div class="table-cell" style="font-size:10px;color:var(--text3)">Q${'n'.repeat(numFF>1?1:0)}</div>`;
-  const nextSubHead = `<div class="table-cell" style="font-size:10px;color:var(--text3)">Q${'n+1'.repeat(1)}</div>`;
-  const header2 = `<div class="table-row table-head" style="grid-template-columns:${gridCols}">
-    ${inputSubHead}${presSubHead}${nextSubHead}
-    ${subHeaders.join('')}
-    ${outputNames.slice().reverse().map(n=>`<div class="table-cell" style="font-size:10px;color:var(--text3)">${h(n)}</div>`).join('')}
-  </div>`;
-
-  const dataRows = rows.map(r => {
-    const excCells = r.excitations.map(v => {
-      const cls = v === '1' ? 'style="color:var(--green);font-weight:700"' : v === 'X' ? 'style="color:var(--amber)"' : '';
-      return `<div class="table-cell" ${cls}>${v}</div>`;
-    }).join('');
-    const outCells = outputNames.slice().reverse().map((n, bi) => {
-      const idx = outputBitsCount - 1 - bi;
-      const bits = r.outputBin.split('');
-      const val = r.outputBin[bi] || '0';
-      return `<div class="table-cell" ${val === '1' ? 'style="color:var(--green)"' : ''}>${val}</div>`;
-    }).join('');
-    return `<div class="table-row${r.isActive ? ' table-active' : ''}" style="grid-template-columns:${gridCols}">
-      <div class="table-cell">${h(r.inputBin)}</div>
-      <div class="table-cell">${h(r.currentName)} (${r.currentBin})</div>
-      <div class="table-cell">${h(r.nextName)} (${r.nextBin})</div>
-      ${excCells}${outCells}
-    </div>`;
-  }).join('');
+  const rows = sortExcitationRows(buildExcitationRows());
+  const stateBitLabels = getStateBitLabels(numFF).join(' ');
+  const tableHTML = renderExcitationTableHTML(rows, numFF, stateBitLabels);
 
   document.getElementById('panelContent').innerHTML = `
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
       <div class="editor-title" style="margin:0">Excitation Table</div>
       <button class="btn sm" onclick="exitExpandMode()">← Back</button>
-      <span style="font-size:11px;color:var(--text3);font-family:var(--mono)">${numFF} FF · ${states.length} states · ${inputBitsCount} input bit${inputBitsCount>1?'s':''}</span>
+      <button class="btn sm" onclick="toggleExcitationSort()">${getExcitationSortButtonLabel()}</button>
+      <span style="font-size:16px;color:var(--text3);font-family:var(--mono)">${numFF} Flip-Flops · ${states.length} states · ${inputBitsCount} input bit${inputBitsCount>1?'s':''}</span>
     </div>
-    <div class="table-wrap">
-      <div class="table-grid">${header1}${header2}${dataRows}</div>
-    </div>
+    ${tableHTML}
   `;
 }
 
@@ -983,7 +1281,7 @@ function renderFFRefPanel() {
     ).join('');
     return `<div class="ff-ref-box">
       <div class="ff-ref-title">${type} Flip-Flop</div>
-      <div style="font-size:11px;color:var(--text3);margin-bottom:6px;font-family:var(--mono)">${d.desc}</div>
+      <div style="font-size:16px;color:var(--text3);margin-bottom:6px;font-family:var(--mono)">${d.desc}</div>
       <table class="ff-ref-table"><thead><tr>${thead}</tr></thead><tbody>${tbody}</tbody></table>
     </div>`;
   }).join('');
@@ -994,7 +1292,7 @@ function renderFFRefPanel() {
       <button class="btn sm" onclick="exitExpandMode()">← Back</button>
     </div>
     <div class="ff-ref-grid">${boxesHTML}</div>
-    <div style="font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.7">
+    <div style="font-size:16px;color:var(--text3);font-family:var(--mono);line-height:1.7">
       <b style="color:var(--text2)">X</b> = don't care (either 0 or 1 produces correct transition)<br>
       Use these tables to determine excitation inputs from present→next state transitions.
     </div>
@@ -1012,7 +1310,7 @@ function renderKmapPanel() {
         <div class="editor-title" style="margin:0">Kmap Solver</div>
         <button class="btn sm" onclick="exitExpandMode()">← Back</button>
       </div>
-      <p style="color:var(--text3);font-size:12px;font-family:var(--mono)">
+      <p style="color:var(--text3);font-size:18px;font-family:var(--mono)">
         Kmap not supported for more than 6 variables.<br>
         Current: ${numVars} vars (${inputBitsCount} input + ${numFF} state bits).
       </p>`;
@@ -1024,7 +1322,7 @@ function renderKmapPanel() {
   // Variable names: input bits MSB→LSB, then state bits MSB→LSB
   const varNames = [];
   for (let i = inputBitsCount - 1; i >= 0; i--) varNames.push(inputNames[i] || `b${i}`);
-  for (let i = 0; i < numFF; i++) varNames.push(`Q${i}`);
+  for (let i = 0; i < numFF; i++) varNames.push(`Q${numFF - 1 - i}`);
 
   let sectionsHTML = '';
 
@@ -1036,23 +1334,25 @@ function renderKmapPanel() {
     const allOne = ms.length + dc.length === (1 << numVars) || ms.length === (1 << numVars);
 
     let exprStr;
+    let qmResult = null;
     if (allZero && dc.length === 0) {
       exprStr = '0';
     } else if (ms.length === (1 << numVars)) {
       exprStr = '1';
     } else {
-      const result = quineMcCluskey(ms, dc, numVars);
-      exprStr = formatBoolExpr(result, varNames);
+      qmResult = quineMcCluskey(ms, dc, numVars);
+      exprStr = formatBoolExpr(qmResult, varNames);
     }
 
-    const kmapHTML = renderKmapHTML(ms, dc, varNames, numVars);
+    const groups = buildKmapGroups(qmResult, ms, dc, varNames);
+    const kmapHTML = renderKmapHTML(ms, dc, varNames, numVars, groups);
     const mintermStr = ms.length > 0 ? `Σm(${ms.sort((a,b)=>a-b).join(',')})` : 'No minterms';
     const dcStr = dc.length > 0 ? ` + d(${dc.sort((a,b)=>a-b).join(',')})` : '';
 
     sectionsHTML += `<div class="kmap-section">
       <div class="kmap-title">${h(label)}</div>
       <div class="kmap-expr"><span class="expr-label">Expression:</span>${h(exprStr)}</div>
-      <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">${mintermStr}${dcStr}</div>
+      <div style="font-size:16px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">${mintermStr}${dcStr}</div>
       ${kmapHTML}
     </div>`;
   });
@@ -1062,21 +1362,23 @@ function renderKmapPanel() {
     const ms = [...new Set(outMinterms[oi])];
     const dc = [];
     let exprStr;
+    let qmResult = null;
     if (ms.length === 0) {
       exprStr = '0';
     } else if (ms.length === (1 << numVars)) {
       exprStr = '1';
     } else {
-      const result = quineMcCluskey(ms, dc, numVars);
-      exprStr = formatBoolExpr(result, varNames);
+      qmResult = quineMcCluskey(ms, dc, numVars);
+      exprStr = formatBoolExpr(qmResult, varNames);
     }
-    const kmapHTML = renderKmapHTML(ms, dc, varNames, numVars);
+    const groups = buildKmapGroups(qmResult, ms, dc, varNames);
+    const kmapHTML = renderKmapHTML(ms, dc, varNames, numVars, groups);
     const mintermStr = ms.length > 0 ? `Σm(${ms.sort((a,b)=>a-b).join(',')})` : 'No minterms';
 
     sectionsHTML += `<div class="kmap-section">
       <div class="kmap-title">Output: ${h(name)}</div>
       <div class="kmap-expr"><span class="expr-label">Expression:</span>${h(exprStr)}</div>
-      <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">${mintermStr}</div>
+      <div style="font-size:16px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">${mintermStr}</div>
       ${kmapHTML}
     </div>`;
   });
@@ -1087,7 +1389,7 @@ function renderKmapPanel() {
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
       <div class="editor-title" style="margin:0">Kmap Solver</div>
       <button class="btn sm" onclick="exitExpandMode()">← Back</button>
-      <span style="font-size:11px;color:var(--text3);font-family:var(--mono)">${numVars} vars: ${varNamesStr}</span>
+      <span style="font-size:16px;color:var(--text3);font-family:var(--mono)">${numVars} vars: ${varNamesStr}</span>
     </div>
     ${sectionsHTML}
   `;
@@ -1098,7 +1400,7 @@ function renderKmapPanel() {
 // ══════════════════════════════════════════════════════════════════
 
 // ── Bottom panel open/close ──────────────────────────────────────
-let bottomTab = 'exc'; // 'exc' | 'ref'
+let bottomTab = 'exc'; // 'exc' | 'onehot' | 'ref'
 
 function enterExpandMode() {
   expandMode = true;
@@ -1108,6 +1410,24 @@ function enterExpandMode() {
   bp.classList.add('open');
   br.classList.add('open');
   renderBottomPanel();
+}
+
+function toggleExpandMode() {
+  expandMode = !expandMode;
+  
+  const synthTab = document.getElementById('synth');
+
+  if (expandMode) {
+    document.getElementById('bottomPanel').classList.add('open');
+    document.getElementById('bottomResizer').classList.add('open');
+    enterExpandMode();
+    synthTab.classList.add('active');  
+  } else {
+    document.getElementById('bottomPanel').classList.remove('open');
+    document.getElementById('bottomResizer').classList.remove('open');
+    exitExpandMode();
+    synthTab.classList.remove('active');
+  }
 }
 
 function exitExpandMode() {
@@ -1125,12 +1445,14 @@ function closeBottomPanel() {
 function setBottomTab(tab) {
   bottomTab = tab;
   document.getElementById('btabExc').classList.toggle('active', tab === 'exc');
+  document.getElementById('btabOneHot').classList.toggle('active', tab === 'onehot');
   document.getElementById('btabRef').classList.toggle('active', tab === 'ref');
   renderBottomPanel();
 }
 
 function changeFFType(ffIndex, type) {
   syncFFTypes();
+  pushUndo();
   flipFlopTypes[ffIndex] = type;
   renderBottomPanel();
 }
@@ -1139,12 +1461,27 @@ function renderBottomPanel() {
   syncFFTypes();
   const numFF = flipFlopTypes.length;
   const info = document.getElementById('bottomInfo');
-  if (info) info.textContent = `${numFF} FF · ${states.length} states · ${inputBitsCount} input bit${inputBitsCount>1?'s':''}`;
+  if (info) info.textContent = `${numFF} Flip-Flops (classical) · ${states.length} Flip-Flops (one-hot) · ${states.length} states · ${inputBitsCount} input bit${inputBitsCount>1?'s':''}`;
+
+  const leftPane = document.getElementById('bottomLeft');
+  const rightPane = document.getElementById('bottomRight');
+  const divider = document.getElementById('bottomPaneDivider');
 
   if (bottomTab === 'ref') {
+    if (divider) divider.style.display = 'none';
+    if (rightPane) rightPane.style.display = 'none';
+    if (leftPane) leftPane.style.flex = '1 1 100%';
     renderBottomFFRef();
   } else {
-    renderBottomExcAndKmap();
+    if (divider) divider.style.display = 'block';
+    if (rightPane) rightPane.style.display = 'block';
+    if (leftPane) leftPane.style.flex = '1 1 0';
+    if (rightPane) rightPane.style.flex = '1 1 0';
+    if (bottomTab === 'onehot') {
+      renderBottomOneHotEquations();
+    } else {
+      renderBottomExcAndKmap();
+    }
   }
 }
 
@@ -1156,71 +1493,16 @@ function renderBottomExcAndKmap() {
 function renderBottomExcitation() {
   syncFFTypes();
   const numFF = flipFlopTypes.length;
-  const rows = buildExcitationRows();
-
-  const excHeaders = [];
-  for (let ff = 0; ff < numFF; ff++) {
-    const type = flipFlopTypes[ff];
-    const labels = getFFLabels(type, ff);
-    const typeOptions = ['D','T','SR','JK'].map(t =>
-      `<option value="${t}" ${t === type ? 'selected' : ''}>${t}</option>`
-    ).join('');
-    if (labels.length === 2) {
-      excHeaders.push(`<div class="table-cell" style="grid-column:span 2"><select onchange="changeFFType(${ff},this.value)">${typeOptions}</select> ${labels[0]}/${labels[1]}</div>`);
-    } else {
-      excHeaders.push(`<div class="table-cell"><select onchange="changeFFType(${ff},this.value)">${typeOptions}</select> ${labels[0]}</div>`);
-    }
-  }
-
-  const subHeaders = [];
-  for (let ff = 0; ff < numFF; ff++) {
-    const labels = getFFLabels(flipFlopTypes[ff], ff);
-    for (const l of labels) subHeaders.push(`<div class="table-cell">${h(l)}</div>`);
-  }
-
-  const numExcCols = rows[0]?.excitations.length || 0;
-  const numOutCols = outputBitsCount;
-  const totalCols = 1 + 1 + 1 + numExcCols + numOutCols;
-  const gridCols = `repeat(${totalCols}, auto)`;
-
-  const header1 = `<div class="table-row table-head" style="grid-template-columns:${gridCols}">
-    <div class="table-cell">${h(inputNames.slice().reverse().join(','))}</div>
-    <div class="table-cell">Present State</div>
-    <div class="table-cell">Next State</div>
-    ${excHeaders.join('')}
-    ${outputNames.slice().reverse().map(n=>`<div class="table-cell">${h(n)}</div>`).join('')}
-  </div>`;
-
-  const header2 = `<div class="table-row table-head" style="grid-template-columns:${gridCols}">
-    <div class="table-cell" style="font-size:10px;color:var(--text3)">${inputNames.slice().reverse().join(' ')}</div>
-    <div class="table-cell" style="font-size:10px;color:var(--text3)">Qn (bin)</div>
-    <div class="table-cell" style="font-size:10px;color:var(--text3)">Qn+1 (bin)</div>
-    ${subHeaders.join('')}
-    ${outputNames.slice().reverse().map(n=>`<div class="table-cell" style="font-size:10px;color:var(--text3)">${h(n)}</div>`).join('')}
-  </div>`;
-
-  const dataRows = rows.map(r => {
-    const excCells = r.excitations.map(v => {
-      const cls = v==='1'?'style="color:var(--green);font-weight:700"':v==='X'?'style="color:var(--amber)"':'';
-      return `<div class="table-cell" ${cls}>${v}</div>`;
-    }).join('');
-    const outCells = outputNames.slice().reverse().map((n, bi) => {
-      const val = r.outputBin[bi] || '0';
-      return `<div class="table-cell" ${val==='1'?'style="color:var(--green)"':''}>${val}</div>`;
-    }).join('');
-    return `<div class="table-row${r.isActive?' table-active':''}" style="grid-template-columns:${gridCols}">
-      <div class="table-cell">${h(r.inputBin)}</div>
-      <div class="table-cell">${h(r.currentName)} (${r.currentBin})</div>
-      <div class="table-cell">${h(r.nextName)} (${r.nextBin})</div>
-      ${excCells}${outCells}
-    </div>`;
-  }).join('');
+  const rows = sortExcitationRows(buildExcitationRows());
+  const stateBitLabels = getStateBitLabels(numFF).join(' ');
+  const tableHTML = renderExcitationTableHTML(rows, numFF, stateBitLabels);
 
   document.getElementById('bottomLeft').innerHTML = `
-    <div class="bottom-pane-label">Excitation Table</div>
-    <div class="table-wrap">
-      <div class="table-grid">${header1}${header2}${dataRows}</div>
+    <div class="bottom-pane-label" style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+      <span>Excitation Table</span>
+      <button class="btn sm" onclick="toggleExcitationSort()">${getExcitationSortButtonLabel()}</button>
     </div>
+    ${tableHTML}
   `;
 }
 
@@ -1232,7 +1514,7 @@ function renderBottomKmap() {
   if (numVars > 6) {
     document.getElementById('bottomRight').innerHTML = `
       <div class="bottom-pane-label">Kmap Solver</div>
-      <p style="color:var(--text3);font-size:12px;font-family:var(--mono)">
+      <p style="color:var(--text3);font-size:18px;font-family:var(--mono)">
         Kmap not supported for more than 6 variables.<br>
         Current: ${numVars} vars (${inputBitsCount} input + ${numFF} state bits).
       </p>`;
@@ -1243,7 +1525,7 @@ function renderBottomKmap() {
 
   const varNames = [];
   for (let i = inputBitsCount - 1; i >= 0; i--) varNames.push(inputNames[i] || `b${i}`);
-  for (let i = 0; i < numFF; i++) varNames.push(`Q${i}`);
+  for (let i = 0; i < numFF; i++) varNames.push(`Q${numFF - 1 - i}`);
 
   let sectionsHTML = '';
 
@@ -1251,16 +1533,21 @@ function renderBottomKmap() {
     const ms = [...new Set(mintermSets[ci])];
     const dc = [...new Set(dcSets[ci])];
     let exprStr;
+    let qmResult = null;
     if (ms.length === 0) { exprStr = '0'; }
     else if (ms.length === (1 << numVars)) { exprStr = '1'; }
-    else { exprStr = formatBoolExpr(quineMcCluskey(ms, dc, numVars), varNames); }
-    const kmapHTML = renderKmapHTML(ms, dc, varNames, numVars);
+    else {
+      qmResult = quineMcCluskey(ms, dc, numVars);
+      exprStr = formatBoolExpr(qmResult, varNames);
+    }
+    const groups = buildKmapGroups(qmResult, ms, dc, varNames);
+    const kmapHTML = renderKmapHTML(ms, dc, varNames, numVars, groups);
     const mintermStr = ms.length > 0 ? `Σm(${ms.sort((a,b)=>a-b).join(',')})` : 'No minterms';
     const dcStr = dc.length > 0 ? ` + d(${dc.sort((a,b)=>a-b).join(',')})` : '';
     sectionsHTML += `<div class="kmap-section">
       <div class="kmap-title">${h(label)}</div>
       <div class="kmap-expr"><span class="expr-label">Expression:</span>${h(exprStr)}</div>
-      <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">${mintermStr}${dcStr}</div>
+      <div style="font-size:16px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">${mintermStr}${dcStr}</div>
       ${kmapHTML}
     </div>`;
   });
@@ -1269,15 +1556,20 @@ function renderBottomKmap() {
     const ms = [...new Set(outMinterms[oi])];
     const dc = [];
     let exprStr;
+    let qmResult = null;
     if (ms.length === 0) { exprStr = '0'; }
     else if (ms.length === (1 << numVars)) { exprStr = '1'; }
-    else { exprStr = formatBoolExpr(quineMcCluskey(ms, dc, numVars), varNames); }
-    const kmapHTML = renderKmapHTML(ms, dc, varNames, numVars);
+    else {
+      qmResult = quineMcCluskey(ms, dc, numVars);
+      exprStr = formatBoolExpr(qmResult, varNames);
+    }
+    const groups = buildKmapGroups(qmResult, ms, dc, varNames);
+    const kmapHTML = renderKmapHTML(ms, dc, varNames, numVars, groups);
     const mintermStr = ms.length > 0 ? `Σm(${ms.sort((a,b)=>a-b).join(',')})` : 'No minterms';
     sectionsHTML += `<div class="kmap-section">
       <div class="kmap-title">Output: ${h(name)}</div>
       <div class="kmap-expr"><span class="expr-label">Expression:</span>${h(exprStr)}</div>
-      <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">${mintermStr}</div>
+      <div style="font-size:16px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">${mintermStr}</div>
       ${kmapHTML}
     </div>`;
   });
@@ -1285,6 +1577,123 @@ function renderBottomKmap() {
   document.getElementById('bottomRight').innerHTML = `
     <div class="bottom-pane-label">Kmap Solver <span style="font-weight:400;color:var(--text3)">(vars: ${varNames.join(', ')})</span></div>
     ${sectionsHTML}
+  `;
+}
+
+function makeSignalName(raw, fallback) {
+  let name = String(raw || fallback || 'STATE').trim().replace(/[^A-Za-z0-9_]+/g, '_');
+  if (!name) name = fallback || 'STATE';
+  if (!/^[A-Za-z_]/.test(name)) name = `S_${name}`;
+  return name;
+}
+
+function getOneHotStateSignals() {
+  return states.map((s, idx) => ({
+    id: s.id,
+    name: s.name || s.id,
+    signal: makeSignalName(`Q${idx}`, `Q${idx}`)
+  }));
+}
+
+function getOneHotInputVarNames() {
+  const names = [];
+  for (let i = inputBitsCount - 1; i >= 0; i--) names.push(makeSignalName(inputNames[i] || `x${i}`, `x${i}`));
+  return names;
+}
+
+function buildOneHotInputExpr(minterms, inputVarNames) {
+  const unique = [...new Set(minterms)].sort((a,b)=>a-b);
+  if (!unique.length) return '0';
+  if (unique.length === (1 << inputBitsCount)) return '1';
+  return formatBoolExpr(quineMcCluskey(unique, [], inputBitsCount), inputVarNames);
+}
+
+function combineOneHotTerm(stateSignal, inputExpr) {
+  if (inputExpr === '0') return null;
+  if (inputExpr === '1') return stateSignal;
+  return `${stateSignal}·(${inputExpr})`;
+}
+
+function buildOneHotEquations() {
+  const stateSignals = getOneHotStateSignals();
+  const inputVarNames = getOneHotInputVarNames();
+  const signalById = Object.fromEntries(stateSignals.map(s => [s.id, s.signal]));
+
+  const nextStateEquations = stateSignals.map(target => {
+    const stateIndex = stateSignals.findIndex(s => s.id === target.id);
+    const terms = [];
+    states.forEach(source => {
+      const minterms = [];
+      for (let i = 0; i < (1 << inputBitsCount); i++) {
+        const t = transitions[source.id]?.[i];
+        if (t && t.to === target.id) minterms.push(i);
+      }
+      const inputExpr = buildOneHotInputExpr(minterms, inputVarNames);
+      const term = combineOneHotTerm(signalById[source.id], inputExpr);
+      if (term) terms.push(term);
+    });
+    return {
+      label: `D${stateIndex}`,
+      stateName: target.name,
+      expr: terms.length ? terms.join(' + ') : '0'
+    };
+  });
+
+  const outputEquations = outputNames.map((name, oi) => {
+    const terms = [];
+    states.forEach(source => {
+      if (source.mode === 'moore') {
+        if ((source.outputs || [])[oi] === 1) terms.push(signalById[source.id]);
+        return;
+      }
+      const minterms = [];
+      for (let i = 0; i < (1 << inputBitsCount); i++) {
+        const t = transitions[source.id]?.[i];
+        const out = t ? normalizeTransitionOutputs(t).out : [];
+        if (out[oi] === 1) minterms.push(i);
+      }
+      const inputExpr = buildOneHotInputExpr(minterms, inputVarNames);
+      const term = combineOneHotTerm(signalById[source.id], inputExpr);
+      if (term) terms.push(term);
+    });
+    return {
+      label: makeSignalName(name || `z${oi}`, `z${oi}`),
+      outputName: name || `z${oi}`,
+      expr: terms.length ? terms.join(' + ') : '0'
+    };
+  });
+
+  return { stateSignals, inputVarNames, nextStateEquations, outputEquations };
+}
+
+function renderBottomOneHotEquations() {
+  const { stateSignals, inputVarNames, nextStateEquations, outputEquations } = buildOneHotEquations();
+
+  const stateLegend = stateSignals.map((s, idx) => `<div style="font-size:18px;color:var(--text2);margin:4px 0"><span style="font-family:var(--mono);font-weight:600">${h(s.name)}</span> = Q${idx}</div>`).join('');
+
+  document.getElementById('bottomLeft').innerHTML = `
+    <div class="bottom-pane-label">One-Hot Next-State Equations</div>
+    ${nextStateEquations.map(eq => `
+      <div class="equation-card">
+        <div class="equation-title">${h(eq.stateName)}</div>
+        <div class="equation-body">${h(eq.label)} = ${h(eq.expr)}</div>
+      </div>
+    `).join('')}
+  `;
+
+  document.getElementById('bottomRight').innerHTML = `
+    <div class="bottom-pane-label">State Legend</div>
+    <div style="background:var(--bg3);padding:10px;border-radius:4px;margin-bottom:12px">
+      ${stateLegend}
+    </div>
+    <div class="bottom-pane-label">One-Hot Output Equations</div>
+    ${outputEquations.map(eq => `
+      <div class="equation-card">
+        <div class="equation-title">${h(eq.outputName)}</div>
+        <div class="equation-body">${h(eq.label)} = ${h(eq.expr)}</div>
+      </div>
+    `).join('')}
+    
   `;
 }
 
@@ -1300,14 +1709,14 @@ function renderBottomFFRef() {
     const d = defs[type];
     const thead = d.cols.map(c=>`<th>${c}</th>`).join('');
     const tbody = d.rows.map(r=>`<tr>${r.map(v=>`<td class="${v==='1'?'v1':v==='X'?'vx':''}">${v}</td>`).join('')}</tr>`).join('');
-    return `<div class="ff-ref-box"><div class="ff-ref-title">${type} Flip-Flop</div><div style="font-size:10px;color:var(--text3);margin-bottom:5px;font-family:var(--mono)">${d.desc}</div><table class="ff-ref-table"><thead><tr>${thead}</tr></thead><tbody>${tbody}</tbody></table></div>`;
+    return `<div class="ff-ref-box"><div class="ff-ref-title">${type} Flip-Flop</div><div style="font-size:16px;color:var(--text3);margin-bottom:5px;font-family:var(--mono)">${d.desc}</div><table class="ff-ref-table"><thead><tr>${thead}</tr></thead><tbody>${tbody}</tbody></table></div>`;
   }).join('');
 
   // Span both panes
   document.getElementById('bottomLeft').innerHTML = `
     <div class="bottom-pane-label">Flip-Flop Excitation Reference</div>
     <div class="ff-ref-grid-bottom">${boxesHTML}</div>
-    <div style="margin-top:12px;font-size:11px;color:var(--text3);font-family:var(--mono);line-height:1.7">
+    <div style="margin-top:12px;font-size:16px;color:var(--text3);font-family:var(--mono);line-height:1.7">
       <b style="color:var(--text2)">X</b> = don't care — either 0 or 1 produces the correct transition.<br>
       Use these tables to determine excitation inputs from present→next state transitions.
     </div>
@@ -1324,7 +1733,10 @@ function toggleForceLayout() { setForceActive(!forceActive); }
 function setForceActive(on) {
   forceActive = on;
   const btn = document.getElementById('btnForce');
-  if (btn) btn.textContent = 'Force Layout: ' + (forceActive ? 'ON' : 'OFF');
+  if (btn) {
+    btn.textContent = 'Force Layout';
+    btn.classList.toggle('active', forceActive);
+  }
   if (forceActive) {
     states.forEach(s => { if (!forceVel[s.id]) forceVel[s.id] = { vx:0, vy:0 }; });
     if (forceTimeoutId) { clearTimeout(forceTimeoutId); forceTimeoutId = null; }
@@ -1435,30 +1847,29 @@ function formatNameValPairs(names, bits) {
   return bits.map((b,i) => `${names[i]||`b${i}`}:${b}`).reverse().join(', ');
 }
 
-function patternWithX(indices) {
-  if (!indices.length) return '';
-  let out = '';
-  for (let j = inputBitsCount-1; j >= 0; j--) {
-    const first = (indices[0]>>j)&1;
-    const same = indices.every(k => ((k>>j)&1) === first);
-    out += same ? String(first) : 'X';
-  }
-  return out;
-}
-
 function captureState() {
-  return JSON.parse(JSON.stringify({ states, transitions, inputBitsCount, inputBits, inputNames, outputBitsCount, outputBits, outputNames, view, simStep, activeStateId, selectedStateId, idCounter }));
+  return JSON.parse(JSON.stringify({
+    states, transitions, inputBitsCount, inputBits, inputNames, outputBitsCount, outputBits, outputNames,
+    view, simStep, activeStateId, selectedStateId, idCounter, bottomSplit, simplifyOn, flipFlopTypes,
+    expandMode, bottomTab, excitationSortMode
+  }));
 }
 function pushUndo() { undoStack.push(captureState()); if (undoStack.length>UNDO_LIMIT) undoStack.shift(); }
 function applyState(data) {
   states = data.states||[]; transitions = data.transitions||{};
   inputBitsCount = data.inputBitsCount||1; inputBits = data.inputBits||[0];
-  inputNames = data.inputNames||[`b0`]; outputBitsCount = data.outputBitsCount||1;
-  outputBits = data.outputBits||[0]; outputNames = data.outputNames||['y0'];
+  inputNames = data.inputNames||[`x0`]; outputBitsCount = data.outputBitsCount||1;
+  outputBits = data.outputBits||[0]; outputNames = data.outputNames||['z0'];
   view = data.view||{x:0,y:0,scale:1.5}; simStep = data.simStep||0;
   activeStateId = data.activeStateId||(states[0]?.id||null);
   selectedStateId = data.selectedStateId||(states[0]?.id||null);
   idCounter = data.idCounter||(states.length+1);
+  bottomSplit = typeof data.bottomSplit==='number' ? Math.max(0.25, Math.min(0.75, data.bottomSplit)) : 0.5;
+  simplifyOn = !!data.simplifyOn;
+  flipFlopTypes = Array.isArray(data.flipFlopTypes) ? data.flipFlopTypes.slice() : [];
+  expandMode = !!data.expandMode;
+  bottomTab = data.bottomTab==='ref' ? 'ref' : (data.bottomTab==='onehot' ? 'onehot' : 'exc');
+  excitationSortMode = data.excitationSortMode==='input' ? 'input' : 'state';
   states.forEach(s => {
     if (!s.outputs) s.outputs = Array(outputBitsCount).fill(0);
     if (!s.mode) s.mode='moore';
@@ -1467,7 +1878,14 @@ function applyState(data) {
   });
   Object.keys(transitions).forEach(sid => { transitions[sid]=(transitions[sid]||[]).map(t=>normalizeTransitionOutputs(t)); });
   updateOutputsFromState();
+  applyBottomSplit();
+  updateSimplifyButton();
   document.getElementById('stepCounter').textContent=`STEP ${simStep}`;
+  document.getElementById('bottomPanel').classList.toggle('open', expandMode);
+  document.getElementById('bottomResizer').classList.toggle('open', expandMode);
+  document.getElementById('btabExc').classList.toggle('active', bottomTab === 'exc');
+  document.getElementById('btabOneHot').classList.toggle('active', bottomTab === 'onehot');
+  document.getElementById('btabRef').classList.toggle('active', bottomTab === 'ref');
   renderInputs(); renderOutputsPanel(); render(); renderEditor();
   if (expandMode) renderBottomPanel();
   else if (activeTab==='log') renderLogPanel();
@@ -1491,6 +1909,7 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('leftResizer').addEventListener('mousedown', e => startResize(e,'left'));
   document.getElementById('rightResizer').addEventListener('mousedown', e => startResize(e,'right'));
   document.getElementById('bottomResizer').addEventListener('mousedown', e => startResizeBottom(e));
+  document.getElementById('bottomPaneDivider').addEventListener('mousedown', e => startResizeBottomSplit(e));
   canvasWrap.addEventListener('wheel', e => {
     e.preventDefault();
     const r = canvasWrap.getBoundingClientRect();
@@ -1503,9 +1922,11 @@ window.addEventListener('DOMContentLoaded', () => {
   }, {passive:false});
   canvasWrap.addEventListener('dragover', e => e.preventDefault());
   canvasWrap.addEventListener('drop', e => dropState(e));
+  document.addEventListener('click', e => { if (!e.target.closest('.menu')) closeMenus(); });
   window.addEventListener('keydown', e => {
     const tag = document.activeElement?.tagName||'';
     if (tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT') return;
+    if (e.key==='Escape') { closeMenus(); return; }
     if (e.ctrlKey&&(e.key==='z'||e.key==='Z')) { e.preventDefault(); undo(); return; }
     if ((e.key==='Backspace'||e.key==='Delete')&&selectedStateId) { e.preventDefault(); removeState(selectedStateId); }
     const panStep = (e.shiftKey?80:40)/view.scale;
@@ -1518,13 +1939,15 @@ window.addEventListener('DOMContentLoaded', () => {
       render();
     }
   });
+  updateMenuChecks();
   initDefault();
 });
 
 function initDefault() {
   states=[]; transitions={};
-  inputBitsCount=1; inputBits=[1]; inputNames=['b0'];
-  outputBitsCount=1; outputBits=[0]; outputNames=['y0'];
+  inputBitsCount=1; inputBits=[1]; inputNames=['x0'];
+  outputBitsCount=1; outputBits=[0]; outputNames=['z0'];
+  bottomSplit=0.5;
   addStateAt(220,140,'S0'); addStateAt(460,140,'S1');
   addStateAt(220,320,'S2'); addStateAt(460,320,'S3');
   const [s0,s1,s2,s3]=states.map(s=>s.id);
@@ -1536,6 +1959,7 @@ function initDefault() {
   seedInitialCurves();
   activeStateId=states[0].id; selectedStateId=states[0].id;
   updateOutputsFromState(); renderInputs(); renderOutputsPanel();
+  applyBottomSplit();
   render(); renderEditor(); renderVarsPanel(); syncModeSwitch();
 }
 
@@ -1548,26 +1972,77 @@ function normalizeTransitionOutputs(t) {
 }
 function bitsToString(bits) { return (bits||[]).slice().reverse().join(''); }
 
+function getCurveSpread(index,count,maxSpread=0.34) {
+  if (count <= 1) return 0;
+  const centered = index - (count - 1) / 2;
+  const step = count > 1 ? (maxSpread * 2) / (count - 1) : 0;
+  return centered * step;
+}
+
+function seededJitter(key) {
+  let hash = 2166136261;
+  for (let i = 0; i < key.length; i++) {
+    hash ^= key.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return ((hash >>> 0) / 4294967295) * 2 - 1;
+}
+
 function seedInitialCurves() {
+  const incoming = {};
   states.forEach(from => {
     const list = transitions[from.id]||[];
-    list.forEach((t,i) => {
+    const nonLoops = [];
+    list.forEach((t, i) => {
       const to = states.find(s=>s.id===t.to);
       if (!to) return;
+      const jitter = seededJitter(`${from.id}:${t.to}:${i}`);
       if (from.id===to.id) {
-        const angle = Math.random()*Math.PI*2;
-        const radius = from.r+30+Math.random()*20;
+        const spread = getCurveSpread(i, list.length, 0.48);
+        const angle = -Math.PI/2 + spread*2.6 + jitter*0.1;
+        const radius = from.r + 42 + jitter*4;
         t.loopDx=Math.cos(angle)*radius; t.loopDy=Math.sin(angle)*radius;
       } else {
-        const dx=to.x-from.x, dy=to.y-from.y;
-        const dist=Math.hypot(dx,dy)||1;
-        const ux=dx/dist, uy=dy/dist;
-        const sx=from.x+ux*(from.r+2), sy=from.y+uy*(from.r+2);
-        const dea=Math.atan2(from.y-to.y,from.x-to.x);
-        const tx=to.x+Math.cos(dea)*(to.r+4), ty=to.y+Math.sin(dea)*(to.r+4);
-        t.cdx=(Math.random()-0.5)*36; t.cdy=(Math.random()-0.5)*36;
+        nonLoops.push({ t, i, to, jitter, baseAngle:Math.atan2(to.y-from.y,to.x-from.x) });
       }
     });
+
+    nonLoops
+      .sort((a,b)=>a.baseAngle-b.baseAngle || a.i-b.i)
+      .forEach((entry, pos) => {
+        const sourceSpread = getCurveSpread(pos, nonLoops.length, 0.72);
+        entry.sourceSpread = sourceSpread;
+        entry.t.startAngle = entry.baseAngle + sourceSpread + entry.jitter * 0.05;
+        if (!incoming[entry.to.id]) incoming[entry.to.id] = [];
+        incoming[entry.to.id].push({ ...entry, from });
+      });
+  });
+
+  Object.values(incoming).forEach(entries => {
+    entries
+      .sort((a,b)=>{
+        const aa = Math.atan2(a.from.y-a.to.y, a.from.x-a.to.x);
+        const ba = Math.atan2(b.from.y-b.to.y, b.from.x-b.to.x);
+        return aa - ba || a.i - b.i;
+      })
+      .forEach((entry, pos) => {
+        const endBase = Math.atan2(entry.from.y-entry.to.y, entry.from.x-entry.to.x);
+        const targetSpread = getCurveSpread(pos, entries.length, 0.72);
+        const dx = entry.to.x - entry.from.x;
+        const dy = entry.to.y - entry.from.y;
+        const dist = Math.hypot(dx,dy) || 1;
+        const sx = entry.from.x + Math.cos(entry.t.startAngle) * (entry.from.r + 2);
+        const sy = entry.from.y + Math.sin(entry.t.startAngle) * (entry.from.r + 2);
+        entry.t.endAngle = endBase - targetSpread + entry.jitter * 0.04;
+        const tx = entry.to.x + Math.cos(entry.t.endAngle) * (entry.to.r + 4);
+        const ty = entry.to.y + Math.sin(entry.t.endAngle) * (entry.to.r + 4);
+        const nx = -(ty - sy) / (Math.hypot(tx - sx, ty - sy) || 1);
+        const ny = (tx - sx) / (Math.hypot(tx - sx, ty - sy) || 1);
+        const curveSide = Math.sign(entry.sourceSpread || -targetSpread || ((pos % 2 === 0) ? 1 : -1));
+        const arch = Math.max(22, Math.min(40, dist * 0.16)) + entry.jitter * 3;
+        entry.t.cdx = nx * arch * curveSide;
+        entry.t.cdy = ny * arch * curveSide;
+      });
   });
 }
 
@@ -1620,7 +2095,7 @@ function drawState(s) {
   const g=ns('g');
   const isActive=activeStateId===s.id, isSel=selectedStateId===s.id;
   const fill=isActive?'rgba(79,158,255,.18)':(isSel?'rgba(245,166,35,.12)':'rgba(79,158,255,.08)');
-  const stroke=isActive?'#4f9eff':(isSel?'#f5a623':'#1e3a5c');
+  const stroke=isActive?'#4f9eff':(isSel?'#f5a623':'var(--state-stroke)');
   const sw=(isActive||isSel)?2:1.5;
   const circle=sv('circle',{cx:s.x,cy:s.y,r:s.r,fill,stroke,'stroke-width':sw});
   if (isActive&&isSel) circle.setAttribute('filter','drop-shadow(0 0 6px rgba(245,166,35,0.9))');
@@ -1652,10 +2127,10 @@ function drawConnections() {
       if (!to) return;
       const isActive=from.id===activeStateId&&g.indices.includes(inputIndex);
       const isSel=from.id===selectedStateId;
-      const col=isSel?'#f5a623':(isActive?'#4f9eff':'#3a4060');
+      const col=isSel?'#f5a623':(isActive?'#4f9eff':'var(--conn)');
       const sw=isActive?2.4:1.4;
       const marker=isSel?'url(#arr_sel)':(isActive?'url(#arr_active)':'url(#arr_norm)');
-      let label=simplifyOn?patternWithX(g.indices):formatInput(g.indices[0]);
+      let label=simplifyOn?formatSimplifiedInputLabel(g.indices):formatInput(g.indices[0]);
       if (from.mode==='mealy') label=`${label}/${simplifyOn?g.outKey:bitsToString(normalizeTransitionOutputs(t).out)}`;
 
       if (from.id===to.id) {
@@ -1667,7 +2142,7 @@ function drawConnections() {
         const ex=from.x+Math.cos(endA)*from.r, ey=from.y+Math.sin(endA)*from.r;
         const path=`M ${sx} ${sy} A ${dist} ${dist} 0 1 1 ${ex} ${ey}`;
         svgEl.appendChild(sv('path',{d:path,fill:'none',stroke:col,'stroke-width':sw,'marker-end':marker}));
-        svgEl.appendChild(txt(from.x+Math.cos(angle)*(dist+12),from.y+Math.sin(angle)*(dist+12),label,'#e2e4f0',9.5,'500'));
+        svgEl.appendChild(txt(from.x+Math.cos(angle)*(dist+12),from.y+Math.sin(angle)*(dist+12),label,'var(--conn-label)',9.5,'500'));
         if (isSel) {
           const hx=from.x+loop.dx, hy=from.y+loop.dy;
           const handle=sv('circle',{cx:hx,cy:hy,r:7,class:'conn-handle'});
@@ -1688,7 +2163,7 @@ function drawConnections() {
         const cp=getCurvePoint(t,baseCp);
         const path=`M ${sx} ${sy} Q ${cp.x} ${cp.y} ${tx} ${ty}`;
         svgEl.appendChild(sv('path',{d:path,fill:'none',stroke:col,'stroke-width':sw,'marker-end':marker}));
-        svgEl.appendChild(txt(cp.x,cp.y-4,label,'#e2e4f0',9.5,'500'));
+        svgEl.appendChild(txt(cp.x,cp.y-4,label,'var(--conn-label)',9.5,'500'));
         if (isSel) {
           const sh=sv('circle',{cx:sx,cy:sy,r:6.5,class:'conn-handle start'});
           sh.addEventListener('mousedown',e=>startDragStart(e,from.id,g.indices));
@@ -1714,17 +2189,55 @@ function startDragEnd(e,fromId,indexOrList,startPoint) {
   const r=canvasWrap.getBoundingClientRect();
   const indices=Array.isArray(indexOrList)?indexOrList:[indexOrList];
   indices.forEach(idx=>{const t=transitions[fromId]?.[idx];if(t)t.userEnd=true;});
-  if(!endPreview){endPreview=sv('line',{x1:startPoint.x,y1:startPoint.y,x2:startPoint.x,y2:startPoint.y,stroke:'#4f9eff','stroke-width':1.4,'stroke-dasharray':'4 4'});svgEl.appendChild(endPreview);}
-  const move=ev=>{const world=screenToWorld(ev.clientX-r.left,ev.clientY-r.top);endPreview.setAttribute('x2',world.x);endPreview.setAttribute('y2',world.y);};
-  const up=ev=>{
-    document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);
-    if(endPreview&&endPreview.parentNode)endPreview.parentNode.removeChild(endPreview);endPreview=null;
+  const move=ev=>{
     const world=screenToWorld(ev.clientX-r.left,ev.clientY-r.top);
-    const target=findStateAt(world.x,world.y);
+    const snapped=getMagnetizedEndTarget(world.x,world.y);
+    const from=states.find(s=>s.id===fromId);
+    if(!from) return;
     indices.forEach(idx=>{
       const t=transitions[fromId]?.[idx];if(!t)return;
-      if(target){t.to=target.id;t.endAngle=Math.atan2(world.y-target.y,world.x-target.x);}
-      else{const ct=states.find(s=>s.id===t.to);if(ct)t.endAngle=Math.atan2(world.y-ct.y,world.x-ct.x);}
+      if (snapped.state) {
+        if (snapped.state.id === fromId) {
+          t.to = fromId;
+          t.loopDx = world.x - from.x;
+          t.loopDy = world.y - from.y;
+        } else {
+          t.to = snapped.state.id;
+          t.endAngle = snapped.angle;
+        }
+      } else if (t.to === fromId) {
+        t.loopDx = world.x - from.x;
+        t.loopDy = world.y - from.y;
+      } else {
+        const to=states.find(s=>s.id===t.to);
+        if (!to) return;
+        t.endAngle = Math.atan2(world.y - to.y, world.x - to.x);
+      }
+    });
+    render();
+  };
+  const up=ev=>{
+    document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);
+    const world=screenToWorld(ev.clientX-r.left,ev.clientY-r.top);
+    const snapped=getMagnetizedEndTarget(world.x,world.y);
+    const from=states.find(s=>s.id===fromId);
+    indices.forEach(idx=>{
+      const t=transitions[fromId]?.[idx];if(!t)return;
+      if (snapped.state) {
+        if (snapped.state.id === fromId) {
+          t.to = fromId;
+          if (from) {
+            t.loopDx = world.x - from.x;
+            t.loopDy = world.y - from.y;
+          }
+        } else {
+          t.to = snapped.state.id;
+          t.endAngle = snapped.angle;
+        }
+      } else if (t.to === fromId && from) {
+        t.loopDx = world.x - from.x;
+        t.loopDy = world.y - from.y;
+      }
     });
     render();if(expandMode)renderBottomPanel();if(activeTab==='table')renderNormalTablePanel();else if(activeTab==='log')switchTab('vars');
   };
@@ -1860,6 +2373,33 @@ function startResizeBottom(e) {
   document.addEventListener('mouseup', up);
 }
 
+function applyBottomSplit() {
+  const left=document.getElementById('bottomLeft');
+  const right=document.getElementById('bottomRight');
+  if(!left || !right) return;
+  const pct = Math.max(25, Math.min(75, bottomSplit * 100));
+  left.style.flex = `0 0 calc(${pct}% - 4px)`;
+  right.style.flex = `0 0 calc(${100 - pct}% - 4px)`;
+}
+
+function startResizeBottomSplit(e) {
+  e.preventDefault();
+  pushUndo();
+  const body = document.getElementById('bottomBody');
+  const rect = body.getBoundingClientRect();
+  const move = ev => {
+    const raw = (ev.clientX - rect.left) / rect.width;
+    bottomSplit = Math.max(0.25, Math.min(0.75, raw));
+    applyBottomSplit();
+  };
+  const up = () => {
+    document.removeEventListener('mousemove', move);
+    document.removeEventListener('mouseup', up);
+  };
+  document.addEventListener('mousemove', move);
+  document.addEventListener('mouseup', up);
+}
+
 function dragStateStart(e,mode) { e.dataTransfer.setData('stateMode',mode); }
 function dropState(e) {
   e.preventDefault();
@@ -1869,6 +2409,26 @@ function dropState(e) {
   const world=screenToWorld(e.clientX-r.left,e.clientY-r.top);
   addStateAt(world.x,world.y,'S'+states.length,mode);
   render();renderEditor();updateRightPanelAfterChange();
+}
+function findClosestState(x,y) {
+  let best=null,bestDist=Infinity;
+  states.forEach(s=>{
+    const dist=Math.hypot(x-s.x,y-s.y);
+    if(dist<bestDist){best=s;bestDist=dist;}
+  });
+  return best?{state:best,dist:bestDist}:null;
+}
+function getMagnetizedEndTarget(x,y) {
+  const closest=findClosestState(x,y);
+  if(!closest)return {state:null,x,y,angle:0};
+  const {state}=closest;
+  const angle=Math.atan2(y-state.y,x-state.x);
+  return {
+    state,
+    angle,
+    x:state.x+Math.cos(angle)*(state.r+4),
+    y:state.y+Math.sin(angle)*(state.r+4)
+  };
 }
 function findStateAt(x,y) {
   for(let i=states.length-1;i>=0;i--){const s=states[i];if(Math.hypot(x-s.x,y-s.y)<=s.r*1.1)return s;}return null;
@@ -1883,7 +2443,7 @@ function renderInputs() {
   panel.innerHTML=`<div class="panel-title">Inputs</div><div class="input-bits-grid">
     ${inputBits.slice().reverse().map((b,bi)=>{
       const idx=inputBits.length-1-bi;
-      const name=inputNames[idx]||`b${idx}`;
+      const name=inputNames[idx]||`x${idx}`;
       return `<div class="input-bit-box${b?' active':''}"><span class="input-bit-label">${h(name)}</span><button class="input-bit-btn" onclick="toggleBit(${idx})">${b}</button></div>`;
     }).join('')}
   </div>`;
@@ -1894,13 +2454,14 @@ function renderOutputsPanel() {
   panel.innerHTML=`<div class="panel-title">Outputs</div><div class="output-bits">
     ${outputBits.slice().reverse().map((b,bi)=>{
       const idx=outputBits.length-1-bi;
-      const name=outputNames[idx]||`y${idx}`;
+      const name=outputNames[idx]||`z${idx}`;
       return `<div class="output-bit-box${b?' active':''}"><span class="output-bit-label">${h(name)}</span><span class="output-bit-val">${b}</span></div>`;
     }).join('')}
   </div>`;
 }
 
 function toggleBit(i) {
+  pushUndo();
   inputBits[i]=inputBits[i]?0:1;
   updateOutputsFromState(); renderInputs(); render(); renderOutputsPanel();
   const cur=states.find(s=>s.id===activeStateId);
@@ -1910,7 +2471,7 @@ function toggleBit(i) {
 
 function addBit() {
   pushUndo();
-  const oldCount=2**inputBitsCount; inputBitsCount++; inputBits.push(0); inputNames.push(`b${inputBitsCount-1}`);
+  const oldCount=2**inputBitsCount; inputBitsCount++; inputBits.push(0); inputNames.push(`x${inputBitsCount-1}`);
   const newCount=2**inputBitsCount;
   states.forEach(s=>{
     const old=transitions[s.id]||[];
@@ -1931,7 +2492,7 @@ function removeBit() {
   renderInputs();render();renderEditor();updateRightPanelAfterChange();
 }
 function addOutputBit() {
-  pushUndo();outputBitsCount++;outputBits.push(0);outputNames.push(`y${outputBitsCount-1}`);
+  pushUndo();outputBitsCount++;outputBits.push(0);outputNames.push(`z${outputBitsCount-1}`);
   states.forEach(s=>{if(!s.outputs)s.outputs=[];s.outputs.push(0);});
   Object.keys(transitions).forEach(sid=>{transitions[sid]=transitions[sid].map(t=>normalizeTransitionOutputs(t));});
   updateOutputsFromState();render();renderOutputsPanel();renderEditor();updateRightPanelAfterChange();
@@ -1947,7 +2508,7 @@ function getInputIndex() { return inputBits.reduce((acc,b,i)=>acc+(b?(1<<i):0),0
 function formatInput(i) { return i.toString(2).padStart(inputBitsCount,'0'); }
 function formatInputKV(index) {
   const parts=[];
-  for(let j=inputBitsCount-1;j>=0;j--){const name=inputNames[j]||`b${j}`;const bit=(index>>j)&1;parts.push(`${h(name)}:${bit}`);}
+  for(let j=inputBitsCount-1;j>=0;j--){const name=inputNames[j]||`x${j}`;const bit=(index>>j)&1;parts.push(`${h(name)}:${bit}`);}
   return parts.join(' ');
 }
 
@@ -1999,11 +2560,11 @@ function setCurrentState(stateId) {
   render();renderOutputsPanel();renderEditor();updateRightPanelAfterChange();
 }
 function renameInput(index,value) {
-  pushUndo();inputNames[index]=value||`b${index}`;renderInputs();renderOutputsPanel();
+  pushUndo();inputNames[index]=value||`x${index}`;renderInputs();renderOutputsPanel();
   if(expandMode)renderBottomPanel();if(activeTab==='table')renderNormalTablePanel();else if(activeTab==='log')switchTab('vars');
 }
 function renameOutput(index,value) {
-  pushUndo();outputNames[index]=value||`y${index}`;renderOutputsPanel();renderInputs();
+  pushUndo();outputNames[index]=value||`z${index}`;renderOutputsPanel();renderInputs();
   if(expandMode)renderBottomPanel();if(activeTab==='table')renderNormalTablePanel();else if(activeTab==='log')switchTab('vars');
 }
 function setStateMode(stateId,mode) {
@@ -2021,7 +2582,12 @@ function syncModeSwitch() {
   if(!sw||!label)return;sw.checked=allMealy;
   label.textContent=allMealy?'All Mealy':(states.every(s=>s.mode!=='mealy')?'All Moore':'Mixed');
 }
-function renameState(id,name) { const s=states.find(st=>st.id===id);if(!s)return;s.name=name||s.name;render(); }
+function renameState(id,name) {
+  const s=states.find(st=>st.id===id);if(!s)return;
+  const next=name||s.name;
+  if(s.name===next)return;
+  pushUndo();s.name=next;render();updateRightPanelAfterChange();
+}
 function setTransition(fromId,index,toId) {
   if(!transitions[fromId])return;pushUndo();
   transitions[fromId][index]={...transitions[fromId][index],to:toId};
@@ -2070,9 +2636,9 @@ function renderVarsPanel() {
   const nextState=states.find(s=>s.id===nextId);
   document.getElementById('panelContent').innerHTML=`
     <div class="editor-title" style="margin-bottom:6px">Inputs</div>
-    ${inputBits.map((b,i)=>`<div class="var-row"><input class="name-input" value="${h(inputNames[i]||`b${i}`)}" oninput="renameInput(${i},this.value)"><span class="var-val">${b}</span></div>`).join('')}
+    ${inputBits.map((b,i)=>`<div class="var-row"><input class="name-input" value="${h(inputNames[i]||`x${i}`)}" oninput="renameInput(${i},this.value)"><span class="var-val">${b}</span></div>`).join('')}
     <div class="editor-title" style="margin:12px 0 6px">Outputs</div>
-    ${outputBits.slice().reverse().map((b,bi)=>{const idx=outputBits.length-1-bi;return`<div class="var-row"><input class="name-input" value="${h(outputNames[idx]||`y${idx}`)}" oninput="renameOutput(${idx},this.value)"><span class="var-val">${b}</span></div>`;}).join('')}
+    ${outputBits.slice().reverse().map((b,bi)=>{const idx=outputBits.length-1-bi;return`<div class="var-row"><input class="name-input" value="${h(outputNames[idx]||`z${idx}`)}" oninput="renameOutput(${idx},this.value)"><span class="var-val">${b}</span></div>`;}).join('')}
     <div class="editor-title" style="margin:12px 0 6px">State</div>
     <div class="var-row"><span class="var-name">current</span><span class="var-val">${cur?h(cur.name):'-'}</span></div>
     <div class="var-row"><span class="var-name">next</span><span class="var-val">${nextState?h(nextState.name):'-'}</span></div>
@@ -2082,7 +2648,7 @@ function renderVarsPanel() {
 function renderLogPanel() {
   const filtered=showInputLogs?simLog:simLog.filter(e=>e.type!=='input');
   const header=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div class="editor-title" style="margin:0">Log</div><label class="mode-switch" style="gap:6px"><span>Show Input Logs</span><label class="switch"><input type="checkbox" ${showInputLogs?'checked':''} onchange="toggleInputLogs(this.checked)"><span class="slider"></span></label></label></div>`;
-  const body=filtered.length?filtered.map(e=>`<div class="log-entry ${e.type||''}"><span class="log-step">${e.step}</span><span>${h(e.msg)}</span></div>`).join(''):'<div style="font-size:12px;color:var(--text3);padding:20px 0;text-align:center">Run steps to see log</div>';
+  const body=filtered.length?filtered.map(e=>`<div class="log-entry ${e.type||''}"><span class="log-step">${e.step}</span><span>${h(e.msg)}</span></div>`).join(''):'<div style="font-size:18px;color:var(--text3);padding:20px 0;text-align:center">Run steps to see log</div>';
   document.getElementById('panelContent').innerHTML=header+body;
 }
 
@@ -2101,25 +2667,46 @@ function renderNormalTablePanel() {
   document.getElementById('panelContent').innerHTML=`
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
       <div class="editor-title" style="margin:0">State Transition Table</div>
-      <button class="btn sm" onclick="enterExpandMode()">Expand →</button>
+     
     </div>
-    <div class="table-wrap"><div class="table-grid" style="">
-      <div class="table-row table-head" style="grid-template-columns:1.2fr 1fr 1fr 1.2fr">
-        <div class="table-cell">${h(inputNames.slice().reverse().join(', '))}</div>
-        <div class="table-cell">Current State</div>
-        <div class="table-cell">Next State</div>
-        <div class="table-cell">${h(outputNames.slice().reverse().join(', '))}</div>
-      </div>
-      ${rows.map(r=>`<div class="table-row${r.current===(cur?cur.name:'')&&r.input===formatInput(curInput)?' table-active':''}" style="grid-template-columns:1.2fr 1fr 1fr 1.2fr"><div class="table-cell">${h(r.input)}</div><div class="table-cell">${h(r.current)}</div><div class="table-cell">${h(r.next)}</div><div class="table-cell">${h(r.output)}</div></div>`).join('')}
-    </div></div>
+    <div class="table-wrap">
+      <table class="state-table">
+        <thead>
+          <tr>
+            <th>${h(inputNames.slice().reverse().join(', '))}</th>
+            <th>Current State</th>
+            <th>Next State</th>
+            <th>${h(outputNames.slice().reverse().join(', '))}</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(r=>`<tr class="${r.current===(cur?cur.name:'')&&r.input===formatInput(curInput)?'table-active':''}"><td>${h(r.input)}</td><td>${h(r.current)}</td><td>${h(r.next)}</td><td>${h(r.output)}</td></tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
   `;
 }
 
 function toggleInputLogs(checked) { showInputLogs=checked; if(activeTab==='log')renderLogPanel(); }
-function toggleSidebars() { document.body.classList.toggle('hide-sidebars'); }
-function toggleTheme() { document.body.classList.toggle('light'); }
+function closeMenus() { document.querySelectorAll('.menu.open').forEach(menu => menu.classList.remove('open')); }
+function toggleMenu(menuId) {
+  const menu=document.getElementById(menuId); if(!menu)return;
+  const willOpen=!menu.classList.contains('open');
+  closeMenus();
+  if(willOpen) menu.classList.add('open');
+}
+function handleMenuAction(action) { closeMenus(); if(typeof action==='function') action(); }
+function updateMenuChecks() {
+  const sidebarCheck=document.getElementById('menuCheckSidebars');
+  const themeCheck=document.getElementById('menuCheckTheme');
+  if(sidebarCheck) sidebarCheck.textContent=document.body.classList.contains('hide-sidebars')?'':'✓';
+  if(themeCheck) themeCheck.textContent=document.body.classList.contains('light')?'✓':'';
+}
+function openLoadDialog() { document.getElementById('fileInput').click(); }
+function toggleSidebars() { document.body.classList.toggle('hide-sidebars'); updateMenuChecks(); }
+function toggleTheme() { document.body.classList.toggle('light'); updateMenuChecks(); }
 function toggleSimplify() { simplifyOn=!simplifyOn; updateSimplifyButton(); render(); if(expandMode)renderBottomPanel();if(activeTab==='table')renderNormalTablePanel(); }
-function updateSimplifyButton() { const btn=document.getElementById('btnSimplify');if(btn)btn.textContent=simplifyOn?'Unsimplify':'Simplify'; }
+function updateSimplifyButton() { const btn=document.getElementById('btnSimplify');if(btn){btn.textContent='Simplify Arrows';btn.classList.toggle('active',simplifyOn);} }
 
 // ══════════════════════════════════════════════════════════════════
 //  SIMULATION
@@ -2163,6 +2750,30 @@ function runSim() {
   },650);
 }
 
+function confirmNewWorkspace() {
+  if(!confirm('Create a new workspace? This will clear the current FSM on the canvas.')) return;
+  pushUndo();
+  clearInterval(runInterval);isRunning=false;
+  document.getElementById('btnRun').textContent='Run';document.getElementById('btnRun').className='btn success';
+  simLog=[];simplifyOn=false;flipFlopTypes=['D'];
+  applyState({
+    states:[],
+    transitions:{},
+    inputBitsCount:1,
+    inputBits:[0],
+    inputNames:['x0'],
+    outputBitsCount:1,
+    outputBits:[0],
+    outputNames:['z0'],
+    view:{x:0,y:0,scale:1.5},
+    simStep:0,
+    activeStateId:null,
+    selectedStateId:null,
+    idCounter:1
+  });
+  updateSimplifyButton();
+}
+
 // ══════════════════════════════════════════════════════════════════
 //  SAVE / LOAD
 // ══════════════════════════════════════════════════════════════════
@@ -2183,6 +2794,7 @@ function loadJSON(e) {
     try{
       const data=JSON.parse(ev.target.result);
       if(!data.states||!data.transitions)throw new Error('Not a valid FSM file');
+      pushUndo();
       if(data.flipFlopTypes)flipFlopTypes=data.flipFlopTypes;
       applyState(data);
       simplifyOn=!!data.simplifyOn;updateSimplifyButton();
@@ -2191,8 +2803,12 @@ function loadJSON(e) {
   rd.readAsText(file);e.target.value='';
 }
 
-function openAbout(){document.getElementById('aboutModal').style.display='flex';}
-function closeAbout(e){if(e&&e.target&&e.target.id!=='aboutModal')return;document.getElementById('aboutModal').style.display='none';}
+function openModal(id){const modal=document.getElementById(id);if(modal)modal.style.display='flex';}
+function closeModal(id,e){if(e&&e.target&&e.target.id!==id)return;const modal=document.getElementById(id);if(modal)modal.style.display='none';}
+function openAbout(){openModal('aboutModal');}
+function closeAbout(e){closeModal('aboutModal',e);}
+function openHelp(){openModal('helpModal');}
+function closeHelp(e){closeModal('helpModal',e);}
 
 // ══════════════════════════════════════════════════════════════════
 //  SVG HELPERS
