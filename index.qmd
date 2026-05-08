@@ -30,7 +30,7 @@ include-in-header:
   <div class="max-w-4xl mx-auto flex flex-col items-center">
     <!-- <img src="pogi.png" alt="EEE Digital logo" -->
          <!-- style="width: 88px; height: 88px; margin-bottom: 1.25rem;"> -->
-    <div style="margin-top: 270px;"></div>
+    <div style="margin-top: 360px;"></div>
     <p class="text-xs font-mono mb-4 tracking-widest uppercase" style="color: #6B0D1A;">
       Digitals &nbsp;·&nbsp; UP EEEi
     </p>

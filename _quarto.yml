@@ -27,6 +27,8 @@ website:
         text: kmap-gamEEE
       - href: FSM_simulatEEE.html
         text: FSMsimulatEEE
+      - href: verilog
+        text: Verilog IDE
   
 format:
   html:
