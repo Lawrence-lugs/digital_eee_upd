@@ -26,11 +26,11 @@ include-in-header:
 ::: {}
 ```{=html}
 <!-- ─── HERO ──────────────────────────────────────────────────────────────── -->
-<section style="background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(107,13,26,0.08) 0%, rgba(107,13,26,0.03) 50%, #ffffff 80%);"
-         class="text-gray-900 py-28 px-8 text-center">
+<section class="hero text-gray-900 py-28 px-8 text-center">
   <div class="max-w-4xl mx-auto flex flex-col items-center">
-    <img src="pogi.png" alt="EEE Digital logo"
-         style="width: 88px; height: 88px; margin-bottom: 1.25rem;">
+    <!-- <img src="pogi.png" alt="EEE Digital logo" -->
+         <!-- style="width: 88px; height: 88px; margin-bottom: 1.25rem;"> -->
+    <div style="margin-top: 360px;"></div>
     <p class="text-xs font-mono mb-4 tracking-widest uppercase" style="color: #6B0D1A;">
       Digitals &nbsp;·&nbsp; UP EEEi
     </p>
@@ -237,6 +237,11 @@ include-in-header:
   <div class="max-w-5xl mx-auto text-center text-sm text-gray-400">
     <p>Digitals | Electrical and Electronics Engineering Institute</p>
     <p class="mt-1">University of the Philippines Diliman</p>
+    <p class="mt-3 text-xs">Note: The above hero header image is AI generated. For inquiries on this, please contact <a href="mailto:adelson.chua@eee.upd.edu.ph">
+    adelson.chua@eee.upd.edu.ph
+    </a>
+    .
+    </p>
     <p class="mt-3 text-xs">&copy; 2026 Lawrence Quizon</p>
   </div>
 </footer>
