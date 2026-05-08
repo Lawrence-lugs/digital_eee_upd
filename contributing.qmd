@@ -1,0 +1,550 @@
+---
+title: ""
+page-layout: full
+toc: false
+include-in-header:
+  - text: |
+      <script src="https://cdn.tailwindcss.com"></script>
+      <script>
+        tailwind.config = {
+          corePlugins: { preflight: false },
+          important: '#tw-root',
+        }
+      </script>
+      <style>
+        #quarto-content { padding: 0 !important; }
+        #quarto-content > * { margin-top: 0 !important; padding-top: 0 !important; }
+        main.content { margin-top: 0 !important; padding-top: 0 !important; }
+        .quarto-title-block, #title-block-header { display: none !important; }
+        #tw-root a { text-decoration: none; }
+        #tw-root img { max-width: 100% !important; height: auto; }
+        #tw-root pre { color: inherit; }
+      </style>
+---
+
+:::: {#tw-root}
+
+::: {}
+```{=html}
+
+<!-- ─── HERO ─────────────────────────────────────────────────────────────────── -->
+<div class="bg-white border-b border-gray-100 py-16 px-6">
+  <div class="max-w-3xl mx-auto">
+    <p class="text-xs font-mono tracking-widest uppercase text-gray-400 mb-3">
+      Digital Design Group &nbsp;·&nbsp; UP EEEi
+    </p>
+    <h1 class="text-4xl font-extrabold text-gray-950 mb-4 leading-tight">
+      Contributing a Page
+    </h1>
+    <p class="text-lg text-gray-600 max-w-2xl leading-relaxed">
+      Add or improve content on
+      <a href="https://digital.eee.upd.edu.ph" target="_blank" class="underline" style="color:#6B0D1A;">digital.eee.upd.edu.ph</a>.
+      No experience with the build system required — just edit Markdown files,
+      test with a local preview, and open a pull request. Once it is reviewed and
+      merged, your changes appear on the live site automatically.
+    </p>
+  </div>
+</div>
+
+<!-- ─── WORKFLOW OVERVIEW ─────────────────────────────────────────────────────── -->
+<div class="bg-gray-50 border-b border-gray-100 py-8 px-6">
+  <div class="max-w-3xl mx-auto">
+    <p class="text-xs font-mono tracking-widest uppercase text-gray-400 mb-5">Overview</p>
+    <div class="flex flex-wrap gap-2 items-center text-sm font-medium">
+      <span class="bg-white border border-gray-200 rounded-full px-4 py-1.5 text-gray-700">Fork &amp; Clone</span>
+      <span class="text-gray-300 text-base">→</span>
+      <span class="bg-white border border-gray-200 rounded-full px-4 py-1.5 text-gray-700">Set Up Environment</span>
+      <span class="text-gray-300 text-base">→</span>
+      <span class="bg-white border border-gray-200 rounded-full px-4 py-1.5 text-gray-700">Edit Pages</span>
+      <span class="text-gray-300 text-base">→</span>
+      <span class="bg-white border border-gray-200 rounded-full px-4 py-1.5 text-gray-700">Preview Locally</span>
+      <span class="text-gray-300 text-base">→</span>
+      <span class="rounded-full px-4 py-1.5 text-white font-semibold" style="background:#6B0D1A;">Pull Request</span>
+    </div>
+  </div>
+</div>
+
+<!-- ─── STEP 1: FORK & CLONE ──────────────────────────────────────────────────── -->
+<div class="bg-white border-b border-gray-100 py-12 px-6">
+  <div class="max-w-3xl mx-auto">
+
+    <div class="flex items-center gap-4 mb-7">
+      <div class="flex-shrink-0 w-9 h-9 rounded-full text-white font-bold text-sm flex items-center justify-center"
+           style="background:#6B0D1A;">1</div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-950">Fork &amp; Clone</h2>
+        <p class="text-sm text-gray-500 mt-0.5">Get your own copy of the repository.</p>
+      </div>
+    </div>
+
+    <div class="space-y-6 pl-[52px]">
+
+      <div>
+        <p class="text-sm font-semibold text-gray-800 mb-2">Fork on GitHub</p>
+        <p class="text-sm text-gray-600 mb-3">
+          Click <strong>Fork</strong> in the upper-right corner of the repository page to create
+          a personal copy under your own account.
+        </p>
+        <a href="https://github.com/Lawrence-lugs/digital_eee_upd/fork"
+           target="_blank"
+           class="inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-lg border transition-colors"
+           style="border-color:#6B0D1A; color:#6B0D1A;">
+          Fork on GitHub ↗
+        </a>
+      </div>
+
+      <div>
+        <p class="text-sm font-semibold text-gray-800 mb-2">Clone to your machine</p>
+        <p class="text-sm text-gray-600 mb-3">
+          Replace <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs">YOUR_USERNAME</code>
+          with your GitHub username.
+        </p>
+        <div class="bg-gray-900 text-gray-100 rounded-lg p-4 text-sm overflow-x-auto">
+          <pre style="margin:0; background:transparent; border:none; padding:0; white-space:pre;">git clone https://github.com/YOUR_USERNAME/digital_eee_upd.git
+cd digital_eee_upd</pre>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ─── STEP 2: SET UP ENVIRONMENT ───────────────────────────────────────────── -->
+<div class="bg-gray-50 border-b border-gray-100 py-12 px-6">
+  <div class="max-w-3xl mx-auto">
+
+    <div class="flex items-center gap-4 mb-7">
+      <div class="flex-shrink-0 w-9 h-9 rounded-full text-white font-bold text-sm flex items-center justify-center"
+           style="background:#6B0D1A;">2</div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-950">Set Up Your Local Environment</h2>
+        <p class="text-sm text-gray-500 mt-0.5">
+          Three options — all end with a live preview server that auto-reloads on save.
+        </p>
+      </div>
+    </div>
+
+    <div class="pl-[52px]">
+
+      <!-- TAB BUTTONS -->
+      <div class="flex flex-wrap gap-2 mb-5">
+        <button id="tab-vscode" onclick="switchTab('vscode')"
+                class="text-sm font-medium px-4 py-2 rounded-lg border cursor-pointer"
+                style="background:#6B0D1A; color:white; border-color:#6B0D1A;">
+          VS Code + Dev Container
+        </button>
+        <button id="tab-docker" onclick="switchTab('docker')"
+                class="text-sm font-medium px-4 py-2 rounded-lg border cursor-pointer"
+                style="background:white; color:#374151; border-color:#d1d5db;">
+          Docker + Terminal
+        </button>
+        <button id="tab-local" onclick="switchTab('local')"
+                class="text-sm font-medium px-4 py-2 rounded-lg border cursor-pointer"
+                style="background:white; color:#374151; border-color:#d1d5db;">
+          Local Install
+        </button>
+      </div>
+
+      <!-- ── VS CODE PANEL ── -->
+      <div id="panel-vscode">
+        <div class="bg-white rounded-xl border border-gray-200 p-6">
+          <p class="text-sm text-gray-500 mb-5 italic">
+            Recommended for most contributors. VS Code detects the devcontainer configuration
+            and sets up the full build environment automatically — no manual installation needed.
+          </p>
+          <ol class="space-y-5 text-sm list-none p-0 m-0">
+
+            <li>
+              <strong class="text-gray-800">Install prerequisites</strong>
+              <ul class="mt-2 ml-5 list-disc space-y-1.5 text-gray-600">
+                <li>
+                  <a href="https://www.docker.com/products/docker-desktop/" target="_blank"
+                     class="underline" style="color:#6B0D1A;">Docker Desktop</a>
+                  — launch it and confirm the engine is running (whale icon in your taskbar)
+                </li>
+                <li>
+                  <a href="https://code.visualstudio.com/" target="_blank"
+                     class="underline" style="color:#6B0D1A;">Visual Studio Code</a>
+                </li>
+                <li>
+                  The
+                  <a href="https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers"
+                     target="_blank" class="underline" style="color:#6B0D1A;">Dev Containers</a>
+                  extension for VS Code
+                </li>
+              </ul>
+            </li>
+
+            <li>
+              <strong class="text-gray-800">Open the cloned folder in VS Code</strong>
+              <div class="mt-2 bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto">
+                <pre style="margin:0; background:transparent; border:none; padding:0; white-space:pre;">code digital_eee_upd</pre>
+              </div>
+              <p class="mt-1.5 text-xs text-gray-500">
+                Or use <strong>File → Open Folder</strong> and select the cloned directory.
+              </p>
+            </li>
+
+            <li>
+              <strong class="text-gray-800">Reopen in Container</strong>
+              <p class="mt-2 text-gray-600 leading-relaxed">
+                VS Code shows a notification in the bottom-right: <em>"Reopen in Container"</em>.
+                Click it. If you missed it, open the Command Palette
+                (<kbd class="bg-gray-100 border border-gray-300 rounded px-1.5 py-0.5 text-xs font-mono">Ctrl+Shift+P</kbd>
+                or
+                <kbd class="bg-gray-100 border border-gray-300 rounded px-1.5 py-0.5 text-xs font-mono">Cmd+Shift+P</kbd>
+                on Mac) and run <strong>Dev Containers: Reopen in Container</strong>.
+              </p>
+              <p class="mt-2 text-gray-600">
+                The first build pulls the container image — this takes a few minutes.
+                Subsequent reopens are instant.
+              </p>
+            </li>
+
+            <li>
+              <strong class="text-gray-800">Start the preview server</strong>
+              <p class="mt-2 text-gray-600 mb-2">
+                Open a terminal inside VS Code
+                (<kbd class="bg-gray-100 border border-gray-300 rounded px-1.5 py-0.5 text-xs font-mono">Ctrl+`</kbd>)
+                and run:
+              </p>
+              <div class="bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto">
+                <pre style="margin:0; background:transparent; border:none; padding:0; white-space:pre;">quarto preview</pre>
+              </div>
+              <p class="mt-1.5 text-xs text-gray-500">
+                VS Code will auto-forward the port and offer to open the preview in your browser.
+                The page reloads automatically whenever you save a file.
+              </p>
+            </li>
+
+          </ol>
+        </div>
+      </div>
+
+      <!-- ── DOCKER TERMINAL PANEL ── -->
+      <div id="panel-docker" style="display:none;">
+        <div class="bg-white rounded-xl border border-gray-200 p-6">
+          <p class="text-sm text-gray-500 mb-5 italic">
+            For terminal users who do not want to use VS Code. Uses the same container image
+            as the devcontainer, so the environment is identical.
+          </p>
+          <ol class="space-y-5 text-sm list-none p-0 m-0">
+
+            <li>
+              <strong class="text-gray-800">Install Docker Desktop</strong>
+              <p class="mt-2 text-gray-600">
+                Download
+                <a href="https://www.docker.com/products/docker-desktop/" target="_blank"
+                   class="underline" style="color:#6B0D1A;">Docker Desktop</a>
+                for your OS. Launch it and wait for the Docker engine to be running
+                before continuing.
+              </p>
+            </li>
+
+            <li>
+              <strong class="text-gray-800">Pull the container image</strong>
+              <div class="mt-2 bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto">
+                <pre style="margin:0; background:transparent; border:none; padding:0; white-space:pre;">docker pull ghcr.io/lawrence-lugs/quartolatex:latest</pre>
+              </div>
+            </li>
+
+            <li>
+              <strong class="text-gray-800">Run a container with the repo mounted</strong>
+              <p class="mt-2 text-gray-600 mb-2">
+                Run this command from inside the cloned <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs">digital_eee_upd</code> directory:
+              </p>
+              <div class="bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto">
+                <pre style="margin:0; background:transparent; border:none; padding:0; white-space:pre;">docker run -it --rm \
+  -v "$(pwd):/workspace" \
+  -w /workspace \
+  -p 4848:4848 \
+  ghcr.io/lawrence-lugs/quartolatex:latest bash</pre>
+              </div>
+              <p class="mt-1.5 text-xs text-gray-500">
+                This drops you into a bash shell inside the container with your repo files mounted.
+                Any changes you make on your machine are immediately visible inside the container.
+              </p>
+            </li>
+
+            <li>
+              <strong class="text-gray-800">Start the preview server inside the container</strong>
+              <div class="mt-2 bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto">
+                <pre style="margin:0; background:transparent; border:none; padding:0; white-space:pre;">quarto preview --port 4848 --host 0.0.0.0</pre>
+              </div>
+              <p class="mt-1.5 text-xs text-gray-500">
+                Open
+                <a href="http://localhost:4848" target="_blank"
+                   class="underline" style="color:#6B0D1A;">http://localhost:4848</a>
+                in your browser. The preview reloads automatically on save.
+              </p>
+            </li>
+
+          </ol>
+        </div>
+      </div>
+
+      <!-- ── LOCAL INSTALL PANEL ── -->
+      <div id="panel-local" style="display:none;">
+        <div class="bg-white rounded-xl border border-gray-200 p-6">
+          <p class="text-sm text-gray-500 mb-5 italic">
+            No Docker? Install Quarto and the Python environment directly on your machine.
+          </p>
+          <ol class="space-y-5 text-sm list-none p-0 m-0">
+
+            <li>
+              <strong class="text-gray-800">Install Quarto</strong>
+              <p class="mt-2 text-gray-600">
+                Download the installer for your OS from
+                <a href="https://quarto.org/docs/get-started/" target="_blank"
+                   class="underline" style="color:#6B0D1A;">quarto.org/docs/get-started</a>.
+              </p>
+            </li>
+
+            <li>
+              <strong class="text-gray-800">Install Miniforge</strong>
+              <p class="mt-2 text-gray-600">
+                Miniforge is a lightweight conda distribution that includes the fast
+                <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs">mamba</code>
+                package solver. Download from
+                <a href="https://github.com/conda-forge/miniforge" target="_blank"
+                   class="underline" style="color:#6B0D1A;">github.com/conda-forge/miniforge</a>.
+              </p>
+            </li>
+
+            <li>
+              <strong class="text-gray-800">Create and activate the Python environment</strong>
+              <p class="mt-2 text-gray-600 mb-2">
+                Run these commands from inside the cloned repository directory:
+              </p>
+              <div class="bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto">
+                <pre style="margin:0; background:transparent; border:none; padding:0; white-space:pre;">mamba env create -f .devcontainer/env.yml
+mamba activate numerical_sims</pre>
+              </div>
+            </li>
+
+            <li>
+              <strong class="text-gray-800">Start the preview server</strong>
+              <div class="mt-2 bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto">
+                <pre style="margin:0; background:transparent; border:none; padding:0; white-space:pre;">quarto preview</pre>
+              </div>
+              <p class="mt-1.5 text-xs text-gray-500">
+                Quarto will print the local URL in the terminal output — open it in your browser.
+                The preview reloads automatically on save.
+              </p>
+            </li>
+
+          </ol>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ─── STEP 3: EDIT OR ADD A PAGE ───────────────────────────────────────────── -->
+<div class="bg-white border-b border-gray-100 py-12 px-6">
+  <div class="max-w-3xl mx-auto">
+
+    <div class="flex items-center gap-4 mb-7">
+      <div class="flex-shrink-0 w-9 h-9 rounded-full text-white font-bold text-sm flex items-center justify-center"
+           style="background:#6B0D1A;">3</div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-950">Edit or Add a Page</h2>
+        <p class="text-sm text-gray-500 mt-0.5">Pages are plain Markdown files. Any text editor works.</p>
+      </div>
+    </div>
+
+    <div class="pl-[52px] space-y-7">
+
+      <!-- What is a .qmd -->
+      <div>
+        <p class="text-sm font-semibold text-gray-800 mb-2">
+          What is a <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs">.qmd</code> file?
+        </p>
+        <p class="text-sm text-gray-600 leading-relaxed">
+          A Quarto Markdown file — just plain Markdown with a short YAML header at the top.
+          Standard Markdown syntax (headings, lists, images, tables, code blocks) all work out
+          of the box. You can also embed raw HTML anywhere for more complex layouts.
+        </p>
+      </div>
+
+      <!-- Where pages live -->
+      <div>
+        <p class="text-sm font-semibold text-gray-800 mb-3">Where pages live</p>
+        <div class="bg-gray-50 border border-gray-200 rounded-lg overflow-hidden text-sm">
+          <table class="w-full">
+            <thead>
+              <tr class="border-b border-gray-200 bg-gray-100">
+                <th class="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide w-1/2">Location</th>
+                <th class="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">Contents</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr class="bg-white">
+                <td class="px-4 py-3 font-mono text-xs text-gray-700">pages/logicLabs/</td>
+                <td class="px-4 py-3 text-gray-600">Logic Labs (lab1.qmd – lab6.qmd and supporting files)</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-mono text-xs text-gray-700">pages/verilogCrashCourse/</td>
+                <td class="px-4 py-3 text-gray-600">Verilog Crash Course chapters</td>
+              </tr>
+              <tr class="bg-white">
+                <td class="px-4 py-3 font-mono text-xs text-gray-700">pages/</td>
+                <td class="px-4 py-3 text-gray-600">Standalone pages (e.g. about.qmd)</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-mono text-xs text-gray-700">static_apps/</td>
+                <td class="px-4 py-3 text-gray-600">Self-contained HTML tools (not rendered by Quarto)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Minimal page template -->
+      <div>
+        <p class="text-sm font-semibold text-gray-800 mb-2">Minimal page template</p>
+        <p class="text-sm text-gray-600 mb-3">
+          Create a new <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs">.qmd</code>
+          file anywhere in the tree. The only required part is the YAML frontmatter at the top:
+        </p>
+        <div class="bg-gray-900 text-gray-100 rounded-lg p-4 text-sm overflow-x-auto">
+          <pre style="margin:0; background:transparent; border:none; padding:0; white-space:pre;">---
+title: "My Page Title"
+---
+
+## Section Heading
+
+Write your content using standard Markdown.
+
+![An image caption](images/my-image.png)</pre>
+        </div>
+        <p class="mt-2 text-xs text-gray-500">
+          The preview server will pick up the new file automatically — no restart needed.
+        </p>
+      </div>
+
+      <!-- Navbar note -->
+      <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
+        <p class="text-sm font-semibold text-amber-800 mb-1">Adding your page to the navbar</p>
+        <p class="text-sm text-amber-700 leading-relaxed">
+          If you want your page to appear in the top navigation, add an entry to
+          <code class="bg-amber-100 px-1.5 py-0.5 rounded text-xs">_quarto.yml</code>
+          under <code class="bg-amber-100 px-1.5 py-0.5 rounded text-xs">website.navbar.left</code>.
+          If you're not sure how, skip it — maintainers can wire up the navigation during PR review.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ─── STEP 4: PULL REQUEST ──────────────────────────────────────────────────── -->
+<div class="bg-gray-50 border-b border-gray-100 py-12 px-6">
+  <div class="max-w-3xl mx-auto">
+
+    <div class="flex items-center gap-4 mb-7">
+      <div class="flex-shrink-0 w-9 h-9 rounded-full text-white font-bold text-sm flex items-center justify-center"
+           style="background:#6B0D1A;">4</div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-950">Open a Pull Request</h2>
+        <p class="text-sm text-gray-500 mt-0.5">Push your changes and request a review.</p>
+      </div>
+    </div>
+
+    <div class="pl-[52px] space-y-6">
+
+      <div>
+        <p class="text-sm font-semibold text-gray-800 mb-2">Commit and push your changes</p>
+        <div class="bg-gray-900 text-gray-100 rounded-lg p-4 text-sm overflow-x-auto">
+          <pre style="margin:0; background:transparent; border:none; padding:0; white-space:pre;">git add .
+git commit -m "Add: brief description of your change"
+git push origin main</pre>
+        </div>
+      </div>
+
+      <div>
+        <p class="text-sm font-semibold text-gray-800 mb-2">Open the pull request on GitHub</p>
+        <p class="text-sm text-gray-600 mb-4">
+          Go to your fork on GitHub. You'll see a banner:
+          <em>"Compare &amp; pull request"</em>. Click it, add a short description
+          of what you've changed, then submit.
+        </p>
+        <a href="https://github.com/Lawrence-lugs/digital_eee_upd/compare"
+           target="_blank"
+           class="inline-flex items-center gap-1.5 text-sm font-semibold px-5 py-2.5 rounded-lg text-white"
+           style="background:#6B0D1A;">
+          Open a Pull Request ↗
+        </a>
+      </div>
+
+      <!-- Auto-deploy note -->
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <p class="text-sm font-semibold text-blue-800 mb-1">What happens after merge</p>
+        <p class="text-sm text-blue-700 leading-relaxed">
+          The live site at
+          <a href="https://digital.eee.upd.edu.ph" target="_blank"
+             class="underline">digital.eee.upd.edu.ph</a>
+          tracks the <code class="bg-blue-100 px-1.5 py-0.5 rounded text-xs">main</code> branch.
+          Once your PR is reviewed and merged, the site rebuilds automatically and your
+          content appears live within minutes.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ─── FOOTER ────────────────────────────────────────────────────────────────── -->
+<div class="bg-white py-10 px-6">
+  <div class="max-w-3xl mx-auto flex flex-wrap gap-4 items-center justify-between">
+    <p class="text-sm text-gray-500">
+      Questions? Open an issue on
+      <a href="https://github.com/Lawrence-lugs/digital_eee_upd/issues" target="_blank"
+         class="underline" style="color:#6B0D1A;">GitHub</a>.
+    </p>
+    <a href="https://github.com/Lawrence-lugs/digital_eee_upd" target="_blank"
+       class="text-sm font-medium text-gray-500 flex items-center gap-1.5"
+       style="text-decoration:none;">
+      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+        <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483
+                 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608
+                 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338
+                 -2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65
+                 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337
+                 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651
+                 .64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943
+                 .359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747
+                 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+      </svg>
+      View on GitHub
+    </a>
+  </div>
+</div>
+
+<!-- ─── TAB SWITCHING SCRIPT ──────────────────────────────────────────────────── -->
+<script>
+function switchTab(name) {
+  var tabs = ['vscode', 'docker', 'local'];
+  tabs.forEach(function(id) {
+    var panel = document.getElementById('panel-' + id);
+    var btn   = document.getElementById('tab-' + id);
+    if (id === name) {
+      panel.style.display = 'block';
+      btn.style.setProperty('background-color', '#6B0D1A', 'important');
+      btn.style.setProperty('color', 'white', 'important');
+      btn.style.setProperty('border-color', '#6B0D1A', 'important');
+    } else {
+      panel.style.display = 'none';
+      btn.style.setProperty('background-color', 'white', 'important');
+      btn.style.setProperty('color', '#374151', 'important');
+      btn.style.setProperty('border-color', '#d1d5db', 'important');
+    }
+  });
+}
+</script>
+```
+:::
+
+::::

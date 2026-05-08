@@ -17,8 +17,12 @@ website:
     left:
       - href: index.qmd
         text: Home
+      - href: contributing.qmd
+        text: Contribute
+      - href: verilog
+        text: Verilog IDE
       - href: exercises
-        text: Vercises
+        text: Verilog Labs
       - href: pages/verilogCrashCourse/index.qmd
         text: Verilog Crash Course
       - href: pages/logicLabs/index.qmd
@@ -27,8 +31,6 @@ website:
         text: kmap-gamEEE
       - href: FSM_simulatEEE.html
         text: FSMsimulatEEE
-      - href: verilog
-        text: Verilog IDE
   
 format:
   html:
