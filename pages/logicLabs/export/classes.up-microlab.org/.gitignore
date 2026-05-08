@@ -1,0 +1,16 @@
+# Files with URL-derived names containing characters illegal on Windows NTFS (:, ?, |).
+# These were created by wget-scraping a MediaWiki site and cannot be checked out on Windows.
+# Note: '?' in gitignore patterns is a wildcard (matches any single char), which also
+# happens to match the literal '?' in these filenames.
+
+# MediaWiki page HTML files - contain ':' in name  (e.g. Lab_0:_Introduction.html)
+index.php/
+
+# MediaWiki load.php requests cached as files - contain '?' and '|' in name
+load.php?*
+
+# Cached image assets with cache-busting query-string suffixes - contain '?' in name
+resources/src/mediawiki.legacy/images/*.gif?*
+resources/src/mediawiki.skinning/images/*.png?*
+skins/Vector/images/*.png?*
+skins/Vector/images/*.svg?*
