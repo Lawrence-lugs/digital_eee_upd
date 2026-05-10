@@ -1,0 +1,1306 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sequential Timing Analyzer v3</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;600;700;800&display=swap');
+
+
+html[data-theme="dark"] {
+  --bg:        #0a0d14;
+  --panel:     #0f1420;
+  --card:      #141926;
+  --border:    #1e2a3a;
+  --border2:   #243048;
+  --text:      #e2e8f0;
+  --text-dim:  #64748b;
+  --text-mid:  #94a3b8;
+  --canvas-bg: #070b11;
+  --grid-line: rgba(59,130,246,0.04);
+}
+html[data-theme="light"] {
+  --bg:        #f0f4fa;
+  --panel:     #ffffff;
+  --card:      #e8edf7;
+  --border:    #c8d4e8;
+  --border2:   #b0c0d8;
+  --text:      #1a2030;
+  --text-dim:  #6b7a99;
+  --text-mid:  #3a4a6a;
+  --canvas-bg: #f7f9fd;
+  --grid-line: rgba(59,130,246,0.06);
+}
+
+:root {
+  --accent-blue:   #3b82f6;
+  --accent-green:  #16a34a;
+  --accent-red:    #ef4444;
+  --accent-yellow: #d97706;
+  --accent-cyan:   #0891b2;
+  --accent-purple: #9333ea;
+  --clk-color:     #0891b2;
+  --q1-color:      #16a34a;
+  --d2-color:      #9333ea;
+}
+html[data-theme="dark"] {
+  --accent-green:  #22c55e;
+  --accent-yellow: #f59e0b;
+  --accent-cyan:   #06b6d4;
+  --accent-purple: #a855f7;
+  --clk-color:     #06b6d4;
+  --q1-color:      #22c55e;
+  --d2-color:      #a855f7;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-size: 24px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none; z-index: 0;
+}
+
+.app {
+  position: relative; z-index: 1;
+  max-width: 1800px; margin: 0 auto; padding: 18px 28px;
+}
+
+/*header*/
+header {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
+}
+.logo { display: flex; align-items: center; gap: 14px; }
+.logo-icon {
+  width: 42px; height: 42px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+  border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px;
+}
+h1 {
+  font-size: 28px; font-weight: 800; letter-spacing: -.5px;
+  background: linear-gradient(90deg, var(--text), var(--accent-cyan));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.subtitle { font-size: 18px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+
+.header-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+/* Status badges */
+.status-badge {
+  padding: 5px 14px; border-radius: 20px; font-size: 16px;
+  font-family: 'JetBrains Mono', monospace; font-weight: 600; letter-spacing: .5px;
+  border: 1px solid; transition: all .3s;
+}
+.status-ok         { background: rgba(34,197,94,.1);  color: var(--accent-green);  border-color: rgba(34,197,94,.3); }
+.status-setup-fail { background: rgba(239,68,68,.1);  color: var(--accent-red);    border-color: rgba(239,68,68,.3); }
+.status-hold-fail  { background: rgba(245,158,11,.1); color: var(--accent-yellow); border-color: rgba(245,158,11,.3); }
+
+/* â”€â”€ TOGGLE WIDGET (shared style) â”€â”€ */
+.toggle-wrap {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 7px 13px;
+}
+.toggle-wrap-label { font-size: 16px; font-family: 'JetBrains Mono', monospace; color: var(--text-mid); white-space: nowrap; }
+.mode-select { display: flex; gap: 6px; flex-wrap: wrap; }
+.mode-btn {
+  border: 1px solid var(--border2);
+  background: var(--panel);
+  color: var(--text-dim);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+.mode-btn.active {
+  background: rgba(59,130,246,.15);
+  border-color: rgba(59,130,246,.45);
+  color: var(--text);
+}
+.tog {
+  position: relative; display: inline-block; width: 44px; height: 22px; cursor: pointer; flex-shrink: 0;
+}
+.tog input { opacity: 0; width: 0; height: 0; }
+.tog-track {
+  position: absolute; inset: 0; background: var(--border2); border-radius: 11px; transition: background .3s;
+}
+.tog-track::after {
+  content: ''; position: absolute; width: 16px; height: 16px; border-radius: 8px;
+  background: var(--text-dim); top: 3px; left: 3px; transition: transform .3s, background .3s;
+}
+.tog input:checked + .tog-track { background: rgba(59,130,246,.35); }
+.tog input:checked + .tog-track::after { transform: translateX(22px); background: var(--accent-blue); }
+.tog-val { font-size: 14px; font-weight: 700; font-family: 'JetBrains Mono', monospace; min-width: 60px; }
+
+/* â”€â”€ MAIN GRID â”€â”€ */
+.main-grid { display: grid; grid-template-columns: 355px 1fr; gap: 20px; }
+
+/* â”€â”€ LEFT PANEL â”€â”€ */
+.left-panel { display: flex; flex-direction: column; gap: 13px; }
+
+.panel-card {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 13px; overflow: hidden; transition: background .3s, border-color .3s;
+}
+.card-header {
+  padding: 10px 16px; background: var(--card); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+  font-size: 14px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-mid);
+}
+.card-header .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.ff-badge {
+  margin-left: auto; padding: 2px 8px; border-radius: 8px; font-size: 16px; border: 1px solid; white-space: nowrap;
+}
+.ff1-badge { background: rgba(34,197,94,.1);  color: var(--accent-green); border-color: rgba(34,197,94,.3); }
+.ff2-badge { background: rgba(59,130,246,.1); color: var(--accent-blue);  border-color: rgba(59,130,246,.3); }
+
+/* Circuit */
+.circuit-wrap { padding: 12px 14px; }
+.circuit-inner { background: var(--canvas-bg); border-radius: 7px; border: 1px solid var(--border); padding: 12px; }
+
+/* Params */
+.param-group { display: flex; flex-direction: column; gap: 10px; padding: 12px 16px; }
+.param-group + .param-group { border-top: 1px solid var(--border); }
+.param-row { display: flex; flex-direction: column; gap: 4px; }
+.param-label-row { display: flex; justify-content: space-between; align-items: center; }
+.param-name { font-size: 16px; font-family: 'JetBrains Mono', monospace; color: var(--text-mid); }
+.param-name sub { font-size: 16px; }
+.param-value {
+  font-size: 16px; font-family: 'JetBrains Mono', monospace; font-weight: 600;
+  color: var(--text); background: var(--bg); border: 1px solid var(--border);
+  border-radius: 5px; padding: 2px 8px; min-width: 58px; text-align: center; transition: border-color .2s, color .2s;
+}
+
+input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 5px; background: transparent; cursor: pointer; }
+input[type=range]::-webkit-slider-runnable-track { height: 5px; border-radius: 3px; background: var(--bg); border: 1px solid var(--border); }
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 17px; height: 17px; border-radius: 50%;
+  background: var(--accent-blue); border: 2px solid var(--bg);
+  box-shadow: 0 0 7px rgba(59,130,246,.5); cursor: grab;
+}
+input[type=range]::-webkit-slider-thumb:active { cursor: grabbing; }
+input[type=range].green::-webkit-slider-thumb  { background: var(--accent-green);  box-shadow: 0 0 7px rgba(34,197,94,.5); }
+input[type=range].red::-webkit-slider-thumb    { background: var(--accent-red);    box-shadow: 0 0 7px rgba(239,68,68,.5); }
+input[type=range].yellow::-webkit-slider-thumb { background: var(--accent-yellow); box-shadow: 0 0 7px rgba(245,158,11,.5); }
+input[type=range].purple::-webkit-slider-thumb { background: var(--accent-purple); box-shadow: 0 0 7px rgba(168,85,247,.5); }
+input[type=range].cyan::-webkit-slider-thumb   { background: var(--accent-cyan);   box-shadow: 0 0 7px rgba(6,182,212,.5); }
+
+/* â”€â”€ RIGHT PANEL â”€â”€ */
+.right-panel { display: flex; flex-direction: column; gap: 14px; }
+
+.waveform-card { background: var(--panel); border: 1px solid var(--border); border-radius: 13px; overflow: hidden; }
+.waveform-header {
+  padding: 10px 18px; background: var(--card); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.wh-title { font-size: 14px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-mid); display: flex; align-items: center; gap: 7px; }
+.waveform-body { padding: 14px 18px; background: var(--canvas-bg); }
+canvas { display: block; width: 100%; border-radius: 5px; }
+
+.legend { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; margin-left: auto; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 14px; font-family: 'JetBrains Mono', monospace; color: var(--text-dim); }
+.l-line { width: 20px; height: 2px; border-radius: 1px; }
+.l-box  { width: 11px; height: 11px; border-radius: 2px; opacity: .6; }
+.l-hatch { width: 20px; height: 11px; border-radius: 2px; overflow: hidden; position: relative; }
+.l-hatch::after {
+  content: ''; position: absolute; inset: 0;
+  background: repeating-linear-gradient(45deg, rgba(168,85,247,.6) 0,rgba(168,85,247,.6) 1.5px, transparent 1.5px, transparent 5px);
+}
+
+/* â”€â”€ INEQUALITIES â”€â”€ */
+.inequalities { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.ineq-card {
+  background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px;
+  transition: border-color .3s, background .3s;
+}
+.ineq-card.pass { border-color: rgba(34,197,94,.4); background: rgba(34,197,94,.04); }
+.ineq-card.fail { border-color: rgba(239,68,68,.4); background: rgba(239,68,68,.04); }
+.ineq-title { font-size: 15px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 7px; font-weight: 700; }
+.ineq-formula { font-family: 'JetBrains Mono', monospace; font-size: 16px; color: var(--text-mid); margin-bottom: 6px; }
+.ineq-values { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+.ineq-values .lhs  { color: var(--accent-cyan); }
+.ineq-values .op   { color: var(--text-dim); }
+.ineq-values .rhs  { color: var(--accent-yellow); }
+.ineq-values .margin { font-size: 14px; font-weight: 400; }
+.ineq-values .margin.pos { color: var(--accent-green); }
+.ineq-values .margin.neg { color: var(--accent-red); }
+.ineq-result { font-size: 14px; font-weight: 700; margin-top: 7px; letter-spacing: .4px; }
+.ineq-card.pass .ineq-result { color: var(--accent-green); }
+.ineq-card.fail .ineq-result { color: var(--accent-red); }
+
+/* show/hide helpers */
+.dual-only { display: none; }
+.dual-only.show { display: block; }
+.single-hide { display: block; }
+.single-hide.hide { display: none; }
+.conditional-hide { display: none; }
+.conditional-hide.show { display: block; }
+.analysis-summary {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 12px;
+}
+.path-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px;
+}
+.path-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.path-card.fail { border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.04); }
+.path-name {
+  font-size: 13px;
+  color: var(--text-mid);
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-bottom: 8px;
+}
+.path-metric {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+.path-metric strong {
+  color: var(--text);
+  font-size: 14px;
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">⏱</div>
+    <div>
+      <h1>Sequential Timing Analyzer</h1>
+      <div class="subtitle">flip-flop timing · non-idealities · setup &amp; hold · bus waveform</div>
+    </div>
+  </div>
+
+  <div class="header-right">
+
+    <!-- Dark / Light toggle -->
+    <div class="toggle-wrap">
+      <span class="toggle-wrap-label">Theme:</span>
+      <label class="tog">
+        <input type="checkbox" id="theme-toggle" checked>
+        <span class="tog-track"></span>
+      </label>
+      <span class="tog-val" id="theme-label" style="color:var(--text-dim)">☀️ Light</span>
+    </div>
+
+    <!-- Topology mode -->
+    <div class="toggle-wrap">
+      <span class="toggle-wrap-label">Topology:</span>
+      <div class="mode-select" id="mode-select">
+        <button type="button" class="mode-btn active" data-mode="single">2 FF</button>
+        <button type="button" class="mode-btn" data-mode="chain">3 FF Chain</button>
+        <button type="button" class="mode-btn" data-mode="parallel">3 FF Parallel</button>
+      </div>
+      <span class="tog-val" id="mode-label" style="color:var(--accent-green)">FF1 -> Logic -> FF2</span>
+    </div>
+
+    <div class="toggle-wrap">
+      <span class="toggle-wrap-label">FF Params:</span>
+      <div class="mode-select" id="ff-param-select">
+        <button type="button" class="mode-btn active" data-ffmode="same">All Same</button>
+        <button type="button" class="mode-btn" data-ffmode="different">All Different</button>
+      </div>
+      <span class="tog-val" id="ff-param-label" style="color:var(--accent-green)">Shared FF parameters</span>
+    </div>
+
+    <div class="status-badge status-ok"    id="setup-status">SETUP </div>
+    <div class="status-badge status-ok"    id="hold-status">HOLD </div>
+  </div>
+</header>
+
+<div class="main-grid">
+
+<div class="left-panel">
+
+  <!-- Circuit Topology -->
+  <div class="panel-card">
+    <div class="card-header">
+      <div class="dot" style="background:var(--accent-cyan)"></div>
+      Circuit Topology
+      <span class="ff-badge ff1-badge" id="circuit-badge" style="margin-left:auto;">2 FF Path</span>
+    </div>
+    <div class="circuit-wrap">
+      <div class="circuit-inner">
+        <div id="circuit-svg"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clock Period -->
+  <div class="panel-card">
+    <div class="card-header">
+      <div class="dot" style="background:var(--clk-color)"></div>
+      Clock Period
+    </div>
+    <div class="param-group">
+      <div class="param-row">
+        <div class="param-label-row">
+          <span class="param-name">T (period)</span>
+          <span class="param-value" id="val-T">10.0 ns</span>
+        </div>
+        <input type="range" class="cyan" id="sl-T" min="1" max="30" step="0.5" value="10">
+      </div>
+    </div>
+  </div>
+
+  <!-- FF1 card -->
+  <div class="panel-card">
+    <div class="card-header">
+      <div class="dot" style="background:var(--accent-green)"></div>
+      <span id="ff1-card-title">Flip-Flop Parameters</span>
+      <span class="ff-badge ff1-badge" id="ff1-badge" style="display:none;">FF1</span>
+    </div>
+    <!-- t_C-Q always here -->
+    <div class="param-group">
+      <div class="param-row">
+        <div class="param-label-row">
+          <span class="param-name">t<sub>C-Q</sub></span>
+          <span class="param-value" id="val-tcq">1.0 ns</span>
+        </div>
+        <input type="range" class="green" id="sl-tcq" min="0.1" max="5" step="0.1" value="1.0">
+      </div>
+    </div>
+    <!-- Window params â€” only in single mode -->
+    <div class="param-group single-hide" id="ff1-window">
+      <div class="param-row">
+        <div class="param-label-row">
+          <span class="param-name">t<sub>setup</sub></span>
+          <span class="param-value" id="val-tsu">1.0 ns</span>
+        </div>
+        <input type="range" class="yellow" id="sl-tsu" min="0.1" max="5" step="0.1" value="1.0">
+      </div>
+      <div class="param-row">
+        <div class="param-label-row">
+          <span class="param-name">t<sub>hold</sub></span>
+          <span class="param-value" id="val-thold">0.5 ns</span>
+        </div>
+        <input type="range" class="red" id="sl-thold" min="0" max="4" step="0.1" value="0.5">
+      </div>
+    </div>
+  </div>
+
+  <!-- FF2 card -->
+  <div class="panel-card conditional-hide" id="ff2-card">
+    <div class="card-header">
+      <div class="dot" style="background:var(--accent-blue)"></div>
+      <span id="ff2-card-title">FF2 â€” Destination</span>
+      <span class="ff-badge ff2-badge">FF2</span>
+    </div>
+    <div class="param-group">
+      <div class="param-row conditional-hide" id="ff2-tcq-row">
+        <div class="param-label-row">
+          <span class="param-name">t<sub>C-Q</sub> <span style="font-size:12px;opacity:.6">(FF2)</span></span>
+          <span class="param-value" id="val-tcq2">1.0 ns</span>
+        </div>
+        <input type="range" class="cyan" id="sl-tcq2" min="0.1" max="5" step="0.1" value="1.0">
+      </div>
+      <div class="param-row">
+        <div class="param-label-row">
+          <span class="param-name">t<sub>setup</sub> <span style="font-size:12px;opacity:.6">(FF2)</span></span>
+          <span class="param-value" id="val-tsu2">1.0 ns</span>
+        </div>
+        <input type="range" class="yellow" id="sl-tsu2" min="0.1" max="5" step="0.1" value="1.0">
+      </div>
+      <div class="param-row">
+        <div class="param-label-row">
+          <span class="param-name">t<sub>hold</sub> <span style="font-size:12px;opacity:.6">(FF2)</span></span>
+          <span class="param-value" id="val-thold2">0.5 ns</span>
+        </div>
+        <input type="range" class="red" id="sl-thold2" min="0" max="4" step="0.1" value="0.5">
+      </div>
+    </div>
+  </div>
+
+  <!-- FF3 card -->
+  <div class="panel-card conditional-hide" id="ff3-card">
+    <div class="card-header">
+      <div class="dot" style="background:var(--accent-cyan)"></div>
+      <span id="ff3-card-title">FF3  Destination</span>
+      <span class="ff-badge ff2-badge">FF3</span>
+    </div>
+    <div class="param-group">
+      <div class="param-row">
+        <div class="param-label-row">
+          <span class="param-name">t<sub>setup</sub> <span style="font-size:12px;opacity:.6">(FF3)</span></span>
+          <span class="param-value" id="val-tsu3">1.0 ns</span>
+        </div>
+        <input type="range" class="yellow" id="sl-tsu3" min="0.1" max="5" step="0.1" value="1.0">
+      </div>
+      <div class="param-row">
+        <div class="param-label-row">
+          <span class="param-name">t<sub>hold</sub> <span style="font-size:12px;opacity:.6">(FF3)</span></span>
+          <span class="param-value" id="val-thold3">0.5 ns</span>
+        </div>
+        <input type="range" class="red" id="sl-thold3" min="0" max="4" step="0.1" value="0.5">
+      </div>
+    </div>
+  </div>
+
+  <!-- Logic Delay 1 -->
+  <div class="panel-card">
+    <div class="card-header">
+      <div class="dot" style="background:var(--accent-purple)"></div>
+      <span id="logic1-title">Combinational Logic Delay</span>
+    </div>
+    <div class="param-group">
+      <div class="param-row">
+        <div class="param-label-row">
+          <span class="param-name">t<sub>Lmin</sub></span>
+          <span class="param-value" id="val-tlmin">2.0 ns</span>
+        </div>
+        <input type="range" class="green" id="sl-tlmin" min="0" max="15" step="0.1" value="2.0">
+      </div>
+      <div class="param-row">
+        <div class="param-label-row">
+          <span class="param-name">t<sub>Lmax</sub></span>
+          <span class="param-value" id="val-tlmax">5.0 ns</span>
+        </div>
+        <input type="range" class="purple" id="sl-tlmax" min="0" max="15" step="0.1" value="5.0">
+      </div>
+      <div style="font-size:12px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;
+                  border-top:1px solid var(--border);padding-top:6px;margin-top:2px;">
+         t<sub>Lmin</sub> < t<sub>Lmax</sub> enforced automatically
+      </div>
+    </div>
+  </div>
+
+  <!-- Logic Delay 2 -->
+  <div class="panel-card conditional-hide" id="logic2-card">
+    <div class="card-header">
+      <div class="dot" style="background:var(--accent-cyan)"></div>
+      <span id="logic2-title">Combinational Logic Delay 2</span>
+    </div>
+    <div class="param-group">
+      <div class="param-row">
+        <div class="param-label-row">
+          <span class="param-name">t<sub>Lmin</sub></span>
+          <span class="param-value" id="val-tlmin2">2.0 ns</span>
+        </div>
+        <input type="range" class="green" id="sl-tlmin2" min="0" max="15" step="0.1" value="2.0">
+      </div>
+      <div class="param-row">
+        <div class="param-label-row">
+          <span class="param-name">t<sub>Lmax</sub></span>
+          <span class="param-value" id="val-tlmax2">5.0 ns</span>
+        </div>
+        <input type="range" class="purple" id="sl-tlmax2" min="0" max="15" step="0.1" value="5.0">
+      </div>
+      <div style="font-size:12px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;
+                  border-top:1px solid var(--border);padding-top:6px;margin-top:2px;">
+         t<sub>Lmin</sub> < t<sub>Lmax</sub> enforced automatically
+      </div>
+    </div>
+  </div>
+
+</div><!-- /left-panel -->
+
+
+<div class="right-panel">
+
+  <!-- Waveform -->
+  <div class="waveform-card">
+    <div class="waveform-header">
+      <div class="wh-title"><span style="color:var(--accent-green)"></span> Timing Waveform</div>
+      <div class="legend">
+        <div class="legend-item"><div class="l-line" style="background:var(--clk-color)"></div>CLK</div>
+        <div class="legend-item"><div class="l-line" style="background:var(--q1-color)"></div>Q</div>
+        <div class="legend-item"><div class="l-line" style="background:var(--d2-color)"></div>Logic / D rows</div>
+        <div class="legend-item"><div class="l-hatch"></div>Unstable (t<sub>Lmin</sub>…<sub>Lmax</sub>)</div>
+        <div class="legend-item"><div class="l-box" style="background:var(--accent-red)"></div>Setup window</div>
+        <div class="legend-item"><div class="l-box" style="background:var(--accent-yellow)"></div>Hold window</div>
+      </div>
+    </div>
+    <div class="waveform-body">
+      <canvas id="waveform"></canvas>
+    </div>
+  </div>
+
+  <!-- Inequalities -->
+  <div class="inequalities">
+    <div class="ineq-card pass" id="setup-card">
+      <div class="ineq-title">Setup Time Constraint</div>
+      <div class="ineq-formula">T ≥ t<sub>C-Q</sub> + t<sub>Lmax</sub> + t<sub>setup</sub></div>
+      <div class="ineq-values">
+        <span class="lhs" id="iq-T"></span><span class="op">≥ </span>
+        <span class="rhs" id="iq-setup-rhs"></span>
+        <span class="margin" id="iq-setup-margin"></span>
+      </div>
+      <div class="ineq-result" id="setup-result">SETUP TIMING MET</div>
+    </div>
+    <div class="ineq-card pass" id="hold-card">
+      <div class="ineq-title">Hold Time Constraint</div>
+      <div class="ineq-formula">t<sub>hold</sub> ≤  t<sub>C-Q</sub> + t<sub>Lmin</sub></div>
+      <div class="ineq-values">
+        <span class="lhs" id="iq-thold-lhs"></span><span class="op"> ≤ </span>
+        <span class="rhs" id="iq-hold-rhs"></span>
+        <span class="margin" id="iq-hold-margin"></span>
+      </div>
+      <div class="ineq-result" id="hold-result">HOLD TIMING MET</div>
+    </div>
+    <div class="ineq-card pass" id="maxfreq-card" style="grid-column:1/-1;">
+      <div class="ineq-title">Maximum Operating Frequency</div>
+      <div class="ineq-values" style="font-size:18px;gap:8px;">
+        <span style="color:var(--text-mid);font-size:12px;">f<sub>max</sub> =</span>
+        <span class="lhs" id="iq-fmax"></span>
+        <span style="color:var(--text-dim);font-size:12px;margin-left:16px;">T =</span>
+        <span id="iq-T2" style="color:var(--accent-cyan);font-size:14px;"></span>
+        <span style="color:var(--text-dim);font-size:12px;">slack =</span>
+        <span id="iq-slack" style="font-size:14px;"></span>
+      </div>
+    </div>
+    <div class="analysis-summary" id="analysis-summary"></div>
+  </div>
+
+</div><!-- /right-panel -->
+</div><!-- /main-grid -->
+</div><!-- /app -->
+
+<script>
+const params = {
+  T: 7,
+  tcq: 1.0,
+  tcq2: 1.0,
+  tsu: 1.0,
+  thold: 0.5,
+  tsu2: 1.0,
+  thold2: 0.5,
+  tsu3: 1.0,
+  thold3: 0.5,
+  tlmin: 1.5,
+  tlmax: 3.5,
+  tlmin2: 1.5,
+  tlmax2: 3.5
+};
+
+let topologyMode = 'single';
+let ffParamMode = 'same';
+
+const canvas = document.getElementById('waveform');
+const ctx = canvas.getContext('2d');
+
+function getCanvasBg() {
+  return getComputedStyle(document.documentElement).getPropertyValue('--canvas-bg').trim() || '#070b11';
+}
+
+function getThemeColor(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+function hexRgb(hex) {
+  if (!hex || !hex.startsWith('#')) return [150, 150, 150];
+  return [parseInt(hex.slice(1, 3), 16), parseInt(hex.slice(3, 5), 16), parseInt(hex.slice(5, 7), 16)];
+}
+
+function getDestParams(ffIndex) {
+  if (ffParamMode === 'same') {
+    return { tsu: params.tsu, thold: params.thold };
+  }
+  if (ffIndex === 2) return { tsu: params.tsu2, thold: params.thold2 };
+  return { tsu: params.tsu3, thold: params.thold3 };
+}
+
+function getLaunchTcq(sourceIndex) {
+  if (ffParamMode === 'same') return params.tcq;
+  if (sourceIndex === 2) return params.tcq2;
+  return params.tcq;
+}
+
+function buildPath(label, sourceIndex, ffIndex, logic, launchBase, color, sourceColor) {
+  const dest = getDestParams(ffIndex);
+  const sourceTcq = getLaunchTcq(sourceIndex);
+  const setupRhs = sourceTcq + logic.tlmax + dest.tsu;
+  const holdRhs = sourceTcq + logic.tlmin;
+  return {
+    label,
+    sourceIndex,
+    ffIndex,
+    launchBase,
+    sourceTcq,
+    tlmin: logic.tlmin,
+    tlmax: logic.tlmax,
+    tsu: dest.tsu,
+    thold: dest.thold,
+    setupRhs,
+    holdRhs,
+    setupSlack: params.T - setupRhs,
+    holdSlack: holdRhs - dest.thold,
+    setupViol: params.T < setupRhs,
+    holdViol: holdRhs < dest.thold,
+    color,
+    sourceColor
+  };
+}
+
+function getTopology() {
+  const q1Color = getThemeColor('--q1-color') || '#22c55e';
+  const d2Color = getThemeColor('--d2-color') || '#a855f7';
+  const q2Color = getThemeColor('--accent-blue') || '#3b82f6';
+  const d3Color = getThemeColor('--accent-cyan') || '#06b6d4';
+
+  if (topologyMode === 'single') {
+    return {
+      badge: '2 FF Path',
+      badgeClass: 'ff-badge ff1-badge',
+      modeLabel: 'FF1 → Logic → FF2',
+      modeColor: 'var(--accent-green)',
+      paths: [
+        buildPath('FF1 → FF2', 1, 2, { tlmin: params.tlmin, tlmax: params.tlmax }, 0, d2Color, q1Color)
+      ],
+      logic1Title: 'Combinational Logic Delay',
+      logic2Title: 'Combinational Logic Delay 2',
+      ff2Title: 'FF2 — Destination',
+      ff3Title: 'FF3 — Destination'
+    };
+  }
+
+  if (topologyMode === 'chain') {
+    return {
+      badge: '3 FF Chain',
+      badgeClass: 'ff-badge ff2-badge',
+      modeLabel: 'FF1 → Logic A → FF2 → Logic B → FF3',
+      modeColor: 'var(--accent-blue)',
+      paths: [
+        buildPath('Stage 1: FF1 → FF2', 1, 2, { tlmin: params.tlmin, tlmax: params.tlmax }, 0, d2Color, q1Color),
+        buildPath('Stage 2: FF2 → FF3', 2, 3, { tlmin: params.tlmin2, tlmax: params.tlmax2 }, params.T, d3Color, q2Color)
+      ],
+      logic1Title: 'Logic A Delay',
+      logic2Title: 'Logic B Delay',
+      ff2Title: 'FF2 — Intermediate',
+      ff3Title: 'FF3 — Destination'
+    };
+  }
+
+  return {
+    badge: '3 FF Parallel',
+    badgeClass: 'ff-badge ff2-badge',
+    modeLabel: 'FF1 splits to FF2 and FF3',
+    modeColor: 'var(--accent-blue)',
+    paths: [
+      buildPath('Branch A: FF1 → FF2', 1, 2, { tlmin: params.tlmin, tlmax: params.tlmax }, 0, d2Color, q1Color),
+      buildPath('Branch B: FF1 → FF3', 1, 3, { tlmin: params.tlmin2, tlmax: params.tlmax2 }, 0, d3Color, q1Color)
+    ],
+    logic1Title: 'Branch A Logic Delay',
+    logic2Title: 'Branch B Logic Delay',
+    ff2Title: 'FF2 — Branch A',
+    ff3Title: 'FF3 — Branch B'
+  };
+}
+
+function updateCircuitDiagram() {
+  const container = document.getElementById('circuit-svg');
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  const shellFill = isLight ? '#ffffff' : '#141926';
+  const logicFill = isLight ? '#ffffff' : '#141926';
+  const clkStroke = isLight ? '#b0c0d8' : '#1e2a3a';
+  const mutedText = isLight ? '#6b7a99' : '#64748b';
+  const base = `<line x1="8" y1="100" x2="320" y2="100" stroke="${clkStroke}" stroke-width="1"/><text x="8" y="111" fill="#06b6d4" font-size="7" font-family="JetBrains Mono">CLK</text>`;
+  const sharedFfStyle = ffParamMode === 'same';
+  const ff1Stroke = '#22c55e';
+  const ff2Stroke = sharedFfStyle ? ff1Stroke : '#3b82f6';
+  const ff3Stroke = sharedFfStyle ? ff1Stroke : '#06b6d4';
+  const ff1Label = sharedFfStyle ? 'FF' : 'FF1';
+  const ff2Label = sharedFfStyle ? 'FF' : 'FF2';
+  const ff3Label = sharedFfStyle ? 'FF' : 'FF3';
+
+  if (topologyMode === 'single') {
+    container.innerHTML = `<svg viewBox="0 0 328 112" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">${base}<rect x="8" y="14" width="56" height="72" rx="6" fill="${shellFill}" stroke="${ff1Stroke}" stroke-width="1.8"/><text x="36" y="38" fill="${ff1Stroke}" font-size="10" text-anchor="middle" font-family="JetBrains Mono" font-weight="bold">${ff1Label}</text><line x1="36" y1="86" x2="36" y2="100" stroke="#06b6d4" stroke-width="1" stroke-dasharray="2,2"/><rect x="88" y="30" width="92" height="38" rx="9" fill="${logicFill}" stroke="#a855f7" stroke-width="1.4" stroke-dasharray="4,2"/><text x="134" y="48" fill="#a855f7" font-size="8" text-anchor="middle" font-family="JetBrains Mono">LOGIC</text><text x="134" y="60" fill="${mutedText}" font-size="6.5" text-anchor="middle" font-family="JetBrains Mono">[Lmin, Lmax]</text><line x1="64" y1="50" x2="88" y2="50" stroke="${ff1Stroke}" stroke-width="1.5"/><line x1="180" y1="50" x2="224" y2="50" stroke="#a855f7" stroke-width="1.5"/><rect x="224" y="14" width="56" height="72" rx="6" fill="${shellFill}" stroke="${ff2Stroke}" stroke-width="1.8"/><text x="252" y="38" fill="${ff2Stroke}" font-size="10" text-anchor="middle" font-family="JetBrains Mono" font-weight="bold">${ff2Label}</text><line x1="252" y1="86" x2="252" y2="100" stroke="#06b6d4" stroke-width="1" stroke-dasharray="2,2"/></svg>`;
+    return;
+  }
+
+  if (topologyMode === 'chain') {
+    container.innerHTML = `<svg viewBox="0 0 328 112" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">${base}<rect x="8" y="14" width="44" height="72" rx="6" fill="${shellFill}" stroke="${ff1Stroke}" stroke-width="1.8"/><text x="30" y="38" fill="${ff1Stroke}" font-size="9" text-anchor="middle" font-family="JetBrains Mono" font-weight="bold">${ff1Label}</text><line x1="30" y1="86" x2="30" y2="100" stroke="#06b6d4" stroke-width="1" stroke-dasharray="2,2"/><rect x="64" y="32" width="58" height="34" rx="9" fill="${logicFill}" stroke="#a855f7" stroke-width="1.4" stroke-dasharray="4,2"/><text x="93" y="52" fill="#a855f7" font-size="7" text-anchor="middle" font-family="JetBrains Mono">LOGIC A</text><rect x="136" y="14" width="44" height="72" rx="6" fill="${shellFill}" stroke="${ff2Stroke}" stroke-width="1.8"/><text x="158" y="38" fill="${ff2Stroke}" font-size="9" text-anchor="middle" font-family="JetBrains Mono" font-weight="bold">${ff2Label}</text><line x1="158" y1="86" x2="158" y2="100" stroke="#06b6d4" stroke-width="1" stroke-dasharray="2,2"/><rect x="194" y="32" width="58" height="34" rx="9" fill="${logicFill}" stroke="#06b6d4" stroke-width="1.4" stroke-dasharray="4,2"/><text x="223" y="52" fill="#06b6d4" font-size="7" text-anchor="middle" font-family="JetBrains Mono">LOGIC B</text><rect x="266" y="14" width="44" height="72" rx="6" fill="${shellFill}" stroke="${ff3Stroke}" stroke-width="1.8"/><text x="288" y="38" fill="${ff3Stroke}" font-size="9" text-anchor="middle" font-family="JetBrains Mono" font-weight="bold">${ff3Label}</text><line x1="288" y1="86" x2="288" y2="100" stroke="#06b6d4" stroke-width="1" stroke-dasharray="2,2"/><line x1="52" y1="50" x2="64" y2="50" stroke="${ff1Stroke}" stroke-width="1.5"/><line x1="122" y1="50" x2="136" y2="50" stroke="#a855f7" stroke-width="1.5"/><line x1="180" y1="50" x2="194" y2="50" stroke="${ff2Stroke}" stroke-width="1.5"/><line x1="252" y1="50" x2="266" y2="50" stroke="#06b6d4" stroke-width="1.5"/></svg>`;
+    return;
+  }
+
+  container.innerHTML = `<svg viewBox="0 0 328 132" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;"><line x1="8" y1="118" x2="320" y2="118" stroke="${clkStroke}" stroke-width="1"/><text x="8" y="129" fill="#06b6d4" font-size="7" font-family="JetBrains Mono">CLK</text><rect x="8" y="28" width="56" height="72" rx="6" fill="${shellFill}" stroke="${ff1Stroke}" stroke-width="1.8"/><text x="36" y="52" fill="${ff1Stroke}" font-size="10" text-anchor="middle" font-family="JetBrains Mono" font-weight="bold">${ff1Label}</text><line x1="36" y1="100" x2="36" y2="118" stroke="#06b6d4" stroke-width="1" stroke-dasharray="2,2"/><line x1="64" y1="50" x2="92" y2="50" stroke="${ff1Stroke}" stroke-width="1.5"/><line x1="64" y1="78" x2="92" y2="78" stroke="${ff1Stroke}" stroke-width="1.5"/><rect x="92" y="32" width="78" height="28" rx="9" fill="${logicFill}" stroke="#a855f7" stroke-width="1.4" stroke-dasharray="4,2"/><text x="131" y="49" fill="#a855f7" font-size="7" text-anchor="middle" font-family="JetBrains Mono">LOGIC A</text><rect x="92" y="64" width="78" height="28" rx="9" fill="${logicFill}" stroke="#06b6d4" stroke-width="1.4" stroke-dasharray="4,2"/><text x="131" y="81" fill="#06b6d4" font-size="7" text-anchor="middle" font-family="JetBrains Mono">LOGIC B</text><line x1="170" y1="46" x2="212" y2="46" stroke="#a855f7" stroke-width="1.5"/><line x1="170" y1="78" x2="212" y2="78" stroke="#06b6d4" stroke-width="1.5"/><rect x="212" y="10" width="56" height="56" rx="6" fill="${shellFill}" stroke="${ff2Stroke}" stroke-width="1.8"/><text x="240" y="32" fill="${ff2Stroke}" font-size="10" text-anchor="middle" font-family="JetBrains Mono" font-weight="bold">${ff2Label}</text><line x1="240" y1="66" x2="240" y2="118" stroke="#06b6d4" stroke-width="1" stroke-dasharray="2,2"/><rect x="212" y="66" width="56" height="56" rx="6" fill="${shellFill}" stroke="${ff3Stroke}" stroke-width="1.8"/><text x="240" y="88" fill="${ff3Stroke}" font-size="10" text-anchor="middle" font-family="JetBrains Mono" font-weight="bold">${ff3Label}</text></svg>`;
+}
+
+function updateVisibility() {
+  const topology = getTopology();
+  const shared = ffParamMode === 'same';
+  const multiStage = topologyMode !== 'single';
+  const showFf2Tcq = !shared && topologyMode === 'chain';
+
+  document.querySelectorAll('#mode-select .mode-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.mode === topologyMode));
+  document.querySelectorAll('#ff-param-select .mode-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.ffmode === ffParamMode));
+
+  document.getElementById('mode-label').textContent = topology.modeLabel;
+  document.getElementById('mode-label').style.color = topology.modeColor;
+  document.getElementById('circuit-badge').textContent = topology.badge;
+  document.getElementById('circuit-badge').className = topology.badgeClass;
+  document.getElementById('ff-param-label').textContent = shared ? 'Shared FF parameters' : 'Per-FF parameters';
+  document.getElementById('ff-param-label').style.color = shared ? 'var(--accent-green)' : 'var(--accent-blue)';
+
+  document.getElementById('ff1-window').classList.toggle('hide', !shared);
+  document.getElementById('ff1-badge').style.display = shared && !multiStage ? 'none' : 'inline-block';
+  document.getElementById('ff1-card-title').textContent = shared ? 'Flip-Flop Parameters' : 'FF1 — Source FF';
+
+  document.getElementById('ff2-card').classList.toggle('show', !shared);
+  document.getElementById('ff3-card').classList.toggle('show', !shared && multiStage);
+  document.getElementById('logic2-card').classList.toggle('show', multiStage);
+  document.getElementById('ff2-tcq-row').classList.toggle('show', showFf2Tcq);
+  document.getElementById('ff2-card-title').textContent = topology.ff2Title;
+  document.getElementById('ff3-card-title').textContent = topology.ff3Title;
+  document.getElementById('logic1-title').textContent = topology.logic1Title;
+  document.getElementById('logic2-title').textContent = topology.logic2Title;
+
+  updateCircuitDiagram();
+}
+
+function setTopologyMode(nextMode) {
+  topologyMode = nextMode;
+  updateVisibility();
+  render();
+}
+
+function setFfParamMode(nextMode) {
+  ffParamMode = nextMode;
+  updateVisibility();
+  render();
+}
+
+[
+  ['sl-T', 'T', 'val-T'],
+  ['sl-tcq', 'tcq', 'val-tcq'],
+  ['sl-tcq2', 'tcq2', 'val-tcq2'],
+  ['sl-tsu', 'tsu', 'val-tsu'],
+  ['sl-thold', 'thold', 'val-thold'],
+  ['sl-tsu2', 'tsu2', 'val-tsu2'],
+  ['sl-thold2', 'thold2', 'val-thold2'],
+  ['sl-tsu3', 'tsu3', 'val-tsu3'],
+  ['sl-thold3', 'thold3', 'val-thold3'],
+  ['sl-tlmin', 'tlmin', 'val-tlmin'],
+  ['sl-tlmax', 'tlmax', 'val-tlmax'],
+  ['sl-tlmin2', 'tlmin2', 'val-tlmin2'],
+  ['sl-tlmax2', 'tlmax2', 'val-tlmax2']
+].forEach(([id, key, valId]) => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.value = params[key];
+  document.getElementById(valId).textContent = `${params[key].toFixed(1)} ns`;
+  el.addEventListener('input', () => {
+    params[key] = parseFloat(el.value);
+    if (key === 'tlmin' && params.tlmin > params.tlmax) {
+      params.tlmax = params.tlmin;
+      document.getElementById('sl-tlmax').value = params.tlmax;
+      document.getElementById('val-tlmax').textContent = `${params.tlmax.toFixed(1)} ns`;
+    }
+    if (key === 'tlmax' && params.tlmax < params.tlmin) {
+      params.tlmin = params.tlmax;
+      document.getElementById('sl-tlmin').value = params.tlmin;
+      document.getElementById('val-tlmin').textContent = `${params.tlmin.toFixed(1)} ns`;
+    }
+    if (key === 'tlmin2' && params.tlmin2 > params.tlmax2) {
+      params.tlmax2 = params.tlmin2;
+      document.getElementById('sl-tlmax2').value = params.tlmax2;
+      document.getElementById('val-tlmax2').textContent = `${params.tlmax2.toFixed(1)} ns`;
+    }
+    if (key === 'tlmax2' && params.tlmax2 < params.tlmin2) {
+      params.tlmin2 = params.tlmax2;
+      document.getElementById('sl-tlmin2').value = params.tlmin2;
+      document.getElementById('val-tlmin2').textContent = `${params.tlmin2.toFixed(1)} ns`;
+    }
+    document.getElementById(valId).textContent = `${params[key].toFixed(1)} ns`;
+    render();
+  });
+});
+
+document.getElementById('theme-toggle').addEventListener('change', function () {
+  document.documentElement.setAttribute('data-theme', this.checked ? 'light' : 'dark');
+  document.getElementById('theme-label').textContent = this.checked ? '☀️ Light' : '🌙 Dark';
+  updateCircuitDiagram();
+  render();
+});
+
+document.querySelectorAll('#mode-select .mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => setTopologyMode(btn.dataset.mode));
+});
+
+document.querySelectorAll('#ff-param-select .mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => setFfParamMode(btn.dataset.ffmode));
+});
+
+function drawBusSegment(ctx2, x1, x2, midY, halfH, color, stable, label, isFirst, isLast) {
+  if (x2 - x1 < 0.5) return;
+  ctx2.strokeStyle = color;
+  ctx2.lineWidth = 2;
+  ctx2.setLineDash([]);
+  if (stable) {
+    ctx2.beginPath(); ctx2.moveTo(x1, midY - halfH); ctx2.lineTo(x2, midY - halfH); ctx2.stroke();
+    ctx2.beginPath(); ctx2.moveTo(x1, midY + halfH); ctx2.lineTo(x2, midY + halfH); ctx2.stroke();
+    const [r, g, b] = hexRgb(color);
+    ctx2.fillStyle = `rgba(${r},${g},${b},0.09)`;
+    ctx2.fillRect(x1, midY - halfH, x2 - x1, halfH * 2);
+    if (x2 - x1 > 36) {
+      ctx2.fillStyle = color;
+      ctx2.font = 'bold 14px JetBrains Mono';
+      ctx2.textAlign = 'center';
+      ctx2.globalAlpha = 0.8;
+      ctx2.fillText(label, (x1 + x2) / 2, midY + 3);
+      ctx2.globalAlpha = 1;
+    }
+  } else {
+    ctx2.save();
+    ctx2.beginPath(); ctx2.rect(x1, midY - halfH, x2 - x1, halfH * 2); ctx2.clip();
+    const [r, g, b] = hexRgb(color);
+    ctx2.fillStyle = `rgba(${r},${g},${b},0.07)`;
+    ctx2.fillRect(x1, midY - halfH, x2 - x1, halfH * 2);
+    ctx2.strokeStyle = color;
+    ctx2.lineWidth = 1;
+    ctx2.globalAlpha = 0.3;
+    for (let s = -halfH * 2; s < (x2 - x1) + halfH * 2; s += 5) {
+      ctx2.beginPath(); ctx2.moveTo(x1 + s, midY - halfH); ctx2.lineTo(x1 + s + halfH * 2, midY + halfH); ctx2.stroke();
+    }
+    ctx2.globalAlpha = 1;
+    ctx2.restore();
+    ctx2.strokeStyle = color;
+    ctx2.lineWidth = 1.5;
+    ctx2.globalAlpha = 0.5;
+    ctx2.beginPath(); ctx2.moveTo(x1, midY - halfH); ctx2.lineTo(x2, midY - halfH); ctx2.stroke();
+    ctx2.beginPath(); ctx2.moveTo(x1, midY + halfH); ctx2.lineTo(x2, midY + halfH); ctx2.stroke();
+    ctx2.globalAlpha = 1;
+  }
+}
+
+function drawBusCrossing(ctx2, x, midY, halfH, color) {
+  ctx2.strokeStyle = color;
+  ctx2.lineWidth = 2;
+  const w = Math.min(halfH * 0.7, 8);
+  ctx2.beginPath(); ctx2.moveTo(x - w, midY - halfH); ctx2.lineTo(x + w, midY + halfH); ctx2.stroke();
+  ctx2.beginPath(); ctx2.moveTo(x - w, midY + halfH); ctx2.lineTo(x + w, midY - halfH); ctx2.stroke();
+}
+
+function drawVerticalGuide(ctx2, x, y1, y2, color) {
+  if (Math.abs(y2 - y1) < 3) return;
+  ctx2.strokeStyle = color;
+  ctx2.lineWidth = 1;
+  ctx2.setLineDash([3, 3]);
+  ctx2.beginPath();
+  ctx2.moveTo(x, y1);
+  ctx2.lineTo(x, y2);
+  ctx2.stroke();
+  ctx2.setLineDash([]);
+}
+
+function drawBracket(ctx2, color, x1, x2, y, label, dashed) {
+  if (Math.abs(x2 - x1) < 3) return;
+  ctx2.strokeStyle = color;
+  ctx2.lineWidth = 1;
+  ctx2.setLineDash(dashed ? [3, 2] : []);
+  ctx2.beginPath();
+  ctx2.moveTo(x1, y);
+  ctx2.lineTo(x2, y);
+  ctx2.moveTo(x1, y - 4);
+  ctx2.lineTo(x1, y + 4);
+  ctx2.moveTo(x2, y - 4);
+  ctx2.lineTo(x2, y + 4);
+  ctx2.stroke();
+  ctx2.setLineDash([]);
+  ctx2.fillStyle = color;
+  ctx2.font = '20px JetBrains Mono';
+  ctx2.textAlign = 'center';
+  ctx2.fillText(label, (x1 + x2) / 2, y - 10);
+}
+function drawBracketMirror(ctx2, color, x1, x2, y, label, dashed) {
+  if (Math.abs(x2 - x1) < 3) return;
+  ctx2.strokeStyle = color;
+  ctx2.lineWidth = 1;
+  ctx2.setLineDash(dashed ? [3, 2] : []);
+  ctx2.beginPath();
+  ctx2.moveTo(x1, y);
+  ctx2.lineTo(x2, y);
+  ctx2.moveTo(x1, y - 4);
+  ctx2.lineTo(x1, y + 4);
+  ctx2.moveTo(x2, y - 4);
+  ctx2.lineTo(x2, y + 4);
+  ctx2.stroke();
+  ctx2.setLineDash([]);
+  ctx2.fillStyle = color;
+  ctx2.font = '20px JetBrains Mono';
+  ctx2.textAlign = 'center';
+  ctx2.fillText(label, (x1 + x2) / 2, y + 20);
+}
+function buildRows(topology) {
+  const rows = [
+    { kind: 'clk', label: 'CLK', color: getThemeColor('--clk-color') || '#06b6d4' },
+    { kind: 'exact', label: 'Q1', color: getThemeColor('--q1-color') || '#22c55e', transitions: [params.tcq, params.T + params.tcq] }
+  ];
+
+  const makeWindowRow = (label, path) => ({
+    kind: 'window',
+    label,
+    color: path.color,
+    path,
+    windows: [
+      [path.launchBase + path.sourceTcq + path.tlmin, path.launchBase + path.sourceTcq + path.tlmax],
+      [path.launchBase + params.T + path.sourceTcq + path.tlmin, path.launchBase + params.T + path.sourceTcq + path.tlmax]
+    ]
+  });
+
+  if (topologyMode === 'single') {
+    rows.push(makeWindowRow('D2', topology.paths[0]));
+    return rows;
+  }
+
+  rows.push(makeWindowRow(topologyMode === 'parallel' ? 'D2A' : 'D2', topology.paths[0]));
+  if (topologyMode === 'chain') {
+    rows.push({
+      kind: 'exact',
+      label: 'Q2',
+      color: topology.paths[1].sourceColor,
+      transitions: [params.T + topology.paths[1].sourceTcq, 2 * params.T + topology.paths[1].sourceTcq]
+    });
+    rows.push(makeWindowRow('D3', topology.paths[1]));
+  } else {
+    rows.push(makeWindowRow('D3B', topology.paths[1]));
+  }
+  return rows;
+}
+
+function drawWaveform(topology) {
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.width / dpr;
+  const H = canvas.height / dpr;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = getCanvasBg();
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+  const gridColor = isDark ? 'rgba(59,130,246,0.05)' : 'rgba(59,130,246,0.08)';
+  const timeAxisColor = isDark ? '#334155' : '#94a3b8';
+  const edgeColor = isDark ? 'rgba(6,182,212,0.7)' : 'rgba(8,145,178,0.7)';
+  const rows = buildRows(topology);
+  const tStart = -params.T / 2;
+  const tEnd = params.T * 2.6;
+  const ox = 60;
+  const botH = 64;
+  const topPad = 30;
+  const rowGap = 400;
+  const rowH = topologyMode === 'single' ? 74 : 66;
+  const scale = (W - ox - 12) / (tEnd - tStart);
+  const pxt = t => ox + (t - tStart) * scale;
+  const xc = t => Math.max(ox, Math.min(pxt(t), W - 4));
+
+  const firstGap = 30;
+  const normalGap = 100;
+
+  let currentY = topPad;
+
+  const rowDefs = rows.map((row, index) => {
+    const obj = {
+      ...row,
+      y: currentY,
+      h: row.kind === 'clk' ? 50 : rowH
+    };
+
+    currentY += obj.h + (index === 0 ? firstGap : normalGap);
+
+    return obj;
+  });
+
+  ctx.strokeStyle = gridColor;
+  ctx.lineWidth = 0.5;
+  for (let t = Math.floor(tStart); t <= tEnd; t += params.T / 4) {
+    const x = pxt(t);
+    ctx.beginPath(); ctx.moveTo(x, 8); ctx.lineTo(x, H - botH); ctx.stroke();
+  }
+
+  ctx.font = '20px JetBrains Mono';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = timeAxisColor;
+  for (let t = Math.ceil(tStart * 2) / 2; t <= tEnd; t += params.T / 2) {
+    ctx.fillText(t.toFixed(1), pxt(t), H - botH + 12);
+  }
+  ctx.fillText('Time (ns)', (W + ox) / 2, H - 4);
+
+  rowDefs.forEach(row => {
+    ctx.fillStyle = row.color;
+    ctx.font = 'bold 20px JetBrains Mono';
+    ctx.textAlign = 'right';
+    ctx.fillText(row.label, ox - 6, row.y + row.h / 2 + 4);
+  });
+
+  [0, params.T, 2 * params.T].forEach(et => {
+    if (pxt(et) < ox || pxt(et) > W - 4) return;
+    ctx.strokeStyle = edgeColor;
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(pxt(et), 8); ctx.lineTo(pxt(et), H - botH); ctx.stroke();
+    ctx.setLineDash([]);
+  });
+
+  const clkRow = rowDefs[0];
+  ctx.strokeStyle = clkRow.color;
+  ctx.lineWidth = 2;
+  const clkPts = [[tStart, 0], [0, 0], [0, 1], [params.T * 0.5, 1], [params.T * 0.5, 0], [params.T, 0], [params.T, 1], [params.T * 1.5, 1], [params.T * 1.5, 0], [2 * params.T, 0], [2 * params.T, 1], [tEnd, 1]];
+  ctx.beginPath();
+  clkPts.forEach(([t, v], i) => {
+    const x = pxt(t);
+    const y = clkRow.y + (1 - v) * clkRow.h;
+    i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+  });
+  ctx.stroke();
+
+
+  const drawnTcq = new Set();
+  rowDefs.slice(1).forEach((row, rowIndex) => {
+    const midY = row.y + row.h / 2;
+    const halfH = row.h * 0.35;
+
+    if (row.kind === 'exact') {
+      const segs = [
+        { t0: tStart, t1: row.transitions[0], stable: false, label: '???' },
+        { t0: row.transitions[0], t1: row.transitions[1], stable: true, label: 'DATA_A' },
+        { t0: row.transitions[1], t1: tEnd, stable: true, label: 'DATA_B' }
+      ];
+      segs.forEach((seg, idx) => drawBusSegment(ctx, xc(seg.t0), xc(seg.t1), midY, halfH, row.color, seg.stable, seg.label, idx === 0, idx === segs.length - 1));
+      row.transitions.forEach(t => {
+        if (t >= tStart && t <= tEnd) drawBusCrossing(ctx, pxt(t), midY, halfH, row.color);
+      });
+      return;
+    }
+
+    const path = row.path;
+    const [w1, w2] = row.windows;
+    const windowTop = row.y - 12;
+    const windowHeight = row.h + 24;
+    const holdFill = isDark ? 'rgba(245,158,11,0.12)' : 'rgba(217,119,6,0.10)';
+    const holdLine = isDark ? 'rgba(245,158,11,0.50)' : 'rgba(217,119,6,0.55)';
+    const setupFill = isDark ? 'rgba(239,68,68,0.12)' : 'rgba(239,68,68,0.09)';
+    const setupLine = isDark ? 'rgba(239,68,68,0.50)' : 'rgba(239,68,68,0.55)';
+    const [winR, winG, winB] = hexRgb(row.color);
+    const arrivalFill = `rgba(${winR}, ${winG}, ${winB}, ${isDark ? '0.12' : '0.09'})`;
+    const arrivalLine = `rgba(${winR}, ${winG}, ${winB}, ${isDark ? '0.40' : '0.45'})`;
+
+    [w1, w2].forEach(window => {
+      const x1 = xc(window[0]);
+      const x2 = xc(window[1]);
+      if (x2 <= x1 + 1) return;
+      ctx.fillStyle = arrivalFill;
+      ctx.fillRect(x1, windowTop, x2 - x1, windowHeight);
+      ctx.strokeStyle = arrivalLine;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 2]);
+      ctx.strokeRect(x1, windowTop, x2 - x1, windowHeight);
+      ctx.setLineDash([]);
+    });
+
+    [path.launchBase, path.launchBase + params.T].forEach(edgeT => {
+      if (path.thold <= 0) return;
+      const x1 = xc(edgeT);
+      const x2 = xc(edgeT + path.thold);
+      ctx.fillStyle = holdFill;
+      ctx.fillRect(x1, windowTop, x2 - x1, windowHeight);
+      ctx.strokeStyle = holdLine;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 2]);
+      ctx.beginPath();
+      ctx.moveTo(x2, windowTop);
+      ctx.lineTo(x2, windowTop + windowHeight);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = holdLine;
+      ctx.font = '20px JetBrains Mono';
+      ctx.textAlign = 'center';
+      //ctx.fillText('t_hold', (x1 + x2) / 2, windowTop + 1);
+      drawBracket(ctx, '#f59e0b', x1, x2, windowTop - 25, 't_hold', false);
+    });
+
+    [path.launchBase + params.T, path.launchBase + 2 * params.T].forEach(edgeT => {
+      const x1 = xc(edgeT - path.tsu);
+      const x2 = xc(edgeT);
+      if (x2 <= x1 + 1) return;
+      ctx.fillStyle = setupFill;
+      ctx.fillRect(x1, windowTop, x2 - x1, windowHeight);
+      ctx.strokeStyle = setupLine;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 2]);
+      ctx.beginPath();
+      ctx.moveTo(x1, windowTop);
+      ctx.lineTo(x1, windowTop + windowHeight);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = setupLine;
+      ctx.font = '20px JetBrains Mono';
+      ctx.textAlign = 'center';
+      //ctx.fillText('t_setup', (x1 + x2) / 2, windowTop + 15);
+      drawBracket(ctx, '#ef4444', x1, x2, windowTop + 5, 't_setup', false);
+    });
+
+    const segs = [
+      { t0: tStart, t1: w1[0], stable: true, label: 'PREV' },
+      { t0: w1[0], t1: w1[1], stable: false, label: '???' },
+      { t0: w1[1], t1: w2[0], stable: true, label: 'DATA_A' },
+      { t0: w2[0], t1: w2[1], stable: false, label: '???' },
+      { t0: w2[1], t1: tEnd, stable: true, label: 'DATA_B' }
+    ];
+      segs.forEach((seg, idx) => drawBusSegment(ctx, xc(seg.t0), xc(seg.t1), midY, halfH, row.color, seg.stable, seg.label, idx === 0, idx === segs.length - 1));
+    [w1[0], w1[1], w2[0], w2[1]].forEach(t => {
+      if (t >= tStart && t <= tEnd) drawBusCrossing(ctx, pxt(t), midY, halfH, row.color);
+    });
+
+    const sourceRow = [...rowDefs.slice(0, rowIndex + 2)].reverse().find(candidate => candidate.kind === 'exact');
+    const tcqY = sourceRow ? sourceRow.y + sourceRow.h + 28 : row.y + row.h + 6;
+    const logicY = row.y + row.h + 28;
+    const tcqKey1 = `${path.sourceIndex}-${path.launchBase}`;
+    if (!drawnTcq.has(tcqKey1)) {
+      drawBracket(ctx, path.sourceColor, pxt(path.launchBase), pxt(path.launchBase + path.sourceTcq), tcqY -10, 'tC-Q', false);
+      drawnTcq.add(tcqKey1);
+    }
+    drawVerticalGuide(ctx, pxt(path.launchBase + path.sourceTcq), tcqY - 6, logicY - 6, '#94a3b8');
+    drawBracketMirror(ctx, '#64748b', pxt(path.launchBase + path.sourceTcq), xc(w1[0]), logicY -12, 't_Lmin', true);
+    drawBracketMirror(ctx, row.color, pxt(path.launchBase + path.sourceTcq), xc(w1[1]), logicY + 20, 't_Lmax', false);
+    const tcqKey2 = `${path.sourceIndex}-${path.launchBase + params.T}`;
+    if (!drawnTcq.has(tcqKey2)) {
+      drawBracket(ctx, path.sourceColor, pxt(path.launchBase + params.T), pxt(path.launchBase + params.T + path.sourceTcq), tcqY -10 , 't_C-Q', false);
+      drawnTcq.add(tcqKey2);
+    }
+    drawVerticalGuide(ctx, pxt(path.launchBase + params.T + path.sourceTcq), tcqY - 10, logicY , '#94a3b8');
+    drawBracketMirror(ctx, '#64748b', pxt(path.launchBase + params.T + path.sourceTcq), xc(w2[0]), logicY - 12, 't_Lmin', true);
+    drawBracketMirror(ctx, row.color, pxt(path.launchBase + params.T + path.sourceTcq), xc(w2[1]), logicY + 20 , 't_Lmax', false);
+
+    if (path.setupViol) {
+      [w1[1], w2[1]].forEach(t => {
+        if (t < tStart || t > tEnd) return;
+        const x = xc(t);
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.moveTo(x - 8, row.y - 8); ctx.lineTo(x + 8, row.y + 8); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(x + 8, row.y - 8); ctx.lineTo(x - 8, row.y + 8); ctx.stroke();
+      });
+    }
+    if (path.holdViol) {
+      [w1[0], w2[0]].forEach(t => {
+        if (t < tStart || t > tEnd) return;
+        const x = xc(t);
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.moveTo(x - 8, row.y - 8); ctx.lineTo(x + 8, row.y + 8); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(x + 8, row.y - 8); ctx.lineTo(x - 8, row.y + 8); ctx.stroke();
+      });
+    }
+  });
+
+  return topology.paths;
+}
+
+function updateEquations(paths) {
+  const worstSetup = paths.reduce((best, path) => path.setupSlack < best.setupSlack ? path : best, paths[0]);
+  const worstHold = paths.reduce((best, path) => path.holdSlack < best.holdSlack ? path : best, paths[0]);
+  const worstOverall = paths.reduce((best, path) => Math.min(path.setupSlack, path.holdSlack) < Math.min(best.setupSlack, best.holdSlack) ? path : best, paths[0]);
+  const setupViol = paths.some(path => path.setupViol);
+  const holdViol = paths.some(path => path.holdViol);
+  const fmax = 1000 / worstSetup.setupRhs;
+
+  document.getElementById('iq-T').textContent = `${params.T.toFixed(1)} ns`;
+  document.getElementById('iq-setup-rhs').textContent = `${worstSetup.setupRhs.toFixed(2)} ns`;
+  document.getElementById('iq-thold-lhs').textContent = `${worstHold.thold.toFixed(1)} ns`;
+  document.getElementById('iq-hold-rhs').textContent = `${worstHold.holdRhs.toFixed(2)} ns`;
+  document.getElementById('iq-T2').textContent = `${params.T.toFixed(1)} ns`;
+  document.getElementById('iq-fmax').textContent = `${fmax.toFixed(1)} MHz`;
+
+  const overallSlack = Math.min(worstOverall.setupSlack, worstOverall.holdSlack);
+  const slackEl = document.getElementById('iq-slack');
+  slackEl.textContent = `${overallSlack >= 0 ? '+' : ''}${overallSlack.toFixed(2)} ns`;
+  slackEl.style.color = overallSlack >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+
+  const smEl = document.getElementById('iq-setup-margin');
+  smEl.textContent = `(${worstSetup.label}: ${worstSetup.setupSlack >= 0 ? '+' : ''}${worstSetup.setupSlack.toFixed(2)} ns)`;
+  smEl.className = `margin ${worstSetup.setupSlack >= 0 ? 'pos' : 'neg'}`;
+
+  const hmEl = document.getElementById('iq-hold-margin');
+  hmEl.textContent = `(${worstHold.label}: ${worstHold.holdSlack >= 0 ? '+' : ''}${worstHold.holdSlack.toFixed(2)} ns)`;
+  hmEl.className = `margin ${worstHold.holdSlack >= 0 ? 'pos' : 'neg'}`;
+
+  const sc = document.getElementById('setup-card');
+  const sr = document.getElementById('setup-result');
+  const ss = document.getElementById('setup-status');
+  if (setupViol) {
+    sc.className = 'ineq-card fail';
+    sr.textContent = `✗ SETUP VIOLATION — worst path: ${worstSetup.label}`;
+    ss.className = 'status-badge status-setup-fail';
+    ss.textContent = 'SETUP ✗';
+  } else {
+    sc.className = 'ineq-card pass';
+    sr.textContent = `✓ SETUP TIMING MET — worst path: ${worstSetup.label}`;
+    ss.className = 'status-badge status-ok';
+    ss.textContent = 'SETUP ✓';
+  }
+
+  const hc = document.getElementById('hold-card');
+  const hr = document.getElementById('hold-result');
+  const hs = document.getElementById('hold-status');
+  if (holdViol) {
+    hc.className = 'ineq-card fail';
+    hr.textContent = `✗ HOLD VIOLATION — worst path: ${worstHold.label}`;
+    hs.className = 'status-badge status-hold-fail';
+    hs.textContent = 'HOLD ✗';
+  } else {
+    hc.className = 'ineq-card pass';
+    hr.textContent = `✓ HOLD TIMING MET — worst path: ${worstHold.label}`;
+    hs.className = 'status-badge status-ok';
+    hs.textContent = 'HOLD ✓';
+  }
+
+  document.getElementById('maxfreq-card').className = `ineq-card ${setupViol || holdViol ? 'fail' : 'pass'}`;
+  document.getElementById('analysis-summary').innerHTML = `<div class="path-grid">${paths.map(path => `<div class="path-card ${path.setupViol || path.holdViol ? 'fail' : ''}"><div class="path-name">${path.label}</div><div class="path-metric">Setup: <strong>${path.setupSlack >= 0 ? '+' : ''}${path.setupSlack.toFixed(2)} ns</strong> (T vs ${path.setupRhs.toFixed(2)} ns)</div><div class="path-metric">Hold: <strong>${path.holdSlack >= 0 ? '+' : ''}${path.holdSlack.toFixed(2)} ns</strong> (${path.thold.toFixed(2)} ns vs ${path.holdRhs.toFixed(2)} ns)</div><div class="path-metric">Logic window: <strong>${path.tlmin.toFixed(1)}…${path.tlmax.toFixed(1)} ns</strong></div></div>`).join('')}</div>`;
+}
+
+function resizeCanvas() {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const w = rect.width - 36;
+  const rowCount = buildRows(getTopology()).length;
+  const h = 170 + rowCount * 140;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  canvas.style.width = `${w}px`;
+  canvas.style.height = `${h}px`;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.scale(dpr, dpr);
+}
+
+function render() {
+  const topology = getTopology();
+  resizeCanvas();
+  const paths = drawWaveform(topology);
+  updateEquations(paths);
+}
+
+window.addEventListener('resize', render);
+updateVisibility();
+render();
+</script>
+</body>
+</html>
