@@ -1,0 +1,4 @@
+# Admin Tools
+
+This path (/admin) is protected by basic authentication. You can only see it if you are authenticated.
+This will later be populated by useful tools.

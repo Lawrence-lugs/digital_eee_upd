@@ -160,7 +160,7 @@ include-in-header:
           </svg>
         </div>
         <h3 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">
-          FF Timing Simulator
+          Timing Simulator
         </h3>
         <p class="text-sm text-gray-500 leading-relaxed">
           Need to confirm what you know about sequential circuits and timing constraints? Visualize and simulate the definitions of sequential timing here.

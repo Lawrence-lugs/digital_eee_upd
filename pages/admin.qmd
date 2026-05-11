@@ -1,0 +1,6 @@
+---
+draft: true
+title: "Admin"
+---
+
+You can only see this if you are authenticated.
