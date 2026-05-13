@@ -1,0 +1,2981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASM Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root {
+  --bg:#0d0f14; --bg2:#141720; --bg3:#1c2030; --bg4:#242840;
+  --border:#2a2f45; --border2:#3a4060;
+  --text:#e2e4f0; --text2:#8890b0; --text3:#555e80;
+  --accent:#4f9eff; --accent2:#2d7dd2;
+  --green:#3ecf8e; --amber:#f5a623; --red:#ff5c5c; --purple:#a78bfa;
+  --mono:'JetBrains Mono',monospace; --sans:'Space Grotesk',sans-serif;
+}
+body.light {
+  --bg:#f7f8fc; --bg2:#ffffff; --bg3:#f2f4fa; --bg4:#e9edf7;
+  --border:#d6dbea; --border2:#c1c7db;
+  --text:#151b2c; --text2:#334155; --text3:#475569;
+  --accent:#2563eb; --accent2:#1d4ed8;
+  --green:#128a58; --amber:#c16a00; --red:#d83a3a; --purple:#6d28d9;
+}
+body { font-family:var(--sans); background:var(--bg); color:var(--text); height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+
+header { height:52px; background:var(--bg2); border-bottom:1px solid var(--border); display:flex; align-items:center; padding:0 14px; gap:8px; flex-shrink:0; z-index:100; flex-wrap:wrap; }
+.logo { font-family:var(--mono); font-weight:700; font-size:20px; color:var(--accent); letter-spacing:2px; white-space:nowrap; }
+.logo span { color:var(--text2); font-weight:400; }
+.header-sep { flex:1; min-width:8px; }
+
+/* Menu */
+.menu-bar { display:flex; align-items:center; gap:2px; }
+.menu { position:relative; }
+.menu-btn { font-family:var(--sans); font-size:18px; font-weight:500; padding:5px 10px; border-radius:6px; border:1px solid transparent; background:transparent; color:var(--text2); cursor:pointer; transition:all .15s; white-space:nowrap; }
+.menu-btn:hover, .menu.open .menu-btn { background:var(--bg3); border-color:var(--border2); color:var(--text); }
+.menu-dropdown { position:absolute; top:calc(100%+6px); left:0; min-width:190px; background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:6px; box-shadow:0 12px 30px rgba(0,0,0,.3); display:none; z-index:200; }
+.menu.open .menu-dropdown { display:block; }
+.menu-item { width:100%; display:flex; align-items:center; gap:8px; padding:8px 10px; border:none; border-radius:7px; background:transparent; color:var(--text); font-family:var(--sans); font-size:18px; text-align:left; cursor:pointer; white-space:nowrap; }
+.menu-item:hover { background:var(--bg3); }
+.menu-item-icon { width:14px; text-align:center; flex-shrink:0; color:var(--accent); }
+.menu-item-kbd { margin-left:auto; font-family:var(--mono); font-size:16px; color:var(--text3); }
+.menu-divider { height:1px; background:var(--border); margin:4px 2px; }
+.info-overlay { position:fixed; inset:0; background:rgba(8,12,20,.62); display:none; align-items:center; justify-content:center; padding:24px; z-index:400; }
+.info-overlay.open { display:flex; }
+.info-dialog { width:min(640px, 100%); max-height:min(82vh, 760px); overflow:auto; background:var(--bg2); border:1px solid var(--border2); border-radius:18px; box-shadow:0 24px 60px rgba(0,0,0,.38); padding:18px 18px 16px; }
+.info-head { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.info-title { font-size:24px; font-weight:600; color:var(--text); }
+.info-close { margin-left:auto; }
+.info-body { color:var(--text2); font-size:17px; line-height:1.65; }
+.info-body p + p { margin-top:10px; }
+.info-body h3 { margin-top:16px; color:var(--text); font-size:18px; }
+.info-body ul { margin:10px 0 0 20px; }
+.info-body li + li { margin-top:6px; }
+.info-body code { font-family:var(--mono); color:var(--accent); }
+
+.btn { font-family:var(--sans); font-size:18px; font-weight:500; padding:5px 11px; border-radius:6px; border:1px solid var(--border2); background:var(--bg3); color:var(--text); cursor:pointer; transition:all .15s; display:flex; align-items:center; gap:5px; white-space:nowrap; }
+.btn:hover { background:var(--bg4); border-color:var(--accent); color:var(--accent); }
+.btn.primary { background:var(--accent2); border-color:var(--accent); color:#fff; }
+.btn.primary:hover { background:var(--accent); }
+.btn.danger { border-color:var(--red); color:var(--red); }
+.btn.danger:hover { background:rgba(255,92,92,.1); }
+.btn.success { background:rgba(62,207,142,.15); border-color:var(--green); color:var(--green); }
+.btn.success:hover { background:rgba(62,207,142,.25); }
+.btn.active { background:var(--accent2); border-color:var(--accent); color:#fff; }
+
+.sim-controls { display:flex; align-items:center; gap:6px; }
+.step-counter { font-family:var(--mono); font-size:18px; color:var(--text2); padding:5px 11px; background:var(--bg3); border:1px solid var(--border); border-radius:6px; min-width:78px; text-align:center; }
+
+/* Speed control */
+.speed-wrap { display:flex; align-items:center; gap:5px; }
+.speed-wrap label { font-size:16px; color:var(--text3); white-space:nowrap; }
+.speed-wrap input[type=range] { width:64px; accent-color:var(--accent); cursor:pointer; }
+
+.main { flex:1; display:flex; overflow:hidden; }
+
+/* SIDEBAR */
+.sidebar { width:210px; min-width:140px; max-width:400px; background:var(--bg2); border-right:1px solid var(--border); display:flex; flex-direction:column; flex-shrink:0; overflow:hidden; }
+.sidebar-resizer { width:5px; background:transparent; cursor:col-resize; flex-shrink:0; transition:background .15s; z-index:10; }
+.sidebar-resizer:hover, .sidebar-resizer.dragging { background:var(--accent); }
+.sidebar-section { padding:11px; border-bottom:1px solid var(--border); }
+.sidebar-label { font-size:16px; font-weight:600; color:var(--text3); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:9px; }
+.block-item { display:flex; align-items:center; gap:8px; padding:7px 9px; border-radius:6px; border:1px solid var(--border); background:var(--bg3); cursor:grab; margin-bottom:5px; transition:all .15s; font-size:18px; font-weight:500; user-select:none; }
+.block-item:hover { border-color:var(--accent); color:var(--accent); }
+.block-item:active { cursor:grabbing; }
+.block-icon { width:18px; height:18px; flex-shrink:0; }
+
+/* CANVAS */
+.canvas-wrap { flex:1; position:relative; overflow:hidden; background:var(--bg); background-image:radial-gradient(circle, var(--border) 1px, transparent 1px); background-size:24px 24px; }
+#canvas { position:absolute; top:0; left:0; width:100%; height:100%; cursor:default; }
+
+/* RIGHT PANEL */
+.right-panel { width:268px; min-width:180px; max-width:500px; background:var(--bg2); border-left:1px solid var(--border); display:flex; flex-direction:column; flex-shrink:0; }
+.right-panel-resizer { width:5px; background:transparent; cursor:col-resize; flex-shrink:0; transition:background .15s; z-index:10; }
+.right-panel-resizer:hover, .right-panel-resizer.dragging { background:var(--accent); }
+.panel-tabs { display:flex; border-bottom:1px solid var(--border); overflow-x:auto; flex-shrink:0; }
+.panel-tabs::-webkit-scrollbar { height:3px; }
+.panel-tab { flex-shrink:0; padding:9px 11px; text-align:center; font-size:16px; font-weight:600; color:var(--text2); cursor:pointer; letter-spacing:.5px; transition:all .15s; border-bottom:2px solid transparent; white-space:nowrap; }
+.panel-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+.panel-content { flex:1; overflow-y:auto; padding:11px; }
+
+/* EDITOR */
+.editor-section { margin-bottom:13px; }
+.editor-label { font-size:16px; font-weight:600; color:var(--text3);flex-direction:column; align-items:left; letter-spacing:1px; text-transform:uppercase; margin-bottom:5px; display:flex;  gap:5px; }
+.editor-input { width:100%; background:var(--bg3); border:1px solid var(--border); border-radius:6px; color:var(--text); font-family:var(--mono); font-size:18px; padding:7px 9px; outline:none; resize:vertical; transition:border-color .15s; }
+.editor-input:focus { border-color:var(--accent); }
+.editor-hint { font-size:16px; color:var(--text3); margin-top:4px; font-family:var(--mono); line-height:1.5; white-space:pre; }
+
+.code-error-box { display:none; background:rgba(255,92,92,.08); border:1px solid var(--red); border-radius:6px; padding:8px 10px; margin-top:6px; font-size:15px; color:var(--red); line-height:1.5; }
+.error-item { margin-bottom:6px; }
+.error-item:last-child { margin-bottom:0; }
+.error-item code { background:rgba(255,92,92,.12); padding:2px 5px; border-radius:3px; font-family:var(--mono); font-size:14px; color:var(--red); }
+
+.code-validation-badge { display:inline-block; margin-left:8px; padding:3px 8px; border-radius:4px; font-size:14px; font-weight:600; }
+.code-validation-badge.valid { color:var(--green); background:rgba(62,207,142,.1); }
+.code-validation-badge.error { color:var(--red); background:rgba(255,92,92,.1); }
+
+/* VARS */
+.var-row { display:flex; align-items:center; padding:5px 0; border-bottom:1px solid var(--border); font-size:18px; gap:5px; }
+@keyframes varFlash {
+  0%   { background: rgba(62,207,142,0.35); border-radius:4px; }
+  100% { background: transparent; }
+}
+.var-changed { animation: varFlash 1.4s ease-out forwards; }
+.var-name { font-family:var(--mono); color:var(--purple); }
+.var-val { font-family:var(--mono); color:var(--green); font-weight:500; }
+
+/* LOG */
+.log-entry { font-family:var(--mono); font-size:16.5px; padding:3px 0; border-bottom:1px solid var(--border); color:var(--text2); display:flex; gap:7px; }
+.log-entry .log-step { color:var(--text3); min-width:28px; flex-shrink:0; }
+.log-entry.active  { color:var(--green); }
+.log-entry.decision{ color:var(--amber); }
+.log-entry.output  { color:var(--purple); }
+.log-entry.error   { color:var(--red); }
+
+/* TABLE */
+.asm-table { width:100%; border-collapse:collapse; font-family:var(--mono); font-size:17px; border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+.asm-table th { background:var(--bg3); font-weight:600; padding:6px 8px; border-bottom:1px solid var(--border); border-right:1px solid var(--border); text-align:left; color:var(--text2); white-space:nowrap; }
+.asm-table th:last-child { border-right:none; }
+.asm-table td { padding:5px 8px; border-bottom:1px solid var(--border); border-right:1px solid var(--border); color:var(--text2); white-space:nowrap; }
+.asm-table td:last-child { border-right:none; }
+.asm-table tr:last-child td { border-bottom:none; }
+.asm-table tr.tbl-active td { background:rgba(79,158,255,.15); color:var(--text); }
+.asm-table tr:nth-child(even):not(.tbl-active) td { background:rgba(79,158,255,.03); }
+
+/* EMPTY */
+.empty-state { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; pointer-events:none; }
+.empty-state h2 { font-size:18px; color:var(--text3); font-weight:500; margin-bottom:8px; }
+.empty-state p { font-size:15px; color:var(--text3); }
+.big-checkbox {
+  transform: scale(1.2);
+  cursor: pointer;
+  margin-right: 4px;
+}
+::-webkit-scrollbar { width:4px; height:4px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border2); border-radius:4px; }
+.var-add-row { display:flex; gap:5px; margin-bottom:9px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">ASM<span> // SIM</span></div>
+
+  <!-- File menu -->
+  <div class="menu-bar">
+    <div class="menu" id="menuFile">
+      <button class="menu-btn" onclick="toggleMenu('menuFile')">File</button>
+      <div class="menu-dropdown">
+        <button class="menu-item" onclick="handleMenu(saveJSON)"><span class="menu-item-icon">⬇</span>Save JSON<span class="menu-item-kbd">Ctrl+S</span></button>
+        <button class="menu-item" onclick="handleMenu(()=>document.getElementById('fileInput').click())"><span class="menu-item-icon">⬆</span>Load JSON<span class="menu-item-kbd">Ctrl+O</span></button>
+        <button class="menu-item" onclick="handleMenu(exportVerilog)"><span class="menu-item-icon">📤</span>Export Verilog</button>
+        <div class="menu-divider"></div>
+        <button class="menu-item" onclick="handleMenu(clearAll)"><span class="menu-item-icon" style="color:var(--red)">✕</span>Clear Canvas</button>
+      </div>
+    </div>
+    <div class="menu" id="menuEdit">
+      <button class="menu-btn" onclick="toggleMenu('menuEdit')">Edit</button>
+      <div class="menu-dropdown">
+        <button class="menu-item" onclick="handleMenu(undo)"><span class="menu-item-icon">↩</span>Undo<span class="menu-item-kbd">Ctrl+Z</span></button>
+        <button class="menu-item" onclick="handleMenu(redo)"><span class="menu-item-icon">↪</span>Redo<span class="menu-item-kbd">Ctrl+Y</span></button>
+        <div class="menu-divider"></div>
+        
+      </div>
+    </div>
+    <div class="menu" id="menuView">
+      <button class="menu-btn" onclick="toggleMenu('menuView')">View</button>
+      <div class="menu-dropdown">
+        <button class="menu-item" onclick="handleMenu(toggleTheme)"><span class="menu-item-icon" id="themeIcon">☀</span>Toggle Theme</button>
+        <button class="menu-item" onclick="handleMenu(centerCanvas)"><span class="menu-item-icon">⊕</span>Center Canvas</button>
+        <button class="menu-item" onclick="handleMenu(()=>setZoom(1))"><span class="menu-item-icon">⊡</span>Reset Zoom</button>
+      </div>
+    </div>
+    <button class="menu-btn" onclick="openInfoDialog('ASM_reference')">ASM Reference</button>
+    <button class="menu-btn" onclick="openInfoDialog('help')">Help</button>
+    <button class="menu-btn" onclick="openInfoDialog('about')">About</button>
+  </div>
+
+  <div class="header-sep"></div>
+
+  <div class="sim-controls">
+    <div class="step-counter" id="stepCounter">CLK 0</div>
+    <button class="btn" onclick="resetSim()" title="Reset (R)">↺ Reset</button>
+    <button class="btn" onclick="stepBack()" title="Step back one clock cycle">← Back</button>
+    <button class="btn" onclick="stepSim()" title="Step one clock cycle (Space)">→ Step</button>
+    <button class="btn success" id="btnRun" onclick="runSim()" title="Run / Stop">▶ Run</button>
+    <div class="speed-wrap">
+      <label>Speed</label>
+      <input type="range" id="speedSlider" min="1" max="10" value="5" title="Simulation speed">
+    </div>
+    <div style="width:1px;height:22px;background:var(--border)"></div>
+    <button class="btn" onclick="centerCanvas()" title="Center canvas">⊕</button>
+    <button class="btn" onclick="undo()" title="Undo (Ctrl+Z)">↩</button>
+    <button class="btn" onclick="redo()" title="Redo (Ctrl+Y)">↪</button>
+  </div>
+</header>
+
+<div class="info-overlay" id="infoOverlay" onclick="handleInfoOverlayClick(event)">
+  <div class="info-dialog" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+    <div class="info-head">
+      <div class="info-title" id="infoTitle">Info</div>
+      <button class="btn info-close" onclick="closeInfoDialog()">Close</button>
+    </div>
+    <div class="info-body" id="infoBody"></div>
+  </div>
+</div>
+
+<input type="file" id="fileInput" accept=".json" style="display:none" onchange="loadJSON(event)">
+
+<div class="main">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Blocks</div>
+      <div class="block-item" draggable="true" ondragstart="dragStart(event,'state')">
+        <svg class="block-icon" viewBox="0 0 20 20"><rect x="2" y="4" width="16" height="12" rx="2" fill="none" stroke="#4f9eff" stroke-width="1.5"/><line x1="2" y1="8" x2="18" y2="8" stroke="#4f9eff" stroke-width="1"/></svg>
+        <div><div style="font-size:18px">State Box</div><div style="font-size:14px;color:var(--text3)"></div></div>
+      </div>
+      <div class="block-item" draggable="true" ondragstart="dragStart(event,'decision')">
+        <svg class="block-icon" viewBox="0 0 20 20"><polygon points="10,2 18,10 10,18 2,10" fill="none" stroke="#f5a623" stroke-width="1.5"/></svg>
+        <div><div style="font-size:18px">Decision Box</div><div style="font-size:14px;color:var(--text3)"></div></div>
+      </div>
+      <div class="block-item" draggable="true" ondragstart="dragStart(event,'output')">
+        <svg class="block-icon" viewBox="0 0 20 20"><rect x="2" y="5" width="16" height="10" rx="5" fill="none" stroke="#a78bfa" stroke-width="1.5"/></svg>
+        <div><div style="font-size:18px">Cond. Output</div><div style="font-size:14px;color:var(--text3)"></div></div>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <!--<div class="sidebar-label">Tips</div>
+      <div style="font-size:10.5px;color:var(--text2);line-height:1.85">
+        • Drag blocks to canvas<br>
+        • Scroll to zoom, drag to pan<br>
+        • Click block → edit code<br>
+        • Drag edge dots to wire<br>
+        • <span style="color:var(--accent)">Drag ● midpoint</span> to reroute<br>
+        • Wire to self = loop<br>
+        • Drag corner to resize<br>
+        • Double-click to delete<br>
+        • Del key deletes selected<br>
+        • Ctrl+Z / Ctrl+Y undo/redo
+      </div>-->
+    </div>
+ 
+    <!-- EDITOR lives here in the sidebar -->
+    <div class="sidebar-section" id="sideEditor" style="flex:1;overflow-y:auto;border-bottom:none">
+      <div style="color:var(--text3);font-size:17px;padding:8px 0;text-align:center">Click a block to edit</div>
+    </div>
+  </div>
+
+  <!-- CANVAS -->
+  <div class="sidebar-resizer" id="sidebarResizer"></div>
+
+  <div class="canvas-wrap" id="canvasWrap"
+       ondragover="event.preventDefault()" ondrop="dropBlock(event)">
+    <svg id="canvas" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="empty-state" id="emptyState">
+      <h2>Drop blocks here</h2>
+      <p>Drag State, Decision, or Output blocks from the left panel</p>
+    </div>
+  </div>
+
+  <div class="right-panel-resizer" id="rightPanelResizer"></div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="panel-tabs">
+      <div class="panel-tab active" id="tabVars"  onclick="switchTab('vars')">VARS</div>
+      <!--<div class="panel-tab"        id="tabTable" onclick="switchTab('table')">TABLE</div> -->
+      <div class="panel-tab"        id="tabLog"   onclick="switchTab('log')">LOG</div>
+    </div>
+    <div class="panel-content" id="panelContent">
+      <div style="color:var(--text3);font-size:18px;padding:20px 0;text-align:center">Set variables then run</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════════════
+let blocks      = [];   // { id, type, x, y, w, h, name, code }
+let connections = [];   // { id, from, to, label, mx, my, loopOff }
+let startBlockId = null; // which state block is the sim start
+let selectedId   = null;
+let selectedConnId = null;
+let activeTab = 'vars';
+let simStep      = 0;
+let simVars      = {};
+let userVars     = {};
+let simLog       = [];
+let activeBlock  = null;  // current state block we're sitting in
+let activeTrail      = new Set();
+let activeConnTrail  = new Set();
+let isRunning    = false;
+let runInterval  = null;
+let idCounter    = 1;
+let lastCycleFingerprint = null;
+let loopRepeatCount = 0;
+let simFinished = false;
+let stepHistory = [];  // for step-back
+let combDefaults = {};            // { varName: defaultValue } for purely-comb vars
+let forcedRegisters = new Set();  // comb vars manually promoted to register
+let regInitValues = {};           // { varName: initValue } for register initial values
+let liveDoubleDriverIds = new Set(); // block IDs with double-driver conflict (live)
+let liveDoubleDriverVarNames = new Set(); // only the specific conflicting var names
+let prevSimVars = {};          // snapshot before last change, for flash detection
+let lastWrittenVars = new Set(); // vars written to this cycle (flash on assignment)
+
+const INFO_DIALOGS = {
+  help: {
+    title: 'Help',
+    body: `
+      <p>This ASM simulator lets you draw Algorithmic State Machine diagrams, connect the blocks, define variable behavior, and run the design clock by clock.</p>
+
+      <h3>Top Bar</h3>
+      <ul>
+        <li><code>File</code>: save the current diagram as JSON or load a saved diagram.</li>
+        <li><code>Edit</code>: undo, redo, center the canvas, or reset zoom.</li>
+        <li><code>View</code>: switch between light and dark theme.</li>
+        <li><code>Help</code>: open this usage guide.</li>
+        <li><code>About</code>: show a short description of the simulator.</li>
+        <li><code>CLK n</code>: shows the current clock cycle number.</li>
+        <li><code>Reset</code>: restart the simulation from the start state and restore register initial values.</li>
+        <li><code>Back</code>: step back one clock cycle using saved history.</li>
+        <li><code>Step</code>: execute exactly one clock cycle.</li>
+        <li><code>Run</code>: keep stepping automatically until the flow ends or an error stops it.</li>
+        <li><code>Speed</code>: change how fast <code>Run</code> advances.</li>
+        <li>The small right-side buttons center the canvas, undo, and redo.</li>
+      </ul>
+
+      <h3>Left Sidebar</h3>
+      <ul>
+        <li><code>State Box</code>: represents a state. Assignments here behave like registered updates and commit on the next clock edge.</li>
+        <li><code>Decision Box</code>: evaluates a Boolean condition and chooses the outgoing branch.</li>
+        <li><code>Cond. Output</code>: applies output/path assignments while the path is active.</li>
+        <li>The legend shows the color meaning for state, decision, conditional output, and start state.</li>
+        <li>The lower editor area updates when you click a block or wire.</li>
+      </ul>
+
+      <h3>Canvas</h3>
+      <ul>
+        <li>Drag blocks from the sidebar and drop them onto the canvas.</li>
+        <li>Drag a block to move it.</li>
+        <li>Drag the resize handle at the bottom-right of a block to resize it.</li>
+        <li>Double-click a block to delete it.</li>
+        <li>Use the mouse wheel to zoom and the canvas controls to re-center if needed.</li>
+      </ul>
+
+      <h3>Wiring</h3>
+      <ul>
+        <li>Drag from a block’s small edge dot to another block to create a connection.</li>
+        <li>Decision boxes can branch; state boxes and conditional output boxes allow only one outgoing connection.</li>
+        <li>Decision branches are auto-labeled <code>true</code> and <code>false</code> when possible.</li>
+        <li>Click a wire to edit or remove it.</li>
+        <li>Drag a wire midpoint to reroute the connection visually.</li>
+      </ul>
+
+      <h3>Block Editor</h3>
+      <ul>
+        <li>Click any block to edit its <code>Name</code>, <code>Code</code>, and <code>Size</code>.</li>
+        <li>For state boxes, you can also mark the block as the start state.</li>
+        <li>The <code>Wires out</code> area lists current outgoing connections and lets you remove them quickly.</li>
+        <li>The code hint under each editor shows the expected syntax for that block type.</li>
+      </ul>
+
+      <h3>Variables Panel</h3>
+      <ul>
+        <li><code>Input Variables</code>: values you set manually that are not assigned anywhere in ASM boxes.</li>
+        <li><code>Registered Vars</code>: variables assigned in state boxes, or combinational vars manually promoted to registers.</li>
+        <li><code>Combinational Vars</code>: variables driven only by active conditional outputs.</li>
+        <li>Registered variables have editable <code>init</code> values used on reset.</li>
+        <li>Combinational variables have editable <code>default</code> values used when their path is inactive.</li>
+        <li>The <code>reg</code> checkbox promotes a combinational variable into register-style behavior.</li>
+        <li>The <code>cond</code> checkbox appears only for manually promoted registers and moves them back to combinational behavior.</li>
+        <li>Highlighted rows show variables written in the most recent simulation step.</li>
+        <li>If a variable is used in code but never declared as an input and never assigned internally, it appears as an undeclared-input warning.</li>
+      </ul>
+
+      <h3>Simulation Rules</h3>
+      <ul>
+        <li>State-box assignments use simultaneous semantics: all right-hand sides are evaluated first, then writes are committed together.</li>
+        <li>Conditional output boxes on the active path update combinational values immediately so later decisions in the same cycle can see them.</li>
+        <li>Registered writes commit at the clock edge after the current ASM block finishes.</li>
+        <li>Double-driver conflicts are flagged when the same variable is assigned incompatibly across active boxes, or assigned more than once in the same box.</li>
+        <li>Red highlighting and log errors help you find conflicts before or during simulation.</li>
+      </ul>
+
+      <h3>Keyboard Shortcuts</h3>
+      <ul>
+        <li><code>Space</code>: step one clock cycle.</li>
+        <li><code>Shift + Space</code>: step back one cycle.</li>
+        <li><code>R</code>: reset simulation.</li>
+        <li><code>Ctrl + S</code>: save JSON.</li>
+        <li><code>Ctrl + O</code>: load JSON.</li>
+        <li><code>Ctrl + Z</code> and <code>Ctrl + Y</code>: undo and redo.</li>
+        <li><code>Delete</code> or <code>Backspace</code>: remove the selected block or wire.</li>
+        <li><code>Esc</code>: close menus, close dialogs, or clear selection.</li>
+      </ul>
+    `
+  },
+  about: {
+    title: 'About',
+    body: `
+      <p><i>"After teaching introductory digital design for several years, I have grown increasingly aware of a gap in the way we introduce students to digital systems. We spend so much time on truth tables, flip-flop excitations, and classical synthesis techniques that circuits can begin to feel like isolated diagrams rather than machines with behavior, purpose, and flow. How can students appreciate processor architectures if they only know state diagrams? It is time for students to see digital design not only as the process of deriving equations, but as the art of describing how hardware thinks, decides, and acts over time. 
+-Adel" </i><br><br>
+
+Conceptualized by Adelson Chua and developed by Isaac Sy.<br>
+Special credits to Lawrence Quizon for the intelligent discussions.<br>
+<br><br>
+Development is ongoing, feedback is appreciated!<br><br>
+
+Dedicated to the crazy ones, the ones who see things differently.<br><br>
+
+From EEEI, UP Diliman for EEE 143 students<br><br>
+
+Feel free to download and modify the HTML file! AI was also used in its development.</p>
+    `
+  },
+  ASM_reference: {
+    title: 'ASM Reference',
+    body: `
+      <p>1) At any given time, you are in a state box. That is your current state. You would move from one state box to another state box every ASM step (one clock cycle).
+<br><br>
+2) A variable can be treated as a register or combinational logic. The distinction depends on how this variable is assigned within the ASM.
+<br><br>
+2A) If a variable is assigned inside a state box, it is inferred as a register. All assignments to a register take effect on the next positive edge of the clock (since it is a register/flip-flop). That is, the update only happens as you transition into a new state. The update is delayed by 1 cycle, effectively.
+<br><br>
+2B) A variable only assigned inside a conditional box (it is not assigned in any state box in the ASM) is, by default, a combinational logic (not a register). A combinational logic assignment would take effect right away (that is, it does not need to wait for the positive edge of the clock).
+<br><br>
+2C) A variable only assigned inside a conditional box (it is not assigned in any state box in the ASM) can also be declared as a register. This has to be explicitly stated together with the ASM (since you would not know it is a register otherwise, as it is not assigned in a state box following rule #2A). If it is declared as a register, then the assignment would take effect on the next positive edge of the clock (typical register/flip-flop behavior).
+ <br><br>
+3) A variable, whether register or combinational, can only be assigned once in every ASM step. An ASM step is basically the evaluation of the assignments starting from a state box (the current state), going through all the decision and conditional boxes until you reach the input to another state box. An ASM step is one clock cycle. A variable assigned more than once within a step will lead to an error, as assignments within an ASM step are evaluated concurrently, not sequentially.
+<br><br>
+4) If a variable is not assigned within an ASM step, the behavior depends on whether it is a register or a combinational output. If the variable is a register, the previous value of that register (or its initial value, also defined with the ASM) is held during that step/clock cycle. If the variable is a combinational output, the value would default to 0 (unless the default value was otherwise stated with the ASM).
+<br><br>
+5) Conditional boxes are typically drawn after decision boxes to represent different assignments depending on some condition. However, you may also put conditional boxes right after a state box. You would do this if you want a combinational output behavior for a variable (i.e., you don't want to declare it as a register, but you want to assign values to it).</p>
+    `
+  }
+};
+let svgEl, canvasWrap;
+
+// ── View (pan / zoom) ───────────────────────────────────
+let view = { x:0, y:0, scale:2 };
+
+// ── Undo/redo ───────────────────────────────────────────
+let undoStack = [], redoStack = [];
+const UNDO_LIMIT = 60;
+
+// ── Block geometry defaults ─────────────────────────────
+const DEFAULTS = { state:{w:140,h:70}, decision:{w:130,h:84}, output:{w:140,h:52} };
+const MIN_W    = { state:100, decision:100, output:100 };
+const MIN_H    = { state:52,  decision:64,  output:40  };
+
+// ════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  svgEl      = document.getElementById('canvas');
+  canvasWrap = document.getElementById('canvasWrap');
+
+  svgEl.addEventListener('click', e => {
+    if (e.target === svgEl) {
+      selectedId = null; selectedConnId = null;
+      render(); renderPanel();
+    }
+  });
+
+  // Pan on empty canvas
+  svgEl.addEventListener('mousedown', e => {
+    if (e.target !== svgEl) return;
+    e.preventDefault();
+    let lx = e.clientX, ly = e.clientY;
+    const move = ev => {
+      view.x -= (ev.clientX - lx) / view.scale;
+      view.y -= (ev.clientY - ly) / view.scale;
+      lx = ev.clientX; ly = ev.clientY;
+      render();
+    };
+    const up = () => { document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', up); };
+    document.addEventListener('mousemove', move);
+    document.addEventListener('mouseup', up);
+  });
+
+  // Scroll to zoom
+  canvasWrap.addEventListener('wheel', e => {
+    e.preventDefault();
+    const r   = canvasWrap.getBoundingClientRect();
+    const mx  = e.clientX - r.left;
+    const my  = e.clientY - r.top;
+    const wx  = view.x + mx / view.scale;
+    const wy  = view.y + my / view.scale;
+    const factor = e.deltaY < 0 ? 1.1 : 0.9;
+    view.scale = Math.max(0.2, Math.min(4, view.scale * factor));
+    view.x = wx - mx / view.scale;
+    view.y = wy - my / view.scale;
+    render();
+  }, { passive: false });
+
+  // Right panel resize
+  const rightPanelEl = document.querySelector('.right-panel');
+  const rightResizerEl = document.getElementById('rightPanelResizer');
+  rightResizerEl.addEventListener('mousedown', e => {
+    e.preventDefault();
+    rightResizerEl.classList.add('dragging');
+    const startX = e.clientX, startW = rightPanelEl.offsetWidth;
+    const onMove = ev => {
+      const newW = Math.max(180, Math.min(500, startW - (ev.clientX - startX)));
+      rightPanelEl.style.width = newW + 'px';
+    };
+    const onUp = () => {
+      rightResizerEl.classList.remove('dragging');
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  });
+
+  // Sidebar resize
+  const sidebarEl = document.querySelector('.sidebar');
+  const resizerEl = document.getElementById('sidebarResizer');
+  resizerEl.addEventListener('mousedown', e => {
+    e.preventDefault();
+    resizerEl.classList.add('dragging');
+    const startX = e.clientX, startW = sidebarEl.offsetWidth;
+    const onMove = ev => {
+      const newW = Math.max(140, Math.min(400, startW + ev.clientX - startX));
+      sidebarEl.style.width = newW + 'px';
+    };
+    const onUp = () => {
+      resizerEl.classList.remove('dragging');
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  });
+
+  // Close menus on outside click
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.menu')) closeMenus();
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', e => {
+    const tag = document.activeElement?.tagName || '';
+    if (e.key === 'Escape') {
+      if (isInfoDialogOpen()) { closeInfoDialog(); return; }
+      closeMenus(); selectedId = null; selectedConnId = null; render(); renderPanel(); return;
+    }
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    if (e.ctrlKey && (e.key === 'z' || e.key === 'Z')) { e.preventDefault(); undo(); return; }
+    if (e.ctrlKey && (e.key === 'y' || e.key === 'Y')) { e.preventDefault(); redo(); return; }
+    if (e.ctrlKey && (e.key === 's' || e.key === 'S')) { e.preventDefault(); saveJSON(); return; }
+    if (e.ctrlKey && (e.key === 'o' || e.key === 'O')) { e.preventDefault(); document.getElementById('fileInput').click(); return; }
+    if ((e.key === 'Delete' || e.key === 'Backspace') && selectedId) { e.preventDefault(); deleteBlock(selectedId); return; }
+    if ((e.key === 'Delete' || e.key === 'Backspace') && selectedConnId) { e.preventDefault(); removeConn(selectedConnId); return; }
+    if (e.key === ' ') { e.preventDefault(); stepSim(); return; }
+    if (e.key === 'r' || e.key === 'R') { resetSim(); return; }
+    if (e.shiftKey && e.key === ' ') { e.preventDefault(); stepBack(); return; }
+    // Arrow key pan
+    const step = (e.shiftKey ? 80 : 32) / view.scale;
+    if (e.key === 'ArrowLeft')  { view.x -= step; render(); }
+    if (e.key === 'ArrowRight') { view.x += step; render(); }
+    if (e.key === 'ArrowUp')    { view.y -= step; render(); }
+    if (e.key === 'ArrowDown')  { view.y += step; render(); }
+  });
+
+  initDefault();
+});
+
+function initDefault() {
+  // a, b are registers (assigned in state boxes)
+  // done is purely combinational (only assigned in conditional output box)
+  const b1 = addBlockAt('state',    155,  0, 'S0', 'a = 0;\nb = n;');
+  const b2 = addBlockAt('decision', 160, 200, 'D0', 'b > 0');
+  const b3 = addBlockAt('output',   360, 290, 'C0', 'done = 1;');
+  const b4 = addBlockAt('state',    31, 389, 'S1', 'a = a + x;\nb = b - 1;');
+  const b5 = addBlockAt('state',    510, 200, 'S2', 'result = a-x;');
+  
+  const b11 = addBlockAt('state',    156, 98, 'S3', 'result = a;');
+  const b17 = addBlockAt('output',    428, 57, 'C1', 'done = 1;');
+  const c1 = mkConn(b2, b4, 'true');
+  c1.mx = 130;
+  c1.my = 318;
+  connections.push(c1);
+  const c2 = mkConn(b4, b2);
+  c2.mx = 211;
+  c2.my = 365;
+  connections.push(c2);
+  //connections.push(mkConn(b2, b4, 'true', 130,318));
+
+  //connections.push(mkConn(b4, b2, '', 211, 365));   // b > 0 → keep multiplying
+  connections.push(mkConn(b2, b3, 'false'));        // loop back to check
+  connections.push(mkConn(b3, b5, ''));   // b == 0 → set done (comb)
+  connections.push(mkConn(b1, b11, ''));        // → done state
+  connections.push(mkConn(b11, b2, ''));  
+  connections.push(mkConn(b17, b1, '', 375,29));
+  connections.push(mkConn(b11, b2, '' ,221,365));
+  connections.push(mkConn(b5, b17, '' ,580,155));
+  startBlockId = b1;
+  userVars = {x:3, n:4}; //remove later
+  simVars = { x:3, n:4, a:0, result:0, done:0 };
+  beginSim();
+  render(); updateEmptyState(); renderVarsPanel();
+}
+
+
+
+
+// ════════════════════════════════════════════════════════
+//  UNDO / REDO
+// ════════════════════════════════════════════════════════
+function capture() {
+  return JSON.parse(JSON.stringify({ blocks, connections, startBlockId, userVars, idCounter, view }));
+}
+function pushUndo() {
+  undoStack.push(capture());
+  if (undoStack.length > UNDO_LIMIT) undoStack.shift();
+  redoStack = [];
+}
+function applySnapshot(snap) {
+  blocks = snap.blocks; connections = snap.connections;
+  startBlockId = snap.startBlockId; userVars = snap.userVars;
+  idCounter = snap.idCounter; view = snap.view;
+  selectedId = null; selectedConnId = null;
+  render(); updateEmptyState(); renderPanel();
+}
+function undo() {
+  if (!undoStack.length) return;
+  redoStack.push(capture());
+  applySnapshot(undoStack.pop());
+}
+function redo() {
+  if (!redoStack.length) return;
+  undoStack.push(capture());
+  applySnapshot(redoStack.pop());
+}
+
+// ════════════════════════════════════════════════════════
+//  VIEW HELPERS
+// ════════════════════════════════════════════════════════
+function updateViewBox() {
+  const w = canvasWrap.clientWidth, h = canvasWrap.clientHeight;
+  svgEl.setAttribute('viewBox', `${view.x} ${view.y} ${w/view.scale} ${h/view.scale}`);
+}
+function screenToWorld(sx, sy) {
+  return { x: view.x + sx/view.scale, y: view.y + sy/view.scale };
+}
+function worldToScreen(wx, wy) {
+  return { x: (wx - view.x) * view.scale, y: (wy - view.y) * view.scale };
+}
+function setZoom(s) {
+  const cx = view.x + canvasWrap.clientWidth  / (2*view.scale);
+  const cy = view.y + canvasWrap.clientHeight / (2*view.scale);
+  view.scale = Math.max(0.2, Math.min(4, s));
+  view.x = cx - canvasWrap.clientWidth  / (2*view.scale);
+  view.y = cy - canvasWrap.clientHeight / (2*view.scale);
+  render();
+}
+function centerCanvas() {
+  if (!blocks.length) { view = {x:0,y:0,scale:1}; render(); return; }
+  let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+  blocks.forEach(b => {
+    minX = Math.min(minX, b.x); minY = Math.min(minY, b.y);
+    maxX = Math.max(maxX, b.x+b.w); maxY = Math.max(maxY, b.y+b.h);
+  });
+  const pw = canvasWrap.clientWidth, ph = canvasWrap.clientHeight;
+  const bw = maxX - minX, bh = maxY - minY;
+  const pad = 60;
+  view.scale = Math.min(4, Math.max(0.2, Math.min((pw-pad*2)/Math.max(bw,1), (ph-pad*2)/Math.max(bh,1))));
+  view.x = minX - pad/view.scale;
+  view.y = minY - pad/view.scale;
+  render();
+}
+
+// ════════════════════════════════════════════════════════
+//  BLOCK CREATION
+// ════════════════════════════════════════════════════════
+function mkConn(from, to, label) {
+  return { id:'c'+(idCounter++), from, to, label:label||'', mx:null, my:null, loopOff:null };
+}
+function addBlockAt(type, x, y, name, code) {
+  const id = 'b'+(idCounter++);
+  const d = DEFAULTS[type];
+  blocks.push({ id, type, x, y, w:d.w, h:d.h, name:name||autoName(type), code:code||'' });
+  if (type === 'state' && !startBlockId) startBlockId = id;
+  return id;
+}
+function autoName(type) {
+  const n = blocks.filter(b=>b.type===type).length;
+  return type==='state'?'S'+n : type==='decision'?'D'+n : 'C'+n;
+}
+
+// ════════════════════════════════════════════════════════
+//  DRAG FROM PALETTE
+// ════════════════════════════════════════════════════════
+function dragStart(e, type) { e.dataTransfer.setData('blockType', type); }
+function dropBlock(e) {
+  e.preventDefault();
+  const type = e.dataTransfer.getData('blockType');
+  if (!type) return;
+  pushUndo();
+  const r = canvasWrap.getBoundingClientRect();
+  const w = screenToWorld(e.clientX - r.left, e.clientY - r.top);
+  const d = DEFAULTS[type];
+  addBlockAt(type, w.x - d.w/2, w.y - d.h/2, null, '');
+  render(); updateEmptyState();
+}
+
+// ════════════════════════════════════════════════════════
+//  GEOMETRY
+// ════════════════════════════════════════════════════════
+function bCX(b) { return b.x + b.w/2; }
+function bCY(b) { return b.y + b.h/2; }
+function edgePt(b, tx, ty) {
+  const cx=bCX(b), cy=bCY(b), dx=tx-cx, dy=ty-cy;
+  if (dx===0 && dy===0) return {x:cx, y:cy};
+  if (b.type === 'decision') {
+    const t = 0.93 / (Math.abs(dx)/(b.w/2) + Math.abs(dy)/(b.h/2));
+    return {x:cx+dx*t, y:cy+dy*t};
+  }
+  const tx2 = Math.abs(dx)>0 ? (b.w/2)/Math.abs(dx) : 1e9;
+  const ty2 = Math.abs(dy)>0 ? (b.h/2)/Math.abs(dy) : 1e9;
+  const t = Math.min(tx2,ty2)*0.97;
+  return {x:cx+dx*t, y:cy+dy*t};
+}
+
+// ════════════════════════════════════════════════════════
+//  RENDER
+// ════════════════════════════════════════════════════════
+function render() {
+  svgEl.innerHTML = '';
+  updateViewBox();
+  const defs = ns('defs');
+  [['norm','#3a4060'],['active','#4f9eff'],['sel','#a78bfa']].forEach(([k,col]) => {
+    const m = ns('marker'); setA(m,{id:'arr_'+k,markerWidth:8,markerHeight:8,refX:7,refY:3,orient:'auto'});
+    const p = ns('path'); setA(p,{d:'M0,0 L6,3 L0,6',fill:'none',stroke:col,'stroke-width':1.5});
+    m.appendChild(p); defs.appendChild(m);
+  });
+  svgEl.appendChild(defs);
+  connections.forEach(drawConn);
+  blocks.forEach(drawBlock);
+}
+
+// ── Block ─────────────────────────────────────────────
+function drawBlock(b) {
+  const g   = ns('g');
+  const act = activeTrail.has(b.id);
+  const sel = selectedId === b.id;
+  const dbl = liveDoubleDriverIds.has(b.id);   // double-driver conflict
+  const isStart = b.id === startBlockId && b.type === 'state';
+  const lines = (b.code||'').split('\n');
+
+  if (b.type === 'state') {
+    const hH   = 22;
+    const fill  = dbl?'rgba(255,92,92,.18)': act?'rgba(79,158,255,.22)':'rgba(79,158,255,.07)';
+    const stk   = dbl?'#ff5c5c': act||sel?'#4f9eff':'#1e3a5c';
+    const sw    = dbl||act||sel?2:1.5;
+    g.appendChild(sv('rect',{x:b.x,y:b.y,width:b.w,height:b.h,rx:7,fill,stroke:stk,'stroke-width':sw}));
+    const hf = dbl?'rgba(255,92,92,.30)': act?'rgba(79,158,255,.38)':'rgba(79,158,255,.16)';
+    g.appendChild(sv('rect',{x:b.x+sw/2,y:b.y+sw/2,width:b.w-sw,height:hH,rx:5,fill:hf,stroke:'none'}));
+    g.appendChild(sv('line',{x1:b.x,y1:b.y+hH,x2:b.x+b.w,y2:b.y+hH,stroke:stk,'stroke-width':'0.8'}));
+    if (isStart) g.appendChild(txt(b.x+10, b.y+hH/2, '★', '#3ecf8e', 10, '700'));
+    if (dbl)     g.appendChild(txt(b.x+b.w-10, b.y+hH/2, '⚡', '#ff5c5c', 10, '700'));
+    g.appendChild(txt(b.x+b.w/2, b.y+hH/2, b.name, labelColor(), 10.5, '600'));
+    const bodyH  = b.h - hH;
+    const lineH  = Math.max(11, Math.min(14, (bodyH-8) / Math.max(lines.length,1)));
+    lines.forEach((line,i) => {
+      const ty = b.y + hH + 5 + i*lineH + lineH/2;
+      if (ty < b.y+b.h-3) g.appendChild(txt(b.x+b.w/2, ty, clip(line,b.w-12), subLabelColor(), 9.5, '400'));
+    });
+  } else if (b.type === 'decision') {
+    const cx=b.x+b.w/2, cy=b.y+b.h/2;
+    const pts=`${cx},${b.y} ${b.x+b.w},${cy} ${cx},${b.y+b.h} ${b.x},${cy}`;
+    const fill = act?'rgba(245,166,35,.22)':'rgba(245,166,35,.07)';
+    const stk  = act||sel?'#f5a623':'#4a3a10';
+    g.appendChild(sv('polygon',{points:pts,fill,stroke:stk,'stroke-width':act||sel?2:1.5}));
+    const nonEmpty = lines.filter(l=>l.trim());
+    const ny = nonEmpty.length ? cy-8 : cy;
+    g.appendChild(txt(cx, ny, b.name, labelColor(), 10.5, '600'));
+    if (nonEmpty.length) g.appendChild(txt(cx, cy+7, clip(nonEmpty[0],b.w-28), subLabelColor(), 9, '400'));
+    g.appendChild(txt(b.x+b.w+9, cy, '', '#f5a623', 9, '600'));
+    g.appendChild(txt(cx, b.y+b.h+12, '', '#f5a623', 9, '600'));
+  } else {
+    const rx   = Math.min(b.h/2, 22);
+    const fill  = dbl?'rgba(255,92,92,.18)': act?'rgba(167,139,250,.22)':'rgba(167,139,250,.07)';
+    const stk   = dbl?'#ff5c5c': act||sel?'#a78bfa':'#2e1e5c';
+    const sw2   = dbl||act||sel?2:1.5;
+    g.appendChild(sv('rect',{x:b.x,y:b.y,width:b.w,height:b.h,rx,fill,stroke:stk,'stroke-width':sw2}));
+    const nonEmpty = lines.filter(l=>l.trim());
+    if (!nonEmpty.length) {
+      g.appendChild(txt(b.x+b.w/2, b.y+b.h/2, b.name, labelColor(), 10.5, '600'));
+    } else {
+      const tot = nonEmpty.length+1;
+      const lh  = Math.max(11, Math.min(14, (b.h-8)/tot));
+      const sy  = b.y + (b.h - tot*lh)/2 + lh/2;
+      g.appendChild(txt(b.x+b.w/2, sy, dbl?b.name+' ⚡':b.name, dbl?'#ff5c5c':labelColor(), 10.5, '600'));
+      nonEmpty.forEach((line,i) => {
+        const ty = sy + (i+1)*lh;
+        if (ty < b.y+b.h-3) g.appendChild(txt(b.x+b.w/2, ty, clip(line,b.w-12), subLabelColor(), 9.5, '400'));
+      });
+    }
+  }
+
+  // Resize handle
+  const sz=10;
+  const rh = sv('rect',{x:b.x+b.w-sz,y:b.y+b.h-sz,width:sz,height:sz,rx:2,fill:'#2a3050',stroke:'#3a4060','stroke-width':'0.8',cursor:'nwse-resize'});
+  rh.addEventListener('mousedown', e=>{ e.preventDefault(); e.stopPropagation(); startResize(e,b.id); });
+  g.appendChild(rh);
+
+  // Connector dots
+  connPts(b).forEach(pt => {
+    const c = sv('circle',{cx:pt.x,cy:pt.y,r:5,fill:'var(--bg)',stroke:'#3a4060','stroke-width':1,cursor:'crosshair'});
+    c.addEventListener('mousedown', e=>{ e.stopPropagation(); startConn(e,b.id,pt.x,pt.y); });
+    g.appendChild(c);
+  });
+
+  g.setAttribute('cursor','move');
+  g.addEventListener('mousedown', e => startBlockDrag(e, b.id));
+  g.addEventListener('dblclick',  e => { e.stopPropagation(); pushUndo(); deleteBlock(b.id); });
+  g.addEventListener('click',     e => { e.stopPropagation(); selectBlock(b.id); });
+  svgEl.appendChild(g);
+}
+
+function connPts(b) {
+  if (b.type==='decision') {
+    const cx=b.x+b.w/2, cy=b.y+b.h/2;
+    return [{x:cx,y:b.y},{x:b.x+b.w,y:cy},{x:cx,y:b.y+b.h},{x:b.x,y:cy}];
+  }
+  return [{x:b.x+b.w/2,y:b.y},{x:b.x+b.w,y:b.y+b.h/2},{x:b.x+b.w/2,y:b.y+b.h},{x:b.x,y:b.y+b.h/2}];
+}
+
+// ── Connection ────────────────────────────────────────
+function drawConn(conn) {
+  const from = blocks.find(b=>b.id===conn.from);
+  if (!from) return;
+  const actC = activeConnTrail.has(conn.id);
+  const selC = selectedConnId === conn.id;
+  const stroke = actC?'#4f9eff': selC?'#a78bfa':'#3a4060';
+  const marker = 'url(#arr_'+(actC?'active':selC?'sel':'norm')+')';
+  const sw     = actC||selC?2:1.5;
+
+  if (conn.from === conn.to) { drawSelfLoop(conn, from, stroke, marker, sw, selC); return; }
+
+  const to = blocks.find(b=>b.id===conn.to);
+  if (!to) return;
+  const fx=bCX(from), fy=bCY(from);
+  const tx=bCX(to),   ty=bCY(to);
+  let mx = (conn.mx!==null&&conn.mx!==undefined) ? conn.mx : (fx+tx)/2;
+  let my = (conn.my!==null&&conn.my!==undefined) ? conn.my : (fy+ty)/2;
+  const ep1 = edgePt(from, mx, my);
+  const ep2 = edgePt(to,   mx, my);
+  const d   = `M ${ep1.x} ${ep1.y} Q ${mx} ${my} ${ep2.x} ${ep2.y}`;
+
+  const path = ns('path'); setA(path,{d,fill:'none',stroke,'stroke-width':sw,'marker-end':marker});
+  svgEl.appendChild(path);
+  const hit = ns('path'); setA(hit,{d,fill:'none',stroke:'transparent','stroke-width':14,cursor:'pointer'});
+  hit.addEventListener('click', e=>{ e.stopPropagation(); selectedConnId=conn.id; selectedId=null; render(); renderConnPanel(conn); });
+  svgEl.appendChild(hit);
+
+  const mpR = selC?6:4;
+  const mp  = sv('circle',{cx:mx,cy:my,r:mpR,fill:selC?'#a78bfa':'var(--bg4)',stroke:selC?'#a78bfa':'#3a4060','stroke-width':1.5,cursor:'grab'});
+  mp.addEventListener('mousedown', e=>{ e.stopPropagation(); dragMid(e,conn); });
+  svgEl.appendChild(mp);
+  drawLabel(conn.label, mx, my-14);
+}
+
+function drawSelfLoop(conn, b, stroke, marker, sw, sel) {
+  const lo = conn.loopOff || {dx:80, dy:-64};
+  const cx = bCX(b), cy = bCY(b);
+  const lx = cx+lo.dx, ly = cy+lo.dy;
+  const ep1 = edgePt(b, lx, b.y-50);
+  const ep2 = edgePt(b, b.x+b.w+50, ly);
+  const d   = `M ${ep1.x} ${ep1.y} C ${ep1.x} ${ly-20}, ${lx-20} ${ep2.y}, ${ep2.x} ${ep2.y}`;
+  const path = ns('path'); setA(path,{d,fill:'none',stroke,'stroke-width':sw,'stroke-dasharray':sel?'':'5 3','marker-end':marker});
+  svgEl.appendChild(path);
+  const hit = ns('path'); setA(hit,{d,fill:'none',stroke:'transparent','stroke-width':14,cursor:'pointer'});
+  hit.addEventListener('click', e=>{ e.stopPropagation(); selectedConnId=conn.id; selectedId=null; render(); renderConnPanel(conn); });
+  svgEl.appendChild(hit);
+  const hR  = sel?7:5;
+  const hnd = sv('circle',{cx:lx,cy:ly,r:hR,fill:sel?'#a78bfa':'var(--bg4)',stroke:sel?'#a78bfa':'#555e80','stroke-width':1.5,cursor:'grab'});
+  hnd.addEventListener('mousedown', e=>{ e.stopPropagation(); dragLoop(e,conn,b); });
+  svgEl.appendChild(hnd);
+  const inf = ns('text'); setA(inf,{x:lx,y:ly-13,'text-anchor':'middle','dominant-baseline':'central',fill:'#555e80','font-size':'17','font-family':"'JetBrains Mono',monospace"});
+  inf.textContent='∞'; svgEl.appendChild(inf);
+  drawLabel(conn.label, lx+12, ly+4);
+}
+
+function drawLabel(label, x, y) {
+  if (!label) return;
+  const lw = label.length*6.5+10;
+  const bg = sv('rect',{x:x-lw/2,y:y-8,width:lw,height:14,rx:3,fill:'var(--bg)',stroke:'none'});
+  const t  = ns('text'); setA(t,{x,y,'text-anchor':'middle','dominant-baseline':'central',fill:'#f5a623','font-size':'12','font-weight':'400','font-family':"'JetBrains Mono',monospace"});
+  t.textContent = label;
+  svgEl.appendChild(bg); svgEl.appendChild(t);
+}
+
+// ── Drag midpoint ─────────────────────────────────────
+function dragMid(e, conn) {
+  e.preventDefault();
+  const move = ev => {
+    const w = screenToWorld(ev.clientX - canvasWrap.getBoundingClientRect().left, ev.clientY - canvasWrap.getBoundingClientRect().top);
+    conn.mx = w.x; conn.my = w.y; render();
+  };
+  const up = () => { document.removeEventListener('mousemove',move); document.removeEventListener('mouseup',up); };
+  document.addEventListener('mousemove',move); document.addEventListener('mouseup',up);
+}
+function dragLoop(e, conn, b) {
+  e.preventDefault();
+  if (!conn.loopOff) conn.loopOff={dx:80,dy:-64};
+  const move = ev => {
+    const w = screenToWorld(ev.clientX - canvasWrap.getBoundingClientRect().left, ev.clientY - canvasWrap.getBoundingClientRect().top);
+    conn.loopOff = { dx:w.x - bCX(b), dy:w.y - bCY(b) }; render();
+  };
+  const up = () => { document.removeEventListener('mousemove',move); document.removeEventListener('mouseup',up); };
+  document.addEventListener('mousemove',move); document.addEventListener('mouseup',up);
+}
+
+// ── Block drag ────────────────────────────────────────
+function startBlockDrag(e, id) {
+  const cur = e.target.getAttribute('cursor');
+  if (cur === 'nwse-resize' || cur === 'crosshair') return;
+  e.preventDefault(); e.stopPropagation();
+  pushUndo();
+  const b  = blocks.find(b=>b.id===id);
+  const w0 = screenToWorld(e.clientX - canvasWrap.getBoundingClientRect().left, e.clientY - canvasWrap.getBoundingClientRect().top);
+  const ox = w0.x - b.x, oy = w0.y - b.y;
+  const move = ev => {
+    const r = canvasWrap.getBoundingClientRect();
+    const w = screenToWorld(ev.clientX-r.left, ev.clientY-r.top);
+    b.x = w.x-ox; b.y = w.y-oy; render();
+  };
+  const up = () => { document.removeEventListener('mousemove',move); document.removeEventListener('mouseup',up); };
+  document.addEventListener('mousemove',move); document.addEventListener('mouseup',up);
+}
+
+// ── Resize ────────────────────────────────────────────
+function startResize(e, id) {
+  e.preventDefault(); e.stopPropagation(); pushUndo();
+  const b = blocks.find(b=>b.id===id);
+  const sw = b.w, sh = b.h;
+  const sx = e.clientX, sy = e.clientY;
+  const move = ev => {
+    b.w = Math.max(MIN_W[b.type], sw+(ev.clientX-sx)/view.scale);
+    b.h = Math.max(MIN_H[b.type], sh+(ev.clientY-sy)/view.scale);
+    render(); if (selectedId===id) renderPanel();
+  };
+  const up = () => { document.removeEventListener('mousemove',move); document.removeEventListener('mouseup',up); };
+  document.addEventListener('mousemove',move); document.addEventListener('mouseup',up);
+}
+
+// ── Connections ───────────────────────────────────────
+let connStart=null, connPreview=null;
+function canAddOutgoingConnection(fromId) {
+  const from = blocks.find(b => b.id === fromId);
+  if (!from) return false;
+  if (from.type === 'decision') return true;
+  return connections.filter(c => c.from === fromId).length === 0;
+}
+function startConn(e, blockId, cx, cy) {
+  e.preventDefault();
+  connStart={blockId,cx,cy};
+  connPreview = sv('line',{x1:cx,y1:cy,x2:cx,y2:cy,stroke:'#4f9eff','stroke-width':1.5,'stroke-dasharray':'4 3','pointer-events':'none'});
+  svgEl.appendChild(connPreview);
+  const move = ev => {
+    const r = canvasWrap.getBoundingClientRect();
+    const w = screenToWorld(ev.clientX-r.left, ev.clientY-r.top);
+    connPreview.setAttribute('x2',w.x); connPreview.setAttribute('y2',w.y);
+  };
+  const up = ev => {
+    document.removeEventListener('mousemove',move); document.removeEventListener('mouseup',up);
+    if (connPreview) { svgEl.removeChild(connPreview); connPreview=null; }
+    const r = canvasWrap.getBoundingClientRect();
+    const w = screenToWorld(ev.clientX-r.left, ev.clientY-r.top);
+    const target = findBlockAt(w.x, w.y);
+    if (target !== null) {
+      if (!canAddOutgoingConnection(connStart.blockId)) {
+        alert('State and conditional output boxes can only have one outgoing connection.');
+        connStart=null;
+        return;
+      }
+      pushUndo();
+      connections.push(mkConn(connStart.blockId, target, autoLabel(connStart.blockId, target)));
+      render();
+    }
+    connStart=null;
+  };
+  document.addEventListener('mousemove',move); document.addEventListener('mouseup',up);
+}
+function autoLabel(fromId, toId) {
+  const from = blocks.find(b=>b.id===fromId);
+  if (from&&from.type==='decision') {
+    const ex = connections.filter(c=>c.from===fromId);
+    if (!ex.some(c=>c.label==='true'))  return 'true';
+    if (!ex.some(c=>c.label==='false')) return 'false';
+  }
+  return '';
+}
+function findBlockAt(wx, wy) {
+  for (let b of [...blocks].reverse()) {
+    if (b.type==='decision') {
+      if (Math.abs(wx-bCX(b))/(b.w/2)+Math.abs(wy-bCY(b))/(b.h/2)<=1.1) return b.id;
+    } else {
+      if (wx>=b.x&&wx<=b.x+b.w&&wy>=b.y&&wy<=b.y+b.h) return b.id;
+    }
+  }
+  return null;
+}
+
+// ════════════════════════════════════════════════════════
+//  SELECT / PANELS
+// ════════════════════════════════════════════════════════
+function selectBlock(id) {
+  selectedId=id; selectedConnId=null;
+  renderSideEditor();
+  render();
+}
+function renderSideEditor() {
+  const el = document.getElementById('sideEditor');
+  if (!el) return;
+  if (selectedConnId) { renderConnPanel(connections.find(c=>c.id===selectedConnId)); return; }
+  if (!selectedId) {
+    el.innerHTML='<div style="color:var(--text3);font-size:17px;padding:8px 0;text-align:center">Click a block to edit</div>';
+    return;
+  }
+  const b = blocks.find(b=>b.id===selectedId); if (!b) return;
+  const names={state:'State Box',decision:'Decision Box',output:'Conditional Output'};
+  const hints={
+    state:   '// Runs each cycle\n// x = x + 1;',
+    decision:'// Boolean expression\n// x > 5',
+    output:  '// Path assignment\n// result = x * 2;'
+  };
+  const conns = connections.filter(c=>c.from===b.id);
+  const isStart = b.id === startBlockId && b.type === 'state';
+  el.innerHTML = `
+    <div class="sidebar-label">${names[b.type]}</div>
+    ${b.type==='state'?`<button class="btn ${isStart?'active':''}" style="width:100%;margin-bottom:8px;font-size:17px" onclick="setStart('${b.id}')">
+      ${isStart?'★ Start state':'☆ Set as start'}
+    </button>`:''}
+    <div class="editor-section">
+      <div class="editor-label">Name</div>
+      <input class="editor-input" value="${h(b.name)}" oninput="liveUpdate('name',this.value)" placeholder="Block name">
+    </div>
+    <div class="editor-section">
+      <div class="editor-label">Code</div>
+      <textarea class="editor-input" rows="5" oninput="handleCodeEditorInput(this)">${h(b.code)}</textarea>
+      <div class="editor-hint">${h(hints[b.type])}</div>
+    </div>
+    <div class="editor-section">
+      <div class="editor-label">Wires out</div>
+      ${conns.length ? conns.map(c=>{
+        const to=blocks.find(b=>b.id===c.to);
+        return `<div class="var-row"><span class="var-name" style="font-size:17px">${h(c.label||'—')}</span>
+          <span style="color:var(--text2);font-size:17px;flex:1">${to?h(to.name):'?'}${c.from===c.to?' ∞':''}</span>
+          <button class="btn" style="padding:1px 6px;font-size:17px" onclick="removeConn('${c.id}')">×</button>
+        </div>`;
+      }).join('') : '<div style="font-size:17px;color:var(--text3)">Drag edge dots to wire</div>'}
+    </div>
+    <div class="editor-section">
+      <div class="editor-label">Size <span style="font-size:15px;color:var(--text2)">(or drag ◢)</span></div>
+      <div style="display:flex;gap:4px">
+        <input class="editor-input" type="number" value="${Math.round(b.w)}" min="${MIN_W[b.type]}" style="width:90px"
+          oninput="liveUpdate('w',Math.max(${MIN_W[b.type]},+this.value))">
+        <input class="editor-input" type="number" value="${Math.round(b.h)}" min="${MIN_H[b.type]}" style="width:90px"
+          oninput="liveUpdate('h',Math.max(${MIN_H[b.type]},+this.value))">
+      </div>
+    </div>
+    
+    <button class="btn danger" style="width:100%;font-size:17px;margin-top:4px" onclick="pushUndo();deleteBlock('${b.id}')">Delete block</button>
+  `;
+}
+function renderPanel() { renderSideEditor(); } // alias kept for any remaining calls
+
+function renderConnPanel(conn) {
+  if (!conn) return;
+  const el = document.getElementById('sideEditor'); if (!el) return;
+  const from=blocks.find(b=>b.id===conn.from), to=blocks.find(b=>b.id===conn.to);
+  const isSelf=conn.from===conn.to;
+  el.innerHTML=`
+    <div class="sidebar-label">Connection${isSelf?' — loop':''}</div>
+    <div style="font-size:17px;color:var(--text2);margin-bottom:10px">${from?h(from.name):'?'} ${isSelf?'↺':'→'} ${to?h(to.name):'?'}</div>
+    <div class="editor-section">
+      <div class="editor-label">Label</div>
+      <input class="editor-input" value="${h(conn.label)}" oninput="updateConn('${conn.id}','label',this.value)" placeholder="true / false">
+    </div>
+    <button class="btn danger" style="width:100%;margin-top:4px;font-size:17px" onclick="removeConn('${conn.id}')">Delete connection</button>
+    <div class="editor-hint" style="margin-top:8px">Drag ● on canvas to reroute.</div>
+  `;
+}
+
+function setStart(id) {
+  pushUndo(); startBlockId = id;
+  render(); renderPanel();
+}
+function liveUpdate(field, val) {
+  const b = blocks.find(b=>b.id===selectedId);
+  if (!b) return;
+  b[field] = val;
+  prevSimVars = {};
+  lastWrittenVars = new Set(); // typing must never trigger flash
+
+  if (field === 'code') {
+    const registeredNames = getRegisteredVarNames();
+
+    // All vars still assigned somewhere in the design
+    const stillAssigned = new Set();
+    blocks.forEach(bl => extractAssignedNames(bl.code, { blockType: bl.type }).forEach(n => stillAssigned.add(n)));
+
+    // Remove from simVars any var that is no longer assigned anywhere
+    // AND is not a user-defined input variable
+    Object.keys(simVars).forEach(varName => {
+      if (!stillAssigned.has(varName) && !(varName in userVars)) {
+        delete simVars[varName];
+        delete combDefaults[varName];
+      }
+    });
+
+    // Pre-initialize any newly introduced vars
+    extractAssignedNames(val, { blockType: b.type }).forEach(varName => {
+      if (!(varName in simVars)) {
+        simVars[varName] = registeredNames.has(varName)
+          ? 0
+          : (varName in combDefaults ? combDefaults[varName] : 0);
+      }
+    });
+  }
+
+  traceAsmBlock();
+  evalCombinationalPath();
+  render();
+  if (activeTab === 'vars') renderVarsPanel();
+}
+
+function handleCodeEditorInput(textarea) {
+  const b = blocks.find(b => b.id === selectedId);
+  if (!b) return;
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  let next = textarea.value.replace(/<-/g, '←');
+  if (b.type !== 'decision') {
+    next = next.replace(/\b([A-Za-z_$][A-Za-z0-9_$]*)\s*<=\s*(?=[A-Za-z0-9_$\-\+(])/g, '$1 ← ');
+  }
+  if (next !== textarea.value) {
+    const delta = next.length - textarea.value.length;
+    textarea.value = next;
+    textarea.setSelectionRange(start + delta, end + delta);
+  }
+  liveUpdate('code', textarea.value);
+  updateCodeValidationDisplay();
+}
+function updateCodeValidationDisplay() {
+  const b = blocks.find(b => b.id === selectedId);
+  if (!b || !['state', 'output'].includes(b.type)) return;
+  
+  const validation = validateAssignmentCode(b.code, b.type);
+  const textarea = document.querySelector('#sideEditor textarea');
+  if (!textarea) return;
+  
+  let errorBox = textarea.parentElement.querySelector('.code-error-box');
+  if (!errorBox) {
+    errorBox = document.createElement('div');
+    errorBox.className = 'code-error-box';
+    textarea.parentElement.appendChild(errorBox);
+  }
+  
+  if (!validation.valid && validation.errors.length > 0) {
+    errorBox.innerHTML = validation.errors.map(err => 
+      `<div class="error-item">• ${err}</div>`
+    ).join('');
+    errorBox.style.display = 'block';
+  } else {
+    errorBox.style.display = 'none';
+  }
+}
+
+// Validate code in state/output boxes. Returns { valid: bool, errors: string[] }
+function validateAssignmentCode(code, blockType) {
+  const errors = [];
+  
+  if (!code || !code.trim()) {
+    return { valid: true, errors: [] }; // empty is OK
+  }
+
+  const statements = splitCodeStatements(code, { blockType });
+  
+  statements.forEach((stmt, idx) => {
+    const lineNum = idx + 1;
+    
+    // Check if statement looks like a comparison (==, !=, <=, >=, <, >) instead of assignment (=)
+    if (stmt.match(/==|!=/) || (stmt.match(/<=|>=/) && !stmt.match(/^[A-Za-z_$][A-Za-z0-9_$]*\s*[+\-*/%&|^]?=/))) {
+      errors.push(`Line ${lineNum}: <code>${h(stmt)}</code> looks like a comparison. Did you mean <code>=</code> instead of <code>==</code>?`);
+      return;
+    }
+    
+    // Parse assignment
+    const parsed = parseAssignmentStatement(stmt);
+    
+    if (!parsed) {
+      // Not a valid assignment
+      if (stmt) {
+        if (/^[A-Za-z_$][A-Za-z0-9_$]*\s*[=!<>]+/.test(stmt)) {
+          errors.push(`Line ${lineNum}: Invalid syntax: <code>${h(stmt)}</code> — use <code>varName = expr;</code>`);
+        } else if (!/^[A-Za-z_$]/.test(stmt)) {
+          errors.push(`Line ${lineNum}: Must start with variable name: <code>${h(stmt)}</code>`);
+        } else {
+          errors.push(`Line ${lineNum}: Not a valid assignment: <code>${h(stmt)}</code>`);
+        }
+      }
+      return;
+    }
+    
+    const { lhs, rhs } = parsed;
+    
+    // Validate LHS
+    if (!/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(lhs)) {
+      errors.push(`Line ${lineNum}: Invalid variable name: <code>${h(lhs)}</code>`);
+      return;
+    }
+    
+    // Check for decimal literals (reject floating point numbers)
+    if (/\b\d+\.\d+\b/.test(rhs)) {
+      errors.push(`Line ${lineNum}: Decimal numbers not allowed — only integers. Found in <code>${h(rhs)}</code>`);
+    }
+    
+    // Try evaluating RHS to catch expression errors
+    try {
+      const result = evalExprInScope(rhs, { ...simVars });
+      // Check if result is an integer
+      if (!Number.isInteger(result)) {
+        errors.push(`Line ${lineNum}: Expression <code>${h(rhs)}</code> evaluates to non-integer <code>${result}</code> — only integers allowed`);
+      }
+    } catch(e) {
+      const msg = (e.message || String(e)).replace(/^SyntaxError: /i, '');
+      errors.push(`Line ${lineNum}: Invalid expression <code>${h(rhs)}</code> — ${msg}`);
+    }
+  });
+  
+  return { valid: errors.length === 0, errors };
+}
+
+function updateConn(id, field, val) {
+  const c=connections.find(c=>c.id===id);
+  if (c) { c[field]=val; render(); }
+}
+function removeConn(id) {
+  pushUndo();
+  connections=connections.filter(c=>c.id!==id);
+  if (selectedConnId===id) { selectedConnId=null; renderPanel(); }
+  render();
+}
+
+// ════════════════════════════════════════════════════════
+//  TABS
+// ════════════════════════════════════════════════════════
+function switchTab(tab) {
+  activeTab=tab;
+  ['vars','table','log'].forEach(t => {
+    const el=document.getElementById('tab'+t[0].toUpperCase()+t.slice(1));
+    if(el) el.classList.toggle('active',t===tab);
+  });
+  if (tab==='vars')  renderVarsPanel();
+  else if (tab==='table') renderTablePanel();
+  else if (tab==='log')  renderLogPanel();
+}
+
+// VARS
+function renderVarsPanel() {
+  const allAsmAssigned = new Set();
+  blocks.forEach(b => extractAssignedNames(b.code, { blockType: b.type }).forEach(n => allAsmAssigned.add(n)));
+  const registeredNames = getRegisteredVarNames();
+
+  // True inputs: user-added AND never assigned in any ASM box
+  const inputKeys = Object.keys(userVars).filter(k => !allAsmAssigned.has(k));
+  const clashKeys = Object.keys(userVars).filter(k =>  allAsmAssigned.has(k));
+
+  // All internal vars: everything in simVars that isn't a true input
+  const internalKeys = [...new Set([
+    ...Object.keys(simVars).filter(k => !inputKeys.includes(k)),
+    ...allAsmAssigned  // include even if not yet in simVars
+  ])].filter(k => !inputKeys.includes(k));
+
+  // Classify internals
+  const stateAssignedNames = new Set();
+  blocks.filter(b => b.type === 'state').forEach(b => extractAssignedNames(b.code, { blockType: b.type }).forEach(n => stateAssignedNames.add(n)));
+  const regKeys  = internalKeys.filter(k =>  registeredNames.has(k));
+  const combKeys = internalKeys.filter(k => !registeredNames.has(k));
+
+  // Detect undeclared inputs: vars used in code but not in userVars and not assigned anywhere
+  const undeclared = [];
+  blocks.forEach(b => {
+    // scan all variable names referenced in code (not just LHS)
+    const allUsed = (b.code || '').match(/\b([A-Za-z_$][A-Za-z0-9_$]*)\b/g) || [];
+    allUsed.forEach(name => {
+      if (!allAsmAssigned.has(name) && !(name in userVars) && !(name in simVars) &&
+          !['true','false','null','undefined','NaN','Infinity','Math','if','else','return','let','var','const'].includes(name)) {
+        undeclared.push(name);
+      }
+    });
+  });
+  const undeclaredUniq = [...new Set(undeclared)];
+
+  let html = `
+    <div class="editor-label" style="margin-bottom:6px">Input Variables
+      <span style="color:var(--text3);font-weight:400;text-transform:none;font-size:15px;margin-left:4px">never assigned in ASM boxes</span>
+    </div>
+    <div class="var-add-row">
+      <input class="editor-input" id="vn" placeholder="name" style="flex:1" onkeydown="if(event.key==='Enter')addVar()">
+      <input class="editor-input" id="vv" placeholder="val" style="width:60px" type="text" inputmode="numeric"
+        onkeydown="handleVarValKey(event,'vv')" onkeyup="if(event.key==='Enter')addVar()">
+      <button class="btn primary" onclick="addVar()" style="padding:5px 8px">+</button>
+    </div>`;
+
+  if (undeclaredUniq.length)
+    html += `<div style="margin-bottom:8px;padding:6px 8px;border-radius:6px;background:rgba(245,166,35,.12);border:1px solid var(--amber);font-size:16px;color:var(--amber)">
+      ⚠ Undeclared input${undeclaredUniq.length>1?'s':''}: <b style="font-family:var(--mono)">${undeclaredUniq.join(', ')}</b> — used in code but not declared in Vars. Add them above.
+    </div>`;
+
+  if (!inputKeys.length)
+    html += `<div style="font-size:17px;color:var(--text3);margin-bottom:6px">No inputs defined.</div>`;
+
+  inputKeys.forEach(k => {
+    html += `<div class="var-row">
+      <span class="var-name">${h(k)}</span>
+      <input class="editor-input var-int-input" data-key="${h(k)}" value="${h(String(userVars[k]))}" style="flex:1;padding:2px 6px"
+        type="text" inputmode="numeric"
+        onkeydown="handleVarValKey(event,'',this)"
+        oninput="onInputVarChange('${h(k)}', this.value, this)">
+      <button class="btn" style="padding:1px 5px;font-size:16px" onclick="removeVar('${h(k)}')">×</button>
+    </div>`;
+  });
+
+  if (clashKeys.length)
+    html += `<div style="margin-top:6px;font-size:16px;color:var(--amber)">⚠ ${clashKeys.join(', ')} clashes with ASM assignment — treated as internal.</div>`;
+
+  // ── Registered vars ──────────────────────────────────
+  if (regKeys.length) {
+    html += `<div class="editor-label" style="margin-top:14px;margin-bottom:6px">
+      Registered Vars <span style="color:var(--accent);font-size:9px;font-family:var(--mono)">[reg]</span>
+      <span style="color:var(--text3);font-weight:400;text-transform:none;font-size:15px;margin-left:4px">update on CLK edge</span>
+    </div>`;
+    regKeys.forEach(k => {
+      const v = k in simVars ? simVars[k] : '—';
+      const dbl = liveDoubleDriverVarNames.has(k);
+      const changed = lastWrittenVars.has(k);
+      const initVal = (k in regInitValues) ? regInitValues[k] : 0;
+      const canDemoteToCond = !stateAssignedNames.has(k) && forcedRegisters.has(k);
+      html += `<div class="var-row${changed?' var-changed':''}" style="flex-wrap:wrap;gap:4px">
+
+  <div style="display:flex;flex-direction:column;min-width:60px">
+    <span class="var-name" style="${dbl?'color:var(--red)':''}">
+      ${h(k)}
+    </span>
+
+    ${canDemoteToCond ? `
+      <label style="
+        font-size:13px;
+        color:var(--text3);
+        display:flex;
+        align-items:center;
+        gap:3px;
+        cursor:pointer;
+        margin-top:2px
+      ">
+        <input
+          type="checkbox" class="big-checkbox"
+          onchange="toggleRegisterConditional('${h(k)}',this.checked)"
+          style="cursor:pointer">
+        cond
+      </label>
+    ` : ``}
+  </div>
+
+  ${dbl?`<span style="color:var(--red);font-size:16px">⚡ double driver</span>`:''}
+
+  <span style="font-size:15px;color:var(--text3)">init:</span>
+
+  <input class="editor-input"
+    value="${h(String(initVal))}"
+    style="width:54px;padding:1px 5px;font-size:17px"
+    type="text"
+    inputmode="numeric"
+    title="Initial value (used on Reset)"
+    onkeydown="handleVarValKey(event,'',this)"
+    oninput="setRegInitValue('${h(k)}', this.value, this)">
+
+  <span class="var-val"
+    data-varkey="${h(k)}"
+    style="margin-left:auto">
+    ${h(JSON.stringify(v))}
+  </span></div>`;
+    });
+ 
+  
+  }
+
+  // ── Combinational vars with editable defaults + register checkbox ────────
+  if (combKeys.length) {
+    html += `<div class="editor-label" style="margin-top:14px;margin-bottom:6px">
+      Combinational Vars <span style="color:var(--purple);font-size:9px;font-family:var(--mono)">[comb]</span>
+      <span style="color:var(--text3);font-weight:400;text-transform:none;font-size:15px;margin-left:4px">instant update</span>
+    </div>`;
+    combKeys.forEach(k => {
+      const cur  = k in simVars ? simVars[k] : (k in combDefaults ? combDefaults[k] : 0);
+      const def  = k in combDefaults ? combDefaults[k] : 0;
+      const changed = lastWrittenVars.has(k) || (k in prevSimVars && prevSimVars[k] !== simVars[k]);
+      const isReg = forcedRegisters.has(k);
+      const dbl = liveDoubleDriverVarNames.has(k);
+      const regInit = (k in regInitValues) ? regInitValues[k] : def;
+      html += `<div class="var-row${changed?' var-changed':''}" style="flex-wrap:wrap;gap:4px">
+  <div style="display:flex;flex-direction:column;min-width:60px">
+    
+    <span class="var-name" style="${dbl?'color:var(--red)':''}">
+      ${h(k)}
+    </span>
+
+    ${dbl ? `
+      <span style="color:var(--red);font-size:16px">
+        ⚡ double driver
+      </span>
+    ` : ``}
+
+    <label
+      style="
+        font-size:13px;
+        color:var(--text3);
+        display:flex;
+        align-items:center;
+        gap:3px;
+        cursor:pointer;
+        margin-top:2px
+      "
+      title="Treat as register (updates on CLK edge)"
+    >
+      <input
+        type="checkbox" class="big-checkbox"
+        ${isReg ? 'checked' : ''}
+        onchange="toggleForcedRegister('${h(k)}',this.checked)"
+        style="cursor:pointer"
+      >
+      reg
+    </label>
+
+  </div>
+
+  ${!isReg ? `
+    <span style="font-size:16px;color:var(--text3)">default:</span>
+    <input
+      class="editor-input"
+      value="${h(String(def))}"
+      style="width:54px;padding:1px 5px;font-size:17px"
+      title="Default value when path is inactive"
+      type="text"
+      inputmode="numeric"
+      onkeydown="handleVarValKey(event,'',this)"
+      oninput="setCombDefault('${h(k)}', this.value, this)"
+    >
+  ` : `
+    <span style="font-size:15px;color:var(--text3)">init:</span>
+    <input
+      class="editor-input"
+      value="${h(String(regInit))}"
+      style="width:54px;padding:1px 5px;font-size:17px"
+      title="Initial register value"
+      type="text"
+      inputmode="numeric"
+      onkeydown="handleVarValKey(event,'',this)"
+      oninput="setRegInitValue('${h(k)}', this.value, this)"
+    >
+  `}
+
+  <span
+    class="var-val"
+    data-varkey="${h(k)}"
+    style="margin-left:auto"
+  >
+    ${h(JSON.stringify(cur))}
+  </span>
+
+</div>`;
+    });
+  }
+   html += `<span style="font-size:15px;color:var(--text2)">
+Combinational variables can be declared as registers instead by checking the checkbox under the variable name. Such variables can be reverted back to combinational logic if desired.
+</span>`;
+  document.getElementById('panelContent').innerHTML = html;
+}
+
+function onInputVarChange(key, rawVal, inputEl) {
+  // Allow partial input like "-" or empty without clobbering focus
+  if (rawVal === '' || rawVal === '-') return;
+  const val = parseIntSafe(rawVal);
+  if (val === null) return; // not a valid integer yet
+  userVars[key] = val;
+  prevSimVars = { ...simVars };
+  simVars[key] = val;
+  traceAsmBlock();
+  evalCombinationalPath();
+  render();
+  // Don't fully re-render the panel (would kill focus); just update display values
+  updateVarDisplayValues();
+}
+
+function setCombDefault(key, rawVal, inputEl) {
+  if (rawVal === '' || rawVal === '-') return;
+  const val = parseIntSafe(rawVal);
+  if (val === null) return;
+  combDefaults[key] = val;
+  prevSimVars = {};
+  lastWrittenVars = new Set();
+  // Re-evaluate immediately so the var reflects new default if off-path
+  traceAsmBlock(); evalCombinationalPath(); render();
+  updateVarDisplayValues();
+}
+
+// Parse a string as an integer (supports negatives). Returns null if incomplete/invalid.
+function parseIntSafe(s) {
+  s = String(s).trim();
+  if (s === '' || s === '-') return null;
+  const n = parseInt(s, 10);
+  if (isNaN(n)) return null;
+  // Ensure no decimal / extra chars
+  if (String(n) !== s && '-'+String(Math.abs(n)) !== s) return null;
+  return n;
+}
+
+function stripLineComment(stmt) {
+  const idx = stmt.indexOf('//');
+  return idx >= 0 ? stmt.slice(0, idx) : stmt;
+}
+
+function splitCodeStatements(code, options = {}) {
+  return normalizeCode(code, options)
+    .split(/[\n;]+/)
+    .map(stripLineComment)
+    .map(s => s.trim())
+    .filter(Boolean);
+}
+
+function parseAssignmentStatement(stmt) {
+  const m = stmt.match(/^([A-Za-z_$][A-Za-z0-9_$]*)\s*(=|\+=|-=|\*=|\/=|%=|&=|\|=|\^=|<<=|>>=|>>>=)\s*(.+)$/);
+  if (!m) return null;
+  return { lhs:m[1], op:m[2], rhs:m[3].trim(), raw:stmt };
+}
+
+function ensureIntegerResult(value, stmt, blockType) {
+  if (!Number.isFinite(value) || !Number.isInteger(value)) {
+    throw new Error(`${blockType === 'state' ? 'State box' : 'Assignment'} must produce an integer: ${stmt}`);
+  }
+}
+
+function evalExprInScope(expr, scope) {
+  const names = Object.keys(scope);
+  const vals = Object.values(scope);
+  return (new Function(...names, 'return (' + expr + ');'))(...vals);
+}
+
+function applyCompoundAssignment(oldVal, op, rhsVal) {
+  switch (op) {
+    case '=':   return rhsVal;
+    case '+=':  return oldVal + rhsVal;
+    case '-=':  return oldVal - rhsVal;
+    case '*=':  return oldVal * rhsVal;
+    case '/=':  return oldVal / rhsVal;
+    case '%=':  return oldVal % rhsVal;
+    case '&=':  return oldVal & rhsVal;
+    case '|=':  return oldVal | rhsVal;
+    case '^=':  return oldVal ^ rhsVal;
+    case '<<=': return oldVal << rhsVal;
+    case '>>=': return oldVal >> rhsVal;
+    case '>>>=': return oldVal >>> rhsVal;
+    default:    return rhsVal;
+  }
+}
+
+function evaluateAssignmentBlock(code, baseScope, options = {}) {
+  const writes = [];
+  const assignedCounts = {};
+
+  const blockType = options.blockType || '';
+
+  // output/conditional boxes use combinational settling
+  const isConditional = blockType === 'output';
+
+  // working scope
+  const scope = { ...baseScope };
+
+  const statements = splitCodeStatements(code, options);
+
+  // STATE BOXES
+  // concurrent semantics (your old behavior)
+  if (!isConditional) {
+
+    statements.forEach(stmt => {
+      const parsed = parseAssignmentStatement(stmt);
+      if (!parsed) return;
+
+      const lhs = parsed.lhs;
+
+      const oldVal = lhs in baseScope ? baseScope[lhs] : 0;
+
+      const rhsVal = evalExprInScope(parsed.rhs, baseScope);
+
+      const value = applyCompoundAssignment(
+        oldVal,
+        parsed.op,
+        rhsVal
+      );
+
+      ensureIntegerResult(value, parsed.raw, blockType);
+
+      writes.push({
+        varName: lhs,
+        value,
+        raw: parsed.raw
+      });
+
+      assignedCounts[lhs] =
+        (assignedCounts[lhs] || 0) + 1;
+    });
+
+  }
+
+// CONDITIONAL / OUTPUT BOXES
+// combinational fixed-point evaluation
+else {
+
+  // count assignments ONCE
+  statements.forEach(stmt => {
+    const parsed = parseAssignmentStatement(stmt);
+    if (!parsed) return;
+
+    assignedCounts[parsed.lhs] =
+      (assignedCounts[parsed.lhs] || 0) + 1;
+  });
+
+  let changed = true;
+  let iter = 0;
+  const MAX_ITER = 32;
+
+  while (changed && iter < MAX_ITER) {
+    changed = false;
+    iter++;
+
+    statements.forEach(stmt => {
+
+      const parsed = parseAssignmentStatement(stmt);
+      if (!parsed) return;
+
+      const lhs = parsed.lhs;
+
+      const oldVal =
+        lhs in scope ? scope[lhs] : 0;
+
+      const rhsVal =
+        evalExprInScope(parsed.rhs, scope);
+
+      const value =
+        applyCompoundAssignment(
+          oldVal,
+          parsed.op,
+          rhsVal
+        );
+
+      // REGISTER VARIABLE
+      if (isRegisterVar(lhs)) {
+
+        let existing =
+          writes.find(w => w.varName === lhs);
+
+        if (existing) {
+          existing.value = value;
+        } else {
+          writes.push({
+            varName: lhs,
+            value,
+            raw: parsed.raw
+          });
+        }
+
+      }
+
+      // COMBINATIONAL VARIABLE
+      else {
+
+        if (scope[lhs] !== value) {
+          scope[lhs] = value;
+          changed = true;
+        }
+
+        let existing =
+          writes.find(w => w.varName === lhs);
+
+        if (existing) {
+          existing.value = value;
+        } else {
+          writes.push({
+            varName: lhs,
+            value,
+            raw: parsed.raw
+          });
+        }
+      }
+
+    });
+
+  }
+}
+  const duplicateVars = new Set(
+    Object.keys(assignedCounts)
+      .filter(k => assignedCounts[k] > 1)
+  );
+
+  return {
+    writes,
+    duplicateVars
+  };
+}
+function isRegisterVar(name) {
+  return getRegisteredVarNames().has(name);
+}
+// Intercept non-numeric keys in integer-only var inputs
+function handleVarValKey(event, id, inputEl) {
+  const el = inputEl || (id ? document.getElementById(id) : null);
+  const allowed = ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Enter','Home','End'];
+  if (allowed.includes(event.key)) return;
+  if (event.key === '-' && el && el.selectionStart === 0 && !el.value.includes('-')) return;
+  if (!/^\d$/.test(event.key)) event.preventDefault();
+}
+
+// Update only the display values in the vars panel without re-rendering (preserves focus)
+function updateVarDisplayValues() {
+  // Update any .var-val spans
+  document.querySelectorAll('.var-val[data-varkey]').forEach(el => {
+    const k = el.dataset.varkey;
+    if (k in simVars) el.textContent = JSON.stringify(simVars[k]);
+  });
+}
+
+function toggleForcedRegister(key, checked) {
+  if (checked) {
+    forcedRegisters.add(key);
+    if (!(key in regInitValues)) {
+      regInitValues[key] = key in simVars ? simVars[key]
+        : (key in combDefaults ? combDefaults[key] : 0);
+    }
+  } else {
+    forcedRegisters.delete(key);
+  }
+  traceAsmBlock(); evalCombinationalPath(); render();
+  if (activeTab === 'vars') renderVarsPanel();
+}
+
+function toggleRegisterConditional(key, checked) {
+  if (!checked) return;
+  forcedRegisters.delete(key);
+  if (!(key in combDefaults)) {
+    combDefaults[key] = key in simVars ? simVars[key]
+      : (key in regInitValues ? regInitValues[key] : 0);
+  }
+  traceAsmBlock(); evalCombinationalPath(); render();
+  if (activeTab === 'vars') renderVarsPanel();
+}
+
+function setRegInitValue(key, rawVal, inputEl) {
+  if (rawVal === '' || rawVal === '-') return;
+  const val = parseIntSafe(rawVal);
+  if (val === null) return;
+  regInitValues[key] = val;
+  prevSimVars = {};
+  lastWrittenVars = new Set();
+  // Don't change simVars live — only takes effect on Reset
+}
+
+function removeVar(k) {
+  delete userVars[k];
+  traceAsmBlock(); evalCombinationalPath(); render();
+  renderVarsPanel();
+}
+function addVar() {
+  const n = document.getElementById('vn').value.trim();
+  const vRaw = document.getElementById('vv').value;
+  if (!n) return;
+  const v = parseIntSafe(vRaw);
+  userVars[n] = v !== null ? v : 0;
+  simVars[n]  = userVars[n];
+  traceAsmBlock(); evalCombinationalPath(); render();
+  renderVarsPanel();
+}
+function removeVar(k) {
+  delete userVars[k];
+  traceAsmBlock(); evalCombinationalPath(); render();
+  renderVarsPanel();
+}
+function renderTablePanel() {
+  const stateBlocks = blocks.filter(b=>b.type==='state');
+  if (!stateBlocks.length) {
+    document.getElementById('panelContent').innerHTML='<div style="font-size:18px;color:var(--text3);padding:20px 0;text-align:center">No state blocks yet</div>';
+    return;
+  }
+  const rows = [];
+  stateBlocks.forEach(state => {
+    // Find the first outgoing connection from this state
+    const outConns = connections.filter(c=>c.from===state.id);
+    if (!outConns.length) {
+      rows.push({ state:state.name, condition:'—', output:'—', nextState:'—', isActive: activeBlock===state.id });
+      return;
+    }
+    // Walk the ASM block combinatorially to find all paths
+    const paths = [];
+    function walkPath(curId, pathConns, depth) {
+      if (depth > 20) return;
+      const cur = blocks.find(b=>b.id===curId);
+      if (!cur) return;
+      if (cur.type==='state' && curId !== state.id) {
+        paths.push({ conditions: pathConns.filter(c=>c.label).map(c=>c.label), outputs: [], nextState: cur.name });
+        return;
+      }
+      const outs = connections.filter(c=>c.from===curId);
+      if (!outs.length) {
+        paths.push({ conditions: pathConns.filter(c=>c.label).map(c=>c.label), outputs: [], nextState:'(end)' });
+        return;
+      }
+      if (cur.type==='decision') {
+        outs.forEach(c => walkPath(c.to, [...pathConns,c], depth+1));
+      } else {
+        walkPath(outs[0].to, [...pathConns, outs[0]], depth+1);
+      }
+    }
+    walkPath(state.id, [], 0);
+
+    if (!paths.length) {
+      rows.push({ state:state.name, condition:'—', output:'—', nextState:'—', isActive: activeBlock===state.id });
+    } else {
+      paths.forEach((p,i) => {
+        rows.push({
+          state: i===0 ? state.name : '',
+          condition: p.conditions.join(' & ') || '—',
+          nextState: p.nextState,
+          isActive: activeBlock===state.id
+        });
+      });
+    }
+  });
+
+  document.getElementById('panelContent').innerHTML=`
+    <div class="editor-label" style="margin-bottom:8px">ASM Transition Table</div>
+    <div style="overflow-x:auto">
+    <table class="asm-table">
+      <thead><tr>
+        <th>State</th><th>Condition</th><th>Next State</th>
+      </tr></thead>
+      <tbody>
+        ${rows.map(r=>`<tr class="${r.isActive&&r.state?'tbl-active':''}">
+          <td style="color:${r.state?'#4f9eff':'var(--text3)'};font-weight:${r.state?'600':'400'}">${h(r.state)}</td>
+          <td>${h(r.condition)}</td>
+          <td style="color:var(--green)">${h(r.nextState)}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+    </div>
+  `;
+}
+
+// LOG
+function renderLogPanel() {
+  let html=simLog.length
+    ? simLog.map(e=>`<div class="log-entry ${e.type}"><span class="log-step">${e.step}</span><span>${h(e.msg)}</span></div>`).join('')
+    : '<div style="font-size:18px;color:var(--text3);padding:20px 0;text-align:center">Run simulation to see log</div>';
+  document.getElementById('panelContent').innerHTML=html;
+  const pc=document.getElementById('panelContent'); pc.scrollTop=pc.scrollHeight;
+}
+
+// ════════════════════════════════════════════════════════
+//  SIMULATION
+// ════════════════════════════════════════════════════════
+function getRunInterval() {
+  const v = +document.getElementById('speedSlider').value;
+  return Math.round(1200 / v);
+}
+
+// Shared init: set up simVars, point activeBlock at start state,
+// highlight it at CLK 0 — no execution yet.
+function beginSim() {
+  simVars = { ...userVars };
+  lastCycleFingerprint = null; loopRepeatCount = 0; simFinished = false;
+  stepHistory = []; prevSimVars = {}; lastWrittenVars = new Set();
+
+  // Pre-initialize every variable that appears as an LHS assignment in any
+  // ASM box, so workVars inside advanceClockCycle is always complete and
+  // applyCode can capture new variable writes from the very first cycle.
+  const registeredNames = getRegisteredVarNames();
+  blocks.forEach(b => {
+    extractAssignedNames(b.code, { blockType: b.type }).forEach(varName => {
+      if (!(varName in simVars)) {
+        const initVal = (varName in regInitValues) ? regInitValues[varName]
+          : registeredNames.has(varName) ? 0
+          : (varName in combDefaults ? combDefaults[varName] : 0);
+        simVars[varName] = initVal;
+      }
+    });
+  });
+  // Apply regInitValues for registered vars (overrides userVars copy)
+  registeredNames.forEach(varName => {
+    if (varName in regInitValues) simVars[varName] = regInitValues[varName];
+  });
+
+  const startB = blocks.find(b => b.id === startBlockId && b.type === 'state')
+              || blocks.find(b => b.type === 'state');
+  if (!startB) return;
+  activeBlock = startB.id;
+  simStep = 0;
+  traceAsmBlock();
+  evalCombinationalPath();
+  document.getElementById('stepCounter').textContent = 'CLK 0';
+}
+
+function resetSim() {
+  clearInterval(runInterval); isRunning = false;
+  document.getElementById('btnRun').textContent = '▶ Run';
+  document.getElementById('btnRun').className = 'btn success';
+  simLog = [];
+  activeTrail = new Set(); activeConnTrail = new Set();
+  beginSim();
+  render();
+  if (activeTab === 'log')   renderLogPanel();
+  if (activeTab === 'vars')  renderVarsPanel();
+  if (activeTab === 'table') renderTablePanel();
+}
+
+function stepSim() {
+  if (!blocks.length) return;
+  if (simFinished) return;
+  if (activeBlock === null) { beginSim(); render(); return; }
+  // Block stepping when there is a double-driver conflict
+  if (liveDoubleDriverIds.size > 0) {
+    addLog('error', '⚡ Cannot step: double driver conflict — fix conflicting assignments first.');
+    if (activeTab === 'log') renderLogPanel();
+    return;
+  }
+  prevSimVars = { ...simVars };
+  advanceClockCycle();
+  document.getElementById('stepCounter').textContent = simFinished ? 'DONE' : `CLK ${simStep}`;
+  render();
+  if (activeTab === 'log')   renderLogPanel();
+  if (activeTab === 'vars')  renderVarsPanel();
+  if (activeTab === 'table') renderTablePanel();
+}
+
+// ── Variable classification ───────────────────────────
+// Scan the entire design and return the set of variable names
+// that are assigned inside ANY state box. These are "registered"
+// variables — they update on the next positive clock edge.
+// Variables assigned ONLY in conditional-output boxes (never in
+// a state box) are purely combinational.
+function getRegisteredVarNames() {
+  const registered = new Set();
+  blocks.filter(b => b.type === 'state').forEach(b => {
+    extractAssignedNames(b.code, { blockType: b.type }).forEach(n => registered.add(n));
+  });
+  // Also include any comb vars the user has promoted to register
+  forcedRegisters.forEach(n => registered.add(n));
+  return registered;
+}
+
+// Normalize <- and <= assignment syntax to = so JS can run it.
+function normalizeCode(code, options = {}) {
+  // Replace varName <- expr or varName ← expr with varName = expr
+  let out = code.replace(/\b([A-Za-z_$][A-Za-z0-9_$]*)\s*(?:<-|←)\s*/g, '$1 = ');
+  // Legacy support: allow varName <= expr as assignment outside decision boxes.
+  if (options.blockType && options.blockType !== 'decision') {
+    out = out.replace(/\b([A-Za-z_$][A-Za-z0-9_$]*)\s*<=\s*(?=[A-Za-z0-9_$\-\+(])/g, '$1 = ');
+  }
+  return out;
+}
+
+// Extract all variable names that appear on the LEFT side of
+// assignments in a block of JS-like code.
+function extractAssignedNames(code, options = {}) {
+  const names = new Set();
+  splitCodeStatements(code, options).forEach(stmt => {
+    const parsed = parseAssignmentStatement(stmt);
+    if (parsed) names.add(parsed.lhs);
+  });
+  return names;
+}
+
+// Run code against a given variable scope and return only the
+// variables that were actually changed (the delta).
+function runCodeGetDelta(code, scope) {
+  if (!code.trim()) return {};
+  const delta = {};
+  const { writes } = evaluateAssignmentBlock(code, scope);
+  writes.forEach(({ varName, value }) => {
+    if (!(varName in scope) || scope[varName] !== value) {
+      delta[varName] = value;
+    }
+  });
+  return delta;
+}
+
+// ── Evaluate combinational outputs along current active path ──
+// 1. Resets all purely-combinational vars to their combDefaults
+// 2. Walks the active path, applies comb-only assignments instantly
+// 3. Detects double-drivers (same var assigned in state box AND output box)
+// 4. Populates liveDoubleDriverIds for red rendering
+function evalCombinationalPath() {
+  liveDoubleDriverIds = new Set();
+  liveDoubleDriverVarNames = new Set();
+  if (!activeBlock) return;
+
+  const registeredNames  = getRegisteredVarNames();
+
+  // Find all vars assigned anywhere in ASM boxes (registered or comb)
+  const allAsmAssigned = new Set();
+  blocks.forEach(b => extractAssignedNames(b.code, { blockType: b.type }).forEach(n => allAsmAssigned.add(n)));
+
+  // Step 1: Reset purely-combinational vars to their defaults
+  allAsmAssigned.forEach(varName => {
+    if (!registeredNames.has(varName)) {
+      simVars[varName] = (varName in combDefaults) ? combDefaults[varName] : 0;
+    }
+  });
+
+  const stateB = blocks.find(b => b.id === activeBlock);
+  if (!stateB) return;
+
+  let stateEval;
+  try {
+    stateEval = evaluateAssignmentBlock(stateB.code, { ...simVars }, { blockType:'state' });
+  } catch (e) {
+    return;
+  }
+
+  const stateAssigned = new Set(stateEval.writes.map(w => w.varName));
+  stateEval.duplicateVars.forEach(varName => {
+    liveDoubleDriverIds.add(activeBlock);
+    liveDoubleDriverVarNames.add(varName);
+  });
+
+  const activeOutputWrites = new Map();
+
+  // Step 2: Walk path
+  let cur = stateB.id, safety = 0;
+  while (true) {
+    if (++safety > 50) break;
+    const curBlock = blocks.find(b => b.id === cur); if (!curBlock) break;
+    let conn;
+    if (curBlock.type === 'decision') {
+      let res = false;
+      try {
+        // Ensure all vars exist before evaluating
+        const scope = { ...simVars };
+        extractAssignedNames(curBlock.code, { blockType: curBlock.type }).forEach(n => { if (!(n in scope)) scope[n] = 0; });
+        const kn = Object.keys(scope), kv = Object.values(scope);
+        res = !!(new Function(...kn, 'return (' + curBlock.code + ');'))(...kv);
+      } catch(e) {}
+      const br = res ? 'true' : 'false';
+      conn = connections.find(c => c.from===cur && (c.label===br || c.label===String(res)))
+          || connections.find(c => c.from===cur);
+    } else {
+      conn = connections.find(c => c.from === cur);
+    }
+    if (!conn) break;
+    const nextBlock = blocks.find(b => b.id === conn.to); if (!nextBlock) break;
+    if (nextBlock.type === 'state') break;
+    cur = conn.to;
+
+    if (nextBlock.type === 'output') {
+      let outEval;
+      try {
+        const scope = { ...simVars };
+        outEval = evaluateAssignmentBlock(nextBlock.code, scope, { blockType:'output' });
+      } catch (e) {
+        break;
+      }
+
+      const outAssigned = new Set(outEval.writes.map(w => w.varName));
+
+      // Double-driver check
+      outAssigned.forEach(varName => {
+        if (stateAssigned.has(varName)) {
+          liveDoubleDriverIds.add(activeBlock);
+          liveDoubleDriverIds.add(nextBlock.id);
+          liveDoubleDriverVarNames.add(varName);  // only the specific var
+        }
+      });
+
+      outEval.duplicateVars.forEach(varName => {
+        liveDoubleDriverIds.add(nextBlock.id);
+        liveDoubleDriverVarNames.add(varName);
+      });
+
+      outEval.writes.forEach(({ varName, value }) => {
+        if (activeOutputWrites.has(varName)) {
+          const prev = activeOutputWrites.get(varName);
+          liveDoubleDriverIds.add(prev.blockId);
+          liveDoubleDriverIds.add(nextBlock.id);
+          liveDoubleDriverVarNames.add(varName);
+        } else {
+          activeOutputWrites.set(varName, { value, blockId: nextBlock.id });
+        }
+      });
+
+      // Apply only purely-combinational vars immediately
+      outEval.writes.forEach(({ varName, value }) => {
+        if (!registeredNames.has(varName)) {
+          simVars[varName] = value;
+        }
+      });
+    }
+  }
+}
+
+// ── Step back ─────────────────────────────────────────
+function stepBack() {
+  if (!stepHistory.length) return;
+  const snap = stepHistory.pop();
+  simVars              = { ...snap.simVars };
+  activeBlock          = snap.activeBlock;
+  simStep              = snap.simStep;
+  simLog               = snap.simLog.map(e => ({ ...e }));
+  simFinished          = snap.simFinished;
+  activeTrail          = new Set(snap.activeTrail);
+  activeConnTrail      = new Set(snap.activeConnTrail);
+  lastCycleFingerprint = snap.lastCycleFingerprint;
+  loopRepeatCount      = snap.loopRepeatCount;
+  prevSimVars          = {};  // no flash on step-back
+  lastWrittenVars      = new Set();
+  traceAsmBlock(); evalCombinationalPath();
+  document.getElementById('stepCounter').textContent = `CLK ${simStep}`;
+  render();
+  if (activeTab === 'log')   renderLogPanel();
+  if (activeTab === 'vars')  renderVarsPanel();
+  if (activeTab === 'table') renderTablePanel();
+}
+
+// ── Two-pass clock cycle ──────────────────────────────
+// Pass 1 (combinational walk):
+//   • State box:  collect assignments → nextStateBuffer (all registered)
+//   • Decision:   evaluate expression using current simVars + any
+//                 combinational updates already applied this cycle
+//   • Cond. output: for each assigned var —
+//       if registered → nextStateBuffer
+//       if combinational → apply immediately to simVars so downstream
+//                          decisions see the updated value
+// Pass 2 (clock edge / commit):
+//   • Flush nextStateBuffer into simVars
+function advanceClockCycle() {
+  if (!activeBlock || simFinished) return;
+  const stateB = blocks.find(b => b.id === activeBlock);
+  if (!stateB || stateB.type !== 'state') { addLog('error', 'Expected a state block'); return; }
+
+  // Push snapshot for step-back
+  stepHistory.push({
+    simVars:              { ...simVars },
+    activeBlock,
+    simStep,
+    simLog:               simLog.map(e => ({ ...e })),
+    simFinished,
+    activeTrail:          [...activeTrail],
+    activeConnTrail:      [...activeConnTrail],
+    lastCycleFingerprint,
+    loopRepeatCount
+  });
+  if (stepHistory.length > 100) stepHistory.shift();
+
+  activeTrail     = new Set();
+  activeConnTrail = new Set();
+  lastWrittenVars = new Set();   // reset for this cycle
+  const cycleLog  = [];
+
+  // Classify variables at design-time (every cycle, cheap enough)
+  const registeredNames = getRegisteredVarNames();
+
+  // nextStateBuffer holds registered writes — committed at clock edge
+  const nextStateBuffer = {};
+
+  // Working copy of simVars; combinational writes go here immediately
+  // so that downstream decisions within the same cycle see them.
+  // Registered writes go into nextStateBuffer instead.
+  const workVars = { ...simVars };
+
+  // Helper: evaluate an expression against workVars
+  function evalInCycle(expr) {
+    if (!expr.trim()) return false;
+    const ns = Object.keys(workVars), vs = Object.values(workVars);
+    return !!(new Function(...ns, 'return (' + expr + ');'))(...vs);
+  }
+
+  // Helper: run code, split results into registered / combinational
+  function applyCode(code, blockType, blockName) {
+    if (!code.trim()) return;
+    const baseScope = { ...workVars };
+    const { writes, duplicateVars } = evaluateAssignmentBlock(code, baseScope, { blockType });
+
+    duplicateVars.forEach(varName => {
+      const where = `[${blockName || stateB.name}]`;
+      cycleLog.push({ type:'error', msg:`  ⚡ DOUBLE DRIVER: '${varName}' assigned more than once in ${where}` });
+    });
+
+    writes.forEach(({ varName, value }) => {
+      if (!(varName in workVars)) workVars[varName] = 0;
+      lastWrittenVars.add(varName);
+      if (registeredNames.has(varName)) {
+        nextStateBuffer[varName] = value;
+      } else {
+        workVars[varName] = value;
+      }
+    });
+  }
+
+  try {
+    // ── Execute state box ──────────────────────────────
+    applyCode(stateB.code, 'state', stateB.name);
+    cycleLog.push({ type:'active', msg:`CLK ${simStep + 1} ▶ [${stateB.name}]` });
+    stateB.code.split('\n').filter(l => l.trim()).forEach(l => {
+      const varName = [...extractAssignedNames(l, { blockType: 'state' })][0];
+      const tag = varName && registeredNames.has(varName) ? ' [reg]' : '';
+      cycleLog.push({ type:'active', msg:`  ${l.trim()}${tag}` });
+    });
+    activeTrail.add(stateB.id);
+
+    // ── Walk combinational path ────────────────────────
+    let cur = stateB.id, safety = 0;
+    while (true) {
+      if (++safety > 50) { cycleLog.push({ type:'error', msg:'  Too many hops in ASM block' }); break; }
+
+      // Find next connection from current block
+      // For decision blocks use true/false label matching;
+      // for everything else just take the first outgoing wire.
+      let conn;
+      const curBlock = blocks.find(b => b.id === cur);
+      if (!curBlock) { cycleLog.push({ type:'error', msg:'  Missing block' }); simFinished=true; break; }
+
+      if (curBlock.type === 'decision') {
+        const res = evalInCycle(curBlock.code);
+        cycleLog.push({ type:'decision', msg:`  ◆ [${curBlock.name}] ${curBlock.code} → ${res}` });
+        const br = res ? 'true' : 'false';
+        conn = connections.find(c => c.from === cur && (c.label === br || c.label === String(res)))
+            || connections.find(c => c.from === cur);
+        if (!conn) { cycleLog.push({ type:'error', msg:'  No connection for: '+br }); simFinished=true; break; }
+      } else {
+        conn = connections.find(c => c.from === cur);
+        if (!conn) { cycleLog.push({ type:'active', msg:`  ▣ [${curBlock.name}] end of flow` }); simFinished=true; break; }
+      }
+
+      activeConnTrail.add(conn.id);
+
+      // Where does this wire lead?
+      const nextId = conn.to;
+
+      // If it leads to a state block → end of this ASM block
+      const nextBlock = blocks.find(b => b.id === nextId);
+      if (!nextBlock) { cycleLog.push({ type:'error', msg:'  Broken connection' }); simFinished=true; break; }
+
+      if (nextBlock.type === 'state') {
+        cycleLog.push({ type:'active', msg:`  → [${nextBlock.name}]` });
+        activeBlock = nextId;
+        break;
+      }
+      // Advance cur to next block
+      cur = nextId;
+      activeTrail.add(cur);
+
+      // Execute conditional output box (decisions already handled above)
+      if (nextBlock.type === 'output') {
+        // Double-driver check: output assigns a var also assigned by state box
+        const outEval = evaluateAssignmentBlock(nextBlock.code, { ...workVars }, { blockType:'output' });
+        const stateEval = evaluateAssignmentBlock(stateB.code, { ...simVars }, { blockType:'state' });
+        const outAssigned = new Set(outEval.writes.map(w => w.varName));
+        const stateAssigned = new Set(stateEval.writes.map(w => w.varName));
+        outAssigned.forEach(varName => {
+          if (stateAssigned.has(varName)) {
+            cycleLog.push({ type:'error',
+              msg:`  ⚡ DOUBLE DRIVER: '${varName}' assigned in both [${stateB.name}] and [${nextBlock.name}]` });
+          }
+        });
+        applyCode(nextBlock.code, 'output', nextBlock.name);
+        nextBlock.code.split('\n').filter(l => l.trim()).forEach(l => {
+          const varName = [...extractAssignedNames(l, { blockType: 'output' })][0];
+          const isReg   = varName && registeredNames.has(varName);
+          const tag     = isReg ? ' [reg]' : ' [comb]';
+          cycleLog.push({ type:'output', msg:`  ⬭ [${nextBlock.name}] ${l.trim()}${tag}` });
+        });
+      }
+      // Decision blocks: already logged above, just advance cur and loop
+    }
+  } catch(err) {
+    cycleLog.push({ type:'error', msg:'Error: ' + err.message });
+    simFinished = true;
+  }
+
+  // ── Clock edge: commit registered writes ───────────
+  Object.assign(workVars, nextStateBuffer);
+  simVars = workVars;
+
+  if (Object.keys(nextStateBuffer).length) {
+    const pairs = Object.entries(nextStateBuffer).map(([k,v]) => `${k}=${JSON.stringify(v)}`).join(', ');
+    cycleLog.push({ type:'active', msg:`  ↑ CLK edge: ${pairs}` });
+  }
+
+  // ── Loop detection ──────────────────────────────────
+  const fingerprint = activeBlock + '|' + JSON.stringify(simVars, Object.keys(simVars).sort());
+  if (fingerprint === lastCycleFingerprint) {
+    loopRepeatCount++;
+    const last = simLog[simLog.length - 1];
+    if (last && last._loopNotice) {
+      last.msg = `  ↻ Repeating loop × ${loopRepeatCount + 1}  (state: ${stateB.name}, vars stable)`;
+      last.step = simStep + 1;
+    } else {
+      simLog.push({ step:simStep + 1, type:'decision', _loopNotice:true,
+        msg:`  ↻ Repeating loop × 2  (state: ${stateB.name}, vars stable)` });
+    }
+    if (simLog.length > 200) simLog.splice(0, simLog.length - 200);
+  } else {
+    loopRepeatCount = 0;
+    lastCycleFingerprint = fingerprint;
+    cycleLog.forEach(e => simLog.push({ step:simStep + 1, type:e.type, msg:e.msg }));
+    if (simLog.length > 200) simLog.splice(0, simLog.length - 200);
+  }
+
+  simStep++;
+
+  // Highlight new current state immediately
+  if (!simFinished) {
+    traceAsmBlock(); evalCombinationalPath();
+  } else {
+    // End of flow — unhighlight everything, nothing is active
+    activeBlock     = null;
+    activeTrail     = new Set();
+    activeConnTrail = new Set();
+  }
+}
+
+// traceAsmBlock: visual-only trace with current simVars (no execution)
+function traceAsmBlock() {
+  activeTrail = new Set(); activeConnTrail = new Set();
+  if (!activeBlock) return;
+  const stateB = blocks.find(b => b.id === activeBlock); if (!stateB) return;
+  activeTrail.add(stateB.id);
+  let cur = stateB.id, safety = 0;
+  while (true) {
+    if (++safety > 50) break;
+    const curBlock = blocks.find(b => b.id === cur); if (!curBlock) break;
+
+    let conn;
+    if (curBlock.type === 'decision') {
+      let res = false;
+      try {
+        const ns = Object.keys(simVars), vs = Object.values(simVars);
+        res = !!(new Function(...ns, 'return (' + curBlock.code + ');'))(...vs);
+      } catch(e) {}
+      const br = res ? 'true' : 'false';
+      conn = connections.find(c => c.from===cur && (c.label===br || c.label===String(res)))
+          || connections.find(c => c.from===cur);
+    } else {
+      conn = connections.find(c => c.from === cur);
+    }
+    if (!conn) break;
+    activeConnTrail.add(conn.id);
+
+    const nextBlock = blocks.find(b => b.id === conn.to); if (!nextBlock) break;
+    if (nextBlock.type === 'state') break; // wire lit, state NOT added to trail
+
+    cur = conn.to;
+    activeTrail.add(cur);
+  }
+}
+
+function addLog(type, msg) {
+  simLog.push({ step:simStep, type, msg });
+  if (simLog.length > 200) simLog.shift();
+}
+
+function runSim() {
+  if (isRunning) {
+    clearInterval(runInterval); isRunning = false;
+    document.getElementById('btnRun').textContent = '▶ Run';
+    document.getElementById('btnRun').className = 'btn success'; return;
+  }
+  if (!blocks.length) return;
+  if (activeBlock === null) { beginSim(); render(); }
+  isRunning = true;
+  document.getElementById('btnRun').textContent = '■ Stop';
+  document.getElementById('btnRun').className = 'btn danger';
+
+  const tick = () => {
+    if (!activeBlock || simFinished) {
+      clearInterval(runInterval); isRunning = false;
+      document.getElementById('btnRun').textContent = '▶ Run';
+      document.getElementById('btnRun').className = 'btn success'; return;
+    }
+    if (liveDoubleDriverIds.size > 0) {
+      addLog('error', '⚡ Cannot run: double driver conflict.');
+      clearInterval(runInterval); isRunning = false;
+      document.getElementById('btnRun').textContent = '▶ Run';
+      document.getElementById('btnRun').className = 'btn success';
+      if (activeTab === 'log') renderLogPanel();
+      return;
+    }
+    prevSimVars = { ...simVars };
+    advanceClockCycle();
+    document.getElementById('stepCounter').textContent = simFinished ? 'DONE' : `CLK ${simStep}`;
+    render();
+    if (activeTab === 'log')   renderLogPanel();
+    if (activeTab === 'vars')  renderVarsPanel();
+    if (activeTab === 'table') renderTablePanel();
+    if (simStep > 600) {
+      addLog('error', 'Max 600 cycles — possible infinite loop. Press Reset.');
+      clearInterval(runInterval); isRunning = false;
+      document.getElementById('btnRun').textContent = '▶ Run';
+      document.getElementById('btnRun').className = 'btn success';
+    }
+  };
+  runInterval = setInterval(tick, getRunInterval());
+}
+
+// ════════════════════════════════════════════════════════
+//  SAVE / LOAD
+// ════════════════════════════════════════════════════════
+function saveJSON() {
+  const data={
+    version:5,
+    blocks,
+    connections,
+    startBlockId,
+    userVars,
+    combDefaults,
+    forcedRegisters:[...forcedRegisters],
+    regInitValues,
+    idCounter,
+    view
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  let name = prompt('Save as:', 'asm_diagram.json');
+  if (name===null) return;
+  name = name.trim() || 'asm_diagram.json';
+  if (!/\.json$/i.test(name)) name+='.json';
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); URL.revokeObjectURL(a.href);
+}
+function loadJSON(e) {
+  const file=e.target.files[0]; if (!file) return;
+  const rd=new FileReader();
+  rd.onload=ev=>{
+    try {
+      const data=JSON.parse(ev.target.result);
+      if (!data.blocks||!data.connections) throw new Error('Not a valid ASM file');
+      pushUndo();
+      blocks=data.blocks; connections=data.connections;
+      startBlockId=data.startBlockId||null; userVars=data.userVars||{};
+      combDefaults=data.combDefaults||{};
+      forcedRegisters=new Set(data.forcedRegisters||[]);
+      regInitValues=data.regInitValues||{};
+      idCounter=data.idCounter||200; view=data.view||{x:0,y:0,scale:1};
+      selectedId=null; selectedConnId=null;
+      simLog=[];
+      render(); updateEmptyState();
+      beginSim(); render();
+      if (activeTab==='vars')  renderVarsPanel();
+      if (activeTab==='log')   renderLogPanel();
+      if (activeTab==='table') renderTablePanel();
+      if (activeTab==='edit')  renderPanel();
+    } catch(err) { alert('Load failed: '+err.message); }
+  };
+  rd.readAsText(file); e.target.value='';
+}
+
+// ════════════════════════════════════════════════════════
+//  UTILS
+// ════════════════════════════════════════════════════════
+function clearAll() {
+  if (!confirm('Clear all blocks and connections?')) return;
+  pushUndo();
+  blocks=[]; connections=[]; selectedId=null; selectedConnId=null;
+  activeBlock=null; startBlockId=null;
+  activeTrail=new Set(); activeConnTrail=new Set();
+  simStep=0; simVars={}; simLog=[]; userVars={}; 
+  render(); updateEmptyState();renderVarsPanel();
+  document.getElementById('stepCounter').textContent='CLK 0';
+}
+function deleteBlock(id) {
+  blocks=blocks.filter(b=>b.id!==id);
+  connections=connections.filter(c=>c.from!==id&&c.to!==id);
+  if (startBlockId===id) startBlockId = blocks.find(b=>b.type==='state')?.id||null;
+  if (selectedId===id) { selectedId=null; renderSideEditor(); }
+
+  // Remove vars no longer assigned anywhere in the design
+  const stillAssigned = new Set();
+  blocks.forEach(bl => extractAssignedNames(bl.code, { blockType: bl.type }).forEach(n => stillAssigned.add(n)));
+  Object.keys(simVars).forEach(varName => {
+    if (!stillAssigned.has(varName) && !(varName in userVars)) {
+      delete simVars[varName];
+      delete combDefaults[varName];
+    }
+  });
+
+  traceAsmBlock(); evalCombinationalPath();
+  render(); updateEmptyState();
+  if (activeTab === 'vars') renderVarsPanel();
+}
+
+// ASM to verilog export
+//pop up window to ask how many bits to export, and also ask which vars to include as outputs
+// ASM to verilog export
+//pop up window to ask how many bits to export, and also ask which vars to include as outputs
+function exportVerilog() {
+  const numBits = prompt('Enter the number of bits for the Verilog export:', '8');
+  if (!numBits) return;
+  const numBitsInt = parseInt(numBits);
+  if (isNaN(numBitsInt) || numBitsInt <= 0) {
+    alert('Invalid number of bits.');
+    return;
+  }
+  
+  // Get all assignable variables
+  const registeredNames = getRegisteredVarNames();
+  const allAsmAssigned = new Set();
+  //except for input vars
+  blocks.forEach(b => extractAssignedNames(b.code, { blockType: b.type }).forEach(n => allAsmAssigned.add(n)));
+  
+  const allVars = [...new Set([...Object.keys(userVars), ...allAsmAssigned])];
+  const inputVars = allVars.filter(k => !allAsmAssigned.has(k));
+  const allVarsExcludingInputs = allVars.filter(v => !inputVars.includes(v));
+  if (allVars.length === 0) {
+    alert('No variables to select as outputs.');
+    return;
+  }
+  
+  // Prompt for output variables
+  const outputPrompt = `Select which variables to include as internal state[not exposed to] (comma-separated):\n\nAvailable: ${allVarsExcludingInputs.join(', ')}\n\nExample: result,done`;
+  const outputStr = prompt(outputPrompt, 'result');
+  
+  if (outputStr === null) return; // User clicked Cancel
+  
+  const outputVarList = outputStr 
+    ? outputStr.split(',').map(v => v.trim()).filter(v => v && allVars.includes(v))
+    : [];
+  
+  const verilog = generateVerilog(numBitsInt, outputVarList);
+  const blob = new Blob([verilog], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'asm_diagram.v';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+ 
+function generateVerilog(bits, internalVarList = []) {
+  if (!blocks.length) { alert('No blocks to export.'); return ''; }
+  const registeredNames = getRegisteredVarNames();
+  const stateBlocks = blocks.filter(b => b.type === 'state');
+  if (!stateBlocks.length) { alert('No state blocks found.'); return ''; }
+ 
+  const stateIdx = {};
+  stateBlocks.forEach((b, i) => stateIdx[b.id] = i);
+  const startIdx = stateIdx[startBlockId] ?? 0;
+ 
+  const allAsmAssigned = new Set();
+  blocks.forEach(b => extractAssignedNames(b.code, { blockType: b.type }).forEach(n => allAsmAssigned.add(n)));
+  
+  const inputVars = Object.keys(userVars).filter(k => !allAsmAssigned.has(k));
+  
+ 
+ 
+  const internalVars = new Set(internalVarList);
+
+  // module outputs are everything NOT internal
+  const moduleOutputs =
+    [...allAsmAssigned].filter(v => !internalVars.has(v));
+
+  // registered module outputs
+  const outputRegs =
+    moduleOutputs.filter(v => registeredNames.has(v));
+  //forced promoted
+  const forcedRegs = [...allAsmAssigned].filter(v => forcedRegisters.has(v));
+  // combinational module outputs
+  const combVars =
+    [...allAsmAssigned].filter(v => !registeredNames.has(v)).filter(v => !forcedRegisters.has(v));
+
+  // internal registered vars
+  const internalRegs =
+    [...internalVars].filter(v => registeredNames.has(v));
+  
+  // internal combinational vars
+  const internalCombs =
+    [...internalVars].filter(v => !registeredNames.has(v));
+  console.log("internalVarList", internalVarList);
+  console.log("registeredNames", registeredNames);
+  console.log("forcedRegs", forcedRegs);
+  console.log("internalCombs", internalCombs);
+  const stateBits = Math.max(1, Math.ceil(Math.log2(stateBlocks.length)));
+  const stateWidth = stateBits > 1 ? `[${stateBits-1}:0] ` : '';
+ 
+  // Generate localparam line
+  let stateParams = 'localparam ';
+  stateBlocks.forEach((b, i) => {
+    const stateName = `S${i}`;
+    const binVal = i.toString(2).padStart(stateBits, '0');
+    stateParams += `${stateName} = ${stateBits}'b${binVal}`;
+    if (i < stateBlocks.length - 1) stateParams += ', ';
+  });
+  stateParams += ';';
+ 
+  function walkFromState(stateId) {
+    const paths = [];
+    function walk(curId, condStack, assignStack, depth) {
+      if (depth > 50) return;
+      const cur = blocks.find(b => b.id === curId);
+      if (!cur) return;
+ 
+      const outConns = connections.filter(c => c.from === curId);
+      if (!outConns.length) {
+        paths.push({ conds: condStack, assigns: assignStack, nextState: null });
+        return;
+      }
+ 
+      if (cur.type === 'decision') {
+        outConns.forEach(conn => {
+          const label = conn.label;
+          const isTrue = label === 'true';
+          const isFalse = label === 'false';
+          let cond = cur.code.trim();
+          if (isFalse) cond = `!(${cond})`;
+          
+          const newConds = [...condStack, cond];
+          const nextBlock = blocks.find(b => b.id === conn.to);
+          if (!nextBlock) return;
+ 
+          if (nextBlock.type === 'state') {
+            const nextStateName = `S${stateIdx[conn.to]}`;
+            paths.push({ conds: newConds, assigns: assignStack, nextState: nextStateName });
+          } else {
+            walk(conn.to, newConds, assignStack, depth + 1);
+          }
+        });
+      } else if (cur.type === 'output') {
+        const stmts = splitCodeStatements(cur.code, { blockType: 'output' });
+        const newAssigns = [...assignStack];
+        stmts.forEach(stmt => {
+          const parsed = parseAssignmentStatement(stmt);
+          if (parsed) {
+            newAssigns.push(`${parsed.lhs} = ${parsed.rhs}`);
+          }
+        });
+        
+        const conn = outConns[0];
+        const nextBlock = blocks.find(b => b.id === conn.to);
+        if (!nextBlock) return;
+ 
+        if (nextBlock.type === 'state') {
+          const nextStateName = `S${stateIdx[conn.to]}`;
+          paths.push({ conds: condStack, assigns: newAssigns, nextState: nextStateName });
+        } else {
+          walk(conn.to, condStack, newAssigns, depth + 1);
+        }
+      } else {
+        const conn = outConns[0];
+        const nextBlock = blocks.find(b => b.id === conn.to);
+        if (nextBlock && nextBlock.type === 'state') {
+          const nextStateName = `S${stateIdx[conn.to]}`;
+          paths.push({ conds: condStack, assigns: assignStack, nextState: nextStateName });
+        } else if (nextBlock) {
+          walk(conn.to, condStack, assignStack, depth + 1);
+        }
+      }
+    }
+    walk(stateId, [], [], 0);
+    return paths;
+  }
+ 
+  let stateTransitions = `  always@(posedge clk) begin\n`;
+  stateTransitions += `    if (!nrst) begin\n`;
+  stateTransitions += `      state <= S${startIdx};\n`;
+  stateTransitions += `    end else begin\n`;
+  stateTransitions += `      case (state)\n`;
+ 
+  stateBlocks.forEach((stateB, idx) => {
+    const stateName = `S${idx}`;
+    const paths = walkFromState(stateB.id);
+    
+    stateTransitions += `        ${stateName}: begin\n`;
+ 
+    if (paths.length === 0 || (paths.length === 1 && paths[0].conds.length === 0 && paths[0].nextState === null)) {
+      stateTransitions += `          state <= S${idx};\n`;
+    } else if (paths.length === 1 && paths[0].conds.length === 0) {
+      stateTransitions += `          state <= ${paths[0].nextState};\n`;
+    } else {
+      paths.forEach((p, pi) => {
+        if (p.conds.length === 0 && p.nextState !== null) {
+          stateTransitions += `          state <= ${p.nextState};\n`;
+        } else if (p.conds.length > 0 && p.nextState !== null) {
+          const guard = p.conds.join(' && ');
+          const keyword = pi === 0 ? 'if' : 'else if';
+          stateTransitions += `          ${keyword} (${guard}) begin\n`;
+          stateTransitions += `            state <= ${p.nextState};\n`;
+          stateTransitions += `          end\n`;
+        }
+      });
+    }
+ 
+    stateTransitions += `        end\n`;
+  });
+ 
+  stateTransitions += `        default: begin\n`;
+  stateTransitions += `          state <= S${startIdx};\n`;
+  stateTransitions += `        end\n`;
+  stateTransitions += `      endcase\n`;
+  stateTransitions += `    end\n`;
+  stateTransitions += `  end\n`;
+ 
+  let stateAssignments = `  always@(posedge clk) begin\n`;
+  stateAssignments += `    if (!nrst) begin\n`;
+  
+  // Initialize all registered vars (outputs + internals)
+  [...registeredNames].forEach(v => {
+    const init = (v in regInitValues) ? regInitValues[v] : 0;
+    stateAssignments += `      ${v} <= ${bits}'d${init};\n`;
+  });
+  
+  stateAssignments += `    end else begin\n`;
+  stateAssignments += `      case (state)\n`;
+ 
+  stateBlocks.forEach((stateB, idx) => {
+    const stateName = `S${idx}`;
+    const stmts = splitCodeStatements(stateB.code, { blockType: 'state' });
+    
+    stateAssignments += `        ${stateName}: begin\n`;
+    if (stmts.length > 0) {
+      stmts.forEach(stmt => {
+        const parsed = parseAssignmentStatement(stmt);
+        if (parsed) {
+          stateAssignments += `          ${parsed.lhs} <= ${parsed.rhs};\n`;
+        }
+      });
+    }
+    stateAssignments += `        end\n`;
+  });
+ 
+  stateAssignments += `      endcase\n`;
+  stateAssignments += `    end\n`;
+  stateAssignments += `  end\n`;
+ 
+  let combOutputs = '';
+
+
+  if (combVars.length > 0) {
+    combOutputs = `  // Combinational outputs\n`;
+    combOutputs += `  always@(*) begin\n`;
+ 
+    const combPathsByVar = {};
+    stateBlocks.forEach((stateB, idx) => {
+      const stateName = `S${idx}`;
+      const paths = walkFromState(stateB.id);
+ 
+      paths.forEach((p) => {
+        p.assigns.forEach(assign => {
+          const parsed = parseAssignmentStatement(assign);
+          if (parsed && combVars.includes(parsed.lhs)) {
+            const varName = parsed.lhs;
+            if (!combPathsByVar[varName]) combPathsByVar[varName] = [];
+            
+            const guard = p.conds.length > 0 
+              ? `((state == ${stateName}) && (${p.conds.join(' && ')}))`
+              : `(state == ${stateName})`;
+            combPathsByVar[varName].push({ guard, rhs: parsed.rhs });
+          }
+        });
+      });
+    });
+ 
+    combVars.forEach(v => {
+      const paths = combPathsByVar[v] || [];
+      const def = (v in combDefaults) ? combDefaults[v] : 0;
+ 
+      if (paths.length === 0) {
+        combOutputs += `    ${v} = ${bits}'d${def};\n`;
+      } else {
+        paths.forEach((p, pi) => {
+          const keyword = pi === 0 ? 'if' : 'else if';
+          combOutputs += `    ${keyword} ${p.guard} begin\n`;
+          combOutputs += `      ${v} = ${bits}'d${p.rhs};\n`;
+          combOutputs += `    end\n`;
+        });
+        combOutputs += `    else begin\n`;
+        combOutputs += `      ${v} = ${bits}'d${def};\n`;
+        combOutputs += `    end\n`;
+      }
+    });
+ 
+    combOutputs += `  end\n`;
+  }
+ //internal comb var
+  let internalOutputs = '';
+  if (forcedRegs.length > 0) {
+    internalOutputs = `  // Regs Combinational outputs\n`;
+    internalOutputs += `  always@(posedge clk) begin\n`;
+    internalOutputs += `    if (!nrst) begin\n`;
+    
+    const internalCombPathsByVar = {};
+    stateBlocks.forEach((stateB, idx) => {
+      const stateName = `S${idx}`;
+      const paths = walkFromState(stateB.id);
+ 
+      paths.forEach((p) => {
+        p.assigns.forEach(assign => {
+          const parsed = parseAssignmentStatement(assign);
+          if (parsed && forcedRegs.includes(parsed.lhs)) {
+            const varName = parsed.lhs;
+            if (!internalCombPathsByVar[varName]) internalCombPathsByVar[varName] = [];
+            
+            const guard = p.conds.length > 0 
+              ? `((state == ${stateName}) && (${p.conds.join(' && ')}))`
+              : `(state == ${stateName})`;
+            internalCombPathsByVar[varName].push({ guard, rhs: parsed.rhs });
+          }
+        });
+      });
+    });
+ 
+    forcedRegs.forEach(v => {
+      const paths = internalCombPathsByVar[v] || [];
+      const def = (v in combDefaults) ? combDefaults[v] : 0;
+ 
+      if (paths.length === 0) {
+        internalOutputs += `    ${v} <= ${bits}'d${def};\n`;
+      } else {
+        internalOutputs += `        ${v} <= ${bits}'d${def};\n`;
+        internalOutputs += `    end else begin\n`;
+        paths.forEach((p, pi) => {
+          const keyword = pi === 0 ? 'if' : 'else if';
+          internalOutputs += `      ${keyword} ${p.guard} begin\n`;
+          internalOutputs += `        ${v} <= ${bits}'d${p.rhs};\n`;
+          internalOutputs += `      end\n`;
+        });
+        internalOutputs += `    end\n`;
+        
+      }
+    });
+ 
+    internalOutputs += `  end\n`;
+  }  
+
+  
+  // Build module
+  let module = `module asm (\n`;
+  
+  // Input ports
+  module += inputVars.map(v => `  input [${bits-1}:0] ${v}`).join(',\n');
+  if (inputVars.length > 0) module += ',\n';
+  
+  // Control ports
+  module += `  input nrst,\n`;
+  module += `  input clk`;
+  
+  // Output ports
+  if (outputRegs.length > 0) module += ',\n';
+
+  module += outputRegs
+  .map(v => `  output reg [${bits-1}:0] ${v}`)
+  .join(',\n');
+
+  if (combVars.length > 0 && outputRegs.length > 0) module += ',\n';
+  
+  module += combVars.filter(v => !internalCombs.includes(v))
+  .map(v => `  output reg [${bits-1}:0] ${v}`)
+  .join(',\n');
+
+
+  module += `);\n\n`;
+ 
+
+  // Internal registered vars
+  if (internalRegs.length > 0) {
+    internalRegs.forEach(v => {
+      module += `  reg [${bits-1}:0] ${v};\n`;
+    });
+  }
+
+  // Internal combinational vars
+  if (internalCombs.length > 0) {
+    internalCombs.forEach(v => {
+      module += `  reg [${bits-1}:0] ${v};\n`;
+    });
+  }
+  
+  module += `  reg ${stateWidth}state;\n\n`;
+  module += `  // state names\n`;
+  module += stateParams + '\n\n';
+  module += `  // state transitions\n`;
+  module += stateTransitions + '\n';
+  module += `  // state box assignments\n`;
+  module += stateAssignments + '\n';
+  if (combOutputs) module += combOutputs + '\n';
+  if (internalCombs) module += internalOutputs + '\n';
+  module += `endmodule\n`;
+ 
+  return module;
+}
+function updateEmptyState() {
+  document.getElementById('emptyState').style.display=blocks.length?'none':'block';
+}
+function clip(str, maxPx) {
+  if (!str) return '';
+  str=str.trim();
+  const max=Math.floor(maxPx/6.2);
+  return str.length>max ? str.slice(0,max-1)+'…' : str;
+}
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  document.getElementById('themeIcon').textContent = document.body.classList.contains('light') ? '🌙' : '☀';
+  render(); // labelColor()/subLabelColor() re-evaluated immediately
+}
+function toggleMenu(id) {
+  const m=document.getElementById(id); if(!m) return;
+  const will=!m.classList.contains('open');
+  closeMenus();
+  if(will) m.classList.add('open');
+}
+function closeMenus() { document.querySelectorAll('.menu.open').forEach(m=>m.classList.remove('open')); }
+function handleMenu(fn) { closeMenus(); fn(); }
+function isInfoDialogOpen() {
+  return document.getElementById('infoOverlay')?.classList.contains('open');
+}
+function openInfoDialog(kind) {
+  closeMenus();
+  const info = INFO_DIALOGS[kind] || INFO_DIALOGS.help;
+  const overlay = document.getElementById('infoOverlay');
+  const titleEl = document.getElementById('infoTitle');
+  const bodyEl = document.getElementById('infoBody');
+  if (!overlay || !titleEl || !bodyEl) return;
+  titleEl.textContent = info.title;
+  bodyEl.innerHTML = info.body;
+  overlay.classList.add('open');
+}
+function closeInfoDialog() {
+  const overlay = document.getElementById('infoOverlay');
+  if (overlay) overlay.classList.remove('open');
+}
+function handleInfoOverlayClick(event) {
+  if (event.target.id === 'infoOverlay') closeInfoDialog();
+}
+
+// Theme-aware label colors for SVG text (can't use CSS vars directly in SVG attributes)
+function labelColor()    { return document.body.classList.contains('light') ? '#151b2c' : '#e2e4f0'; }
+function subLabelColor() { return document.body.classList.contains('light') ? '#475569' : '#7a86a8'; }
+
+// SVG helpers
+function ns(tag) { return document.createElementNS('http://www.w3.org/2000/svg',tag); }
+function setA(el,attrs) { for(const[k,v]of Object.entries(attrs))el.setAttribute(k,String(v));return el; }
+function sv(tag,attrs) { return setA(ns(tag),attrs); }
+function txt(x,y,str,fill,size,weight) {
+  const t=ns('text');
+  setA(t,{x,y,'text-anchor':'middle','dominant-baseline':'central',fill,'font-size':size,'font-weight':weight,'font-family':"'JetBrains Mono',monospace"});
+  t.textContent=str; return t;
+}
+function h(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+</script>
+</body>
+</html>
