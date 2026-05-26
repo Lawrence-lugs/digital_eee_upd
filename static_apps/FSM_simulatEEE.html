@@ -667,18 +667,20 @@ function renderExcitationTableHTML(rows, numFF, stateBitLabels) {
     for (const l of labels) subHeaders.push(`<th>${h(l)}</th>`);
   }
 
+  const hasInputs = inputBitsCount > 0;
+
   const header1 = `
     <tr>
-      <th>Inputs</th>
+      ${hasInputs ? '<th>Inputs</th>' : ''}
       <th>Present State</th>
       <th>Next State</th>
       ${excHeaders.join('')}
-      <th colspan="${outputNames.length}">Outputs</th>  
+      <th colspan="${outputNames.length}">Outputs</th>
     </tr>`;
 
   const header2 = `
     <tr>
-      <th>${inputNames.slice().reverse().join(' ')}</th>
+      ${hasInputs ? `<th>${inputNames.slice().reverse().join(' ')}</th>` : ''}
       <th>${stateBitLabels}</th>
       <th>${stateBitLabels}</th>
       ${subHeaders.join('')}
@@ -695,7 +697,7 @@ function renderExcitationTableHTML(rows, numFF, stateBitLabels) {
       return `<td ${val === '1' ? 'style="color:var(--green)"' : ''}>${val}</td>`;
     }).join('');
     return `<tr class="${r.isActive ? 'active-row' : ''}">
-      <td>${h(r.inputBin)}</td>
+      ${hasInputs ? `<td>${h(r.inputBin)}</td>` : ''}
       <td>${h(r.currentName)} (${r.currentBin})</td>
       <td>${h(r.nextName)} (${r.nextBin})</td>
       ${excCells}${outCells}
@@ -2482,7 +2484,7 @@ function addBit() {
   renderInputs();render();renderEditor();updateRightPanelAfterChange();
 }
 function removeBit() {
-  if(inputBitsCount<=1)return;pushUndo();
+  if(inputBitsCount<=0)return;pushUndo();
   inputBitsCount--;inputBits.pop();inputNames.pop();
   const newCount=2**inputBitsCount;
   states.forEach(s=>{
@@ -2673,14 +2675,14 @@ function renderNormalTablePanel() {
       <table class="state-table">
         <thead>
           <tr>
-            <th>${h(inputNames.slice().reverse().join(', '))}</th>
+            ${inputBitsCount>0?`<th>${h(inputNames.slice().reverse().join(', '))}</th>`:''}
             <th>Current State</th>
             <th>Next State</th>
             <th>${h(outputNames.slice().reverse().join(', '))}</th>
           </tr>
         </thead>
         <tbody>
-          ${rows.map(r=>`<tr class="${r.current===(cur?cur.name:'')&&r.input===formatInput(curInput)?'table-active':''}"><td>${h(r.input)}</td><td>${h(r.current)}</td><td>${h(r.next)}</td><td>${h(r.output)}</td></tr>`).join('')}
+          ${rows.map(r=>`<tr class="${r.current===(cur?cur.name:'')&&(inputBitsCount===0||r.input===formatInput(curInput))?'table-active':''}">${inputBitsCount>0?`<td>${h(r.input)}</td>`:''}<td>${h(r.current)}</td><td>${h(r.next)}</td><td>${h(r.output)}</td></tr>`).join('')}
         </tbody>
       </table>
     </div>

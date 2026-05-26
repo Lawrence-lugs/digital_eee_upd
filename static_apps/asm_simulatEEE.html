@@ -34,6 +34,7 @@ header { height:52px; background:var(--bg2); border-bottom:1px solid var(--borde
 .menu { position:relative; }
 .menu-btn { font-family:var(--sans); font-size:18px; font-weight:500; padding:5px 10px; border-radius:6px; border:1px solid transparent; background:transparent; color:var(--text2); cursor:pointer; transition:all .15s; white-space:nowrap; }
 .menu-btn:hover, .menu.open .menu-btn { background:var(--bg3); border-color:var(--border2); color:var(--text); }
+.menu-btn.active { color:var(--accent); border-color:var(--accent); background:var(--bg3); border-bottom-width:2px; }
 .menu-dropdown { position:absolute; top:calc(100%+6px); left:0; min-width:190px; background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:6px; box-shadow:0 12px 30px rgba(0,0,0,.3); display:none; z-index:200; }
 .menu.open .menu-dropdown { display:block; }
 .menu-item { width:100%; display:flex; align-items:center; gap:8px; padding:8px 10px; border:none; border-radius:7px; background:transparent; color:var(--text); font-family:var(--sans); font-size:18px; text-align:left; cursor:pointer; white-space:nowrap; }
@@ -75,7 +76,7 @@ header { height:52px; background:var(--bg2); border-bottom:1px solid var(--borde
 .main { flex:1; display:flex; overflow:hidden; }
 
 /* SIDEBAR */
-.sidebar { width:210px; min-width:140px; max-width:400px; background:var(--bg2); border-right:1px solid var(--border); display:flex; flex-direction:column; flex-shrink:0; overflow:hidden; }
+.sidebar { width:210px; min-width:140px; background:var(--bg2); border-right:1px solid var(--border); display:flex; flex-direction:column; flex-shrink:0; overflow:hidden; }
 .sidebar-resizer { width:5px; background:transparent; cursor:col-resize; flex-shrink:0; transition:background .15s; z-index:10; }
 .sidebar-resizer:hover, .sidebar-resizer.dragging { background:var(--accent); }
 .sidebar-section { padding:11px; border-bottom:1px solid var(--border); }
@@ -90,7 +91,7 @@ header { height:52px; background:var(--bg2); border-bottom:1px solid var(--borde
 #canvas { position:absolute; top:0; left:0; width:100%; height:100%; cursor:default; }
 
 /* RIGHT PANEL */
-.right-panel { width:268px; min-width:180px; max-width:500px; background:var(--bg2); border-left:1px solid var(--border); display:flex; flex-direction:column; flex-shrink:0; }
+.right-panel { width:268px; min-width:380px; background:var(--bg2); border-left:1px solid var(--border); display:flex; flex-direction:column; flex-shrink:0; }
 .right-panel-resizer { width:5px; background:transparent; cursor:col-resize; flex-shrink:0; transition:background .15s; z-index:10; }
 .right-panel-resizer:hover, .right-panel-resizer.dragging { background:var(--accent); }
 .panel-tabs { display:flex; border-bottom:1px solid var(--border); overflow-x:auto; flex-shrink:0; }
@@ -98,6 +99,19 @@ header { height:52px; background:var(--bg2); border-bottom:1px solid var(--borde
 .panel-tab { flex-shrink:0; padding:9px 11px; text-align:center; font-size:16px; font-weight:600; color:var(--text2); cursor:pointer; letter-spacing:.5px; transition:all .15s; border-bottom:2px solid transparent; white-space:nowrap; }
 .panel-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
 .panel-content { flex:1; overflow-y:auto; padding:11px; }
+/* SYNTH BOTTOM PANEL */
+.synth-resizer { height:5px; background:transparent; cursor:row-resize; flex-shrink:0; transition:background .15s; z-index:10; }
+.synth-resizer:hover, .synth-resizer.dragging { background:var(--accent); }
+.synth-panel { flex-shrink:0; display:flex; flex-direction:column; border-top:2px solid var(--accent); background:var(--bg2); height:310px; }
+.synth-panel-bar { display:flex; align-items:center; gap:0; padding:0; border-bottom:1px solid var(--border); background:var(--bg3); flex-shrink:0; height:30px; }
+.synth-panel-title { flex:1; padding:0 12px; font-size:15px; font-weight:700; letter-spacing:.5px; color:var(--accent); display:flex; align-items:center; }
+.synth-panel-title + .synth-panel-title { border-left:1px solid var(--border); color:var(--purple); }
+.synth-panel-close { border:none; background:transparent; color:var(--text3); cursor:pointer; padding:0 10px; font-size:17px; height:100%; flex-shrink:0; }
+.synth-panel-close:hover { color:var(--text); }
+.synth-panel-body { flex:1; display:flex; overflow:hidden; }
+.synth-pane { flex:1; overflow:auto; padding:10px 12px; min-width:80px; }
+.synth-pane-resizer { width:5px; background:transparent; cursor:col-resize; flex-shrink:0; transition:background .15s; z-index:10; }
+.synth-pane-resizer:hover, .synth-pane-resizer.dragging { background:var(--accent); }
 
 /* EDITOR */
 .editor-section { margin-bottom:13px; }
@@ -135,9 +149,9 @@ header { height:52px; background:var(--bg2); border-bottom:1px solid var(--borde
 
 /* TABLE */
 .asm-table { width:100%; border-collapse:collapse; font-family:var(--mono); font-size:17px; border:1px solid var(--border); border-radius:6px; overflow:hidden; }
-.asm-table th { background:var(--bg3); font-weight:600; padding:6px 8px; border-bottom:1px solid var(--border); border-right:1px solid var(--border); text-align:left; color:var(--text2); white-space:nowrap; }
+.asm-table th { background:var(--bg3); font-weight:600; padding:6px 8px; border-bottom:1px solid var(--border); border-right:1px solid var(--border); text-align:center; color:var(--text2); white-space:nowrap; }
 .asm-table th:last-child { border-right:none; }
-.asm-table td { padding:5px 8px; border-bottom:1px solid var(--border); border-right:1px solid var(--border); color:var(--text2); white-space:nowrap; }
+.asm-table td { padding:5px 8px; border-bottom:1px solid var(--border); border-right:1px solid var(--border); color:var(--text2); white-space:nowrap; text-align:center; }
 .asm-table td:last-child { border-right:none; }
 .asm-table tr:last-child td { border-bottom:none; }
 .asm-table tr.tbl-active td { background:rgba(79,158,255,.15); color:var(--text); }
@@ -147,11 +161,20 @@ header { height:52px; background:var(--bg2); border-bottom:1px solid var(--borde
 .empty-state { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; pointer-events:none; }
 .empty-state h2 { font-size:18px; color:var(--text3); font-weight:500; margin-bottom:8px; }
 .empty-state p { font-size:15px; color:var(--text3); }
-.big-checkbox {
-  transform: scale(1.2);
-  cursor: pointer;
-  margin-right: 4px;
+.var-type-btn {
+  font-size:12px; padding:2px 8px; border-radius:10px;
+  border:1px solid var(--border2); background:var(--bg4);
+  color:var(--text3); cursor:pointer; font-family:var(--sans);
+  transition:all .15s; margin-top:3px; white-space:nowrap;
 }
+.var-type-btn:hover { border-color:var(--accent); color:var(--accent); }
+.var-base-btn {
+  font-size:11px; padding:1px 6px; border-radius:8px;
+  border:1px solid var(--border2); background:var(--bg4);
+  color:var(--text3); cursor:pointer; font-family:var(--mono);
+  transition:all .15s; white-space:nowrap; flex-shrink:0;
+}
+.var-base-btn:hover { border-color:var(--amber); color:var(--amber); }
 ::-webkit-scrollbar { width:4px; height:4px; }
 ::-webkit-scrollbar-track { background:transparent; }
 ::-webkit-scrollbar-thumb { background:var(--border2); border-radius:4px; }
@@ -193,6 +216,8 @@ header { height:52px; background:var(--bg2); border-bottom:1px solid var(--borde
       </div>
     </div>
     <button class="menu-btn" onclick="openInfoDialog('ASM_reference')">ASM Reference</button>
+    <button class="menu-btn" onclick="openInfoDialog('ops')">Supported Operations</button>
+    
     <button class="menu-btn" onclick="openInfoDialog('help')">Help</button>
     <button class="menu-btn" onclick="openInfoDialog('about')">About</button>
   </div>
@@ -208,12 +233,7 @@ header { height:52px; background:var(--bg2); border-bottom:1px solid var(--borde
     <div class="speed-wrap">
       <label>Speed</label>
       <input type="range" id="speedSlider" min="1" max="10" value="5" title="Simulation speed">
-    </div>
-    <div style="width:1px;height:22px;background:var(--border)"></div>
-    <button class="btn" onclick="centerCanvas()" title="Center canvas">⊕</button>
-    <button class="btn" onclick="undo()" title="Undo (Ctrl+Z)">↩</button>
-    <button class="btn" onclick="redo()" title="Redo (Ctrl+Y)">↪</button>
-  </div>
+    
 </header>
 
 <div class="info-overlay" id="infoOverlay" onclick="handleInfoOverlayClick(event)">
@@ -283,15 +303,30 @@ header { height:52px; background:var(--bg2); border-bottom:1px solid var(--borde
   <div class="right-panel-resizer" id="rightPanelResizer"></div>
 
   <!-- RIGHT PANEL -->
-  <div class="right-panel">
+  <div class="right-panel" id="rightPanel">
     <div class="panel-tabs">
       <div class="panel-tab active" id="tabVars"  onclick="switchTab('vars')">VARS</div>
-      <!--<div class="panel-tab"        id="tabTable" onclick="switchTab('table')">TABLE</div> -->
       <div class="panel-tab"        id="tabLog"   onclick="switchTab('log')">LOG</div>
+      <button class="menu-btn" id="btnSynth" onclick="toggleSynthPanel()">SYNTHESIZE</button>
     </div>
     <div class="panel-content" id="panelContent">
       <div style="color:var(--text3);font-size:18px;padding:20px 0;text-align:center">Set variables then run</div>
     </div>
+  </div>
+</div>
+
+<!-- SYNTHESIS BOTTOM PANEL -->
+<div class="synth-resizer" id="synthResizer" style="display:none"></div>
+<div class="synth-panel" id="synthPanel" style="display:none">
+  <div class="synth-panel-bar">
+    <div class="synth-panel-title">DATAPATH</div>
+    <div class="synth-panel-title">CONTROLLER</div>
+    <button class="synth-panel-close" onclick="toggleSynthPanel()" title="Close">✕</button>
+  </div>
+  <div class="synth-panel-body">
+    <div class="synth-pane" id="synthDpath"></div>
+    <div class="synth-pane-resizer" id="synthPaneResizer"></div>
+    <div class="synth-pane" id="synthCtrl"></div>
   </div>
 </div>
 
@@ -322,8 +357,15 @@ let stepHistory = [];  // for step-back
 let combDefaults = {};            // { varName: defaultValue } for purely-comb vars
 let forcedRegisters = new Set();  // comb vars manually promoted to register
 let regInitValues = {};           // { varName: initValue } for register initial values
+let varBits = {};                 // { varName: bitWidth } per-variable Verilog bit widths
+let varBitDefault = 8;            // default bit width used when varBits[v] is unset
+let simDisplayBase = 'dec';       // global display/input base: 'dec'|'hex'|'bin'
 let liveDoubleDriverIds = new Set(); // block IDs with double-driver conflict (live)
 let liveDoubleDriverVarNames = new Set(); // only the specific conflicting var names
+let liveCircularIds = new Set();    // block IDs with circular combinational dependency
+let liveCodeErrorIds = new Set();   // block IDs with invalid code (decision: assignment instead of expr)
+let bitRangeVarNames = new Set(); // registered vars currently out of 2's-complement range
+let synthPanelOpen = false;
 let prevSimVars = {};          // snapshot before last change, for flash detection
 let lastWrittenVars = new Set(); // vars written to this cycle (flash on assignment)
 
@@ -391,8 +433,8 @@ const INFO_DIALOGS = {
         <li><code>Combinational Vars</code>: variables driven only by active conditional outputs.</li>
         <li>Registered variables have editable <code>init</code> values used on reset.</li>
         <li>Combinational variables have editable <code>default</code> values used when their path is inactive.</li>
-        <li>The <code>reg</code> checkbox promotes a combinational variable into register-style behavior.</li>
-        <li>The <code>cond</code> checkbox appears only for manually promoted registers and moves them back to combinational behavior.</li>
+        <li>The <code>→ reg</code> button promotes a combinational variable into register-style behavior.</li>
+        <li>The <code>→ comb</code> button appears only for manually promoted registers and moves them back to combinational behavior.</li>
         <li>Highlighted rows show variables written in the most recent simulation step.</li>
         <li>If a variable is used in code but never declared as an input and never assigned internally, it appears as an undeclared-input warning.</li>
       </ul>
@@ -454,7 +496,46 @@ Feel free to download and modify the HTML file! AI was also used in its developm
 <br><br>
 4) If a variable is not assigned within an ASM step, the behavior depends on whether it is a register or a combinational output. If the variable is a register, the previous value of that register (or its initial value, also defined with the ASM) is held during that step/clock cycle. If the variable is a combinational output, the value would default to 0 (unless the default value was otherwise stated with the ASM).
 <br><br>
-5) Conditional boxes are typically drawn after decision boxes to represent different assignments depending on some condition. However, you may also put conditional boxes right after a state box. You would do this if you want a combinational output behavior for a variable (i.e., you don't want to declare it as a register, but you want to assign values to it).</p>
+5) Conditional boxes are typically drawn after decision boxes to represent different assignments depending on some condition. However, you may also put conditional boxes right after a state box. You would do this if you want a combinational output behavior for a variable (i.e., you don't want to declare it as a register, but you want to assign values to it).
+
+    `
+  },
+  ops: {
+    title: 'Supported Operations',
+    body: `
+<h3>Assignment (state &amp; output boxes)</h3>
+<ul>
+  <li><code>a = expr</code> &nbsp; simple assign</li>
+  <li><code>a &lt;- expr</code> &nbsp; alternate assignment form (same as <code>=</code>)</li>
+  <li><code>a += expr</code> &nbsp;<code>-=</code> &nbsp;<code>*=</code> &nbsp;<code>&amp;=</code> &nbsp;<code>|=</code> &nbsp;<code>^=</code> &nbsp;<code>&lt;&lt;=</code> &nbsp;<code>&gt;&gt;=</code> &nbsp; compound</li>
+  
+</ul>
+<h3>Arithmetic</h3>
+<ul>
+  <li><code>+</code> add &nbsp; <code>-</code> subtract &nbsp; <code>*</code> multiply</li>
+  <li><b>No division or modulo</b> — hardware division requires dedicated logic</li>
+</ul>
+<h3>Comparison (decision boxes &amp; RHS expressions)</h3>
+<ul>
+  <li><code>==</code> &nbsp;<code>!=</code> &nbsp;<code>&lt;</code> &nbsp;<code>&gt;</code> &nbsp;<code>&lt;=</code> &nbsp;<code>&gt;=</code></li>
+</ul>
+<h3>Bitwise</h3>
+<ul>
+  <li><code>&amp;</code> AND &nbsp; <code>|</code> OR &nbsp; <code>^</code> XOR &nbsp; <code>~</code> NOT</li>
+  <li><code>&lt;&lt;</code> left-shift &nbsp; <code>&gt;&gt;</code> logical right-shift (fill 0) &nbsp; <code>&gt;&gt;&gt;</code> arithmetic right-shift (sign-extend)</li>
+</ul>
+<h3>Logical (decision boxes)</h3>
+<ul>
+  <li><code>&amp;&amp;</code> AND &nbsp; <code>||</code> OR &nbsp; <code>!</code> NOT</li>
+</ul>
+<h3>Bit Operations (RHS only)</h3>
+<ul>
+  <li><code>A[7:0]</code> — bits 7 down to 0 of A (width = 8)</li>
+  <li><code>A[4]</code> — single bit 4 of A</li>
+  <li><code>{A, B, C}</code> — concatenation, A is MSB. Supports slice parts: <code>{A[3:1], B[2:0]}</code></li>
+</ul>
+<h3>Variable bit widths</h3>
+<p>Set in the VARS panel (<b>bits:</b> field). Used for synthesis tables and Verilog export. Values are checked against 2's-complement range — stepping is blocked if a register is out of range.</p>
     `
   }
 };
@@ -525,7 +606,7 @@ window.addEventListener('DOMContentLoaded', () => {
     rightResizerEl.classList.add('dragging');
     const startX = e.clientX, startW = rightPanelEl.offsetWidth;
     const onMove = ev => {
-      const newW = Math.max(180, Math.min(500, startW - (ev.clientX - startX)));
+      const newW = Math.max(180, startW - (ev.clientX - startX));
       rightPanelEl.style.width = newW + 'px';
     };
     const onUp = () => {
@@ -545,11 +626,55 @@ window.addEventListener('DOMContentLoaded', () => {
     resizerEl.classList.add('dragging');
     const startX = e.clientX, startW = sidebarEl.offsetWidth;
     const onMove = ev => {
-      const newW = Math.max(140, Math.min(400, startW + ev.clientX - startX));
+      const newW = Math.max(140, startW + ev.clientX - startX);
       sidebarEl.style.width = newW + 'px';
     };
     const onUp = () => {
       resizerEl.classList.remove('dragging');
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  });
+
+  // Synth pane horizontal resize (DPATH / CTRL split)
+  const synthDpathEl     = document.getElementById('synthDpath');
+  const synthCtrlEl      = document.getElementById('synthCtrl');
+  const synthPaneResizerEl = document.getElementById('synthPaneResizer');
+  synthPaneResizerEl.addEventListener('mousedown', e => {
+    e.preventDefault();
+    synthPaneResizerEl.classList.add('dragging');
+    const startX = e.clientX, startW = synthDpathEl.offsetWidth;
+    const onMove = ev => {
+      const bodyW = synthDpathEl.parentElement.offsetWidth;
+      const newW  = Math.max(80, Math.min(bodyW - 80 - 5, startW + (ev.clientX - startX)));
+      synthDpathEl.style.flex = 'none';
+      synthDpathEl.style.width = newW + 'px';
+      synthCtrlEl.style.flex = '1';
+    };
+    const onUp = () => {
+      synthPaneResizerEl.classList.remove('dragging');
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  });
+
+  // Synth panel vertical resize
+  const synthPanelEl   = document.getElementById('synthPanel');
+  const synthResizerEl = document.getElementById('synthResizer');
+  synthResizerEl.addEventListener('mousedown', e => {
+    e.preventDefault();
+    synthResizerEl.classList.add('dragging');
+    const startY = e.clientY, startH = synthPanelEl.offsetHeight;
+    const onMove = ev => {
+      const newH = Math.max(120, Math.min(window.innerHeight - 120, startH - (ev.clientY - startY)));
+      synthPanelEl.style.height = newH + 'px';
+    };
+    const onUp = () => {
+      synthResizerEl.classList.remove('dragging');
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseup', onUp);
     };
@@ -615,7 +740,7 @@ function initDefault() {
   connections.push(mkConn(b2, b3, 'false'));        // loop back to check
   connections.push(mkConn(b3, b5, ''));   // b == 0 → set done (comb)
   connections.push(mkConn(b1, b11, ''));        // → done state
-  connections.push(mkConn(b11, b2, ''));  
+  //connections.push(mkConn(b11, b2, ''));  
   connections.push(mkConn(b17, b1, '', 375,29));
   connections.push(mkConn(b11, b2, '' ,221,365));
   connections.push(mkConn(b5, b17, '' ,580,155));
@@ -623,7 +748,7 @@ function initDefault() {
   userVars = {x:3, n:4}; //remove later
   simVars = { x:3, n:4, a:0, result:0, done:0 };
   beginSim();
-  render(); updateEmptyState(); renderVarsPanel();
+  render(); updateEmptyState(); refreshPanels();
 }
 
 
@@ -645,7 +770,7 @@ function applySnapshot(snap) {
   startBlockId = snap.startBlockId; userVars = snap.userVars;
   idCounter = snap.idCounter; view = snap.view;
   selectedId = null; selectedConnId = null;
-  render(); updateEmptyState(); renderPanel();
+  revalidateAllBlocks(); render(); updateEmptyState(); renderPanel(); refreshPanels();
 }
 function undo() {
   if (!undoStack.length) return;
@@ -699,7 +824,7 @@ function centerCanvas() {
 //  BLOCK CREATION
 // ════════════════════════════════════════════════════════
 function mkConn(from, to, label) {
-  return { id:'c'+(idCounter++), from, to, label:label||'', mx:null, my:null, loopOff:null };
+  return { id:'c'+(idCounter++), from, to, label:label||'', mx:null, my:null, loopOff:null, startAngle:null, endAngle:null };
 }
 function addBlockAt(type, x, y, name, code) {
   const id = 'b'+(idCounter++);
@@ -726,7 +851,7 @@ function dropBlock(e) {
   const w = screenToWorld(e.clientX - r.left, e.clientY - r.top);
   const d = DEFAULTS[type];
   addBlockAt(type, w.x - d.w/2, w.y - d.h/2, null, '');
-  render(); updateEmptyState();
+  render(); updateEmptyState(); refreshPanels();
 }
 
 // ════════════════════════════════════════════════════════
@@ -769,21 +894,27 @@ function drawBlock(b) {
   const g   = ns('g');
   const act = activeTrail.has(b.id);
   const sel = selectedId === b.id;
-  const dbl = liveDoubleDriverIds.has(b.id);   // double-driver conflict
+  const dbl = liveDoubleDriverIds.has(b.id);
+  const cyc = liveCircularIds.has(b.id);
+  const codeErr = liveCodeErrorIds.has(b.id);
+  const err = dbl || cyc || codeErr;
+  const errCol = '#ff5c5c';
   const isStart = b.id === startBlockId && b.type === 'state';
   const lines = (b.code||'').split('\n');
 
+  const selCol = '#3ecf8e';
   if (b.type === 'state') {
     const hH   = 22;
-    const fill  = dbl?'rgba(255,92,92,.18)': act?'rgba(79,158,255,.22)':'rgba(79,158,255,.07)';
-    const stk   = dbl?'#ff5c5c': act||sel?'#4f9eff':'#1e3a5c';
-    const sw    = dbl||act||sel?2:1.5;
+    const fill  = err?'rgba(255,92,92,.18)': act?'rgba(79,158,255,.22)': sel?'rgba(62,207,142,.12)':'rgba(79,158,255,.07)';
+    const stk   = err?errCol: sel?selCol: act?'#4f9eff':'#1e3a5c';
+    const sw    = err||act||sel?2:1.5;
     g.appendChild(sv('rect',{x:b.x,y:b.y,width:b.w,height:b.h,rx:7,fill,stroke:stk,'stroke-width':sw}));
-    const hf = dbl?'rgba(255,92,92,.30)': act?'rgba(79,158,255,.38)':'rgba(79,158,255,.16)';
+    const hf = err?'rgba(255,92,92,.30)': act?'rgba(79,158,255,.38)': sel?'rgba(62,207,142,.25)':'rgba(79,158,255,.16)';
     g.appendChild(sv('rect',{x:b.x+sw/2,y:b.y+sw/2,width:b.w-sw,height:hH,rx:5,fill:hf,stroke:'none'}));
     g.appendChild(sv('line',{x1:b.x,y1:b.y+hH,x2:b.x+b.w,y2:b.y+hH,stroke:stk,'stroke-width':'0.8'}));
-    if (isStart) g.appendChild(txt(b.x+10, b.y+hH/2, '★', '#3ecf8e', 10, '700'));
-    if (dbl)     g.appendChild(txt(b.x+b.w-10, b.y+hH/2, '⚡', '#ff5c5c', 10, '700'));
+    if (isStart) g.appendChild(txt(b.x+10,    b.y+hH/2, '★', '#3ecf8e', 10, '700'));
+    if (dbl)     g.appendChild(txt(b.x+b.w-10, b.y+hH/2, '⚡', errCol,   10, '700'));
+    if (cyc)     g.appendChild(txt(b.x+b.w-10, b.y+hH/2, '↺', errCol,   11, '700'));
     g.appendChild(txt(b.x+b.w/2, b.y+hH/2, b.name, labelColor(), 10.5, '600'));
     const bodyH  = b.h - hH;
     const lineH  = Math.max(11, Math.min(14, (bodyH-8) / Math.max(lines.length,1)));
@@ -794,52 +925,47 @@ function drawBlock(b) {
   } else if (b.type === 'decision') {
     const cx=b.x+b.w/2, cy=b.y+b.h/2;
     const pts=`${cx},${b.y} ${b.x+b.w},${cy} ${cx},${b.y+b.h} ${b.x},${cy}`;
-    const fill = act?'rgba(245,166,35,.22)':'rgba(245,166,35,.07)';
-    const stk  = act||sel?'#f5a623':'#4a3a10';
-    g.appendChild(sv('polygon',{points:pts,fill,stroke:stk,'stroke-width':act||sel?2:1.5}));
+    const fill = codeErr?'rgba(255,92,92,.18)': act?'rgba(245,166,35,.22)': sel?'rgba(62,207,142,.12)':'rgba(245,166,35,.07)';
+    const stk  = codeErr?errCol: sel?selCol: act?'#f5a623':'#4a3a10';
+    g.appendChild(sv('polygon',{points:pts,fill,stroke:stk,'stroke-width':codeErr||act||sel?2:1.5}));
     const nonEmpty = lines.filter(l=>l.trim());
-    const ny = nonEmpty.length ? cy-8 : cy;
-    g.appendChild(txt(cx, ny, b.name, labelColor(), 10.5, '600'));
-    if (nonEmpty.length) g.appendChild(txt(cx, cy+7, clip(nonEmpty[0],b.w-28), subLabelColor(), 9, '400'));
+    if (nonEmpty.length) g.appendChild(txt(cx, cy, clip(nonEmpty[0],b.w-28), codeErr?errCol:subLabelColor(), 10, '400'));
+    if (codeErr) g.appendChild(txt(cx, b.y+6, '⚠', errCol, 9, '700'));
     g.appendChild(txt(b.x+b.w+9, cy, '', '#f5a623', 9, '600'));
     g.appendChild(txt(cx, b.y+b.h+12, '', '#f5a623', 9, '600'));
   } else {
     const rx   = Math.min(b.h/2, 22);
-    const fill  = dbl?'rgba(255,92,92,.18)': act?'rgba(167,139,250,.22)':'rgba(167,139,250,.07)';
-    const stk   = dbl?'#ff5c5c': act||sel?'#a78bfa':'#2e1e5c';
-    const sw2   = dbl||act||sel?2:1.5;
+    const fill  = err?'rgba(255,92,92,.18)': act?'rgba(167,139,250,.22)': sel?'rgba(62,207,142,.12)':'rgba(167,139,250,.07)';
+    const stk   = err?errCol: sel?selCol: act?'#a78bfa':'#2e1e5c';
+    const sw2   = err||act||sel?2:1.5;
     g.appendChild(sv('rect',{x:b.x,y:b.y,width:b.w,height:b.h,rx,fill,stroke:stk,'stroke-width':sw2}));
     const nonEmpty = lines.filter(l=>l.trim());
-    if (!nonEmpty.length) {
-      g.appendChild(txt(b.x+b.w/2, b.y+b.h/2, b.name, labelColor(), 10.5, '600'));
-    } else {
-      const tot = nonEmpty.length+1;
-      const lh  = Math.max(11, Math.min(14, (b.h-8)/tot));
-      const sy  = b.y + (b.h - tot*lh)/2 + lh/2;
-      g.appendChild(txt(b.x+b.w/2, sy, dbl?b.name+' ⚡':b.name, dbl?'#ff5c5c':labelColor(), 10.5, '600'));
-      nonEmpty.forEach((line,i) => {
-        const ty = sy + (i+1)*lh;
-        if (ty < b.y+b.h-3) g.appendChild(txt(b.x+b.w/2, ty, clip(line,b.w-12), subLabelColor(), 9.5, '400'));
-      });
-    }
+    const lhO = Math.max(11, Math.min(14, (b.h-8)/Math.max(nonEmpty.length,1)));
+    const syO = b.y + (b.h - nonEmpty.length*lhO)/2 + lhO/2;
+    nonEmpty.forEach((line,i) => {
+      const ty = syO + i*lhO;
+      if (ty < b.y+b.h-3) g.appendChild(txt(b.x+b.w/2, ty, clip(line,b.w-12), err?errCol:subLabelColor(), 9.5, '400'));
+    });
+    if (err && !nonEmpty.length) g.appendChild(txt(b.x+b.w/2, b.y+b.h/2, cyc?'↺':'⚡', errCol, 11, '700'));
+    if (err &&  nonEmpty.length) g.appendChild(txt(b.x+b.w-8, b.y+10, cyc?'↺':'⚡', errCol, 10, '700'));
   }
 
   // Resize handle
   const sz=10;
-  const rh = sv('rect',{x:b.x+b.w-sz,y:b.y+b.h-sz,width:sz,height:sz,rx:2,fill:'#2a3050',stroke:'#3a4060','stroke-width':'0.8',cursor:'nwse-resize'});
+  const rh = sv('rect',{x:b.x+b.w-sz,y:b.y+b.h-sz,width:sz,height:sz,rx:2,fill:sel?'#2a3050':'transparent',stroke:sel?'#3a4060':'transparent','stroke-width':'0.8',cursor:'nwse-resize'});
   rh.addEventListener('mousedown', e=>{ e.preventDefault(); e.stopPropagation(); startResize(e,b.id); });
   g.appendChild(rh);
 
-  // Connector dots
-  connPts(b).forEach(pt => {
-    const c = sv('circle',{cx:pt.x,cy:pt.y,r:5,fill:'var(--bg)',stroke:'#3a4060','stroke-width':1,cursor:'crosshair'});
+  // Connector dots — only when selected
+  if (sel) connPts(b).forEach(pt => {
+    const c = sv('circle',{cx:pt.x,cy:pt.y,r:6,fill:'var(--bg)',stroke:'#3ecf8e','stroke-width':1.5,cursor:'crosshair'});
     c.addEventListener('mousedown', e=>{ e.stopPropagation(); startConn(e,b.id,pt.x,pt.y); });
     g.appendChild(c);
   });
 
   g.setAttribute('cursor','move');
   g.addEventListener('mousedown', e => startBlockDrag(e, b.id));
-  g.addEventListener('dblclick',  e => { e.stopPropagation(); pushUndo(); deleteBlock(b.id); });
+  //g.addEventListener('dblclick',  e => { e.stopPropagation(); pushUndo(); deleteBlock(b.id); });
   g.addEventListener('click',     e => { e.stopPropagation(); selectBlock(b.id); });
   svgEl.appendChild(g);
 }
@@ -857,7 +983,7 @@ function drawConn(conn) {
   const from = blocks.find(b=>b.id===conn.from);
   if (!from) return;
   const actC = activeConnTrail.has(conn.id);
-  const selC = selectedConnId === conn.id;
+  const selC = selectedConnId === conn.id || selectedId === conn.from;
   const stroke = actC?'#4f9eff': selC?'#a78bfa':'#3a4060';
   const marker = 'url(#arr_'+(actC?'active':selC?'sel':'norm')+')';
   const sw     = actC||selC?2:1.5;
@@ -870,8 +996,13 @@ function drawConn(conn) {
   const tx=bCX(to),   ty=bCY(to);
   let mx = (conn.mx!==null&&conn.mx!==undefined) ? conn.mx : (fx+tx)/2;
   let my = (conn.my!==null&&conn.my!==undefined) ? conn.my : (fy+ty)/2;
-  const ep1 = edgePt(from, mx, my);
-  const ep2 = edgePt(to,   mx, my);
+
+  const ep1 = conn.startAngle!=null
+    ? edgePt(from, fx+Math.cos(conn.startAngle)*1000, fy+Math.sin(conn.startAngle)*1000)
+    : edgePt(from, mx, my);
+  const ep2 = conn.endAngle!=null
+    ? edgePt(to, tx+Math.cos(conn.endAngle)*1000, ty+Math.sin(conn.endAngle)*1000)
+    : edgePt(to, mx, my);
   const d   = `M ${ep1.x} ${ep1.y} Q ${mx} ${my} ${ep2.x} ${ep2.y}`;
 
   const path = ns('path'); setA(path,{d,fill:'none',stroke,'stroke-width':sw,'marker-end':marker});
@@ -880,10 +1011,24 @@ function drawConn(conn) {
   hit.addEventListener('click', e=>{ e.stopPropagation(); selectedConnId=conn.id; selectedId=null; render(); renderConnPanel(conn); });
   svgEl.appendChild(hit);
 
-  const mpR = selC?6:4;
-  const mp  = sv('circle',{cx:mx,cy:my,r:mpR,fill:selC?'#a78bfa':'var(--bg4)',stroke:selC?'#a78bfa':'#3a4060','stroke-width':1.5,cursor:'grab'});
-  mp.addEventListener('mousedown', e=>{ e.stopPropagation(); dragMid(e,conn); });
-  svgEl.appendChild(mp);
+  if (selC) {
+    const mp = sv('circle',{cx:mx,cy:my,r:6,fill:'#a78bfa',stroke:'#a78bfa','stroke-width':1.5,cursor:'grab'});
+    mp.addEventListener('mousedown', e=>{ e.stopPropagation(); dragMid(e,conn); });
+    svgEl.appendChild(mp);
+
+    // Offset handles 8px outward from block edge so they sit outside the block
+    const a1 = Math.atan2(ep1.y - bCY(from), ep1.x - bCX(from));
+    const h1x = ep1.x + Math.cos(a1)*8, h1y = ep1.y + Math.sin(a1)*8;
+    const a2 = Math.atan2(ep2.y - bCY(to), ep2.x - bCX(to));
+    const h2x = ep2.x + Math.cos(a2)*8, h2y = ep2.y + Math.sin(a2)*8;
+    const sh = sv('circle',{cx:h1x,cy:h1y,r:7,fill:'#f5a623',stroke:'#f5a623','stroke-width':1.5,cursor:'grab',opacity:0.9});
+    sh.addEventListener('mousedown', e=>{ e.stopPropagation(); dragConnStart(e,conn); });
+    svgEl.appendChild(sh);
+    const eh = sv('circle',{cx:h2x,cy:h2y,r:7,fill:'#f5a623',stroke:'#f5a623','stroke-width':1.5,cursor:'grab',opacity:0.9});
+    eh.addEventListener('mousedown', e=>{ e.stopPropagation(); dragConnEnd(e,conn); });
+    svgEl.appendChild(eh);
+  }
+
   drawLabel(conn.label, mx, my-14);
 }
 
@@ -925,6 +1070,36 @@ function dragMid(e, conn) {
     conn.mx = w.x; conn.my = w.y; render();
   };
   const up = () => { document.removeEventListener('mousemove',move); document.removeEventListener('mouseup',up); };
+  document.addEventListener('mousemove',move); document.addEventListener('mouseup',up);
+}
+function dragConnStart(e, conn) {
+  e.preventDefault(); pushUndo();
+  const r = canvasWrap.getBoundingClientRect();
+  const from = blocks.find(b => b.id === conn.from);
+  const move = ev => {
+    const w = screenToWorld(ev.clientX-r.left, ev.clientY-r.top);
+    if (from) conn.startAngle = Math.atan2(w.y - bCY(from), w.x - bCX(from));
+    render();
+  };
+  const up = () => { document.removeEventListener('mousemove',move); document.removeEventListener('mouseup',up); };
+  document.addEventListener('mousemove',move); document.addEventListener('mouseup',up);
+}
+function dragConnEnd(e, conn) {
+  e.preventDefault(); pushUndo();
+  const r = canvasWrap.getBoundingClientRect();
+  const move = ev => {
+    const w = screenToWorld(ev.clientX-r.left, ev.clientY-r.top);
+    const nearest = findNearestBlock(w.x, w.y);
+    if (nearest) {
+      conn.to = nearest.id;
+      conn.endAngle = Math.atan2(w.y - bCY(nearest), w.x - bCX(nearest));
+    }
+    render();
+  };
+  const up = () => {
+    document.removeEventListener('mousemove',move); document.removeEventListener('mouseup',up);
+    render(); renderSideEditor(); refreshPanels();
+  };
   document.addEventListener('mousemove',move); document.addEventListener('mouseup',up);
 }
 function dragLoop(e, conn, b) {
@@ -972,38 +1147,59 @@ function startResize(e, id) {
 }
 
 // ── Connections ───────────────────────────────────────
-let connStart=null, connPreview=null;
+let connStart=null, connPreview=null, connSnapHighlight=null;
 function canAddOutgoingConnection(fromId) {
   const from = blocks.find(b => b.id === fromId);
   if (!from) return false;
-  if (from.type === 'decision') return true;
-  return connections.filter(c => c.from === fromId).length === 0;
+  const outCount = connections.filter(c => c.from === fromId).length;
+  if (from.type === 'decision') return outCount < 2;
+  return outCount === 0;
+}
+function findNearestBlock(wx, wy) {
+  let best = null, bestDist = Infinity;
+  blocks.forEach(b => {
+    const d = Math.hypot(wx - bCX(b), wy - bCY(b));
+    if (d < bestDist) { best = b; bestDist = d; }
+  });
+  return best;
 }
 function startConn(e, blockId, cx, cy) {
   e.preventDefault();
   connStart={blockId,cx,cy};
-  connPreview = sv('line',{x1:cx,y1:cy,x2:cx,y2:cy,stroke:'#4f9eff','stroke-width':1.5,'stroke-dasharray':'4 3','pointer-events':'none'});
+  connPreview = sv('path',{d:`M ${cx} ${cy} L ${cx} ${cy}`,fill:'none',stroke:'#4f9eff','stroke-width':1.8,'marker-end':'url(#arr_active)','pointer-events':'none'});
   svgEl.appendChild(connPreview);
   const move = ev => {
     const r = canvasWrap.getBoundingClientRect();
     const w = screenToWorld(ev.clientX-r.left, ev.clientY-r.top);
-    connPreview.setAttribute('x2',w.x); connPreview.setAttribute('y2',w.y);
+    const from = blocks.find(b => b.id === connStart.blockId);
+    const ep1 = from ? edgePt(from, w.x, w.y) : {x:connStart.cx, y:connStart.cy};
+
+    const nearest = findNearestBlock(w.x, w.y);
+    let ep2x = w.x, ep2y = w.y;
+    if (nearest) {
+      const angle = Math.atan2(w.y - bCY(nearest), w.x - bCX(nearest));
+      const ep2 = edgePt(nearest, bCX(nearest)+Math.cos(angle)*1000, bCY(nearest)+Math.sin(angle)*1000);
+      ep2x = ep2.x; ep2y = ep2.y;
+    }
+    connPreview.setAttribute('d', `M ${ep1.x} ${ep1.y} L ${ep2x} ${ep2y}`);
   };
   const up = ev => {
     document.removeEventListener('mousemove',move); document.removeEventListener('mouseup',up);
     if (connPreview) { svgEl.removeChild(connPreview); connPreview=null; }
     const r = canvasWrap.getBoundingClientRect();
     const w = screenToWorld(ev.clientX-r.left, ev.clientY-r.top);
-    const target = findBlockAt(w.x, w.y);
+    const nearest = findNearestBlock(w.x, w.y);
+    const target = nearest ? nearest.id : null;
     if (target !== null) {
       if (!canAddOutgoingConnection(connStart.blockId)) {
         alert('State and conditional output boxes can only have one outgoing connection.');
-        connStart=null;
-        return;
+        connStart=null; return;
       }
       pushUndo();
-      connections.push(mkConn(connStart.blockId, target, autoLabel(connStart.blockId, target)));
-      render();
+      const conn = mkConn(connStart.blockId, target, autoLabel(connStart.blockId, target));
+      conn.endAngle = Math.atan2(w.y - bCY(nearest), w.x - bCX(nearest));
+      connections.push(conn);
+      render(); refreshPanels();
     }
     connStart=null;
   };
@@ -1090,6 +1286,7 @@ function renderSideEditor() {
     
     <button class="btn danger" style="width:100%;font-size:17px;margin-top:4px" onclick="pushUndo();deleteBlock('${b.id}')">Delete block</button>
   `;
+  updateCodeValidationDisplay();
 }
 function renderPanel() { renderSideEditor(); } // alias kept for any remaining calls
 
@@ -1098,12 +1295,20 @@ function renderConnPanel(conn) {
   const el = document.getElementById('sideEditor'); if (!el) return;
   const from=blocks.find(b=>b.id===conn.from), to=blocks.find(b=>b.id===conn.to);
   const isSelf=conn.from===conn.to;
+  const isDecisionSource = from && from.type === 'decision';
+  const labelField = isDecisionSource
+    ? `<select class="editor-input" onchange="updateConn('${conn.id}','label',this.value)" style="font-size:17px">
+        <option value="true"  ${conn.label==='true' ?'selected':''}>true</option>
+        <option value="false" ${conn.label==='false'?'selected':''}>false</option>
+       </select>
+       <div class="editor-hint" style="margin-top:4px">Branch taken when condition is true / false.</div>`
+    : `<input class="editor-input" value="${h(conn.label)}" oninput="updateConn('${conn.id}','label',this.value)" placeholder="(optional label)">`;
   el.innerHTML=`
     <div class="sidebar-label">Connection${isSelf?' — loop':''}</div>
     <div style="font-size:17px;color:var(--text2);margin-bottom:10px">${from?h(from.name):'?'} ${isSelf?'↺':'→'} ${to?h(to.name):'?'}</div>
     <div class="editor-section">
       <div class="editor-label">Label</div>
-      <input class="editor-input" value="${h(conn.label)}" oninput="updateConn('${conn.id}','label',this.value)" placeholder="true / false">
+      ${labelField}
     </div>
     <button class="btn danger" style="width:100%;margin-top:4px;font-size:17px" onclick="removeConn('${conn.id}')">Delete connection</button>
     <div class="editor-hint" style="margin-top:8px">Drag ● on canvas to reroute.</div>
@@ -1112,7 +1317,7 @@ function renderConnPanel(conn) {
 
 function setStart(id) {
   pushUndo(); startBlockId = id;
-  render(); renderPanel();
+  render(); renderPanel(); refreshPanels();
 }
 function liveUpdate(field, val) {
   const b = blocks.find(b=>b.id===selectedId);
@@ -1150,7 +1355,7 @@ function liveUpdate(field, val) {
   traceAsmBlock();
   evalCombinationalPath();
   render();
-  if (activeTab === 'vars') renderVarsPanel();
+  refreshPanels();
 }
 
 function handleCodeEditorInput(textarea) {
@@ -1159,9 +1364,6 @@ function handleCodeEditorInput(textarea) {
   const start = textarea.selectionStart;
   const end = textarea.selectionEnd;
   let next = textarea.value.replace(/<-/g, '←');
-  if (b.type !== 'decision') {
-    next = next.replace(/\b([A-Za-z_$][A-Za-z0-9_$]*)\s*<=\s*(?=[A-Za-z0-9_$\-\+(])/g, '$1 ← ');
-  }
   if (next !== textarea.value) {
     const delta = next.length - textarea.value.length;
     textarea.value = next;
@@ -1170,11 +1372,41 @@ function handleCodeEditorInput(textarea) {
   liveUpdate('code', textarea.value);
   updateCodeValidationDisplay();
 }
+function validateDecisionCode(code) {
+  const errors = [];
+  if (!code || !code.trim()) return { valid: true, errors: [] };
+  const trimmed = code.trim();
+
+  // Single expression only — no semicolons
+  if (trimmed.includes(';')) {
+    errors.push('Decision box must contain a single boolean expression, not multiple statements.');
+    return { valid: false, errors };
+  }
+
+  // Bare identifier: valid only if 1-bit signal
+  if (/^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(trimmed)) {
+    const bits = varBits[trimmed] ?? varBitDefault;
+    if (bits !== 1) {
+      errors.push(`<code>${h(trimmed)}</code> is a ${bits}-bit signal — only 1-bit signals can be used directly as a condition. Use a relational expression (e.g. <code>${h(trimmed)} != 0</code>).`);
+    }
+    return { valid: errors.length === 0, errors };
+  }
+
+  // Bare assignment: = not preceded by !<>= and not ==
+  if (/(?<![!<>=])=(?!=)/.test(trimmed)) {
+    errors.push(`<code>${h(trimmed)}</code> looks like an assignment — decision boxes must be boolean expressions only (e.g. <code>a == 0</code>, <code>b > 0</code>).`);
+  }
+
+  return { valid: errors.length === 0, errors };
+}
+
 function updateCodeValidationDisplay() {
   const b = blocks.find(b => b.id === selectedId);
-  if (!b || !['state', 'output'].includes(b.type)) return;
-  
-  const validation = validateAssignmentCode(b.code, b.type);
+  if (!b || !['state', 'output', 'decision'].includes(b.type)) return;
+
+  const validation = b.type === 'decision'
+    ? validateDecisionCode(b.code)
+    : validateAssignmentCode(b.code, b.type);
   const textarea = document.querySelector('#sideEditor textarea');
   if (!textarea) return;
   
@@ -1185,8 +1417,20 @@ function updateCodeValidationDisplay() {
     textarea.parentElement.appendChild(errorBox);
   }
   
+  const hasCircular = validation.errors.some(e => e.includes('Circular'));
+  const wasCircular = liveCircularIds.has(b.id);
+  if (hasCircular) liveCircularIds.add(b.id);
+  else             liveCircularIds.delete(b.id);
+
+  const hasCodeError = !validation.valid;
+  const wasCodeError = liveCodeErrorIds.has(b.id);
+  if (hasCodeError) liveCodeErrorIds.add(b.id);
+  else              liveCodeErrorIds.delete(b.id);
+
+  if (hasCircular !== wasCircular || hasCodeError !== wasCodeError) render();
+
   if (!validation.valid && validation.errors.length > 0) {
-    errorBox.innerHTML = validation.errors.map(err => 
+    errorBox.innerHTML = validation.errors.map(err =>
       `<div class="error-item">• ${err}</div>`
     ).join('');
     errorBox.style.display = 'block';
@@ -1208,9 +1452,9 @@ function validateAssignmentCode(code, blockType) {
   statements.forEach((stmt, idx) => {
     const lineNum = idx + 1;
     
-    // Check if statement looks like a comparison (==, !=, <=, >=, <, >) instead of assignment (=)
-    if (stmt.match(/==|!=/) || (stmt.match(/<=|>=/) && !stmt.match(/^[A-Za-z_$][A-Za-z0-9_$]*\s*[+\-*/%&|^]?=/))) {
-      errors.push(`Line ${lineNum}: <code>${h(stmt)}</code> looks like a comparison. Did you mean <code>=</code> instead of <code>==</code>?`);
+    // Check if statement looks like a comparison instead of assignment
+    if (stmt.match(/==|!=/) || (stmt.match(/<=|>=/) && !stmt.match(/^[A-Za-z_$][A-Za-z0-9_$]*\s*[+\-*&|^]?=/))) {
+      errors.push(`Line ${lineNum}: <code>${h(stmt)}</code> is not a valid assignment — use <code>varName = expr</code>. (<code><=</code> is the comparison operator; use <code>=</code> for assignment.)`);
       return;
     }
     
@@ -1239,6 +1483,11 @@ function validateAssignmentCode(code, blockType) {
       return;
     }
     
+    // Reject division and modulo operators
+    if (/\//.test(rhs) || /%/.test(rhs)) {
+      errors.push(`Line ${lineNum}: Operators <code>/</code> and <code>%</code> are not supported — use <code>+</code> <code>-</code> <code>*</code> for arithmetic.`);
+    }
+
     // Check for decimal literals (reject floating point numbers)
     if (/\b\d+\.\d+\b/.test(rhs)) {
       errors.push(`Line ${lineNum}: Decimal numbers not allowed — only integers. Found in <code>${h(rhs)}</code>`);
@@ -1255,20 +1504,66 @@ function validateAssignmentCode(code, blockType) {
       const msg = (e.message || String(e)).replace(/^SyntaxError: /i, '');
       errors.push(`Line ${lineNum}: Invalid expression <code>${h(rhs)}</code> — ${msg}`);
     }
+
+    // Check constant RHS against declared bit width
+    try {
+      const constVal = evalExprInScope(rhs, {});
+      if (Number.isInteger(constVal) && Number.isFinite(constVal)) {
+        const bw = varBits[lhs] ?? varBitDefault;
+        const half = Math.pow(2, bw - 1);
+        if (constVal < -half || constVal > half - 1) {
+          errors.push(`Line ${lineNum}: Value <code>${constVal}</code> is out of the ${bw}-bit range [${-half}, ${half-1}] for <code>${h(lhs)}</code>`);
+        }
+      }
+    } catch(e) { /* non-constant RHS — skip static range check */ }
   });
   
+  // For output/state boxes: detect circular deps among combinational vars
+  if (['output', 'state'].includes(blockType) && errors.length === 0) {
+    const combDeps = {};
+    statements.forEach(stmt => {
+      const parsed = parseAssignmentStatement(stmt);
+      if (!parsed || isRegisterVar(parsed.lhs)) return;
+      combDeps[parsed.lhs] = (parsed.rhs.match(/\b[A-Za-z_$][A-Za-z0-9_$]*\b/g) || []);
+    });
+    const combLhs = new Set(Object.keys(combDeps));
+    const GRAY = 1, BLACK = 2;
+    const color = {};
+    let cycleNodes = null;
+    const dfs = (u, path) => {
+      color[u] = GRAY;
+      for (const v of combDeps[u]) {
+        if (!combLhs.has(v)) continue;
+        if (color[v] === GRAY) {
+          const idx = path.indexOf(v);
+          cycleNodes = [...path.slice(idx), v];
+          return true;
+        }
+        if (color[v] !== BLACK && dfs(v, [...path, v])) return true;
+      }
+      color[u] = BLACK;
+      return false;
+    };
+    for (const node of combLhs) {
+      if (!color[node] && dfs(node, [node])) break;
+    }
+    if (cycleNodes) {
+      errors.push(`Circular combinational assignment: <code>${cycleNodes.join(' → ')}</code> forms a cycle — combinational logic cannot depend on itself.`);
+    }
+  }
+
   return { valid: errors.length === 0, errors };
 }
 
 function updateConn(id, field, val) {
   const c=connections.find(c=>c.id===id);
-  if (c) { c[field]=val; render(); }
+  if (c) { c[field]=val; render(); refreshPanels(); }
 }
 function removeConn(id) {
   pushUndo();
   connections=connections.filter(c=>c.id!==id);
-  if (selectedConnId===id) { selectedConnId=null; renderPanel(); }
-  render();
+  if (selectedConnId===id) selectedConnId=null;
+  render(); renderSideEditor(); refreshPanels();
 }
 
 // ════════════════════════════════════════════════════════
@@ -1280,9 +1575,66 @@ function switchTab(tab) {
     const el=document.getElementById('tab'+t[0].toUpperCase()+t.slice(1));
     if(el) el.classList.toggle('active',t===tab);
   });
-  if (tab==='vars')  renderVarsPanel();
-  else if (tab==='table') renderTablePanel();
-  else if (tab==='log')  renderLogPanel();
+  if (tab==='vars')        renderVarsPanel();
+  else if (tab==='table')  renderTablePanel();
+  else if (tab==='log')    renderLogPanel();
+}
+
+function refreshPanels() {
+  if (activeTab === 'vars')        renderVarsPanel();
+  else if (activeTab === 'table')  renderTablePanel();
+  else if (activeTab === 'log')    renderLogPanel();
+  if (synthPanelOpen) { renderDatapathPanel(); renderCtrlPanel(); }
+}
+
+function getVarBase(_k) { return simDisplayBase; }
+
+function formatInBase(val, base, bits) {
+  if (typeof val !== 'number' || !Number.isFinite(val)) return String(val);
+  const bw = Math.min(bits || varBitDefault, 32);
+  const mask = bw === 32 ? 0xFFFFFFFF : (1 << bw) - 1;
+  const unsigned = (val & mask) >>> 0;
+  if (base === 'hex') {
+    const digits = Math.ceil(bw / 4);
+    return '0x' + unsigned.toString(16).toUpperCase().padStart(digits, '0');
+  }
+  if (base === 'bin') return '0b' + unsigned.toString(2).padStart(bw, '0');
+  return String(val);
+}
+
+function parseInBase(str, base, bits) {
+  str = String(str).trim();
+  if (!str) return null;
+  const bw = Math.min(bits || varBitDefault, 32);
+  const mask = bw === 32 ? 0xFFFFFFFF : (1 << bw) - 1;
+  const half = Math.pow(2, bw - 1);
+  const full = Math.pow(2, bw);
+  let n;
+  if (base === 'hex') {
+    const s = /^0x/i.test(str) ? str : '0x' + str;
+    n = parseInt(s, 16);
+    if (isNaN(n) || n < 0) return null;
+    n = (n & mask) >>> 0;
+    if (n >= half) n -= full;
+  } else if (base === 'bin') {
+    const s = /^0b/i.test(str) ? str.slice(2) : str;
+    if (!s || /[^01]/.test(s)) return null;
+    n = parseInt(s, 2);
+    if (isNaN(n)) return null;
+    n = (n & mask) >>> 0;
+    if (n >= half) n -= full;
+  } else {
+    if (str === '-') return null;
+    n = parseInt(str, 10);
+    if (isNaN(n)) return null;
+    if (String(n) !== str && '-' + String(Math.abs(n)) !== str) return null;
+  }
+  return n;
+}
+
+function setDisplayBase(base) {
+  simDisplayBase = base;
+  if (activeTab === 'vars') renderVarsPanel();
 }
 
 // VARS
@@ -1322,6 +1674,12 @@ function renderVarsPanel() {
   const undeclaredUniq = [...new Set(undeclared)];
 
   let html = `
+    <div class="editor-label" style="margin-bottom:4px">Number base / Radix</div>
+    <div style="display:flex;gap:5px;margin-bottom:12px">
+      <button class="btn${simDisplayBase==='dec'?' active':''}" style="flex:1;padding:3px 0;font-size:15px" onclick="setDisplayBase('dec')">dec</button>
+      <button class="btn${simDisplayBase==='hex'?' active':''}" style="flex:1;padding:3px 0;font-size:15px;font-family:var(--mono)" onclick="setDisplayBase('hex')">hex (0x)</button>
+      <button class="btn${simDisplayBase==='bin'?' active':''}" style="flex:1;padding:3px 0;font-size:15px;font-family:var(--mono)" onclick="setDisplayBase('bin')">bin (0b)</button>
+    </div>
     <div class="editor-label" style="margin-bottom:6px">Input Variables
       <span style="color:var(--text3);font-weight:400;text-transform:none;font-size:15px;margin-left:4px">never assigned in ASM boxes</span>
     </div>
@@ -1341,12 +1699,20 @@ function renderVarsPanel() {
     html += `<div style="font-size:17px;color:var(--text3);margin-bottom:6px">No inputs defined.</div>`;
 
   inputKeys.forEach(k => {
-    html += `<div class="var-row">
-      <span class="var-name">${h(k)}</span>
-      <input class="editor-input var-int-input" data-key="${h(k)}" value="${h(String(userVars[k]))}" style="flex:1;padding:2px 6px"
-        type="text" inputmode="numeric"
+    const bw  = varBits[k] ?? varBitDefault;
+    const base = getVarBase(k);
+    const oor = bitRangeVarNames.has(k);
+    html += `<div class="var-row" style="flex-wrap:wrap;gap:4px">
+      <span class="var-name" style="${oor?'color:var(--red)':''}">${h(k)}</span>
+      <input class="editor-input var-int-input" data-key="${h(k)}" value="${h(formatInBase(userVars[k], base, bw))}" style="flex:1;padding:2px 6px;${oor?'border-color:var(--red);':''}"
+        type="text" inputmode="${base==='dec'?'numeric':'text'}"
         onkeydown="handleVarValKey(event,'',this)"
         oninput="onInputVarChange('${h(k)}', this.value, this)">
+      ${oor ? `<span style="color:var(--red);font-size:14px" title="Value outside 2's-complement range for ${bw} bits">⚠ out of range (${bw}-bit: ${-(Math.pow(2,bw-1))} to ${Math.pow(2,bw-1)-1})</span>` : ''}
+      <span style="font-size:13px;color:var(--text3)" title="Bit width">bits:</span>
+      <input class="editor-input" type="number" value="${bw}" min="1" max="64"
+        style="width:54px;padding:1px 5px;font-size:17px" title="Bit width"
+        onchange="setVarBits('${h(k)}',this.value)">
       <button class="btn" style="padding:1px 5px;font-size:16px" onclick="removeVar('${h(k)}')">×</button>
     </div>`;
   });
@@ -1366,49 +1732,45 @@ function renderVarsPanel() {
       const changed = lastWrittenVars.has(k);
       const initVal = (k in regInitValues) ? regInitValues[k] : 0;
       const canDemoteToCond = !stateAssignedNames.has(k) && forcedRegisters.has(k);
+      const bw = varBits[k] ?? varBitDefault;
+      const base = getVarBase(k);
+      const oor = bitRangeVarNames.has(k);
       html += `<div class="var-row${changed?' var-changed':''}" style="flex-wrap:wrap;gap:4px">
 
   <div style="display:flex;flex-direction:column;min-width:60px">
-    <span class="var-name" style="${dbl?'color:var(--red)':''}">
+    <span class="var-name" style="${(dbl||oor)?'color:var(--red)':''}">
       ${h(k)}
     </span>
-
     ${canDemoteToCond ? `
-      <label style="
-        font-size:13px;
-        color:var(--text3);
-        display:flex;
-        align-items:center;
-        gap:3px;
-        cursor:pointer;
-        margin-top:2px
-      ">
-        <input
-          type="checkbox" class="big-checkbox"
-          onchange="toggleRegisterConditional('${h(k)}',this.checked)"
-          style="cursor:pointer">
-        cond
-      </label>
+      <button class="var-type-btn" onclick="toggleRegisterConditional('${h(k)}',true)"
+        title="Revert to combinational logic">→ comb</button>
     ` : ``}
   </div>
 
   ${dbl?`<span style="color:var(--red);font-size:16px">⚡ double driver</span>`:''}
+  ${oor?`<span style="color:var(--red);font-size:14px" title="Value outside 2's-complement range for ${bw} bits">⚠ out of range</span>`:''}
 
   <span style="font-size:15px;color:var(--text3)">init:</span>
 
   <input class="editor-input"
-    value="${h(String(initVal))}"
+    value="${h(formatInBase(initVal, base, bw))}"
     style="width:54px;padding:1px 5px;font-size:17px"
     type="text"
-    inputmode="numeric"
+    inputmode="${base==='dec'?'numeric':'text'}"
     title="Initial value (used on Reset)"
     onkeydown="handleVarValKey(event,'',this)"
     oninput="setRegInitValue('${h(k)}', this.value, this)">
 
+  <span style="font-size:13px;color:var(--text3)" title="Verilog bit width">bits:</span>
+  <input class="editor-input" type="number" value="${bw}" min="1" max="64"
+    style="width:54px;padding:1px 5px;font-size:17px" title="Bit width"
+    onchange="setVarBits('${h(k)}',this.value)">
+
   <span class="var-val"
     data-varkey="${h(k)}"
+    data-base="${base}"
     style="margin-left:auto">
-    ${h(JSON.stringify(v))}
+    ${typeof v === 'number' ? h(formatInBase(v, base, bw)) : h(String(v))}
   </span></div>`;
     });
  
@@ -1417,7 +1779,9 @@ function renderVarsPanel() {
 
   // ── Combinational vars with editable defaults + register checkbox ────────
   if (combKeys.length) {
-    html += `<div class="editor-label" style="margin-top:14px;margin-bottom:6px">
+    html += `
+    
+    <div class="editor-label" style="margin-top:14px;margin-bottom:6px">
       Combinational Vars <span style="color:var(--purple);font-size:9px;font-family:var(--mono)">[comb]</span>
       <span style="color:var(--text3);font-weight:400;text-transform:none;font-size:15px;margin-left:4px">instant update</span>
     </div>`;
@@ -1428,9 +1792,11 @@ function renderVarsPanel() {
       const isReg = forcedRegisters.has(k);
       const dbl = liveDoubleDriverVarNames.has(k);
       const regInit = (k in regInitValues) ? regInitValues[k] : def;
+      const bw = varBits[k] ?? varBitDefault;
+      const base = getVarBase(k);
       html += `<div class="var-row${changed?' var-changed':''}" style="flex-wrap:wrap;gap:4px">
   <div style="display:flex;flex-direction:column;min-width:60px">
-    
+
     <span class="var-name" style="${dbl?'color:var(--red)':''}">
       ${h(k)}
     </span>
@@ -1441,26 +1807,8 @@ function renderVarsPanel() {
       </span>
     ` : ``}
 
-    <label
-      style="
-        font-size:13px;
-        color:var(--text3);
-        display:flex;
-        align-items:center;
-        gap:3px;
-        cursor:pointer;
-        margin-top:2px
-      "
-      title="Treat as register (updates on CLK edge)"
-    >
-      <input
-        type="checkbox" class="big-checkbox"
-        ${isReg ? 'checked' : ''}
-        onchange="toggleForcedRegister('${h(k)}',this.checked)"
-        style="cursor:pointer"
-      >
-      reg
-    </label>
+    <button class="var-type-btn" onclick="toggleForcedRegister('${h(k)}',true)"
+      title="Treat as register (updates on CLK edge)">→ reg</button>
 
   </div>
 
@@ -1468,11 +1816,11 @@ function renderVarsPanel() {
     <span style="font-size:16px;color:var(--text3)">default:</span>
     <input
       class="editor-input"
-      value="${h(String(def))}"
+      value="${h(formatInBase(def, base, bw))}"
       style="width:54px;padding:1px 5px;font-size:17px"
       title="Default value when path is inactive"
       type="text"
-      inputmode="numeric"
+      inputmode="${base==='dec'?'numeric':'text'}"
       onkeydown="handleVarValKey(event,'',this)"
       oninput="setCombDefault('${h(k)}', this.value, this)"
     >
@@ -1480,51 +1828,71 @@ function renderVarsPanel() {
     <span style="font-size:15px;color:var(--text3)">init:</span>
     <input
       class="editor-input"
-      value="${h(String(regInit))}"
+      value="${h(formatInBase(regInit, base, bw))}"
       style="width:54px;padding:1px 5px;font-size:17px"
       title="Initial register value"
       type="text"
-      inputmode="numeric"
+      inputmode="${base==='dec'?'numeric':'text'}"
       onkeydown="handleVarValKey(event,'',this)"
       oninput="setRegInitValue('${h(k)}', this.value, this)"
     >
   `}
 
+  <span style="font-size:13px;color:var(--text3)" title="Verilog bit width">bits:</span>
+  <input class="editor-input" type="number" value="${bw}" min="1" max="64"
+    style="width:54px;padding:1px 5px;font-size:17px" title="Bit width"
+    onchange="setVarBits('${h(k)}',this.value)">
+
   <span
     class="var-val"
     data-varkey="${h(k)}"
+    data-base="${base}"
     style="margin-left:auto"
   >
-    ${h(JSON.stringify(cur))}
+    ${h(formatInBase(cur, base, bw))}
   </span>
 
 </div>`;
     });
   }
    html += `<span style="font-size:15px;color:var(--text2)">
-Combinational variables can be declared as registers instead by checking the checkbox under the variable name. Such variables can be reverted back to combinational logic if desired.
+Combinational variables can be declared as registers instead using the <b>→ reg</b> button. Such variables can be reverted back to combinational logic using the <b>→ comb</b> button.
 </span>`;
+  html += `
+  </div>`;
   document.getElementById('panelContent').innerHTML = html;
 }
 
 function onInputVarChange(key, rawVal, inputEl) {
-  // Allow partial input like "-" or empty without clobbering focus
-  if (rawVal === '' || rawVal === '-') return;
-  const val = parseIntSafe(rawVal);
+  if (!rawVal || rawVal === '-') return;
+  const val = parseInBase(rawVal, getVarBase(key), varBits[key] ?? varBitDefault);
   if (val === null) return; // not a valid integer yet
+  const prev = userVars[key];
   userVars[key] = val;
   prevSimVars = { ...simVars };
   simVars[key] = val;
+  // Log input changes so students can see what triggered a path change
+  if (simStep > 0 && prev !== val) {
+    addLog('output', `  ✎ input ${key}: ${prev} → ${val}`);
+  }
   traceAsmBlock();
   evalCombinationalPath();
   render();
-  // Don't fully re-render the panel (would kill focus); just update display values
-  updateVarDisplayValues();
+  const oorBefore = bitRangeVarNames.has(key);
+  checkBitRanges();
+  const oorAfter = bitRangeVarNames.has(key);
+  if (oorBefore !== oorAfter) {
+    refreshPanels();
+  } else {
+    // Don't fully re-render (would kill focus); just update display values
+    updateVarDisplayValues();
+    if (activeTab === 'log') renderLogPanel();
+  }
 }
 
 function setCombDefault(key, rawVal, inputEl) {
-  if (rawVal === '' || rawVal === '-') return;
-  const val = parseIntSafe(rawVal);
+  if (!rawVal || rawVal === '-') return;
+  const val = parseInBase(rawVal, getVarBase(key), varBits[key] ?? varBitDefault);
   if (val === null) return;
   combDefaults[key] = val;
   prevSimVars = {};
@@ -1559,7 +1927,7 @@ function splitCodeStatements(code, options = {}) {
 }
 
 function parseAssignmentStatement(stmt) {
-  const m = stmt.match(/^([A-Za-z_$][A-Za-z0-9_$]*)\s*(=|\+=|-=|\*=|\/=|%=|&=|\|=|\^=|<<=|>>=|>>>=)\s*(.+)$/);
+  const m = stmt.match(/^([A-Za-z_$][A-Za-z0-9_$]*)\s*(=|\+=|-=|\*=|&=|\|=|\^=|<<=|>>=|>>>=)\s*(.+)$/);
   if (!m) return null;
   return { lhs:m[1], op:m[2], rhs:m[3].trim(), raw:stmt };
 }
@@ -1570,10 +1938,82 @@ function ensureIntegerResult(value, stmt, blockType) {
   }
 }
 
+// Pre-process Verilog-style bit operations into JavaScript equivalents.
+// A[7:0]  → ((A >>> 0) & 0xFF)
+// A[4]    → ((A >>> 4) & 1)
+// {A,B,C} → ((A << totalShift) | ((B & mask) << shift) | (C & mask))
+//            using varBits[name] ?? varBitDefault for each part's width
+function preprocessBitExpr(expr) {
+  // Helper: width of a concat part (may contain slice notation)
+  function _partWidth(part) {
+    let m = part.match(/^[A-Za-z_$][A-Za-z0-9_$]*\[(\d+):(\d+)\]$/);
+    if (m) return parseInt(m[1], 10) - parseInt(m[2], 10) + 1;
+    m = part.match(/^[A-Za-z_$][A-Za-z0-9_$]*\[(\d+)\]$/);
+    if (m) return 1;
+    if (/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(part)) return varBits[part] ?? varBitDefault;
+    return varBitDefault;
+  }
+  // Helper: convert one concat part to a JS sub-expression
+  function _partToJS(part) {
+    let m = part.match(/^([A-Za-z_$][A-Za-z0-9_$]*)\[(\d+):(\d+)\]$/);
+    if (m) {
+      const loN = parseInt(m[3], 10), width = parseInt(m[2], 10) - loN + 1;
+      const mask = width >= 32 ? 0xFFFFFFFF : (1 << width) - 1;
+      return `((${m[1]} >>> ${loN}) & ${mask})`;
+    }
+    m = part.match(/^([A-Za-z_$][A-Za-z0-9_$]*)\[(\d+)\]$/);
+    if (m) return `((${m[1]} >>> ${parseInt(m[2], 10)}) & 1)`;
+    return part;
+  }
+
+  // Process concatenation FIRST so we can detect slice widths before they get replaced
+  expr = expr.replace(/\{([^}]+)\}/g, (_m, inner) => {
+    const parts = inner.split(',').map(p => p.trim()).filter(Boolean);
+    if (parts.length === 0) return '0';
+    if (parts.length === 1) return _partToJS(parts[0]);
+    let result = '', shift = 0;
+    for (let i = parts.length - 1; i >= 0; i--) {
+      const bw = _partWidth(parts[i]);
+      const jsE = _partToJS(parts[i]);
+      const mask = bw >= 32 ? 0xFFFFFFFF : (1 << bw) - 1;
+      if (i === parts.length - 1) {
+        result = `(${jsE} & ${mask})`;
+      } else if (i === 0) {
+        result = `((${jsE} << ${shift}) | ${result})`;
+      } else {
+        result = `(((${jsE} & ${mask}) << ${shift}) | ${result})`;
+      }
+      shift += bw;
+    }
+    return result;
+  });
+
+  // Bit slice: VARNAME[hi:lo]
+  expr = expr.replace(/([A-Za-z_$][A-Za-z0-9_$]*)\[(\d+):(\d+)\]/g, (_m, name, hi, lo) => {
+    const hiN = parseInt(hi, 10), loN = parseInt(lo, 10);
+    const width = hiN - loN + 1;
+    const mask = width >= 32 ? 0xFFFFFFFF : (1 << width) - 1;
+    return `((${name} >>> ${loN}) & ${mask})`;
+  });
+  // Single bit: VARNAME[n]
+  expr = expr.replace(/([A-Za-z_$][A-Za-z0-9_$]*)\[(\d+)\]/g, (_m, name, bit) => {
+    return `((${name} >>> ${parseInt(bit, 10)}) & 1)`;
+  });
+
+  // Verilog shift convention: >> = logical (fill 0), >>> = arithmetic (sign-extend)
+  // JS is opposite: >> = arithmetic, >>> = logical — so swap them
+  expr = expr.replace(/>>>/g, '__ARITH__');
+  expr = expr.replace(/>>/g, '>>>');        // user >> (logical)  → JS >>> (logical)
+  expr = expr.replace(/__ARITH__/g, '>>'); // user >>> (arith)   → JS >>  (arithmetic)
+
+  return expr;
+}
+
 function evalExprInScope(expr, scope) {
   const names = Object.keys(scope);
   const vals = Object.values(scope);
-  return (new Function(...names, 'return (' + expr + ');'))(...vals);
+  const processed = preprocessBitExpr(expr);
+  return (new Function(...names, 'return (' + processed + ');'))(...vals);
 }
 
 function applyCompoundAssignment(oldVal, op, rhsVal) {
@@ -1582,14 +2022,13 @@ function applyCompoundAssignment(oldVal, op, rhsVal) {
     case '+=':  return oldVal + rhsVal;
     case '-=':  return oldVal - rhsVal;
     case '*=':  return oldVal * rhsVal;
-    case '/=':  return oldVal / rhsVal;
-    case '%=':  return oldVal % rhsVal;
+
     case '&=':  return oldVal & rhsVal;
     case '|=':  return oldVal | rhsVal;
     case '^=':  return oldVal ^ rhsVal;
-    case '<<=': return oldVal << rhsVal;
-    case '>>=': return oldVal >> rhsVal;
-    case '>>>=': return oldVal >>> rhsVal;
+    case '<<=':  return oldVal << rhsVal;
+    case '>>=':  return oldVal >>> rhsVal;  // Verilog >> = logical (fill 0)
+    case '>>>=': return oldVal >> rhsVal;   // Verilog >>> = arithmetic (sign-extend)
     default:    return rhsVal;
   }
 }
@@ -1654,6 +2093,40 @@ else {
     assignedCounts[parsed.lhs] =
       (assignedCounts[parsed.lhs] || 0) + 1;
   });
+
+  // Dependency-graph cycle detection for combinational vars
+  {
+    const combDeps = {}; // lhs -> [dep var names that are also comb-assigned here]
+    statements.forEach(stmt => {
+      const parsed = parseAssignmentStatement(stmt);
+      if (!parsed || isRegisterVar(parsed.lhs)) return;
+      combDeps[parsed.lhs] = (parsed.rhs.match(/\b[A-Za-z_$][A-Za-z0-9_$]*\b/g) || []);
+    });
+    const combLhs = new Set(Object.keys(combDeps));
+    const GRAY = 1, BLACK = 2;
+    const color = {};
+    let cycleNodes = null;
+    const dfsCycle = (u, path) => {
+      color[u] = GRAY;
+      for (const v of combDeps[u]) {
+        if (!combLhs.has(v)) continue;
+        if (color[v] === GRAY) {
+          const idx = path.indexOf(v);
+          cycleNodes = [...path.slice(idx), v];
+          return true;
+        }
+        if (color[v] !== BLACK && dfsCycle(v, [...path, v])) return true;
+      }
+      color[u] = BLACK;
+      return false;
+    };
+    for (const node of combLhs) {
+      if (!color[node] && dfsCycle(node, [node])) break;
+    }
+    if (cycleNodes) {
+      throw new Error(`Circular combinational assignment: ${cycleNodes.join(' → ')} forms a cycle.`);
+    }
+  }
 
   let changed = true;
   let iter = 0;
@@ -1726,7 +2199,21 @@ else {
     });
 
   }
+
+  // Circular combinational assignment: fixed-point didn't converge
+  if (changed && iter >= MAX_ITER) {
+    const circularVars = [];
+    statements.forEach(stmt => {
+      const parsed = parseAssignmentStatement(stmt);
+      if (!parsed || isRegisterVar(parsed.lhs)) return;
+      const rhsNames = (parsed.rhs.match(/\b[A-Za-z_$][A-Za-z0-9_$]*\b/g) || []);
+      if (rhsNames.includes(parsed.lhs)) circularVars.push(parsed.lhs);
+    });
+    const label = circularVars.length ? circularVars.join(', ') : 'unknown variable(s)';
+    throw new Error(`Circular combinational assignment: ${label} depends on itself. Remove the self-dependency.`);
+  }
 }
+
   const duplicateVars = new Set(
     Object.keys(assignedCounts)
       .filter(k => assignedCounts[k] > 1)
@@ -1745,16 +2232,39 @@ function handleVarValKey(event, id, inputEl) {
   const el = inputEl || (id ? document.getElementById(id) : null);
   const allowed = ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Enter','Home','End'];
   if (allowed.includes(event.key)) return;
+  if (simDisplayBase === 'hex') {
+    if (/^[0-9a-fA-FxX]$/.test(event.key)) return;
+    event.preventDefault(); return;
+  }
+  if (simDisplayBase === 'bin') {
+    if (/^[01bB]$/.test(event.key)) return;
+    event.preventDefault(); return;
+  }
   if (event.key === '-' && el && el.selectionStart === 0 && !el.value.includes('-')) return;
   if (!/^\d$/.test(event.key)) event.preventDefault();
 }
 
 // Update only the display values in the vars panel without re-rendering (preserves focus)
 function updateVarDisplayValues() {
-  // Update any .var-val spans
   document.querySelectorAll('.var-val[data-varkey]').forEach(el => {
     const k = el.dataset.varkey;
-    if (k in simVars) el.textContent = JSON.stringify(simVars[k]);
+    if (k in simVars) {
+      const bw = varBits[k] ?? varBitDefault;
+      el.textContent = formatInBase(simVars[k], getVarBase(k), bw);
+    }
+  });
+}
+
+function revalidateAllBlocks() {
+  liveCircularIds = new Set();
+  liveCodeErrorIds = new Set();
+  blocks.forEach(b => {
+    if (!['state', 'output', 'decision'].includes(b.type)) return;
+    const result = b.type === 'decision'
+      ? validateDecisionCode(b.code)
+      : validateAssignmentCode(b.code, b.type);
+    if (!result.valid) liveCodeErrorIds.add(b.id);
+    if (result.errors.some(e => e.includes('Circular'))) liveCircularIds.add(b.id);
   });
 }
 
@@ -1768,8 +2278,8 @@ function toggleForcedRegister(key, checked) {
   } else {
     forcedRegisters.delete(key);
   }
-  traceAsmBlock(); evalCombinationalPath(); render();
-  if (activeTab === 'vars') renderVarsPanel();
+  revalidateAllBlocks(); traceAsmBlock(); evalCombinationalPath(); render(); refreshPanels();
+  updateCodeValidationDisplay();
 }
 
 function toggleRegisterConditional(key, checked) {
@@ -1779,13 +2289,13 @@ function toggleRegisterConditional(key, checked) {
     combDefaults[key] = key in simVars ? simVars[key]
       : (key in regInitValues ? regInitValues[key] : 0);
   }
-  traceAsmBlock(); evalCombinationalPath(); render();
-  if (activeTab === 'vars') renderVarsPanel();
+  revalidateAllBlocks(); traceAsmBlock(); evalCombinationalPath(); render(); refreshPanels();
+  updateCodeValidationDisplay();
 }
 
 function setRegInitValue(key, rawVal, inputEl) {
-  if (rawVal === '' || rawVal === '-') return;
-  const val = parseIntSafe(rawVal);
+  if (!rawVal || rawVal === '-') return;
+  const val = parseInBase(rawVal, getVarBase(key), varBits[key] ?? varBitDefault);
   if (val === null) return;
   regInitValues[key] = val;
   prevSimVars = {};
@@ -1793,10 +2303,21 @@ function setRegInitValue(key, rawVal, inputEl) {
   // Don't change simVars live — only takes effect on Reset
 }
 
+function setVarBits(key, rawVal) {
+  const n = parseInt(rawVal, 10);
+  if (!isNaN(n)) varBits[key] = Math.min(64, Math.max(1, n));
+  else delete varBits[key];
+  checkBitRanges(); refreshPanels(); updateCodeValidationDisplay();
+}
+
+function setVarBitDefault(rawVal) {
+  const n = parseInt(rawVal, 10);
+  if (!isNaN(n)) varBitDefault = Math.min(64, Math.max(1, n));
+}
+
 function removeVar(k) {
   delete userVars[k];
-  traceAsmBlock(); evalCombinationalPath(); render();
-  renderVarsPanel();
+  traceAsmBlock(); evalCombinationalPath(); render(); refreshPanels();
 }
 function addVar() {
   const n = document.getElementById('vn').value.trim();
@@ -1805,13 +2326,7 @@ function addVar() {
   const v = parseIntSafe(vRaw);
   userVars[n] = v !== null ? v : 0;
   simVars[n]  = userVars[n];
-  traceAsmBlock(); evalCombinationalPath(); render();
-  renderVarsPanel();
-}
-function removeVar(k) {
-  delete userVars[k];
-  traceAsmBlock(); evalCombinationalPath(); render();
-  renderVarsPanel();
+  traceAsmBlock(); evalCombinationalPath(); render(); refreshPanels();
 }
 function renderTablePanel() {
   const stateBlocks = blocks.filter(b=>b.type==='state');
@@ -1884,6 +2399,374 @@ function renderTablePanel() {
 }
 
 // LOG
+// ════════════════════════════════════════════════════════
+//  DATAPATH & CONTROLLER TABS
+// ════════════════════════════════════════════════════════
+
+function ceilPow2(n) {
+  if (n <= 1) return 1;
+  return Math.pow(2, Math.ceil(Math.log2(n)));
+}
+
+// Wrap complex true-branch condition expressions in parens for display.
+// Simple identifiers and already-parenthesised complements are left as-is.
+function displayCondExpr(expr) {
+  if (/^\([\s\S]*\)'$/.test(expr)) return expr;         // already (...)′
+  if (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(expr)) return expr; // simple name
+  return `(${expr})`;
+}
+
+// Strip (expr)' wrapper to recover the base condition expression.
+function baseCondExpr(expr) {
+  const m = expr.match(/^\(([\s\S]*)\)'$/);
+  return m ? m[1] : expr;
+}
+
+// Convert internal condition notation to plain English for display.
+// (expr)' → NOT(expr), plain expr → as-is.
+function condExprToText(expr) {
+  const m = expr.match(/^\(([\s\S]*)\)'$/);
+  return m ? `NOT(${m[1]})` : expr;
+}
+
+// Walk all combinational paths from a state box outward until the next state box.
+// Returns [{conds:[{expr,label}], assigns:[{lhs,rhs}], nextStateName, nextStateId}]
+function walkStatePathsForSynth(stateId) {
+  const paths = [];
+  function walk(curId, condStack, assignStack, depth) {
+    if (depth > 50) return;
+    const cur = blocks.find(b => b.id === curId); if (!cur) return;
+    const outConns = connections.filter(c => c.from === curId);
+    if (!outConns.length) {
+      paths.push({ conds: condStack, assigns: assignStack, nextStateName: '(end)', nextStateId: null });
+      return;
+    }
+    if (cur.type === 'decision') {
+      outConns.forEach(conn => {
+        let expr = cur.code.trim();
+        if (conn.label === 'false') expr = `(${expr})'`;
+        const nc = [...condStack, { expr, label: conn.label }];
+        const next = blocks.find(b => b.id === conn.to); if (!next) return;
+        if (next.type === 'state')
+          paths.push({ conds: nc, assigns: assignStack, nextStateName: next.name, nextStateId: next.id });
+        else walk(conn.to, nc, assignStack, depth + 1);
+      });
+    } else if (cur.type === 'output') {
+      const na = [...assignStack];
+      splitCodeStatements(cur.code, { blockType: 'output' }).forEach(stmt => {
+        const p = parseAssignmentStatement(stmt); if (p) na.push({ lhs: p.lhs, rhs: p.rhs });
+      });
+      const conn = outConns[0]; if (!conn) return;
+      const next = blocks.find(b => b.id === conn.to); if (!next) return;
+      if (next.type === 'state')
+        paths.push({ conds: condStack, assigns: na, nextStateName: next.name, nextStateId: next.id });
+      else walk(conn.to, condStack, na, depth + 1);
+    } else {
+      const conn = outConns[0]; if (!conn) return;
+      const next = blocks.find(b => b.id === conn.to); if (!next) return;
+      if (next.type === 'state')
+        paths.push({ conds: condStack, assigns: assignStack, nextStateName: next.name, nextStateId: next.id });
+      else walk(conn.to, condStack, assignStack, depth + 1);
+    }
+  }
+  walk(stateId, [], [], 0);
+  return paths;
+}
+
+// Returns { registers, ctrlRows, allConditions, stateEncoding, stateBits, combSummary } or null.
+function buildSynthesisData() {
+  const stateBlocks = blocks.filter(b => b.type === 'state');
+  if (!stateBlocks.length) return null;
+
+  const registeredNames = getRegisteredVarNames();
+
+  // State encoding: binary index per state block (in diagram order)
+  const numStates = stateBlocks.length;
+  const stateBits = numStates <= 1 ? 1 : Math.ceil(Math.log2(numStates));
+  const stateEncoding = {};
+  stateBlocks.forEach((sb, i) => {
+    stateEncoding[sb.id] = { name: sb.name, index: i, binary: i.toString(2).padStart(stateBits, '0') };
+  });
+
+  // Collect unique RHS expressions per register
+  const regRhsMap = {};
+  registeredNames.forEach(v => { regRhsMap[v] = []; });
+
+  // Combinational variable tracking
+  const allAsmAssigned = new Set();
+  blocks.forEach(b => extractAssignedNames(b.code, { blockType: b.type }).forEach(n => allAsmAssigned.add(n)));
+  const combVarNames = [...allAsmAssigned].filter(v => !registeredNames.has(v));
+  const combMap = {}; // varName -> [{stateName, rawConds, rhs}]
+  combVarNames.forEach(v => { combMap[v] = []; });
+
+  // Build raw rows: one per state × path
+  const rawRows = [];
+
+  stateBlocks.forEach(stateB => {
+    const stateAssigns = {};
+    splitCodeStatements(stateB.code, { blockType: 'state' }).forEach(stmt => {
+      const p = parseAssignmentStatement(stmt); if (!p) return;
+      if (registeredNames.has(p.lhs)) {
+        stateAssigns[p.lhs] = p.rhs;
+        if (!regRhsMap[p.lhs].includes(p.rhs)) regRhsMap[p.lhs].push(p.rhs);
+      }
+    });
+
+    walkStatePathsForSynth(stateB.id).forEach(path => {
+      const rowAssigns = { ...stateAssigns };
+      path.assigns.forEach(a => {
+        if (registeredNames.has(a.lhs)) {
+          rowAssigns[a.lhs] = a.rhs;
+          if (!regRhsMap[a.lhs].includes(a.rhs)) regRhsMap[a.lhs].push(a.rhs);
+        }
+        if (combMap[a.lhs] !== undefined)
+          combMap[a.lhs].push({ stateName: stateB.name, rawConds: path.conds, rhs: a.rhs });
+      });
+      rawRows.push({
+        stateId: stateB.id, stateName: stateB.name,
+        rawConds: path.conds,
+        nextStateName: path.nextStateName, nextStateId: path.nextStateId,
+        assigns: rowAssigns,
+        unconnected: path.nextStateId === null
+      });
+    });
+  });
+
+  // Build registers with pow-2 mux sizes
+  const registers = [];
+  registeredNames.forEach(v => {
+    // Only include hold if at least one path leaves this register unassigned
+    const needsHold = rawRows.some(row => row.assigns[v] === undefined);
+    const inputs = [];
+    if (needsHold) inputs.push({ idx: 0, expr: v, label: 'hold' });
+    regRhsMap[v].forEach(rhs => inputs.push({ idx: inputs.length, expr: rhs, label: rhs }));
+    const muxActual   = inputs.length || 1;
+    const muxSizePow2 = ceilPow2(muxActual);
+    const selBits     = Math.max(1, Math.log2(muxSizePow2));
+    registers.push({ name: v, inputs, muxActual, muxSizePow2, selBits });
+  });
+
+  // Collect all unique base condition expressions across all rows
+  const allConditions = [];
+  rawRows.forEach(row => {
+    row.rawConds.forEach(c => {
+      const base = baseCondExpr(c.expr);
+      if (!allConditions.includes(base)) allConditions.push(base);
+    });
+  });
+
+  // Build control rows with sel signals and condValues
+  const ctrlRows = rawRows.map(row => {
+    const sels = {};
+    registers.forEach(reg => {
+      const rhs = row.assigns[reg.name];
+      const found = rhs !== undefined ? reg.inputs.findIndex(inp => inp.expr === rhs) : -1;
+      sels[reg.name] = found >= 0 ? found : 0;
+    });
+    const condValues = {};
+    allConditions.forEach(expr => { condValues[expr] = 'X'; });
+    row.rawConds.forEach(c => { condValues[baseCondExpr(c.expr)] = c.label === 'true' ? '1' : '0'; });
+    return { ...row, sels, condValues };
+  });
+
+  // Combinational summary
+  const combSummary = combVarNames
+    .filter(v => combMap[v].length > 0)
+    .map(v => ({ name: v, def: v in combDefaults ? combDefaults[v] : 0, entries: combMap[v] }));
+
+  return { registers, ctrlRows, allConditions, stateEncoding, stateBits, combSummary };
+}
+
+function checkBitRanges() {
+  bitRangeVarNames.clear();
+  const registeredNames = getRegisteredVarNames();
+  const check = (v, val) => {
+    if (typeof val !== 'number' || !Number.isInteger(val)) return;
+    const bits = varBits[v] ?? varBitDefault;
+    const half = Math.pow(2, bits - 1);
+    if (val < -half || val > half - 1) bitRangeVarNames.add(v);
+  };
+  registeredNames.forEach(v => { if (v in simVars) check(v, simVars[v]); });
+  Object.keys(userVars).forEach(v => check(v, userVars[v]));
+}
+
+function toggleSynthPanel() {
+  synthPanelOpen = !synthPanelOpen;
+  const panel    = document.getElementById('synthPanel');
+  const resizer  = document.getElementById('synthResizer');
+  const btn      = document.getElementById('btnSynth');
+  panel.style.display   = synthPanelOpen ? 'flex'  : 'none';
+  resizer.style.display = synthPanelOpen ? 'block' : 'none';
+  if (btn) btn.classList.toggle('active', synthPanelOpen);
+  if (synthPanelOpen) { renderDatapathPanel(); renderCtrlPanel(); }
+}
+
+// ── DPATH pane ──────────────────────────────────────────
+function renderDatapathPanel() {
+  const pc = document.getElementById('synthDpath');
+  if (!pc) return;
+  if (!blocks.filter(b => b.type === 'state').length) {
+    pc.innerHTML = '<div style="font-size:16px;color:var(--text3);padding:16px 0;text-align:center">No state blocks yet</div>';
+    return;
+  }
+  const data = buildSynthesisData();
+  if (!data) { pc.innerHTML = '<div style="font-size:16px;color:var(--text3);padding:16px 0;text-align:center">Nothing to synthesize</div>'; return; }
+  const { registers, combSummary } = data;
+  let html = '';
+
+  // Section 1: Register table
+  html += `<div class="editor-label" style="margin-bottom:6px">Registers</div>`;
+  if (!registers.length) {
+    html += `<div style="font-size:16px;color:var(--text3);margin-bottom:14px">No registered variables found.</div>`;
+  } else {
+    const maxInputs = Math.max(...registers.map(r => r.inputs.length));
+    html += `<div style="overflow-x:auto;margin-bottom:4px"><table class="asm-table"><thead><tr><th>Register</th>`;
+    for (let i = 0; i < maxInputs; i++)
+      html += `<th style="color:var(--purple)">Mux[${i}]</th>`;
+    html += `<th>Mux size</th></tr></thead><tbody>`;
+    registers.forEach(reg => {
+      html += `<tr><td style="color:var(--accent);font-weight:600">${h(reg.name)}</td>`;
+      for (let i = 0; i < maxInputs; i++) {
+        const inp = reg.inputs[i];
+        if (inp) {
+          const label = inp.label === 'hold' ? `${inp.expr} (hold)` : inp.expr;
+          html += `<td style="color:var(--green)">${h(label)}</td>`;
+        } else {
+          html += `<td style="color:var(--text3)">—</td>`;
+        }
+      }
+      html += `<td style="color:var(--amber);font-weight:600">${reg.muxSizePow2}-to-1</td></tr>`;
+    });
+    html += `</tbody></table></div>`;
+    html += `<div style="font-size:13px;color:var(--text3);margin-bottom:14px">Mux size rounded to next power of 2.</div>`;
+  }
+
+  // Section 2: Required operations
+  const allOps = new Set();
+  registers.forEach(reg => reg.inputs.filter(i => i.label !== 'hold').forEach(inp => allOps.add(inp.expr)));
+  if (allOps.size) {
+    html += `<div class="editor-label" style="margin-bottom:6px">Other Required Datapath Blocks</div>`;
+    html += `<div style="font-size:14px;color:var(--red);margin-bottom:8px">These expressions must be implemented as combinational circuits feeding the register muxes:</div>`;
+    html += `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px">`;
+    allOps.forEach(op => {
+      html += `<span style="font-family:var(--mono);background:var(--bg2);color:var(--green);padding:5px 12px;border-radius:4px;font-size:14px;border:1px solid var(--border2);display:inline-block">${h(op)}</span>`;
+    });
+    html += `</div>`;
+  }
+
+  // Section 3: Combinational outputs (condition → value, else → default)
+  if (combSummary.length) {
+    html += `<div class="editor-label" style="margin-bottom:6px">Combinational Outputs</div>`;
+    html += `<div style="overflow-x:auto;margin-bottom:8px"><table class="asm-table"><thead><tr><th>Variable</th><th>Expression</th><th>Value</th></tr></thead><tbody>`;
+    combSummary.forEach(cv => {
+      cv.entries.forEach((e, i) => {
+        const condParts = e.rawConds.map(c => h(displayCondExpr(c.expr))).join(' • ');
+        const whenStr = condParts ? `${h(e.stateName)} • ${condParts}` : h(e.stateName);
+        html += `<tr>
+          ${i===0 ? `<td style="color:var(--purple);font-weight:600" rowspan="${cv.entries.length+1}">${h(cv.name)}</td>` : ''}
+          <td style="color:#4f9eff">${whenStr}</td>
+          <td style="color:var(--green);font-family:var(--mono)">${h(e.rhs)}</td>
+        </tr>`;
+      });
+      // else row
+      html += `<tr>
+        <td style="color:var(--text3);font-style:italic">else</td>
+        <td style="color:var(--text3);font-style:italic;font-family:var(--mono)">${h(String(cv.def))}</td>
+      </tr>`;
+    });
+    html += `</tbody></table></div>`;
+  }
+
+  pc.innerHTML = html;
+}
+
+// ── CTRL pane ───────────────────────────────────────────
+function renderCtrlPanel() {
+  const pc = document.getElementById('synthCtrl');
+  if (!pc) return;
+  const stateBlocks = blocks.filter(b => b.type === 'state');
+  if (!stateBlocks.length) {
+    pc.innerHTML = '<div style="font-size:16px;color:var(--text3);padding:16px 0;text-align:center">No state blocks yet</div>';
+    return;
+  }
+  const data = buildSynthesisData();
+  if (!data) { pc.innerHTML = '<div style="font-size:16px;color:var(--text3);padding:16px 0;text-align:center">Nothing to synthesize</div>'; return; }
+  const { registers, ctrlRows, allConditions, stateEncoding, stateBits } = data;
+  let html = '';
+
+  // State encoding table
+  html += `<div class="editor-label" style="margin-bottom:6px">State Encoding (${stateBits}-bit)</div>`;
+  html += `<div style="overflow-x:auto;margin-bottom:16px"><table class="asm-table"><thead><tr><th>State</th><th>Binary</th></tr></thead><tbody>`;
+  stateBlocks.forEach(sb => {
+    const enc = stateEncoding[sb.id];
+    const isActive = sb.id === activeBlock;
+    html += `<tr class="${isActive?'tbl-active':''}"><td style="color:#4f9eff">${h(sb.name)}</td><td style="font-family:var(--mono);color:var(--amber)">${enc.binary}</td></tr>`;
+  });
+  html += `</tbody></table></div>`;
+
+  // Controller truth table
+  html += `<div class="editor-label" style="margin-bottom:6px">Controller</div>`;
+  if (!ctrlRows.length) {
+    html += `<div style="font-size:16px;color:var(--text3)">No paths found.</div>`;
+  } else {
+    html += `<div style="overflow-x:auto;margin-bottom:16px"><table class="asm-table"><thead><tr>`;
+    html += `<th style="text-align:center">State</th>`;
+    allConditions.forEach(cond => html += `<th style="text-align:center;color:var(--amber)">${h(displayCondExpr(cond))}</th>`);
+    html += `<th style="text-align:center">Next State</th>`;
+    registers.forEach(reg => html += `<th style="text-align:center;color:var(--purple)">${h(reg.name)}_ctrl</th>`);
+    html += `</tr></thead><tbody>`;
+
+    let prevStateId = null;
+    ctrlRows.forEach(row => {
+      const isActive = row.stateId === activeBlock;
+      const isFirst  = row.stateId !== prevStateId;
+      prevStateId = row.stateId;
+      const enc     = stateEncoding[row.stateId];
+      const nextEnc = row.nextStateId ? stateEncoding[row.nextStateId] : null;
+
+      html += `<tr class="${isActive?'tbl-active':''}">`;
+
+      // State column
+      html += `<td style="white-space:nowrap;text-align:center;color:${isFirst?'#4f9eff':'var(--text3)'};font-weight:${isFirst?600:400}">`;
+      if (isFirst && enc) html += `${h(row.stateName)} <span style="font-family:var(--mono);font-size:13px;color:var(--amber)">(${enc.binary})</span>`;
+      html += `</td>`;
+
+      // Condition input columns
+      allConditions.forEach(cond => {
+        const val = row.condValues[cond];
+        const style = val==='X' ? 'color:var(--text3)' : val==='1' ? 'color:var(--green);font-weight:600' : 'color:#f87171;font-weight:600';
+        html += `<td style="font-family:var(--mono);text-align:center;${style}">${val}</td>`;
+      });
+
+      // Next state column (before ctrl signals)
+      if (row.unconnected) {
+        html += `<td style="text-align:center;color:#f87171;font-weight:600">UNCONNECTED</td>`;
+      } else if (nextEnc) {
+        html += `<td style="white-space:nowrap;text-align:center;color:var(--green)">${h(row.nextStateName)} <span style="font-family:var(--mono);font-size:13px;color:var(--amber)">(${nextEnc.binary})</span></td>`;
+      } else {
+        html += `<td style="text-align:center;color:var(--text3)">X</td>`;
+      }
+
+      // Mux control signal columns
+      registers.forEach(reg => {
+        const selIdx   = row.sels[reg.name] ?? 0;
+        const inp      = reg.inputs[selIdx];
+        const selBin   = selIdx.toString(2).padStart(reg.selBits, '0');
+        html += `<td style="white-space:nowrap;text-align:center;color:var(--text)">`;
+        html += `<span style="font-family:var(--mono);font-weight:600">${selBin}</span>`;
+        const inpLabel = inp ? (inp.label === 'hold' ? `${inp.expr} (hold)` : inp.expr) : '?';
+        html += ` <span style="font-size:13px;color:var(--green)">(${h(inpLabel)})</span></td>`;
+      });
+
+      html += `</tr>`;
+    });
+    html += `</tbody></table></div>`;
+  }
+
+  pc.innerHTML = html;
+}
+
+// LOG
 function renderLogPanel() {
   let html=simLog.length
     ? simLog.map(e=>`<div class="log-entry ${e.type}"><span class="log-step">${e.step}</span><span>${h(e.msg)}</span></div>`).join('')
@@ -1942,30 +2825,36 @@ function resetSim() {
   document.getElementById('btnRun').className = 'btn success';
   simLog = [];
   activeTrail = new Set(); activeConnTrail = new Set();
+  bitRangeVarNames.clear();
   beginSim();
-  render();
-  if (activeTab === 'log')   renderLogPanel();
-  if (activeTab === 'vars')  renderVarsPanel();
-  if (activeTab === 'table') renderTablePanel();
+  checkBitRanges();
+  render(); refreshPanels();
 }
 
 function stepSim() {
   if (!blocks.length) return;
   if (simFinished) return;
   if (activeBlock === null) { beginSim(); render(); return; }
+  // Block stepping when any block has invalid code
+  if (liveCodeErrorIds.size > 0 || liveCircularIds.size > 0) {
+    alert('Cannot simulate: one or more blocks have invalid code (shown in red). Fix all errors before running.');
+    return;
+  }
   // Block stepping when there is a double-driver conflict
   if (liveDoubleDriverIds.size > 0) {
-    addLog('error', '⚡ Cannot step: double driver conflict — fix conflicting assignments first.');
-    if (activeTab === 'log') renderLogPanel();
+    alert('Cannot simulate: double driver conflict (⚡) — the same variable is assigned in multiple places on the active path. Fix conflicting assignments first.');
+    return;
+  }
+  // Block stepping when a register value is out of its bit-width range
+  if (bitRangeVarNames.size > 0) {
+    alert(`Cannot simulate: ${[...bitRangeVarNames].join(', ')} ${bitRangeVarNames.size > 1 ? 'are' : 'is'} out of 2's-complement range for the declared bit width. Fix the bit width or the value.`);
     return;
   }
   prevSimVars = { ...simVars };
   advanceClockCycle();
+  checkBitRanges();
   document.getElementById('stepCounter').textContent = simFinished ? 'DONE' : `CLK ${simStep}`;
-  render();
-  if (activeTab === 'log')   renderLogPanel();
-  if (activeTab === 'vars')  renderVarsPanel();
-  if (activeTab === 'table') renderTablePanel();
+  render(); refreshPanels();
 }
 
 // ── Variable classification ───────────────────────────
@@ -1984,11 +2873,11 @@ function getRegisteredVarNames() {
   return registered;
 }
 
-// Normalize <- and <= assignment syntax to = so JS can run it.
+// Normalize <- and (legacy) <= assignment syntax to = so JS can run it.
 function normalizeCode(code, options = {}) {
-  // Replace varName <- expr or varName ← expr with varName = expr
   let out = code.replace(/\b([A-Za-z_$][A-Za-z0-9_$]*)\s*(?:<-|←)\s*/g, '$1 = ');
-  // Legacy support: allow varName <= expr as assignment outside decision boxes.
+  // Keep <= as assignment alias in state/output boxes for backwards compatibility
+  // (new code should use = directly; the editor no longer auto-converts <=)
   if (options.blockType && options.blockType !== 'decision') {
     out = out.replace(/\b([A-Za-z_$][A-Za-z0-9_$]*)\s*<=\s*(?=[A-Za-z0-9_$\-\+(])/g, '$1 = ');
   }
@@ -2020,6 +2909,34 @@ function runCodeGetDelta(code, scope) {
   return delta;
 }
 
+// Structural double-driver scan used when no simulation is running.
+// Flags any state box + output box on any path that both assign the same var.
+function scanDesignTimeDoubleDrivers() {
+  liveDoubleDriverIds = new Set();
+  liveDoubleDriverVarNames = new Set();
+  blocks.filter(b => b.type === 'state').forEach(stateB => {
+    const stateAssigned = new Set(extractAssignedNames(stateB.code, { blockType: 'state' }));
+    function walk(curId, depth) {
+      if (depth > 50) return;
+      connections.filter(c => c.from === curId).forEach(conn => {
+        const next = blocks.find(b => b.id === conn.to);
+        if (!next || next.type === 'state') return;
+        if (next.type === 'output') {
+          extractAssignedNames(next.code, { blockType: 'output' }).forEach(varName => {
+            if (stateAssigned.has(varName)) {
+              liveDoubleDriverIds.add(stateB.id);
+              liveDoubleDriverIds.add(next.id);
+              liveDoubleDriverVarNames.add(varName);
+            }
+          });
+        }
+        walk(conn.to, depth + 1);
+      });
+    }
+    walk(stateB.id, 0);
+  });
+}
+
 // ── Evaluate combinational outputs along current active path ──
 // 1. Resets all purely-combinational vars to their combDefaults
 // 2. Walks the active path, applies comb-only assignments instantly
@@ -2028,7 +2945,10 @@ function runCodeGetDelta(code, scope) {
 function evalCombinationalPath() {
   liveDoubleDriverIds = new Set();
   liveDoubleDriverVarNames = new Set();
-  if (!activeBlock) return;
+  if (!activeBlock) {
+    scanDesignTimeDoubleDrivers();
+    return;
+  }
 
   const registeredNames  = getRegisteredVarNames();
 
@@ -2070,11 +2990,10 @@ function evalCombinationalPath() {
     if (curBlock.type === 'decision') {
       let res = false;
       try {
-        // Ensure all vars exist before evaluating
         const scope = { ...simVars };
         extractAssignedNames(curBlock.code, { blockType: curBlock.type }).forEach(n => { if (!(n in scope)) scope[n] = 0; });
         const kn = Object.keys(scope), kv = Object.values(scope);
-        res = !!(new Function(...kn, 'return (' + curBlock.code + ');'))(...kv);
+        res = !!(new Function(...kn, 'return (' + preprocessBitExpr(curBlock.code) + ');'))(...kv);
       } catch(e) {}
       const br = res ? 'true' : 'false';
       conn = connections.find(c => c.from===cur && (c.label===br || c.label===String(res)))
@@ -2154,6 +3073,7 @@ function stepBack() {
   if (activeTab === 'log')   renderLogPanel();
   if (activeTab === 'vars')  renderVarsPanel();
   if (activeTab === 'table') renderTablePanel();
+  if (synthPanelOpen) { renderDatapathPanel(); renderCtrlPanel(); }
 }
 
 // ── Two-pass clock cycle ──────────────────────────────
@@ -2202,11 +3122,11 @@ function advanceClockCycle() {
   // Registered writes go into nextStateBuffer instead.
   const workVars = { ...simVars };
 
-  // Helper: evaluate an expression against workVars
+  // Helper: evaluate a (possibly bit-slice/concat) expression against workVars
   function evalInCycle(expr) {
     if (!expr.trim()) return false;
     const ns = Object.keys(workVars), vs = Object.values(workVars);
-    return !!(new Function(...ns, 'return (' + expr + ');'))(...vs);
+    return !!(new Function(...ns, 'return (' + preprocessBitExpr(expr) + ');'))(...vs);
   }
 
   // Helper: run code, split results into registered / combinational
@@ -2323,7 +3243,10 @@ function advanceClockCycle() {
 
   // ── Loop detection ──────────────────────────────────
   const fingerprint = activeBlock + '|' + JSON.stringify(simVars, Object.keys(simVars).sort());
-  if (fingerprint === lastCycleFingerprint) {
+  if (simFinished) {
+    cycleLog.forEach(e => simLog.push({ step:simStep + 1, type:e.type, msg:e.msg }));
+    if (simLog.length > 200) simLog.splice(0, simLog.length - 200);
+  } else if (fingerprint === lastCycleFingerprint) {
     loopRepeatCount++;
     const last = simLog[simLog.length - 1];
     if (last && last._loopNotice) {
@@ -2360,6 +3283,20 @@ function traceAsmBlock() {
   if (!activeBlock) return;
   const stateB = blocks.find(b => b.id === activeBlock); if (!stateB) return;
   activeTrail.add(stateB.id);
+
+  const registeredNames = getRegisteredVarNames();
+
+  // Working scope so output-box comb assignments propagate to downstream decisions
+  const workScope = { ...simVars };
+  // Reset comb vars to defaults for a clean trace
+  const allAsmAssigned = new Set();
+  blocks.forEach(b => extractAssignedNames(b.code, { blockType: b.type }).forEach(n => allAsmAssigned.add(n)));
+  allAsmAssigned.forEach(varName => {
+    if (!registeredNames.has(varName)) {
+      workScope[varName] = (varName in combDefaults) ? combDefaults[varName] : 0;
+    }
+  });
+
   let cur = stateB.id, safety = 0;
   while (true) {
     if (++safety > 50) break;
@@ -2369,8 +3306,8 @@ function traceAsmBlock() {
     if (curBlock.type === 'decision') {
       let res = false;
       try {
-        const ns = Object.keys(simVars), vs = Object.values(simVars);
-        res = !!(new Function(...ns, 'return (' + curBlock.code + ');'))(...vs);
+        const ns = Object.keys(workScope), vs = Object.values(workScope);
+        res = !!(new Function(...ns, 'return (' + preprocessBitExpr(curBlock.code) + ');'))(...vs);
       } catch(e) {}
       const br = res ? 'true' : 'false';
       conn = connections.find(c => c.from===cur && (c.label===br || c.label===String(res)))
@@ -2386,6 +3323,16 @@ function traceAsmBlock() {
 
     cur = conn.to;
     activeTrail.add(cur);
+
+    // Apply comb output effects so subsequent decisions see updated values
+    if (nextBlock.type === 'output') {
+      try {
+        const { writes } = evaluateAssignmentBlock(nextBlock.code, { ...workScope }, { blockType: 'output' });
+        writes.forEach(({ varName, value }) => {
+          if (!registeredNames.has(varName)) workScope[varName] = value;
+        });
+      } catch(e) {}
+    }
   }
 }
 
@@ -2401,6 +3348,14 @@ function runSim() {
     document.getElementById('btnRun').className = 'btn success'; return;
   }
   if (!blocks.length) return;
+  if (liveCodeErrorIds.size > 0 || liveCircularIds.size > 0) {
+    alert('Cannot simulate: one or more blocks have invalid code (shown in red). Fix all errors before running.');
+    return;
+  }
+  if (liveDoubleDriverIds.size > 0) {
+    alert('Cannot simulate: double driver conflict (⚡) — fix conflicting assignments first.');
+    return;
+  }
   if (activeBlock === null) { beginSim(); render(); }
   isRunning = true;
   document.getElementById('btnRun').textContent = '■ Stop';
@@ -2412,8 +3367,8 @@ function runSim() {
       document.getElementById('btnRun').textContent = '▶ Run';
       document.getElementById('btnRun').className = 'btn success'; return;
     }
-    if (liveDoubleDriverIds.size > 0) {
-      addLog('error', '⚡ Cannot run: double driver conflict.');
+    if (liveDoubleDriverIds.size > 0 || bitRangeVarNames.size > 0) {
+      addLog('error', liveDoubleDriverIds.size > 0 ? '⚡ Cannot run: double driver conflict.' : `⚠ Cannot run: ${[...bitRangeVarNames].join(', ')} out of range.`);
       clearInterval(runInterval); isRunning = false;
       document.getElementById('btnRun').textContent = '▶ Run';
       document.getElementById('btnRun').className = 'btn success';
@@ -2422,11 +3377,13 @@ function runSim() {
     }
     prevSimVars = { ...simVars };
     advanceClockCycle();
+    checkBitRanges();
     document.getElementById('stepCounter').textContent = simFinished ? 'DONE' : `CLK ${simStep}`;
     render();
     if (activeTab === 'log')   renderLogPanel();
     if (activeTab === 'vars')  renderVarsPanel();
     if (activeTab === 'table') renderTablePanel();
+    if (synthPanelOpen) { renderDatapathPanel(); renderCtrlPanel(); }
     if (simStep > 600) {
       addLog('error', 'Max 600 cycles — possible infinite loop. Press Reset.');
       clearInterval(runInterval); isRunning = false;
@@ -2442,7 +3399,7 @@ function runSim() {
 // ════════════════════════════════════════════════════════
 function saveJSON() {
   const data={
-    version:5,
+    version:6,
     blocks,
     connections,
     startBlockId,
@@ -2450,6 +3407,9 @@ function saveJSON() {
     combDefaults,
     forcedRegisters:[...forcedRegisters],
     regInitValues,
+    varBits,
+    varBitDefault,
+    simDisplayBase,
     idCounter,
     view
   };
@@ -2473,10 +3433,13 @@ function loadJSON(e) {
       combDefaults=data.combDefaults||{};
       forcedRegisters=new Set(data.forcedRegisters||[]);
       regInitValues=data.regInitValues||{};
+      varBits=data.varBits||{};
+      varBitDefault=data.varBitDefault||8;
+      simDisplayBase=data.simDisplayBase||'dec';
       idCounter=data.idCounter||200; view=data.view||{x:0,y:0,scale:1};
       selectedId=null; selectedConnId=null;
       simLog=[];
-      render(); updateEmptyState();
+      revalidateAllBlocks(); render(); updateEmptyState();
       beginSim(); render();
       if (activeTab==='vars')  renderVarsPanel();
       if (activeTab==='log')   renderLogPanel();
@@ -2496,8 +3459,9 @@ function clearAll() {
   blocks=[]; connections=[]; selectedId=null; selectedConnId=null;
   activeBlock=null; startBlockId=null;
   activeTrail=new Set(); activeConnTrail=new Set();
-  simStep=0; simVars={}; simLog=[]; userVars={}; 
-  render(); updateEmptyState();renderVarsPanel();
+  simStep=0; simVars={}; simLog=[]; userVars={};
+  varBits={}; varBitDefault=8; simDisplayBase='dec';
+  render(); updateEmptyState(); refreshPanels();
   document.getElementById('stepCounter').textContent='CLK 0';
 }
 function deleteBlock(id) {
@@ -2505,6 +3469,8 @@ function deleteBlock(id) {
   connections=connections.filter(c=>c.from!==id&&c.to!==id);
   if (startBlockId===id) startBlockId = blocks.find(b=>b.type==='state')?.id||null;
   if (selectedId===id) { selectedId=null; renderSideEditor(); }
+  liveCircularIds.delete(id);
+  liveCodeErrorIds.delete(id);
 
   // Remove vars no longer assigned anywhere in the design
   const stillAssigned = new Set();
@@ -2517,8 +3483,7 @@ function deleteBlock(id) {
   });
 
   traceAsmBlock(); evalCombinationalPath();
-  render(); updateEmptyState();
-  if (activeTab === 'vars') renderVarsPanel();
+  render(); updateEmptyState(); refreshPanels();
 }
 
 // ASM to verilog export
@@ -2526,20 +3491,25 @@ function deleteBlock(id) {
 // ASM to verilog export
 //pop up window to ask how many bits to export, and also ask which vars to include as outputs
 function exportVerilog() {
-  const numBits = prompt('Enter the number of bits for the Verilog export:', '8');
-  if (!numBits) return;
-  const numBitsInt = parseInt(numBits);
-  if (isNaN(numBitsInt) || numBitsInt <= 0) {
-    alert('Invalid number of bits.');
+  // Validate all blocks before export
+  const errorBlockNames = [];
+  blocks.forEach(b => {
+    if (!['state', 'output', 'decision'].includes(b.type)) return;
+    const result = b.type === 'decision'
+      ? validateDecisionCode(b.code)
+      : validateAssignmentCode(b.code, b.type);
+    if (!result.valid) errorBlockNames.push(b.name || b.id);
+  });
+  if (errorBlockNames.length > 0) {
+    alert(`Cannot export: ${errorBlockNames.length} block(s) have invalid code (⚠): ${errorBlockNames.join(', ')}.\nFix all errors before exporting.`);
     return;
   }
-  
+
   // Get all assignable variables
   const registeredNames = getRegisteredVarNames();
   const allAsmAssigned = new Set();
-  //except for input vars
   blocks.forEach(b => extractAssignedNames(b.code, { blockType: b.type }).forEach(n => allAsmAssigned.add(n)));
-  
+
   const allVars = [...new Set([...Object.keys(userVars), ...allAsmAssigned])];
   const inputVars = allVars.filter(k => !allAsmAssigned.has(k));
   const allVarsExcludingInputs = allVars.filter(v => !inputVars.includes(v));
@@ -2547,18 +3517,17 @@ function exportVerilog() {
     alert('No variables to select as outputs.');
     return;
   }
-  
-  // Prompt for output variables
-  const outputPrompt = `Select which variables to include as internal state[not exposed to] (comma-separated):\n\nAvailable: ${allVarsExcludingInputs.join(', ')}\n\nExample: result,done`;
-  const outputStr = prompt(outputPrompt, 'result');
-  
-  if (outputStr === null) return; // User clicked Cancel
-  
-  const outputVarList = outputStr 
+
+  // Prompt only for which vars are internal (not exposed as ports)
+  const outputPrompt = `Variables to keep internal (not exposed as module ports), comma-separated.\n\nAvailable: ${allVarsExcludingInputs.join(', ')}\n\nLeave blank to expose all as ports.`;
+  const outputStr = prompt(outputPrompt, '');
+  if (outputStr === null) return;
+
+  const outputVarList = outputStr
     ? outputStr.split(',').map(v => v.trim()).filter(v => v && allVars.includes(v))
     : [];
-  
-  const verilog = generateVerilog(numBitsInt, outputVarList);
+
+  const verilog = generateVerilog(outputVarList);
   const blob = new Blob([verilog], { type: 'text/plain' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -2567,7 +3536,11 @@ function exportVerilog() {
   URL.revokeObjectURL(a.href);
 }
  
-function generateVerilog(bits, internalVarList = []) {
+function getVarBitWidth(v) { return varBits[v] ?? varBitDefault; }
+function vBits(v) { const b = getVarBitWidth(v); return b > 1 ? `[${b-1}:0] ` : ''; }
+function vLit(v, val) { return `${getVarBitWidth(v)}'d${val}`; }
+
+function generateVerilog(internalVarList = []) {
   if (!blocks.length) { alert('No blocks to export.'); return ''; }
   const registeredNames = getRegisteredVarNames();
   const stateBlocks = blocks.filter(b => b.type === 'state');
@@ -2736,7 +3709,7 @@ function generateVerilog(bits, internalVarList = []) {
   // Initialize all registered vars (outputs + internals)
   [...registeredNames].forEach(v => {
     const init = (v in regInitValues) ? regInitValues[v] : 0;
-    stateAssignments += `      ${v} <= ${bits}'d${init};\n`;
+    stateAssignments += `      ${v} <= ${vLit(v, init)};\n`;
   });
   
   stateAssignments += `    end else begin\n`;
@@ -2795,16 +3768,16 @@ function generateVerilog(bits, internalVarList = []) {
       const def = (v in combDefaults) ? combDefaults[v] : 0;
  
       if (paths.length === 0) {
-        combOutputs += `    ${v} = ${bits}'d${def};\n`;
+        combOutputs += `    ${v} = ${vLit(v, def)};\n`;
       } else {
         paths.forEach((p, pi) => {
           const keyword = pi === 0 ? 'if' : 'else if';
           combOutputs += `    ${keyword} ${p.guard} begin\n`;
-          combOutputs += `      ${v} = ${bits}'d${p.rhs};\n`;
+          combOutputs += `      ${v} = ${p.rhs};\n`;
           combOutputs += `    end\n`;
         });
         combOutputs += `    else begin\n`;
-        combOutputs += `      ${v} = ${bits}'d${def};\n`;
+        combOutputs += `      ${v} = ${vLit(v, def)};\n`;
         combOutputs += `    end\n`;
       }
     });
@@ -2844,14 +3817,14 @@ function generateVerilog(bits, internalVarList = []) {
       const def = (v in combDefaults) ? combDefaults[v] : 0;
  
       if (paths.length === 0) {
-        internalOutputs += `    ${v} <= ${bits}'d${def};\n`;
+        internalOutputs += `    ${v} <= ${vLit(v, def)};\n`;
       } else {
-        internalOutputs += `        ${v} <= ${bits}'d${def};\n`;
+        internalOutputs += `        ${v} <= ${vLit(v, def)};\n`;
         internalOutputs += `    end else begin\n`;
         paths.forEach((p, pi) => {
           const keyword = pi === 0 ? 'if' : 'else if';
           internalOutputs += `      ${keyword} ${p.guard} begin\n`;
-          internalOutputs += `        ${v} <= ${bits}'d${p.rhs};\n`;
+          internalOutputs += `        ${v} <= ${vLit(v, p.rhs)};\n`;
           internalOutputs += `      end\n`;
         });
         internalOutputs += `    end\n`;
@@ -2867,41 +3840,41 @@ function generateVerilog(bits, internalVarList = []) {
   let module = `module asm (\n`;
   
   // Input ports
-  module += inputVars.map(v => `  input [${bits-1}:0] ${v}`).join(',\n');
+  module += inputVars.map(v => `  input ${vBits(v)}${v}`).join(',\n');
   if (inputVars.length > 0) module += ',\n';
-  
+
   // Control ports
   module += `  input nrst,\n`;
   module += `  input clk`;
-  
+
   // Output ports
   if (outputRegs.length > 0) module += ',\n';
 
   module += outputRegs
-  .map(v => `  output reg [${bits-1}:0] ${v}`)
+  .map(v => `  output reg ${vBits(v)}${v}`)
   .join(',\n');
 
   if (combVars.length > 0 && outputRegs.length > 0) module += ',\n';
-  
+
   module += combVars.filter(v => !internalCombs.includes(v))
-  .map(v => `  output reg [${bits-1}:0] ${v}`)
+  .map(v => `  output reg ${vBits(v)}${v}`)
   .join(',\n');
 
 
   module += `);\n\n`;
- 
+
 
   // Internal registered vars
   if (internalRegs.length > 0) {
     internalRegs.forEach(v => {
-      module += `  reg [${bits-1}:0] ${v};\n`;
+      module += `  reg ${vBits(v)}${v};\n`;
     });
   }
 
   // Internal combinational vars
   if (internalCombs.length > 0) {
     internalCombs.forEach(v => {
-      module += `  reg [${bits-1}:0] ${v};\n`;
+      module += `  reg ${vBits(v)}${v};\n`;
     });
   }
   
