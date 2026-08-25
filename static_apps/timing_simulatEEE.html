@@ -250,6 +250,17 @@ canvas { display: block; width: 100%; border-radius: 5px; }
 .single-hide.hide { display: none; }
 .conditional-hide { display: none; }
 .conditional-hide.show { display: block; }
+.adv-only { display: none; }
+.adv-only.show { display: block; }
+
+.skew-dir-btn {
+  border: 1px solid var(--border2); background: var(--panel); color: var(--text-dim);
+  border-radius: 8px; padding: 5px 10px; font-size: 14px;
+  font-family: 'JetBrains Mono', monospace; cursor: pointer; transition: all .2s;
+}
+.skew-dir-btn.active {
+  background: rgba(245,158,11,.15); border-color: rgba(245,158,11,.5); color: var(--accent-yellow);
+}
 .analysis-summary {
   grid-column: 1 / -1;
   display: grid;
@@ -332,6 +343,16 @@ canvas { display: block; width: 100%; border-radius: 5px; }
         <button type="button" class="mode-btn" data-ffmode="different">All Different</button>
       </div>
       <span class="tog-val" id="ff-param-label" style="color:var(--accent-green)">Shared FF parameters</span>
+    </div>
+
+    <!-- Advanced mode toggle -->
+    <div class="toggle-wrap">
+      <span class="toggle-wrap-label">Advanced:</span>
+      <label class="tog">
+        <input type="checkbox" id="adv-toggle">
+        <span class="tog-track"></span>
+      </label>
+      <span class="tog-val" id="adv-label" style="color:var(--text-dim)">Off</span>
     </div>
 
     <div class="status-badge status-ok"    id="setup-status">SETUP </div>
@@ -523,6 +544,45 @@ canvas { display: block; width: 100%; border-radius: 5px; }
     </div>
   </div>
 
+  <!-- Clock Non-Idealities (Advanced Mode only) -->
+  <div class="panel-card adv-only" id="adv-card">
+    <div class="card-header">
+      <div class="dot" style="background:var(--accent-yellow)"></div>
+      Clock Non-Idealities
+    </div>
+    <div class="param-group">
+      <div class="param-row">
+        <div class="param-label-row">
+          <span class="param-name">t<sub>skew</sub> magnitude</span>
+          <span class="param-value" id="val-skew">0.0 ns</span>
+        </div>
+        <input type="range" class="yellow" id="sl-skew" min="0" max="5" step="0.1" value="0">
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-top:2px;">
+        <span class="param-name" style="font-size:14px;white-space:nowrap;">CLK2 direction:</span>
+        <button type="button" class="skew-dir-btn active" id="skew-pos-btn">+skew (late)</button>
+        <button type="button" class="skew-dir-btn" id="skew-neg-btn">−skew (early)</button>
+      </div>
+      <div style="font-size:12px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;
+                  border-top:1px solid var(--border);padding-top:6px;margin-top:2px;">
+        CLK1 = FF1 clock &nbsp;·&nbsp; CLK2 = FF2 clock ± t<sub>skew</sub>
+      </div>
+    </div>
+    <div class="param-group">
+      <div class="param-row">
+        <div class="param-label-row">
+          <span class="param-name">t<sub>jitter</sub></span>
+          <span class="param-value" id="val-jitter">0.0 ns</span>
+        </div>
+        <input type="range" class="yellow" id="sl-jitter" min="0" max="3" step="0.05" value="0">
+      </div>
+      <div style="font-size:12px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;
+                  border-top:1px solid var(--border);padding-top:6px;margin-top:2px;">
+        ±t<sub>jitter</sub> uncertainty shown on clock edges
+      </div>
+    </div>
+  </div>
+
 </div><!-- /left-panel -->
 
 
@@ -539,6 +599,8 @@ canvas { display: block; width: 100%; border-radius: 5px; }
         <div class="legend-item"><div class="l-hatch"></div>Unstable (t<sub>Lmin</sub>…<sub>Lmax</sub>)</div>
         <div class="legend-item"><div class="l-box" style="background:var(--accent-red)"></div>Setup window</div>
         <div class="legend-item"><div class="l-box" style="background:var(--accent-yellow)"></div>Hold window</div>
+        <div class="legend-item adv-only" id="leg-clk2"><div class="l-line" style="background:#f59e0b"></div>CLK2 (skewed)</div>
+        <div class="legend-item adv-only" id="leg-jitter"><div class="l-box" style="background:rgba(245,158,11,0.4);border:1px dashed #f59e0b"></div>Jitter ±t<sub>j</sub></div>
       </div>
     </div>
     <div class="waveform-body">
@@ -600,11 +662,15 @@ const params = {
   tlmin: 1.5,
   tlmax: 3.5,
   tlmin2: 1.5,
-  tlmax2: 3.5
+  tlmax2: 3.5,
+  skew: 0,
+  jitter: 0
 };
 
 let topologyMode = 'single';
 let ffParamMode = 'same';
+let advancedMode = false;
+let skewPositive = true;
 
 const canvas = document.getElementById('waveform');
 const ctx = canvas.getContext('2d');
@@ -641,6 +707,10 @@ function buildPath(label, sourceIndex, ffIndex, logic, launchBase, color, source
   const sourceTcq = getLaunchTcq(sourceIndex);
   const setupRhs = sourceTcq + logic.tlmax + dest.tsu;
   const holdRhs = sourceTcq + logic.tlmin;
+  const captureEdgeOffset = advancedMode ? params.skew * (skewPositive ? 1 : -1) : 0;
+  const jitter = advancedMode ? params.jitter : 0;
+  const setupLhs = params.T + captureEdgeOffset - 2 * jitter;
+  const holdLhs = dest.thold + captureEdgeOffset + 2 * jitter;
   return {
     label,
     sourceIndex,
@@ -653,10 +723,14 @@ function buildPath(label, sourceIndex, ffIndex, logic, launchBase, color, source
     thold: dest.thold,
     setupRhs,
     holdRhs,
-    setupSlack: params.T - setupRhs,
-    holdSlack: holdRhs - dest.thold,
-    setupViol: params.T < setupRhs,
-    holdViol: holdRhs < dest.thold,
+    setupLhs,
+    holdLhs,
+    captureEdgeOffset,
+    jitter,
+    setupSlack: setupLhs - setupRhs,
+    holdSlack: holdRhs - holdLhs,
+    setupViol: setupLhs < setupRhs,
+    holdViol: holdRhs < holdLhs,
     color,
     sourceColor
   };
@@ -803,7 +877,9 @@ function setFfParamMode(nextMode) {
   ['sl-tlmin', 'tlmin', 'val-tlmin'],
   ['sl-tlmax', 'tlmax', 'val-tlmax'],
   ['sl-tlmin2', 'tlmin2', 'val-tlmin2'],
-  ['sl-tlmax2', 'tlmax2', 'val-tlmax2']
+  ['sl-tlmax2', 'tlmax2', 'val-tlmax2'],
+  ['sl-skew', 'skew', 'val-skew'],
+  ['sl-jitter', 'jitter', 'val-jitter']
 ].forEach(([id, key, valId]) => {
   const el = document.getElementById(id);
   if (!el) return;
@@ -840,6 +916,29 @@ document.getElementById('theme-toggle').addEventListener('change', function () {
   document.documentElement.setAttribute('data-theme', this.checked ? 'light' : 'dark');
   document.getElementById('theme-label').textContent = this.checked ? '☀️ Light' : '🌙 Dark';
   updateCircuitDiagram();
+  render();
+});
+
+document.getElementById('adv-toggle').addEventListener('change', function () {
+  advancedMode = this.checked;
+  document.getElementById('adv-label').textContent = advancedMode ? 'On' : 'Off';
+  document.getElementById('adv-label').style.color = advancedMode ? 'var(--accent-yellow)' : 'var(--text-dim)';
+  document.getElementById('adv-card').classList.toggle('show', advancedMode);
+  document.getElementById('leg-clk2').classList.toggle('show', advancedMode);
+  document.getElementById('leg-jitter').classList.toggle('show', advancedMode);
+  render();
+});
+
+document.getElementById('skew-pos-btn').addEventListener('click', () => {
+  skewPositive = true;
+  document.getElementById('skew-pos-btn').classList.add('active');
+  document.getElementById('skew-neg-btn').classList.remove('active');
+  render();
+});
+document.getElementById('skew-neg-btn').addEventListener('click', () => {
+  skewPositive = false;
+  document.getElementById('skew-neg-btn').classList.add('active');
+  document.getElementById('skew-pos-btn').classList.remove('active');
   render();
 });
 
@@ -952,8 +1051,17 @@ function drawBracketMirror(ctx2, color, x1, x2, y, label, dashed) {
   ctx2.fillText(label, (x1 + x2) / 2, y + 20);
 }
 function buildRows(topology) {
+  const clkColor = getThemeColor('--clk-color') || '#06b6d4';
+  const clk2Color = '#f59e0b';
+  const captureOffset = advancedMode ? params.skew * (skewPositive ? 1 : -1) : 0;
+  const clkRows = advancedMode
+    ? [
+        { kind: 'clk', label: 'CLK1', color: clkColor, skewOffset: 0 },
+        { kind: 'clk', label: 'CLK2', color: clk2Color, skewOffset: captureOffset }
+      ]
+    : [{ kind: 'clk', label: 'CLK', color: clkColor, skewOffset: 0 }];
   const rows = [
-    { kind: 'clk', label: 'CLK', color: getThemeColor('--clk-color') || '#06b6d4' },
+    ...clkRows,
     { kind: 'exact', label: 'Q1', color: getThemeColor('--q1-color') || '#22c55e', transitions: [params.tcq, params.T + params.tcq] }
   ];
 
@@ -1024,7 +1132,7 @@ function drawWaveform(topology) {
       h: row.kind === 'clk' ? 50 : rowH
     };
 
-    currentY += obj.h + (index === 0 ? firstGap : normalGap);
+    currentY += obj.h + (row.kind === 'clk' ? firstGap : normalGap);
 
     return obj;
   });
@@ -1060,21 +1168,91 @@ function drawWaveform(topology) {
     ctx.setLineDash([]);
   });
 
-  const clkRow = rowDefs[0];
-  ctx.strokeStyle = clkRow.color;
-  ctx.lineWidth = 2;
-  const clkPts = [[tStart, 0], [0, 0], [0, 1], [params.T * 0.5, 1], [params.T * 0.5, 0], [params.T, 0], [params.T, 1], [params.T * 1.5, 1], [params.T * 1.5, 0], [2 * params.T, 0], [2 * params.T, 1], [tEnd, 1]];
-  ctx.beginPath();
-  clkPts.forEach(([t, v], i) => {
-    const x = pxt(t);
-    const y = clkRow.y + (1 - v) * clkRow.h;
-    i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+  if (advancedMode && params.skew > 0) {
+    const captureOff = params.skew * (skewPositive ? 1 : -1);
+    const clk2EdgeColor = isDark ? 'rgba(245,158,11,0.5)' : 'rgba(217,119,6,0.55)';
+    [captureOff, params.T + captureOff, 2 * params.T + captureOff].forEach(et => {
+      if (pxt(et) < ox || pxt(et) > W - 4) return;
+      ctx.strokeStyle = clk2EdgeColor;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath(); ctx.moveTo(pxt(et), 8); ctx.lineTo(pxt(et), H - botH); ctx.stroke();
+      ctx.setLineDash([]);
+    });
+  }
+
+  const clkRowDefs = rowDefs.filter(r => r.kind === 'clk');
+  const clkSpanTop    = clkRowDefs.length ? clkRowDefs[0].y - 3 : 0;
+  const clkSpanBottom = clkRowDefs.length ? clkRowDefs[clkRowDefs.length - 1].y + clkRowDefs[clkRowDefs.length - 1].h + 3 : 0;
+
+  clkRowDefs.forEach(clkRow => {
+    const off = clkRow.skewOffset || 0;
+    const clkPts = [
+      [tStart, 0], [off, 0], [off, 1], [params.T * 0.5 + off, 1], [params.T * 0.5 + off, 0],
+      [params.T + off, 0], [params.T + off, 1], [params.T * 1.5 + off, 1], [params.T * 1.5 + off, 0],
+      [2 * params.T + off, 0], [2 * params.T + off, 1], [tEnd, 1]
+    ];
+    ctx.strokeStyle = clkRow.color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    clkPts.forEach(([t, v], i) => {
+      const x = pxt(t);
+      const y = clkRow.y + (1 - v) * clkRow.h;
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    });
+    ctx.stroke();
+    if (advancedMode && params.jitter > 0) {
+      const jFill = 'rgba(245,158,11,0.18)';
+      const jStroke = 'rgba(245,158,11,0.65)';
+      const isFirstClk = clkRow === clkRowDefs[0];
+      [off, params.T * 0.5 + off, params.T + off, params.T * 1.5 + off, 2 * params.T + off].forEach((et, ei) => {
+        const xj1 = pxt(et - params.jitter);
+        const xj2 = pxt(et + params.jitter);
+        // shaded band per row
+        ctx.fillStyle = jFill;
+        ctx.fillRect(xj1, clkRow.y - 3, Math.max(xj2 - xj1, 1), clkRow.h + 6);
+        // dotted vertical lines spanning ALL clk rows so intersections are visible
+        ctx.strokeStyle = jStroke;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 3]);
+        ctx.beginPath(); ctx.moveTo(xj1, clkSpanTop); ctx.lineTo(xj1, clkSpanBottom); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(xj2, clkSpanTop); ctx.lineTo(xj2, clkSpanBottom); ctx.stroke();
+        ctx.setLineDash([]);
+        // ±tjitter label above the band — only on first clock row, first occurrence
+        if (isFirstClk && ei === 0) {
+          ctx.fillStyle = 'rgba(245,158,11,0.9)';
+          ctx.font = 'bold 13px JetBrains Mono';
+          ctx.textAlign = 'center';
+          ctx.fillText(`±tⱼ`, (xj1 + xj2) / 2, clkSpanTop - 4);
+        }
+      });
+    }
   });
-  ctx.stroke();
+
+  // tskew bracket below the two clock rows
+  if (advancedMode && params.skew > 0 && clkRowDefs.length >= 2) {
+    const captureOff = params.skew * (skewPositive ? 1 : -1);
+    const x1 = pxt(0);
+    const x2 = pxt(captureOff);
+    const xa = Math.min(x1, x2), xb = Math.max(x1, x2);
+    const by = clkSpanBottom + 10;
+    if (xb - xa > 2) {
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([]);
+      ctx.beginPath(); ctx.moveTo(xa, by + 6); ctx.lineTo(xb, by + 6); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(xa, by + 1); ctx.lineTo(xa, by + 11); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(xb, by + 1); ctx.lineTo(xb, by + 11); ctx.stroke();
+      ctx.fillStyle = '#f59e0b';
+      ctx.font = 'bold 13px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText(`tskew = ${Math.abs(captureOff).toFixed(2)} ns`, (xa + xb) / 2, by + 24);
+    }
+  }
 
 
   const drawnTcq = new Set();
-  rowDefs.slice(1).forEach((row, rowIndex) => {
+  rowDefs.filter(r => r.kind !== 'clk').forEach((row) => {
     const midY = row.y + row.h / 2;
     const halfH = row.h * 0.35;
 
@@ -1116,7 +1294,7 @@ function drawWaveform(topology) {
       ctx.setLineDash([]);
     });
 
-    [path.launchBase, path.launchBase + params.T].forEach(edgeT => {
+    [path.launchBase + path.captureEdgeOffset, path.launchBase + params.T + path.captureEdgeOffset].forEach(edgeT => {
       if (path.thold <= 0) return;
       const x1 = xc(edgeT);
       const x2 = xc(edgeT + path.thold);
@@ -1137,7 +1315,7 @@ function drawWaveform(topology) {
       drawBracket(ctx, '#f59e0b', x1, x2, windowTop - 25, 't_hold', false);
     });
 
-    [path.launchBase + params.T, path.launchBase + 2 * params.T].forEach(edgeT => {
+    [path.launchBase + params.T + path.captureEdgeOffset, path.launchBase + 2 * params.T + path.captureEdgeOffset].forEach(edgeT => {
       const x1 = xc(edgeT - path.tsu);
       const x2 = xc(edgeT);
       if (x2 <= x1 + 1) return;
@@ -1170,7 +1348,8 @@ function drawWaveform(topology) {
       if (t >= tStart && t <= tEnd) drawBusCrossing(ctx, pxt(t), midY, halfH, row.color);
     });
 
-    const sourceRow = [...rowDefs.slice(0, rowIndex + 2)].reverse().find(candidate => candidate.kind === 'exact');
+    const myRowIdx = rowDefs.indexOf(row);
+    const sourceRow = rowDefs.slice(0, myRowIdx).reverse().find(candidate => candidate.kind === 'exact');
     const tcqY = sourceRow ? sourceRow.y + sourceRow.h + 28 : row.y + row.h + 6;
     const logicY = row.y + row.h + 28;
     const tcqKey1 = `${path.sourceIndex}-${path.launchBase}`;
@@ -1221,11 +1400,21 @@ function updateEquations(paths) {
   const worstOverall = paths.reduce((best, path) => Math.min(path.setupSlack, path.holdSlack) < Math.min(best.setupSlack, best.holdSlack) ? path : best, paths[0]);
   const setupViol = paths.some(path => path.setupViol);
   const holdViol = paths.some(path => path.holdViol);
-  const fmax = 1000 / worstSetup.setupRhs;
+  const fmax = 1000 / (worstSetup.setupRhs + 2 * worstSetup.jitter - worstSetup.captureEdgeOffset);
 
-  document.getElementById('iq-T').textContent = `${params.T.toFixed(1)} ns`;
+  const skewSign = (worstSetup.captureEdgeOffset >= 0) ? '+' : '−';
+  const setupFormula = advancedMode
+    ? `T ${skewSign} t<sub>skew</sub> − 2t<sub>jitter</sub> ≥ t<sub>C-Q</sub> + t<sub>Lmax</sub> + t<sub>setup</sub>`
+    : `T ≥ t<sub>C-Q</sub> + t<sub>Lmax</sub> + t<sub>setup</sub>`;
+  const holdFormula = advancedMode
+    ? `t<sub>hold</sub> ${skewSign} t<sub>skew</sub> + 2t<sub>jitter</sub> ≤ t<sub>C-Q</sub> + t<sub>Lmin</sub>`
+    : `t<sub>hold</sub> ≤  t<sub>C-Q</sub> + t<sub>Lmin</sub>`;
+  document.querySelector('#setup-card .ineq-formula').innerHTML = setupFormula;
+  document.querySelector('#hold-card .ineq-formula').innerHTML = holdFormula;
+
+  document.getElementById('iq-T').textContent = `${worstSetup.setupLhs.toFixed(2)} ns`;
   document.getElementById('iq-setup-rhs').textContent = `${worstSetup.setupRhs.toFixed(2)} ns`;
-  document.getElementById('iq-thold-lhs').textContent = `${worstHold.thold.toFixed(1)} ns`;
+  document.getElementById('iq-thold-lhs').textContent = `${worstHold.holdLhs.toFixed(2)} ns`;
   document.getElementById('iq-hold-rhs').textContent = `${worstHold.holdRhs.toFixed(2)} ns`;
   document.getElementById('iq-T2').textContent = `${params.T.toFixed(1)} ns`;
   document.getElementById('iq-fmax').textContent = `${fmax.toFixed(1)} MHz`;

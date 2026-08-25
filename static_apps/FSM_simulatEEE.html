@@ -35,8 +35,8 @@ body.light .input-bit-btn { color:#000; }
 body.light .state-drag.moore,
 body.light .state-drag.mealy { color:#000; }
 
-header { min-height:96px; background:var(--bg2); border-bottom:1px solid var(--border); display:flex; align-items:center; align-content:center; flex-wrap:wrap; padding:12px 18px; gap:12px; flex-shrink:0; z-index:100; }
-.logo { font-family:var(--mono); font-weight:700; font-size:24px; color:var(--accent); letter-spacing:2px; }
+header { min-height:52px; background:var(--bg2); border-bottom:1px solid var(--border); display:flex; align-items:center; align-content:center; flex-wrap:wrap; padding:4px 14px; gap:8px; flex-shrink:0; z-index:100; }
+.logo { font-family:var(--mono); font-weight:700; font-size:20px; color:var(--accent); letter-spacing:2px; white-space:nowrap; }
 .logo span { color:var(--text2); font-weight:400; }
 .header-sep { flex:1 1 auto; min-width:24px; }
 .sim-controls { display:flex; align-items:center; justify-content:flex-end; gap:6px; flex:1 1 320px; min-width:0; flex-wrap:wrap; }
@@ -52,10 +52,11 @@ header { min-height:96px; background:var(--bg2); border-bottom:1px solid var(--b
 .btn.success:hover { background:rgba(62,207,142,.25); }
 .btn.active { background:var(--accent2); border-color:var(--accent); color:#fff; }
 .btn.active:hover { background:var(--accent); }
+header .btn { padding:5px 11px; border-radius:6px; }
 
 .menu-bar { display:flex; align-items:center; gap:6px; }
 .menu { position:relative; }
-.menu-btn { font-family:var(--sans); font-size:17px; font-weight:500; padding:9px 13px; border-radius:8px; border:1px solid transparent; background:transparent; color:var(--text2); cursor:pointer; transition:all .15s; }
+.menu-btn { font-family:var(--sans); font-size:18px; font-weight:500; padding:5px 10px; border-radius:6px; border:1px solid transparent; background:transparent; color:var(--text2); cursor:pointer; transition:all .15s; white-space:nowrap; }
 .menu-btn:hover,
 .menu.open .menu-btn { background:var(--bg3); border-color:var(--border2); color:var(--text); }
 .menu-dropdown { position:absolute; top:calc(100% + 8px); left:0; min-width:220px; background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:8px; box-shadow:0 16px 36px rgba(0,0,0,.22); display:none; z-index:150; }
@@ -65,7 +66,7 @@ header { min-height:96px; background:var(--bg2); border-bottom:1px solid var(--b
 .menu-item-check { width:16px; color:var(--accent); font-weight:700; text-align:center; flex-shrink:0; }
 .menu-divider { height:1px; background:var(--border); margin:6px 2px; }
 
-.step-counter { font-family:var(--mono); font-size:18px; color:var(--text2); padding:10px 16px; background:var(--bg3); border:1px solid var(--border); border-radius:8px; min-width:126px; text-align:center; }
+.step-counter { font-family:var(--mono); font-size:18px; color:var(--text2); padding:5px 11px; background:var(--bg3); border:1px solid var(--border); border-radius:6px; min-width:96px; text-align:center; }
 
 
 
@@ -296,7 +297,7 @@ body.hide-sidebars .resize-handle { display:none; }
         <button class="menu-item" type="button" onclick="handleMenuAction(saveJSON)">
           <span class="menu-item-check"></span><span>Save to file</span>
         </button>
-        <button class="menu-item" type="button" onclick="handleMenuAction(confirmNewWorkspace);initDefault();">
+        <button class="menu-item" type="button" onclick="handleMenuAction(loadDefaultDesign)">
           <span class="menu-item-check"></span><span>Load Default</span>
         </button>
       </div>
@@ -519,6 +520,18 @@ body.hide-sidebars .resize-handle { display:none; }
   </div>
 </div>
 
+<div class="modal-backdrop" id="mealyToMooreModal" onclick="closeMealyToMooreModal(event)">
+  <div class="modal" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
+    <h2>Ambiguous Moore Conversion</h2>
+    <p>The highlighted states have transitions with conflicting output values. Moore mode requires one output per state — converting will use the first transition's output for each.</p>
+    <div id="mealyToMooreContent"></div>
+    <div class="modal-actions">
+      <button class="btn" style="background:var(--accent);color:#fff" onclick="confirmMealyToMoore()">Convert</button>
+      <button class="btn" onclick="closeMealyToMooreModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ══════════════════════════════════════════════════════════════════
 //  STATE
@@ -553,6 +566,8 @@ let bottomSplit = 0.5;
 
 let svgEl, canvasWrap;
 let view = { x: 0, y: 0, scale: 1.5 };
+let ambiguousStateIds = new Set();
+let pendingMealyToMooreCallback = null;
 
 // ── Force layout ────────────────────────────────────────────────
 let forceActive = false;
@@ -1856,7 +1871,27 @@ function captureState() {
     expandMode, bottomTab, excitationSortMode
   }));
 }
-function pushUndo() { undoStack.push(captureState()); if (undoStack.length>UNDO_LIMIT) undoStack.shift(); }
+function pushUndo() { undoStack.push(captureState()); if (undoStack.length>UNDO_LIMIT) undoStack.shift(); saveToStorage(); }
+
+// ── Autosave to localStorage (same pattern as the ASM simulator) ──
+const STORAGE_KEY = 'fsm_simulatEEE_design';
+let _saveTimer = null;
+function saveToStorage() {
+  clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(() => {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(captureState())); } catch(e) {}
+  }, 800);
+}
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+    if (!data || !Array.isArray(data.states) || !data.states.length) return false;
+    applyState(data);
+    return true;
+  } catch(e) { return false; }
+}
 function applyState(data) {
   states = data.states||[]; transitions = data.transitions||{};
   inputBitsCount = data.inputBitsCount||1; inputBits = data.inputBits||[0];
@@ -1905,6 +1940,8 @@ window.addEventListener('DOMContentLoaded', () => {
   svgEl = document.getElementById('canvas');
   canvasWrap = document.getElementById('canvasWrap');
 
+  new ResizeObserver(() => updateViewBox()).observe(canvasWrap);
+
   svgEl.addEventListener('click', e => { if (e.target===svgEl) { selectedStateId=null; render(); renderEditor(); } });
   canvasWrap.addEventListener('contextmenu', e => e.preventDefault());
   svgEl.addEventListener('mousedown', e => { if (e.button!==0||e.target!==svgEl) return; startPan(e); });
@@ -1942,7 +1979,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
   updateMenuChecks();
-  initDefault();
+  if (!loadFromStorage()) initDefault();
 });
 
 function initDefault() {
@@ -1963,6 +2000,19 @@ function initDefault() {
   updateOutputsFromState(); renderInputs(); renderOutputsPanel();
   applyBottomSplit();
   render(); renderEditor(); renderVarsPanel(); syncModeSwitch();
+}
+
+// Replace the current FSM with the built-in default example
+function loadDefaultDesign() {
+  if (states.length && !confirm('Replace the current FSM with the default example?')) return;
+  pushUndo();
+  clearInterval(runInterval); isRunning=false;
+  document.getElementById('btnRun').textContent='Run';
+  document.getElementById('btnRun').className='btn success';
+  simStep=0; simLog=[];
+  document.getElementById('stepCounter').textContent='STEP 0';
+  initDefault();
+  saveToStorage();
 }
 
 function makeTransition(to) { return { to, out:Array(outputBitsCount).fill(0) }; }
@@ -2002,7 +2052,7 @@ function seedInitialCurves() {
       if (from.id===to.id) {
         const spread = getCurveSpread(i, list.length, 0.48);
         const angle = -Math.PI/2 + spread*2.6 + jitter*0.1;
-        const radius = from.r + 42 + jitter*4;
+        const radius = from.r*0.55 + jitter*1.4;
         t.loopDx=Math.cos(angle)*radius; t.loopDy=Math.sin(angle)*radius;
       } else {
         nonLoops.push({ t, i, to, jitter, baseAngle:Math.atan2(to.y-from.y,to.x-from.x) });
@@ -2095,11 +2145,12 @@ function getWorldBounds() {
 
 function drawState(s) {
   const g=ns('g');
-  const isActive=activeStateId===s.id, isSel=selectedStateId===s.id;
-  const fill=isActive?'rgba(79,158,255,.18)':(isSel?'rgba(245,166,35,.12)':'rgba(79,158,255,.08)');
-  const stroke=isActive?'#4f9eff':(isSel?'#f5a623':'var(--state-stroke)');
-  const sw=(isActive||isSel)?2:1.5;
+  const isActive=activeStateId===s.id, isSel=selectedStateId===s.id, isAmb=ambiguousStateIds.has(s.id);
+  const fill=isActive?'rgba(79,158,255,.18)':(isSel?'rgba(245,166,35,.12)':(isAmb?'rgba(245,166,35,.1)':'rgba(79,158,255,.08)'));
+  const stroke=isActive?'#4f9eff':(isSel||isAmb)?'#f5a623':'var(--state-stroke)';
+  const sw=(isActive||isSel||isAmb)?2:1.5;
   const circle=sv('circle',{cx:s.x,cy:s.y,r:s.r,fill,stroke,'stroke-width':sw});
+  if (isAmb) circle.setAttribute('filter','drop-shadow(0 0 8px rgba(245,166,35,0.7))');
   if (isActive&&isSel) circle.setAttribute('filter','drop-shadow(0 0 6px rgba(245,166,35,0.9))');
   g.appendChild(circle);
   const label=s.mode==='moore'?`${s.name}/${bitsToString(s.outputs)}`:s.name;
@@ -2132,14 +2183,18 @@ function drawConnections() {
       const col=isSel?'#f5a623':(isActive?'#4f9eff':'var(--conn)');
       const sw=isActive?2.4:1.4;
       const marker=isSel?'url(#arr_sel)':(isActive?'url(#arr_active)':'url(#arr_norm)');
-      let label=simplifyOn?formatSimplifiedInputLabel(g.indices):formatInput(g.indices[0]);
-      if (from.mode==='mealy') label=`${label}/${simplifyOn?g.outKey:bitsToString(normalizeTransitionOutputs(t).out)}`;
+      const inputStr = inputBitsCount > 0
+        ? (simplifyOn ? formatSimplifiedInputLabel(g.indices) : formatInput(g.indices[0]))
+        : '';
+      const outStr = simplifyOn ? g.outKey : bitsToString(normalizeTransitionOutputs(t).out);
+      let label = inputStr;
+      if (from.mode === 'mealy') label = inputStr ? `${inputStr}/${outStr}` : outStr;
 
       if (from.id===to.id) {
-        const loop=getLoopHandle(from,t);
-        const dist=Math.max(from.r+16,Math.hypot(loop.dx,loop.dy));
+        const loop=getLoopHandle(from,t,g.indices[0],list.length);
+        const dist=Math.max(from.r*0.75,Math.hypot(loop.dx,loop.dy));
         const angle=Math.atan2(loop.dy,loop.dx);
-        const startA=angle-1.2, endA=angle+1.2;
+        const startA=angle-0.8, endA=angle+0.8;
         const sx=from.x+Math.cos(startA)*from.r, sy=from.y+Math.sin(startA)*from.r;
         const ex=from.x+Math.cos(endA)*from.r, ey=from.y+Math.sin(endA)*from.r;
         const path=`M ${sx} ${sy} A ${dist} ${dist} 0 1 1 ${ex} ${ey}`;
@@ -2258,8 +2313,20 @@ function getCurvePoint(t,baseCp) {
   if(typeof t.cx==='number'&&typeof t.cy==='number'){t.cdx=t.cx-baseCp.x;t.cdy=t.cy-baseCp.y;delete t.cx;delete t.cy;return{x:baseCp.x+t.cdx,y:baseCp.y+t.cdy};}
   return baseCp;
 }
-function getLoopHandle(state,t) {
-  if(typeof t.loopDx!=='number'||typeof t.loopDy!=='number'){t.loopDx=state.r+40;t.loopDy=-state.r-40;}
+function getLoopHandle(state,t,i,count) {
+  if(typeof t.loopDx!=='number'||typeof t.loopDy!=='number'){
+    // Fan multiple default self-transitions (one per input combo) around the
+    // node at different angles, same approach seedInitialCurves uses for the
+    // built-in demo - otherwise every untouched self-loop lands on the exact
+    // same spot and only one is ever visible.
+    const idx = typeof i==='number' ? i : 0;
+    const cnt = typeof count==='number' && count>0 ? count : 1;
+    const jitter = seededJitter(`${state.id}:loop:${idx}`);
+    const spread = getCurveSpread(idx, cnt, 0.48);
+    const angle = -Math.PI/2 + spread*2.6 + jitter*0.1;
+    const radius = state.r*0.55 + jitter*1.4;
+    t.loopDx=Math.cos(angle)*radius; t.loopDy=Math.sin(angle)*radius;
+  }
   return {dx:t.loopDx,dy:t.loopDy};
 }
 
@@ -2507,7 +2574,7 @@ function removeOutputBit() {
 }
 
 function getInputIndex() { return inputBits.reduce((acc,b,i)=>acc+(b?(1<<i):0),0); }
-function formatInput(i) { return i.toString(2).padStart(inputBitsCount,'0'); }
+function formatInput(i) { return inputBitsCount > 0 ? i.toString(2).padStart(inputBitsCount,'0') : ''; }
 function formatInputKV(index) {
   const parts=[];
   for(let j=inputBitsCount-1;j>=0;j--){const name=inputNames[j]||`x${j}`;const bit=(index>>j)&1;parts.push(`${h(name)}:${bit}`);}
@@ -2519,6 +2586,7 @@ function formatInputKV(index) {
 // ══════════════════════════════════════════════════════════════════
 
 function renderEditor() {
+  syncModeSwitch();
   const panel=document.getElementById('editorPanel');
   const selected=states.find(s=>s.id===selectedStateId);
   const current=states.find(s=>s.id===activeStateId);
@@ -2569,14 +2637,83 @@ function renameOutput(index,value) {
   pushUndo();outputNames[index]=value||`z${index}`;renderOutputsPanel();renderInputs();
   if(expandMode)renderBottomPanel();if(activeTab==='table')renderNormalTablePanel();else if(activeTab==='log')switchTab('vars');
 }
+function copyMooreOutputsToTransitions(s) {
+  const outs = (s.outputs || []).slice(0, outputBitsCount);
+  while (outs.length < outputBitsCount) outs.push(0);
+  (transitions[s.id] || []).forEach(t => { normalizeTransitionOutputs(t); t.out = [...outs]; });
+}
+function copyTransitionOutputsToMoore(s) {
+  const trans = transitions[s.id] || [];
+  const out = trans.length ? normalizeTransitionOutputs(trans[0]).out : Array(outputBitsCount).fill(0);
+  s.outputs = [...out];
+}
+function showMealyToMooreModal(statesToConvert, callback) {
+  const ambiguous = statesToConvert.filter(s => {
+    if (s.mode !== 'mealy') return false;
+    const trans = transitions[s.id] || [];
+    if (trans.length < 2) return false;
+    const first = JSON.stringify(normalizeTransitionOutputs(trans[0]).out);
+    return trans.some(t => JSON.stringify(normalizeTransitionOutputs(t).out) !== first);
+  });
+  if (!ambiguous.length) { pushUndo(); callback(); return; }
+  ambiguousStateIds = new Set(ambiguous.map(s => s.id));
+  pendingMealyToMooreCallback = callback;
+  let html = '';
+  ambiguous.forEach(s => {
+    const trans = transitions[s.id] || [];
+    html += `<div style="margin-bottom:10px;padding:8px 12px;background:var(--bg3);border-radius:6px;border:1px solid var(--amber)">`;
+    html += `<div style="font-weight:700;margin-bottom:6px;color:var(--amber)">${h(s.name)}</div>`;
+    html += `<div style="font-family:var(--mono);font-size:15px;display:flex;flex-wrap:wrap;gap:10px">`;
+    trans.forEach((t, i) => {
+      const out = normalizeTransitionOutputs(t).out;
+      const toS = states.find(st => st.id === t.to);
+      html += `<span>T${i} →${h(toS ? toS.name : '?')}: <span style="color:var(--green)">${bitsToString(out)}</span></span>`;
+    });
+    html += `</div></div>`;
+  });
+  document.getElementById('mealyToMooreContent').innerHTML = html;
+  render();
+  document.getElementById('mealyToMooreModal').style.display = 'flex';
+}
+function confirmMealyToMoore() {
+  if (!pendingMealyToMooreCallback) return;
+  pushUndo();
+  const cb = pendingMealyToMooreCallback;
+  ambiguousStateIds = new Set();
+  pendingMealyToMooreCallback = null;
+  document.getElementById('mealyToMooreModal').style.display = 'none';
+  cb();
+}
+function closeMealyToMooreModal(e) {
+  if (e && e.target && e.target.id !== 'mealyToMooreModal') return;
+  ambiguousStateIds = new Set();
+  pendingMealyToMooreCallback = null;
+  document.getElementById('mealyToMooreModal').style.display = 'none';
+  render();
+}
 function setStateMode(stateId,mode) {
-  const s=states.find(st=>st.id===stateId);if(!s)return;pushUndo();
-  s.mode=mode==='mealy'?'mealy':'moore';updateOutputsFromState();renderOutputsPanel();
-  render();renderEditor();updateRightPanelAfterChange();syncModeSwitch();
+  const s=states.find(st=>st.id===stateId);if(!s)return;
+  if (mode==='mealy'&&s.mode==='moore') {
+    pushUndo();copyMooreOutputsToTransitions(s);s.mode='mealy';
+    updateOutputsFromState();renderOutputsPanel();render();renderEditor();updateRightPanelAfterChange();syncModeSwitch();
+  } else if (mode==='moore'&&s.mode==='mealy') {
+    showMealyToMooreModal([s],()=>{
+      copyTransitionOutputsToMoore(s);s.mode='moore';
+      updateOutputsFromState();renderOutputsPanel();render();renderEditor();updateRightPanelAfterChange();syncModeSwitch();
+    });
+  }
 }
 function setAllModesFromSwitch(isMealy) {
-  pushUndo();const next=isMealy?'mealy':'moore';states.forEach(s=>{s.mode=next;});
-  updateOutputsFromState();renderOutputsPanel();render();renderEditor();updateRightPanelAfterChange();syncModeSwitch();
+  if (isMealy) {
+    pushUndo();
+    states.forEach(s=>{ if(s.mode==='moore') copyMooreOutputsToTransitions(s); s.mode='mealy'; });
+    updateOutputsFromState();renderOutputsPanel();render();renderEditor();updateRightPanelAfterChange();syncModeSwitch();
+  } else {
+    showMealyToMooreModal(states.filter(s=>s.mode==='mealy'),()=>{
+      states.forEach(s=>{ if(s.mode==='mealy') copyTransitionOutputsToMoore(s); s.mode='moore'; });
+      updateOutputsFromState();renderOutputsPanel();render();renderEditor();updateRightPanelAfterChange();syncModeSwitch();
+    });
+  }
 }
 function syncModeSwitch() {
   const allMealy=states.length&&states.every(s=>s.mode==='mealy');

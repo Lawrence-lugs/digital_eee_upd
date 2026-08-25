@@ -149,7 +149,7 @@ include-in-header:
       
       
       <!-- Timing Simulator -->
-      <a href="timing_simulator.html"
+      <a href="timing_simulatEEE.html"
          class="block bg-white rounded-xl border border-gray-200 p-6
                 hover:shadow-md hover:border-red-300 transition-all group">
         <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4"

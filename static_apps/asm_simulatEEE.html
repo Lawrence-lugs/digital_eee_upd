@@ -162,12 +162,23 @@ header { height:52px; background:var(--bg2); border-bottom:1px solid var(--borde
 .empty-state h2 { font-size:18px; color:var(--text3); font-weight:500; margin-bottom:8px; }
 .empty-state p { font-size:15px; color:var(--text3); }
 .var-type-btn {
-  font-size:12px; padding:2px 8px; border-radius:10px;
-  border:1px solid var(--border2); background:var(--bg4);
-  color:var(--text3); cursor:pointer; font-family:var(--sans);
-  transition:all .15s; margin-top:3px; white-space:nowrap;
+  font-size:12px; padding:3px 10px; border-radius:12px;
+  border:1.5px solid var(--border2); background:var(--bg3);
+  color:var(--text2); cursor:pointer; font-family:var(--mono);
+  font-weight:600; letter-spacing:.3px;
+  transition:background .15s, border-color .15s, color .15s;
+  margin-top:3px; white-space:nowrap;
 }
-.var-type-btn:hover { border-color:var(--accent); color:var(--accent); }
+.var-type-btn:hover { border-color:var(--accent); color:var(--accent); background:rgba(79,158,255,.08); }
+.drag-handle { cursor:grab; color:var(--text3); font-size:15px; user-select:none; padding:0 2px; flex-shrink:0; }
+.drag-handle:hover { color:var(--accent); }
+.var-row.drag-over-row { box-shadow:0 -2px 0 var(--accent); }
+.var-row.drag-over-row-bottom { box-shadow:0 2px 0 var(--accent); }
+.var-sec { border-radius:6px; }
+.var-sec.var-sec-grid { display:grid; grid-template-columns:minmax(40px,auto) auto 1fr; gap:0 10px; }
+.var-sec.var-sec-grid > .var-sec-hint { grid-column:1/-1; }
+.var-sec.drag-over-sec { outline:1px dashed var(--accent); outline-offset:2px; }
+.var-sec-hint { font-size:14px; color:var(--text3); padding:6px 0; text-align:center; border:1px dashed var(--border); border-radius:6px; margin:4px 0; }
 .var-base-btn {
   font-size:11px; padding:1px 6px; border-radius:8px;
   border:1px solid var(--border2); background:var(--bg4);
@@ -194,8 +205,10 @@ header { height:52px; background:var(--bg2); border-bottom:1px solid var(--borde
         <button class="menu-item" onclick="handleMenu(saveJSON)"><span class="menu-item-icon">⬇</span>Save JSON<span class="menu-item-kbd">Ctrl+S</span></button>
         <button class="menu-item" onclick="handleMenu(()=>document.getElementById('fileInput').click())"><span class="menu-item-icon">⬆</span>Load JSON<span class="menu-item-kbd">Ctrl+O</span></button>
         <button class="menu-item" onclick="handleMenu(exportVerilog)"><span class="menu-item-icon">📤</span>Export Verilog</button>
+        <button class="menu-item" onclick="handleMenu(loadDefaultDesign)"><span class="menu-item-icon">⟲</span>Load Default Design</button>
         <div class="menu-divider"></div>
         <button class="menu-item" onclick="handleMenu(clearAll)"><span class="menu-item-icon" style="color:var(--red)">✕</span>Clear Canvas</button>
+        <button class="menu-item" onclick="handleMenu(()=>{clearStoredDesign();alert('Saved design cleared. Reload the page to start fresh.');})" style="color:var(--text3)"><span class="menu-item-icon">🗑</span>Clear Saved Design</button>
       </div>
     </div>
     <div class="menu" id="menuEdit">
@@ -319,7 +332,7 @@ header { height:52px; background:var(--bg2); border-bottom:1px solid var(--borde
 <div class="synth-resizer" id="synthResizer" style="display:none"></div>
 <div class="synth-panel" id="synthPanel" style="display:none">
   <div class="synth-panel-bar">
-    <div class="synth-panel-title">DATAPATH</div>
+    <div class="synth-panel-title" id="synthTitleDpath">DATAPATH</div>
     <div class="synth-panel-title">CONTROLLER</div>
     <button class="synth-panel-close" onclick="toggleSynthPanel()" title="Close">✕</button>
   </div>
@@ -355,7 +368,9 @@ let loopRepeatCount = 0;
 let simFinished = false;
 let stepHistory = [];  // for step-back
 let combDefaults = {};            // { varName: defaultValue } for purely-comb vars
-let forcedRegisters = new Set();  // comb vars manually promoted to register
+let forcedRegisters    = new Set();  // comb vars manually promoted to register
+let forcedCombinational = new Set(); // state-assigned vars manually demoted to combinational
+let signedVars          = new Set(); // vars treated as 2's-complement signed in Verilog export
 let regInitValues = {};           // { varName: initValue } for register initial values
 let varBits = {};                 // { varName: bitWidth } per-variable Verilog bit widths
 let varBitDefault = 8;            // default bit width used when varBits[v] is unset
@@ -368,6 +383,9 @@ let bitRangeVarNames = new Set(); // registered vars currently out of 2's-comple
 let synthPanelOpen = false;
 let prevSimVars = {};          // snapshot before last change, for flash detection
 let lastWrittenVars = new Set(); // vars written to this cycle (flash on assignment)
+let varOrder = [];             // user-defined display order of variables (drag to reorder)
+let dragVarName = null;        // var currently being dragged in the vars panel
+let dragVarSec  = null;        // section it was dragged from: 'input'|'reg'|'comb'
 
 const INFO_DIALOGS = {
   help: {
@@ -433,8 +451,8 @@ const INFO_DIALOGS = {
         <li><code>Combinational Vars</code>: variables driven only by active conditional outputs.</li>
         <li>Registered variables have editable <code>init</code> values used on reset.</li>
         <li>Combinational variables have editable <code>default</code> values used when their path is inactive.</li>
-        <li>The <code>→ reg</code> button promotes a combinational variable into register-style behavior.</li>
-        <li>The <code>→ comb</code> button appears only for manually promoted registers and moves them back to combinational behavior.</li>
+        <li>Drag a variable's <code>⠿</code> handle up or down to reorder it within its section.</li>
+        <li>Drag a variable between the <code>Registered Vars</code> and <code>Combinational Vars</code> sections to convert it between register and combinational behavior.</li>
         <li>Highlighted rows show variables written in the most recent simulation step.</li>
         <li>If a variable is used in code but never declared as an input and never assigned internally, it appears as an undeclared-input warning.</li>
       </ul>
@@ -482,21 +500,21 @@ Feel free to download and modify the HTML file! AI was also used in its developm
   ASM_reference: {
     title: 'ASM Reference',
     body: `
-      <p>1) At any given time, you are in a state box. That is your current state. You would move from one state box to another state box every ASM step (one clock cycle).
+      <p><b>1) State transition behavior.</b> At any given time, you are in a state box. That is your current state. You would move from one state box to another state box every ASM step (one clock cycle). An ASM step is the evaluation of the path starting from a state box (the current state), going through all the resolved decision and conditional boxes until you reach the input of another state box. The next state transition happens on the next positive edge of the clock.
 <br><br>
-2) A variable can be treated as a register or combinational logic. The distinction depends on how this variable is assigned within the ASM.
+<b>2) Variable type and timing.</b> Variable assignments are written inside state and conditional boxes. The variable updates are performed when they are on the currently active ASM path. The timing of when these assignments take place depends on whether a variable is treated as a register or combinational logic. When the ASM is drawn, all variables assigned within the ASM must be explicitly declared either as registers or as combinational logic to remove ambiguity. The distinction is important since the variable update for every ASM step would differ as follows:
 <br><br>
-2A) If a variable is assigned inside a state box, it is inferred as a register. All assignments to a register take effect on the next positive edge of the clock (since it is a register/flip-flop). That is, the update only happens as you transition into a new state. The update is delayed by 1 cycle, effectively.
+Assignments to variables declared as <b>registers</b> happen only on the next positive edge of the clock (since they should follow a flip-flop-based behavior). That is, those variables would only update as you transition into the next state.
 <br><br>
-2B) A variable only assigned inside a conditional box (it is not assigned in any state box in the ASM) is, by default, a combinational logic (not a register). A combinational logic assignment would take effect right away (that is, it does not need to wait for the positive edge of the clock).
+Assignments to variables declared as <b>combinational logic</b> would update right away (it doesn't need to wait for a positive edge of the clock). That is, combinational logic variables along the active ASM path update instantaneously.
 <br><br>
-2C) A variable only assigned inside a conditional box (it is not assigned in any state box in the ASM) can also be declared as a register. This has to be explicitly stated together with the ASM (since you would not know it is a register otherwise, as it is not assigned in a state box following rule #2A). If it is declared as a register, then the assignment would take effect on the next positive edge of the clock (typical register/flip-flop behavior).
- <br><br>
-3) A variable, whether register or combinational, can only be assigned once in every ASM step. An ASM step is basically the evaluation of the assignments starting from a state box (the current state), going through all the decision and conditional boxes until you reach the input to another state box. An ASM step is one clock cycle. A variable assigned more than once within a step will lead to an error, as assignments within an ASM step are evaluated concurrently, not sequentially.
+By default (if for some reason they are not explicitly stated), variables assigned inside state boxes are treated as registers, while variables assigned inside conditional boxes are treated as combinational logic.
 <br><br>
-4) If a variable is not assigned within an ASM step, the behavior depends on whether it is a register or a combinational output. If the variable is a register, the previous value of that register (or its initial value, also defined with the ASM) is held during that step/clock cycle. If the variable is a combinational output, the value would default to 0 (unless the default value was otherwise stated with the ASM).
+<b>3) Initial and default values.</b> A variable treated as a register should always have a defined <b>reset value</b>. This is the value assumed by the variable at the very first state, even without explicit assignment. By default, the reset value is 0, unless otherwise stated with the ASM. A variable treated as combinational logic would always have a defined <b>default value</b>. This is the value assumed by the variable when it is not actively assigned within the active ASM path. By default, this value is 0, unless otherwise stated with the ASM.
 <br><br>
-5) Conditional boxes are typically drawn after decision boxes to represent different assignments depending on some condition. However, you may also put conditional boxes right after a state box. You would do this if you want a combinational output behavior for a variable (i.e., you don't want to declare it as a register, but you want to assign values to it).
+<b>4) Assignment concurrency.</b> A variable, whether register or combinational, can only be assigned once in every ASM step. This covers all assignments within the active ASM path, from the current state box through all the resolved decision and conditional boxes until before the next state box. A variable assigned more than once within the active ASM path is considered invalid, as assignments within an ASM step are evaluated concurrently, not sequentially.
+<br><br>
+<b>5) Unassigned variables.</b> If a variable is not assigned within an ASM step, the behavior depends on whether it is a register or a combinational output. If the variable is a register, the previous value of that register (or its reset value, if not previously assigned) is held during that step/clock cycle. If the variable is a combinational output, the value would take its default value (typically 0, unless the default value was otherwise stated with the ASM).
 
     `
   },
@@ -528,7 +546,7 @@ Feel free to download and modify the HTML file! AI was also used in its developm
 <ul>
   <li><code>&amp;&amp;</code> AND &nbsp; <code>||</code> OR &nbsp; <code>!</code> NOT</li>
 </ul>
-<h3>Bit Operations (RHS only)</h3>
+<h3>Bit Operations</h3>
 <ul>
   <li><code>A[7:0]</code> — bits 7 down to 0 of A (width = 8)</li>
   <li><code>A[4]</code> — single bit 4 of A</li>
@@ -559,6 +577,10 @@ const MIN_H    = { state:52,  decision:64,  output:40  };
 window.addEventListener('DOMContentLoaded', () => {
   svgEl      = document.getElementById('canvas');
   canvasWrap = document.getElementById('canvasWrap');
+
+  // Keep viewBox in sync whenever the canvas container is resized
+  // (sidebar drag, synth panel open/close, right-panel resize, window resize)
+  new ResizeObserver(() => updateViewBox()).observe(canvasWrap);
 
   svgEl.addEventListener('click', e => {
     if (e.target === svgEl) {
@@ -652,6 +674,7 @@ window.addEventListener('DOMContentLoaded', () => {
       synthDpathEl.style.flex = 'none';
       synthDpathEl.style.width = newW + 'px';
       synthCtrlEl.style.flex = '1';
+      syncSynthTitles();
     };
     const onUp = () => {
       synthPaneResizerEl.classList.remove('dragging');
@@ -661,6 +684,7 @@ window.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('mousemove', onMove);
     document.addEventListener('mouseup', onUp);
   });
+  window.addEventListener('resize', syncSynthTitles);
 
   // Synth panel vertical resize
   const synthPanelEl   = document.getElementById('synthPanel');
@@ -712,8 +736,37 @@ window.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'ArrowDown')  { view.y += step; render(); }
   });
 
-  initDefault();
+  const saved = loadFromStorage();
+  if (!saved) initDefault();
 });
+
+const STORAGE_KEY = 'asm_simulatEEE_design';
+let _saveTimer = null;
+function saveToStorage() {
+  clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(() => {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(capture())); } catch(e) {}
+  }, 800);
+}
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const snap = JSON.parse(raw);
+    if (!snap || !snap.blocks) return false;
+    applySnapshot(snap);
+    // applySnapshot (shared with undo/redo) does not start the simulation, so a
+    // freshly loaded design would sit with activeBlock=null until Reset is clicked.
+    // Initialize the sim at the start block, matching initDefault/loadJSON.
+    beginSim();
+    checkBitRanges();
+    render(); refreshPanels();
+    return true;
+  } catch(e) { return false; }
+}
+function clearStoredDesign() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+}
 
 function initDefault() {
   // a, b are registers (assigned in state boxes)
@@ -751,6 +804,23 @@ function initDefault() {
   render(); updateEmptyState(); refreshPanels();
 }
 
+// Replace the current design with the built-in default example
+function loadDefaultDesign() {
+  if (blocks.length && !confirm('Replace the current design with the default example?')) return;
+  pushUndo();
+  blocks=[]; connections=[]; selectedId=null; selectedConnId=null;
+  activeBlock=null; startBlockId=null;
+  activeTrail=new Set(); activeConnTrail=new Set();
+  simStep=0; simVars={}; simLog=[]; userVars={};
+  combDefaults={}; regInitValues={}; varBits={}; varBitDefault=8; varOrder=[];
+  forcedRegisters=new Set(); forcedCombinational=new Set(); signedVars=new Set();
+  liveDoubleDriverIds=new Set(); liveDoubleDriverVarNames=new Set();
+  liveCircularIds=new Set(); liveCodeErrorIds=new Set();
+  initDefault();
+  renderSideEditor();
+  saveToStorage();
+}
+
 
 
 
@@ -758,17 +828,32 @@ function initDefault() {
 //  UNDO / REDO
 // ════════════════════════════════════════════════════════
 function capture() {
-  return JSON.parse(JSON.stringify({ blocks, connections, startBlockId, userVars, idCounter, view }));
+  return JSON.parse(JSON.stringify({
+    blocks, connections, startBlockId, userVars, idCounter, view,
+    combDefaults, regInitValues, varBits, varBitDefault, varOrder,
+    forcedRegisters:[...forcedRegisters],
+    forcedCombinational:[...forcedCombinational],
+    signedVars:[...signedVars]
+  }));
 }
 function pushUndo() {
   undoStack.push(capture());
   if (undoStack.length > UNDO_LIMIT) undoStack.shift();
   redoStack = [];
+  saveToStorage();
 }
 function applySnapshot(snap) {
   blocks = snap.blocks; connections = snap.connections;
   startBlockId = snap.startBlockId; userVars = snap.userVars;
   idCounter = snap.idCounter; view = snap.view;
+  if (snap.combDefaults)         combDefaults = snap.combDefaults;
+  if (snap.regInitValues)        regInitValues = snap.regInitValues;
+  if (snap.varBits)              varBits = snap.varBits;
+  if (snap.varBitDefault)        varBitDefault = snap.varBitDefault;
+  if (snap.varOrder)             varOrder = snap.varOrder;
+  if (snap.forcedRegisters)      forcedRegisters = new Set(snap.forcedRegisters);
+  if (snap.forcedCombinational)  forcedCombinational = new Set(snap.forcedCombinational);
+  if (snap.signedVars)           signedVars = new Set(snap.signedVars);
   selectedId = null; selectedConnId = null;
   revalidateAllBlocks(); render(); updateEmptyState(); renderPanel(); refreshPanels();
 }
@@ -885,8 +970,12 @@ function render() {
     m.appendChild(p); defs.appendChild(m);
   });
   svgEl.appendChild(defs);
-  connections.forEach(drawConn);
+  // Draw connection visuals behind blocks, but defer hit areas/handles to a
+  // second pass so they sit on top of blocks and are always independently clickable.
+  const connHitQueue = [];
+  connections.forEach(conn => drawConn(conn, connHitQueue));
   blocks.forEach(drawBlock);
+  connHitQueue.forEach(el => svgEl.appendChild(el));
 }
 
 // ── Block ─────────────────────────────────────────────
@@ -979,7 +1068,7 @@ function connPts(b) {
 }
 
 // ── Connection ────────────────────────────────────────
-function drawConn(conn) {
+function drawConn(conn, hitQueue) {
   const from = blocks.find(b=>b.id===conn.from);
   if (!from) return;
   const actC = activeConnTrail.has(conn.id);
@@ -988,7 +1077,7 @@ function drawConn(conn) {
   const marker = 'url(#arr_'+(actC?'active':selC?'sel':'norm')+')';
   const sw     = actC||selC?2:1.5;
 
-  if (conn.from === conn.to) { drawSelfLoop(conn, from, stroke, marker, sw, selC); return; }
+  if (conn.from === conn.to) { drawSelfLoop(conn, from, stroke, marker, sw, selC, hitQueue); return; }
 
   const to = blocks.find(b=>b.id===conn.to);
   if (!to) return;
@@ -1009,30 +1098,29 @@ function drawConn(conn) {
   svgEl.appendChild(path);
   const hit = ns('path'); setA(hit,{d,fill:'none',stroke:'transparent','stroke-width':14,cursor:'pointer'});
   hit.addEventListener('click', e=>{ e.stopPropagation(); selectedConnId=conn.id; selectedId=null; render(); renderConnPanel(conn); });
-  svgEl.appendChild(hit);
+  (hitQueue||[]).push(hit);
 
   if (selC) {
     const mp = sv('circle',{cx:mx,cy:my,r:6,fill:'#a78bfa',stroke:'#a78bfa','stroke-width':1.5,cursor:'grab'});
     mp.addEventListener('mousedown', e=>{ e.stopPropagation(); dragMid(e,conn); });
-    svgEl.appendChild(mp);
+    (hitQueue||[]).push(mp);
 
-    // Offset handles 8px outward from block edge so they sit outside the block
     const a1 = Math.atan2(ep1.y - bCY(from), ep1.x - bCX(from));
     const h1x = ep1.x + Math.cos(a1)*8, h1y = ep1.y + Math.sin(a1)*8;
     const a2 = Math.atan2(ep2.y - bCY(to), ep2.x - bCX(to));
     const h2x = ep2.x + Math.cos(a2)*8, h2y = ep2.y + Math.sin(a2)*8;
     const sh = sv('circle',{cx:h1x,cy:h1y,r:7,fill:'#f5a623',stroke:'#f5a623','stroke-width':1.5,cursor:'grab',opacity:0.9});
     sh.addEventListener('mousedown', e=>{ e.stopPropagation(); dragConnStart(e,conn); });
-    svgEl.appendChild(sh);
+    (hitQueue||[]).push(sh);
     const eh = sv('circle',{cx:h2x,cy:h2y,r:7,fill:'#f5a623',stroke:'#f5a623','stroke-width':1.5,cursor:'grab',opacity:0.9});
     eh.addEventListener('mousedown', e=>{ e.stopPropagation(); dragConnEnd(e,conn); });
-    svgEl.appendChild(eh);
+    (hitQueue||[]).push(eh);
   }
 
   drawLabel(conn.label, mx, my-14);
 }
 
-function drawSelfLoop(conn, b, stroke, marker, sw, sel) {
+function drawSelfLoop(conn, b, stroke, marker, sw, sel, hitQueue) {
   const lo = conn.loopOff || {dx:80, dy:-64};
   const cx = bCX(b), cy = bCY(b);
   const lx = cx+lo.dx, ly = cy+lo.dy;
@@ -1043,11 +1131,11 @@ function drawSelfLoop(conn, b, stroke, marker, sw, sel) {
   svgEl.appendChild(path);
   const hit = ns('path'); setA(hit,{d,fill:'none',stroke:'transparent','stroke-width':14,cursor:'pointer'});
   hit.addEventListener('click', e=>{ e.stopPropagation(); selectedConnId=conn.id; selectedId=null; render(); renderConnPanel(conn); });
-  svgEl.appendChild(hit);
+  (hitQueue||[]).push(hit);
   const hR  = sel?7:5;
   const hnd = sv('circle',{cx:lx,cy:ly,r:hR,fill:sel?'#a78bfa':'var(--bg4)',stroke:sel?'#a78bfa':'#555e80','stroke-width':1.5,cursor:'grab'});
   hnd.addEventListener('mousedown', e=>{ e.stopPropagation(); dragLoop(e,conn,b); });
-  svgEl.appendChild(hnd);
+  (hitQueue||[]).push(hnd);
   const inf = ns('text'); setA(inf,{x:lx,y:ly-13,'text-anchor':'middle','dominant-baseline':'central',fill:'#555e80','font-size':'17','font-family':"'JetBrains Mono',monospace"});
   inf.textContent='∞'; svgEl.appendChild(inf);
   drawLabel(conn.label, lx+12, ly+4);
@@ -1199,7 +1287,7 @@ function startConn(e, blockId, cx, cy) {
       const conn = mkConn(connStart.blockId, target, autoLabel(connStart.blockId, target));
       conn.endAngle = Math.atan2(w.y - bCY(nearest), w.x - bCX(nearest));
       connections.push(conn);
-      render(); refreshPanels();
+      render(); renderSideEditor(); refreshPanels();
     }
     connStart=null;
   };
@@ -1264,6 +1352,7 @@ function renderSideEditor() {
       <textarea class="editor-input" rows="5" oninput="handleCodeEditorInput(this)">${h(b.code)}</textarea>
       <div class="editor-hint">${h(hints[b.type])}</div>
     </div>
+    <div id="sideVarsList">${sideEditorVarsHtml(b)}</div>
     <div class="editor-section">
       <div class="editor-label">Wires out</div>
       ${conns.length ? conns.map(c=>{
@@ -1289,6 +1378,38 @@ function renderSideEditor() {
   updateCodeValidationDisplay();
 }
 function renderPanel() { renderSideEditor(); } // alias kept for any remaining calls
+
+// Variables declaration list ([reg]/[comb] + convert buttons) shown in the
+// side editor for state AND conditional output boxes (rule 2: every assigned
+// variable is explicitly declarable as register or combinational).
+function sideEditorVarsHtml(b) {
+  if (!b || !['state', 'output'].includes(b.type)) return '';
+  const assigned = extractAssignedNames(b.code, { blockType: b.type });
+  if (!assigned.size) return '';
+  const registeredNames = getRegisteredVarNames();
+  let s = `<div class="editor-section"><div class="editor-label">Variables</div>`;
+  [...assigned].forEach(k => {
+    const isReg = registeredNames.has(k);
+    s += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+      <span style="font-family:var(--mono);font-size:15px;color:${isReg?'var(--accent)':'var(--purple)'}">${h(k)}</span>
+      <span style="font-size:13px;color:var(--text3)">${isReg?'[reg]':'[comb]'}</span>
+      <button class="var-type-btn" style="margin-top:0" onclick="${isReg
+        ? (forcedRegisters.has(k) ? `toggleRegisterConditional('${h(k)}',true)` : `toggleForcedCombinational('${h(k)}')`)
+        : (forcedCombinational.has(k) ? `toggleForcedCombinational('${h(k)}')` : `toggleForcedRegister('${h(k)}',true)`)}"
+      >${isReg ? '→ comb' : '→ reg'}</button>
+    </div>`;
+  });
+  s += `</div>`;
+  return s;
+}
+
+// Refresh the Variables list in place — no full renderSideEditor() rebuild,
+// so the code textarea keeps focus while the user is typing.
+function refreshSideEditorVars() {
+  const holder = document.getElementById('sideVarsList');
+  if (!holder) return;
+  holder.innerHTML = sideEditorVarsHtml(blocks.find(b => b.id === selectedId));
+}
 
 function renderConnPanel(conn) {
   if (!conn) return;
@@ -1372,6 +1493,26 @@ function handleCodeEditorInput(textarea) {
   liveUpdate('code', textarea.value);
   updateCodeValidationDisplay();
 }
+// Check bit-select / bit-slice references (var[n], var[hi:lo]) against the
+// variable's declared bit width. Returns an array of error strings.
+function validateBitIndexRefs(expr) {
+  const errors = [];
+  const re = /\b([A-Za-z_$][A-Za-z0-9_$]*)\[(\d+)(?::(\d+))?\]/g;
+  let m;
+  while ((m = re.exec(expr)) !== null) {
+    const name = m[1], hi = parseInt(m[2], 10);
+    const lo = m[3] !== undefined ? parseInt(m[3], 10) : null;
+    const bw = varBits[name] ?? varBitDefault;
+    if (hi >= bw) {
+      errors.push(`Bit index <code>${h(m[0])}</code> is out of range — <code>${h(name)}</code> is ${bw}-bit, so the largest index is ${bw - 1}.`);
+    }
+    if (lo !== null && lo > hi) {
+      errors.push(`Bit slice <code>${h(m[0])}</code> is invalid — high index must be ≥ low index.`);
+    }
+  }
+  return errors;
+}
+
 function validateDecisionCode(code) {
   const errors = [];
   if (!code || !code.trim()) return { valid: true, errors: [] };
@@ -1385,7 +1526,14 @@ function validateDecisionCode(code) {
 
   // Bare identifier: valid only if 1-bit signal
   if (/^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(trimmed)) {
-    const bits = varBits[trimmed] ?? varBitDefault;
+    // If the variable has no explicit bit-width AND is never assigned anywhere,
+    // treat it as a 1-bit input (e.g. a flag or enable signal). No error.
+    const isAssignedSomewhere = blocks.some(b =>
+      extractAssignedNames(b.code, { blockType: b.type }).has(trimmed));
+    const hasExplicitWidth = trimmed in varBits || trimmed in userVars;
+    const bits = hasExplicitWidth
+      ? (varBits[trimmed] ?? varBitDefault)
+      : (isAssignedSomewhere ? varBitDefault : 1);
     if (bits !== 1) {
       errors.push(`<code>${h(trimmed)}</code> is a ${bits}-bit signal — only 1-bit signals can be used directly as a condition. Use a relational expression (e.g. <code>${h(trimmed)} != 0</code>).`);
     }
@@ -1396,6 +1544,8 @@ function validateDecisionCode(code) {
   if (/(?<![!<>=])=(?!=)/.test(trimmed)) {
     errors.push(`<code>${h(trimmed)}</code> looks like an assignment — decision boxes must be boolean expressions only (e.g. <code>a == 0</code>, <code>b > 0</code>).`);
   }
+
+  validateBitIndexRefs(trimmed).forEach(e => errors.push(e));
 
   return { valid: errors.length === 0, errors };
 }
@@ -1476,13 +1626,28 @@ function validateAssignmentCode(code, blockType) {
     }
     
     const { lhs, rhs } = parsed;
-    
-    // Validate LHS
-    if (!/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(lhs)) {
-      errors.push(`Line ${lineNum}: Invalid variable name: <code>${h(lhs)}</code>`);
+
+    // Validate LHS — allow plain var, var[n], var[hi:lo], {var,var,...}
+    const lhsValid = /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(lhs) ||
+      /^[A-Za-z_$][A-Za-z0-9_$]*\[\d+\]$/.test(lhs) ||
+      /^[A-Za-z_$][A-Za-z0-9_$]*\[\d+:\d+\]$/.test(lhs) ||
+      /^\{[A-Za-z_$][A-Za-z0-9_$,\[\]: ]*\}$/.test(lhs);
+    if (!lhsValid) {
+      errors.push(`Line ${lineNum}: Invalid LHS: <code>${h(lhs)}</code>`);
       return;
     }
-    
+
+    // Bit-width consistency: only when the LHS is a slice/concat (multi-target)
+    // and the RHS width is statically known (concat/slice/var). Plain-var LHS is
+    // skipped — values just truncate/zero-extend as usual.
+    if (lhs.startsWith('{') || /\[\d+(:\d+)?\]$/.test(lhs)) {
+      const lhsW = lhsBitWidth(parseLhs(lhs));
+      const rhsW = rhsBitWidth(rhs);
+      if (rhsW !== null && lhsW !== rhsW) {
+        errors.push(`Line ${lineNum}: Bit-width mismatch — LHS <code>${h(lhs)}</code> is ${lhsW} bit${lhsW===1?'':'s'} but RHS <code>${h(rhs)}</code> is ${rhsW} bit${rhsW===1?'':'s'}.`);
+      }
+    }
+
     // Reject division and modulo operators
     if (/\//.test(rhs) || /%/.test(rhs)) {
       errors.push(`Line ${lineNum}: Operators <code>/</code> and <code>%</code> are not supported — use <code>+</code> <code>-</code> <code>*</code> for arithmetic.`);
@@ -1492,10 +1657,20 @@ function validateAssignmentCode(code, blockType) {
     if (/\b\d+\.\d+\b/.test(rhs)) {
       errors.push(`Line ${lineNum}: Decimal numbers not allowed — only integers. Found in <code>${h(rhs)}</code>`);
     }
-    
-    // Try evaluating RHS to catch expression errors
+
+    // Check bit-select / slice indices against declared bit widths (both sides)
+    validateBitIndexRefs(rhs).forEach(e => errors.push(`Line ${lineNum}: ${e}`));
+    validateBitIndexRefs(lhs).forEach(e => errors.push(`Line ${lineNum}: ${e}`));
+
+    // Try evaluating RHS to catch expression errors.
+    // Build a fallback scope so vars not yet in simVars (e.g. forcedCombinational
+    // vars before sim starts) don't produce spurious "is not defined" errors.
+    const evalScope = {};
+    blocks.forEach(b => extractAssignedNames(b.code, { blockType: b.type }).forEach(n => { evalScope[n] = 0; }));
+    Object.keys(userVars).forEach(k => { evalScope[k] = userVars[k]; });
+    Object.assign(evalScope, simVars); // actual sim values override defaults
     try {
-      const result = evalExprInScope(rhs, { ...simVars });
+      const result = evalExprInScope(rhs, evalScope);
       // Check if result is an integer
       if (!Number.isInteger(result)) {
         errors.push(`Line ${lineNum}: Expression <code>${h(rhs)}</code> evaluates to non-integer <code>${result}</code> — only integers allowed`);
@@ -1505,17 +1680,25 @@ function validateAssignmentCode(code, blockType) {
       errors.push(`Line ${lineNum}: Invalid expression <code>${h(rhs)}</code> — ${msg}`);
     }
 
-    // Check constant RHS against declared bit width
-    try {
-      const constVal = evalExprInScope(rhs, {});
-      if (Number.isInteger(constVal) && Number.isFinite(constVal)) {
-        const bw = varBits[lhs] ?? varBitDefault;
-        const half = Math.pow(2, bw - 1);
-        if (constVal < -half || constVal > half - 1) {
-          errors.push(`Line ${lineNum}: Value <code>${constVal}</code> is out of the ${bw}-bit range [${-half}, ${half-1}] for <code>${h(lhs)}</code>`);
-        }
+    // Check constant RHS against declared bit width (only for plain var LHS)
+    if (/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(lhs)) {
+      const bw = varBits[lhs] ?? varBitDefault;
+      // Literal-width check: a hex/bin literal implies a width by its digit
+      // count (0x006 → 12 bits) even if its value fits. Flag if it exceeds bw.
+      const litW = literalBitWidth(rhs);
+      if (litW !== null && litW > bw) {
+        errors.push(`Line ${lineNum}: Literal <code>${h(rhs)}</code> implies ${litW} bits but <code>${h(lhs)}</code> is ${bw}-bit — remove leading zeros or widen the variable.`);
       }
-    } catch(e) { /* non-constant RHS — skip static range check */ }
+      try {
+        const constVal = evalExprInScope(rhs, {});
+        if (Number.isInteger(constVal) && Number.isFinite(constVal)) {
+          const { min, max } = varRange(lhs);
+          if (constVal < min || constVal > max) {
+            errors.push(`Line ${lineNum}: Value <code>${constVal}</code> is out of the ${bw}-bit ${signedVars.has(lhs)?'signed':'unsigned'} range [${min}, ${max}] for <code>${h(lhs)}</code>`);
+          }
+        }
+      } catch(e) { /* non-constant RHS — skip static range check */ }
+    }
   });
   
   // For output/state boxes: detect circular deps among combinational vars
@@ -1523,8 +1706,13 @@ function validateAssignmentCode(code, blockType) {
     const combDeps = {};
     statements.forEach(stmt => {
       const parsed = parseAssignmentStatement(stmt);
-      if (!parsed || isRegisterVar(parsed.lhs)) return;
-      combDeps[parsed.lhs] = (parsed.rhs.match(/\b[A-Za-z_$][A-Za-z0-9_$]*\b/g) || []);
+      if (!parsed) return;
+      const deps = (parsed.rhs.match(/\b[A-Za-z_$][A-Za-z0-9_$]*\b/g) || []);
+      function addDep(d) {
+        if (d.kind === 'concat') { d.parts.forEach(addDep); return; }
+        if (!isRegisterVar(d.name)) combDeps[d.name] = deps;
+      }
+      addDep(parseLhs(parsed.lhs));
     });
     const combLhs = new Set(Object.keys(combDeps));
     const GRAY = 1, BLACK = 2;
@@ -1585,6 +1773,7 @@ function refreshPanels() {
   else if (activeTab === 'table')  renderTablePanel();
   else if (activeTab === 'log')    renderLogPanel();
   if (synthPanelOpen) { renderDatapathPanel(); renderCtrlPanel(); }
+  refreshSideEditorVars();
 }
 
 function getVarBase(_k) { return simDisplayBase; }
@@ -1595,14 +1784,29 @@ function formatInBase(val, base, bits) {
   const mask = bw === 32 ? 0xFFFFFFFF : (1 << bw) - 1;
   const unsigned = (val & mask) >>> 0;
   if (base === 'hex') {
+    // Don't truncate an out-of-range positive value into the declared width —
+    // show its full magnitude so the implied-width error flags it rather than
+    // silently masking it down (e.g. 511 in an 8-bit var stays 0x1FF, not 0xFF).
+    if (val > mask) return '0x' + val.toString(16).toUpperCase();
     const digits = Math.ceil(bw / 4);
     return '0x' + unsigned.toString(16).toUpperCase().padStart(digits, '0');
   }
-  if (base === 'bin') return '0b' + unsigned.toString(2).padStart(bw, '0');
+  if (base === 'bin') {
+    if (val > mask) return '0b' + val.toString(2);
+    return '0b' + unsigned.toString(2).padStart(bw, '0');
+  }
   return String(val);
 }
 
-function parseInBase(str, base, bits) {
+// Like formatInBase but strips the 0x/0b prefix — for use inside inputs where prefix is shown externally
+function formatDigits(val, base, bits) {
+  const s = formatInBase(val, base, bits);
+  if (base === 'hex') return s.replace(/^0x/i, '');
+  if (base === 'bin') return s.replace(/^0b/i, '');
+  return s;
+}
+
+function parseInBase(str, base, bits, signed = true) {
   str = String(str).trim();
   if (!str) return null;
   const bw = Math.min(bits || varBitDefault, 32);
@@ -1614,15 +1818,20 @@ function parseInBase(str, base, bits) {
     const s = /^0x/i.test(str) ? str : '0x' + str;
     n = parseInt(s, 16);
     if (isNaN(n) || n < 0) return null;
+    const digits = s.replace(/^0x/i, '').length;
+    if (digits * 4 > bw) return n; // digit count implies more bits than declared
+    if (n > mask) return n; // numeric overflow
     n = (n & mask) >>> 0;
-    if (n >= half) n -= full;
+    if (signed && n >= half) n -= full;
   } else if (base === 'bin') {
     const s = /^0b/i.test(str) ? str.slice(2) : str;
     if (!s || /[^01]/.test(s)) return null;
     n = parseInt(s, 2);
     if (isNaN(n)) return null;
+    if (s.length > bw) return n; // digit count implies more bits than declared
+    if (n > mask) return n; // numeric overflow
     n = (n & mask) >>> 0;
-    if (n >= half) n -= full;
+    if (signed && n >= half) n -= full;
   } else {
     if (str === '-') return null;
     n = parseInt(str, 10);
@@ -1637,14 +1846,22 @@ function setDisplayBase(base) {
   if (activeTab === 'vars') renderVarsPanel();
 }
 
-// VARS
-function renderVarsPanel() {
+// Sort keys by user-defined varOrder (unknown keys keep their natural order at the end)
+function orderKeys(keys) {
+  return [...keys].sort((a, b) => {
+    const ia = varOrder.indexOf(a), ib = varOrder.indexOf(b);
+    return (ia < 0 ? Number.MAX_SAFE_INTEGER : ia) - (ib < 0 ? Number.MAX_SAFE_INTEGER : ib);
+  });
+}
+
+// Classify all variables into the three panel sections (with user ordering applied)
+function computeVarSections() {
   const allAsmAssigned = new Set();
   blocks.forEach(b => extractAssignedNames(b.code, { blockType: b.type }).forEach(n => allAsmAssigned.add(n)));
   const registeredNames = getRegisteredVarNames();
 
   // True inputs: user-added AND never assigned in any ASM box
-  const inputKeys = Object.keys(userVars).filter(k => !allAsmAssigned.has(k));
+  const inputKeys = orderKeys(Object.keys(userVars).filter(k => !allAsmAssigned.has(k)));
   const clashKeys = Object.keys(userVars).filter(k =>  allAsmAssigned.has(k));
 
   // All internal vars: everything in simVars that isn't a true input
@@ -1653,11 +1870,14 @@ function renderVarsPanel() {
     ...allAsmAssigned  // include even if not yet in simVars
   ])].filter(k => !inputKeys.includes(k));
 
-  // Classify internals
-  const stateAssignedNames = new Set();
-  blocks.filter(b => b.type === 'state').forEach(b => extractAssignedNames(b.code, { blockType: b.type }).forEach(n => stateAssignedNames.add(n)));
-  const regKeys  = internalKeys.filter(k =>  registeredNames.has(k));
-  const combKeys = internalKeys.filter(k => !registeredNames.has(k));
+  const regKeys  = orderKeys(internalKeys.filter(k =>  registeredNames.has(k)));
+  const combKeys = orderKeys(internalKeys.filter(k => !registeredNames.has(k)));
+  return { allAsmAssigned, registeredNames, inputKeys, clashKeys, regKeys, combKeys };
+}
+
+// VARS
+function renderVarsPanel() {
+  const { allAsmAssigned, inputKeys, clashKeys, regKeys, combKeys } = computeVarSections();
 
   // Detect undeclared inputs: vars used in code but not in userVars and not assigned anywhere
   const undeclared = [];
@@ -1680,7 +1900,7 @@ function renderVarsPanel() {
       <button class="btn${simDisplayBase==='hex'?' active':''}" style="flex:1;padding:3px 0;font-size:15px;font-family:var(--mono)" onclick="setDisplayBase('hex')">hex (0x)</button>
       <button class="btn${simDisplayBase==='bin'?' active':''}" style="flex:1;padding:3px 0;font-size:15px;font-family:var(--mono)" onclick="setDisplayBase('bin')">bin (0b)</button>
     </div>
-    <div class="editor-label" style="margin-bottom:6px">Input Variables
+    <div class="editor-label" style="margin-bottom:6px;color:var(--green)">Input Variables
       <span style="color:var(--text3);font-weight:400;text-transform:none;font-size:15px;margin-left:4px">never assigned in ASM boxes</span>
     </div>
     <div class="var-add-row">
@@ -1691,132 +1911,145 @@ function renderVarsPanel() {
     </div>`;
 
   if (undeclaredUniq.length)
-    html += `<div style="margin-bottom:8px;padding:6px 8px;border-radius:6px;background:rgba(245,166,35,.12);border:1px solid var(--amber);font-size:16px;color:var(--amber)">
-      ⚠ Undeclared input${undeclaredUniq.length>1?'s':''}: <b style="font-family:var(--mono)">${undeclaredUniq.join(', ')}</b> — used in code but not declared in Vars. Add them above.
+    html += `<div style="margin-bottom:8px;padding:6px 8px;border-radius:6px;background:rgba(245,166,35,.12);border:1px solid var(--amber);font-size:15px;color:var(--amber)">
+      ⚠ Used but undeclared — click to add as 1-bit input:<br>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px">
+        ${undeclaredUniq.map(name=>`<button class="btn" style="font-family:var(--mono);font-size:14px;padding:2px 8px;color:var(--amber);border-color:var(--amber)" onclick="quickAddVar('${h(name)}')">${h(name)} +</button>`).join('')}
+      </div>
     </div>`;
 
   if (!inputKeys.length)
     html += `<div style="font-size:17px;color:var(--text3);margin-bottom:6px">No inputs defined.</div>`;
 
+  html += `<div class="var-sec" data-sec="input" ondragover="varDragOver(event)" ondragleave="varDragLeave(event)" ondrop="varDrop(event,'input')">`;
   inputKeys.forEach(k => {
     const bw  = varBits[k] ?? varBitDefault;
     const base = getVarBase(k);
-    const oor = bitRangeVarNames.has(k);
-    html += `<div class="var-row" style="flex-wrap:wrap;gap:4px">
+    // Range error only in decimal; hex/bin width errors are surfaced live by
+    // updateVarOutOfRangeFlags (the formatted value is always masked, so a fresh
+    // hex/bin render never has a digit-count violation to show statically).
+    const oor = base === 'dec' && bitRangeVarNames.has(k);
+    const r = varRange(k);
+    html += `<div class="var-row" data-var="${h(k)}" style="flex-wrap:wrap;gap:4px">
+      <span class="drag-handle" draggable="true" title="Drag to reorder"
+        ondragstart="varDragStart(event,'${h(k)}','input')" ondragend="varDragEnd(event)">⠿</span>
       <span class="var-name" style="${oor?'color:var(--red)':''}">${h(k)}</span>
-      <input class="editor-input var-int-input" data-key="${h(k)}" value="${h(formatInBase(userVars[k], base, bw))}" style="flex:1;padding:2px 6px;${oor?'border-color:var(--red);':''}"
+      <input class="editor-input var-int-input" data-key="${h(k)}" value="${h(formatDigits(userVars[k], base, bw))}" style="flex:1;padding:2px 6px;${oor?'border-color:var(--red);':''}"
         type="text" inputmode="${base==='dec'?'numeric':'text'}"
         onkeydown="handleVarValKey(event,'',this)"
         oninput="onInputVarChange('${h(k)}', this.value, this)">
-      ${oor ? `<span style="color:var(--red);font-size:14px" title="Value outside 2's-complement range for ${bw} bits">⚠ out of range (${bw}-bit: ${-(Math.pow(2,bw-1))} to ${Math.pow(2,bw-1)-1})</span>` : ''}
       <span style="font-size:13px;color:var(--text3)" title="Bit width">bits:</span>
       <input class="editor-input" type="number" value="${bw}" min="1" max="64"
         style="width:54px;padding:1px 5px;font-size:17px" title="Bit width"
         onchange="setVarBits('${h(k)}',this.value)">
+      <button class="var-type-btn" style="margin-top:0;${signedVars.has(k)?'border-color:var(--accent);color:var(--accent)':''}"
+        onclick="toggleSigned('${h(k)}')" title="Toggle signed (2's complement) interpretation">
+        ${signedVars.has(k)?'±signed':'unsigned'}</button>
       <button class="btn" style="padding:1px 5px;font-size:16px" onclick="removeVar('${h(k)}')">×</button>
+      ${oor ? `<div class="oor-warn" style="flex-basis:100%;color:var(--red);font-size:14px" title="Value outside the ${signedVars.has(k)?'signed':'unsigned'} range for ${bw} bits">⚠ out of range (${bw}-bit: ${r.min} to ${r.max})</div>` : ''}
     </div>`;
   });
+  html += `</div>`;
 
   if (clashKeys.length)
     html += `<div style="margin-top:6px;font-size:16px;color:var(--amber)">⚠ ${clashKeys.join(', ')} clashes with ASM assignment — treated as internal.</div>`;
 
   // ── Registered vars ──────────────────────────────────
-  if (regKeys.length) {
-    html += `<div class="editor-label" style="margin-top:14px;margin-bottom:6px">
-      Registered Vars <span style="color:var(--accent);font-size:9px;font-family:var(--mono)">[reg]</span>
+  const hasInternal = regKeys.length || combKeys.length;
+  if (hasInternal) {
+    html += `<div class="editor-label" style="margin-top:14px;margin-bottom:6px;color:var(--red)">
+      Registered Vars <span style="font-size:9px;font-family:var(--mono)">[reg]</span>
       <span style="color:var(--text3);font-weight:400;text-transform:none;font-size:15px;margin-left:4px">update on CLK edge</span>
-    </div>`;
+    </div>
+    <div class="var-sec var-sec-grid" data-sec="reg" ondragover="varDragOver(event)" ondragleave="varDragLeave(event)" ondrop="varDrop(event,'reg')">`;
+    if (!regKeys.length)
+      html += `<div class="var-sec-hint">drop a variable here to make it a register</div>`;
     regKeys.forEach(k => {
       const v = k in simVars ? simVars[k] : '—';
       const dbl = liveDoubleDriverVarNames.has(k);
       const changed = lastWrittenVars.has(k);
       const initVal = (k in regInitValues) ? regInitValues[k] : 0;
-      const canDemoteToCond = !stateAssignedNames.has(k) && forcedRegisters.has(k);
       const bw = varBits[k] ?? varBitDefault;
       const base = getVarBase(k);
       const oor = bitRangeVarNames.has(k);
-      html += `<div class="var-row${changed?' var-changed':''}" style="flex-wrap:wrap;gap:4px">
+      html += `<div class="var-row${changed?' var-changed':''}" data-var="${h(k)}" style="grid-column:1/-1;display:grid;grid-template-columns:subgrid;row-gap:4px;align-items:center">
 
-  <div style="display:flex;flex-direction:column;min-width:60px">
-    <span class="var-name" style="${(dbl||oor)?'color:var(--red)':''}">
-      ${h(k)}
-    </span>
-    ${canDemoteToCond ? `
-      <button class="var-type-btn" onclick="toggleRegisterConditional('${h(k)}',true)"
-        title="Revert to combinational logic">→ comb</button>
-    ` : ``}
-  </div>
+  <span style="display:flex;align-items:center;gap:4px">
+    <span class="drag-handle" draggable="true" title="Drag to reorder, or drop on Combinational Vars to convert"
+      ondragstart="varDragStart(event,'${h(k)}','reg')" ondragend="varDragEnd(event)">⠿</span>
+    <span class="var-name" style="${(dbl||oor)?'color:var(--red)':''}">${h(k)}</span>
+  </span>
 
-  ${dbl?`<span style="color:var(--red);font-size:16px">⚡ double driver</span>`:''}
-  ${oor?`<span style="color:var(--red);font-size:14px" title="Value outside 2's-complement range for ${bw} bits">⚠ out of range</span>`:''}
-
-  <span style="font-size:15px;color:var(--text3)">init:</span>
-
-  <input class="editor-input"
-    value="${h(formatInBase(initVal, base, bw))}"
-    style="width:54px;padding:1px 5px;font-size:17px"
-    type="text"
-    inputmode="${base==='dec'?'numeric':'text'}"
-    title="Initial value (used on Reset)"
-    onkeydown="handleVarValKey(event,'',this)"
-    oninput="setRegInitValue('${h(k)}', this.value, this)">
-
-  <span style="font-size:13px;color:var(--text3)" title="Verilog bit width">bits:</span>
-  <input class="editor-input" type="number" value="${bw}" min="1" max="64"
-    style="width:54px;padding:1px 5px;font-size:17px" title="Bit width"
-    onchange="setVarBits('${h(k)}',this.value)">
+  <span style="display:flex;align-items:center;gap:5px">
+    <span style="font-size:15px;color:var(--text3);min-width:56px;text-align:right">init:</span>
+    <input class="editor-input" data-key="${h(k)}"
+      value="${h(formatDigits(initVal, base, bw))}"
+      style="width:54px;padding:1px 5px;font-size:17px"
+      type="text"
+      inputmode="${base==='dec'?'numeric':'text'}"
+      title="Initial value (used on Reset)"
+      onkeydown="handleVarValKey(event,'',this)"
+      oninput="setRegInitValue('${h(k)}', this.value, this)">
+  </span>
 
   <span class="var-val"
     data-varkey="${h(k)}"
     data-base="${base}"
-    style="margin-left:auto">
+    style="justify-self:end">
     ${typeof v === 'number' ? h(formatInBase(v, base, bw)) : h(String(v))}
-  </span></div>`;
+  </span>
+
+  <button class="var-type-btn" style="margin-top:0;justify-self:start;${signedVars.has(k)?'border-color:var(--accent);color:var(--accent)':''}"
+    onclick="toggleSigned('${h(k)}')" title="Toggle signed (2's complement) for Verilog export">
+    ${signedVars.has(k)?'±signed':'unsigned'}</button>
+
+  <span style="display:flex;align-items:center;gap:5px">
+    <span style="font-size:13px;color:var(--text3);min-width:56px;text-align:right" title="Verilog bit width">bits:</span>
+    <input class="editor-input" type="number" value="${bw}" min="1" max="64"
+      style="width:54px;padding:1px 5px;font-size:17px" title="Bit width"
+      onchange="setVarBits('${h(k)}',this.value)">
+  </span>
+
+  <span></span>
+
+  ${(dbl||oor) ? `<div class="oor-warn" style="grid-column:1/-1;color:var(--red);font-size:14px">
+    ${dbl?`<span style="font-size:16px">⚡ double driver</span> `:''}
+    ${oor?`<span title="Value outside the ${signedVars.has(k)?'signed':'unsigned'} range for ${bw} bits">⚠ out of range (${bw}-bit: ${varRange(k).min} to ${varRange(k).max})</span>`:''}
+  </div>` : ''}</div>`;
     });
- 
-  
+    html += `</div>`;
   }
 
-  // ── Combinational vars with editable defaults + register checkbox ────────
-  if (combKeys.length) {
+  // ── Combinational vars with editable defaults ────────
+  if (hasInternal) {
     html += `
-    
-    <div class="editor-label" style="margin-top:14px;margin-bottom:6px">
-      Combinational Vars <span style="color:var(--purple);font-size:9px;font-family:var(--mono)">[comb]</span>
+    <div class="editor-label" style="margin-top:14px;margin-bottom:6px;color:var(--accent)">
+      Combinational Vars <span style="font-size:9px;font-family:var(--mono)">[comb]</span>
       <span style="color:var(--text3);font-weight:400;text-transform:none;font-size:15px;margin-left:4px">instant update</span>
-    </div>`;
+    </div>
+    <div class="var-sec var-sec-grid" data-sec="comb" ondragover="varDragOver(event)" ondragleave="varDragLeave(event)" ondrop="varDrop(event,'comb')">`;
+    if (!combKeys.length)
+      html += `<div class="var-sec-hint">drop a variable here to make it combinational</div>`;
     combKeys.forEach(k => {
       const cur  = k in simVars ? simVars[k] : (k in combDefaults ? combDefaults[k] : 0);
       const def  = k in combDefaults ? combDefaults[k] : 0;
       const changed = lastWrittenVars.has(k) || (k in prevSimVars && prevSimVars[k] !== simVars[k]);
-      const isReg = forcedRegisters.has(k);
       const dbl = liveDoubleDriverVarNames.has(k);
-      const regInit = (k in regInitValues) ? regInitValues[k] : def;
       const bw = varBits[k] ?? varBitDefault;
       const base = getVarBase(k);
-      html += `<div class="var-row${changed?' var-changed':''}" style="flex-wrap:wrap;gap:4px">
-  <div style="display:flex;flex-direction:column;min-width:60px">
+      html += `<div class="var-row${changed?' var-changed':''}" data-var="${h(k)}" style="grid-column:1/-1;display:grid;grid-template-columns:subgrid;row-gap:4px;align-items:center">
 
-    <span class="var-name" style="${dbl?'color:var(--red)':''}">
-      ${h(k)}
-    </span>
+  <span style="display:flex;align-items:center;gap:4px">
+    <span class="drag-handle" draggable="true" title="Drag to reorder, or drop on Registered Vars to convert"
+      ondragstart="varDragStart(event,'${h(k)}','comb')" ondragend="varDragEnd(event)">⠿</span>
+    <span class="var-name" style="${dbl?'color:var(--red)':''}">${h(k)}</span>
+  </span>
 
-    ${dbl ? `
-      <span style="color:var(--red);font-size:16px">
-        ⚡ double driver
-      </span>
-    ` : ``}
-
-    <button class="var-type-btn" onclick="toggleForcedRegister('${h(k)}',true)"
-      title="Treat as register (updates on CLK edge)">→ reg</button>
-
-  </div>
-
-  ${!isReg ? `
-    <span style="font-size:16px;color:var(--text3)">default:</span>
+  <span style="display:flex;align-items:center;gap:5px">
+    <span style="font-size:16px;color:var(--text3);min-width:56px;text-align:right">default:</span>
     <input
-      class="editor-input"
-      value="${h(formatInBase(def, base, bw))}"
+      class="editor-input" data-key="${h(k)}"
+      value="${h(formatDigits(def, base, bw))}"
       style="width:54px;padding:1px 5px;font-size:17px"
       title="Default value when path is inactive"
       type="text"
@@ -1824,53 +2057,132 @@ function renderVarsPanel() {
       onkeydown="handleVarValKey(event,'',this)"
       oninput="setCombDefault('${h(k)}', this.value, this)"
     >
-  ` : `
-    <span style="font-size:15px;color:var(--text3)">init:</span>
-    <input
-      class="editor-input"
-      value="${h(formatInBase(regInit, base, bw))}"
-      style="width:54px;padding:1px 5px;font-size:17px"
-      title="Initial register value"
-      type="text"
-      inputmode="${base==='dec'?'numeric':'text'}"
-      onkeydown="handleVarValKey(event,'',this)"
-      oninput="setRegInitValue('${h(k)}', this.value, this)"
-    >
-  `}
-
-  <span style="font-size:13px;color:var(--text3)" title="Verilog bit width">bits:</span>
-  <input class="editor-input" type="number" value="${bw}" min="1" max="64"
-    style="width:54px;padding:1px 5px;font-size:17px" title="Bit width"
-    onchange="setVarBits('${h(k)}',this.value)">
+  </span>
 
   <span
     class="var-val"
     data-varkey="${h(k)}"
     data-base="${base}"
-    style="margin-left:auto"
+    style="justify-self:end"
   >
     ${h(formatInBase(cur, base, bw))}
   </span>
 
+  <button class="var-type-btn" style="margin-top:0;justify-self:start;${signedVars.has(k)?'border-color:var(--accent);color:var(--accent)':''}"
+    onclick="toggleSigned('${h(k)}')" title="Toggle signed (2's complement) for Verilog export">
+    ${signedVars.has(k)?'±signed':'unsigned'}</button>
+
+  <span style="display:flex;align-items:center;gap:5px">
+    <span style="font-size:13px;color:var(--text3);min-width:56px;text-align:right" title="Verilog bit width">bits:</span>
+    <input class="editor-input" type="number" value="${bw}" min="1" max="64"
+      style="width:54px;padding:1px 5px;font-size:17px" title="Bit width"
+      onchange="setVarBits('${h(k)}',this.value)">
+  </span>
+
+  <span></span>
+
+  ${dbl ? `<div style="grid-column:1/-1;color:var(--red);font-size:16px">⚡ double driver</div>` : ``}
+
 </div>`;
     });
+    html += `</div>`;
   }
    html += `<span style="font-size:15px;color:var(--text2)">
-Combinational variables can be declared as registers instead using the <b>→ reg</b> button. Such variables can be reverted back to combinational logic using the <b>→ comb</b> button.
+Drag the <b>⠿</b> handle to reorder variables. Drag a variable between the <b>Registered</b> and <b>Combinational</b> sections to convert it.
 </span>`;
   html += `
   </div>`;
   document.getElementById('panelContent').innerHTML = html;
+  // Reflect any current out-of-range / implied-width errors immediately (e.g.
+  // after a radix switch) instead of waiting for the user to type in a field.
+  updateVarOutOfRangeFlags();
+}
+
+// ── Vars panel drag & drop (reorder + reg/comb conversion) ──
+function varDragStart(e, k, sec) {
+  dragVarName = k; dragVarSec = sec;
+  e.dataTransfer.effectAllowed = 'move';
+  try { e.dataTransfer.setData('text/plain', k); } catch(_) {}
+  // Drag image: the whole row instead of just the handle
+  const row = e.target.closest('.var-row');
+  if (row && e.dataTransfer.setDragImage) e.dataTransfer.setDragImage(row, 10, 10);
+}
+function clearDragHighlights() {
+  document.querySelectorAll('.drag-over-row').forEach(el => el.classList.remove('drag-over-row'));
+  document.querySelectorAll('.drag-over-row-bottom').forEach(el => el.classList.remove('drag-over-row-bottom'));
+  document.querySelectorAll('.drag-over-sec').forEach(el => el.classList.remove('drag-over-sec'));
+}
+function varDragOver(e) {
+  if (!dragVarName) return;
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  clearDragHighlights();
+  const row = e.target.closest('.var-row[data-var]');
+  if (row && row.dataset.var !== dragVarName) {
+    const rect = row.getBoundingClientRect();
+    row.classList.add(e.clientY > rect.top + rect.height / 2 ? 'drag-over-row-bottom' : 'drag-over-row');
+  } else if (!row) {
+    const sec = e.target.closest('.var-sec');
+    if (sec) sec.classList.add('drag-over-sec');
+  }
+}
+function varDragLeave(e) {
+  const sec = e.target.closest('.var-sec');
+  if (sec && !sec.contains(e.relatedTarget)) clearDragHighlights();
+}
+function varDragEnd() {
+  dragVarName = null; dragVarSec = null;
+  clearDragHighlights();
+}
+function varDrop(e, sec) {
+  if (!dragVarName) return;
+  e.preventDefault(); e.stopPropagation();
+  clearDragHighlights();
+  const k = dragVarName, fromSec = dragVarSec;
+  dragVarName = null; dragVarSec = null;
+
+  // Cross-section drops convert reg <-> comb; inputs can't change type by dragging
+  if (fromSec !== sec) {
+    if (fromSec === 'reg' && sec === 'comb') {
+      if (forcedRegisters.has(k)) toggleRegisterConditional(k, true);
+      else toggleForcedCombinational(k);
+    } else if (fromSec === 'comb' && sec === 'reg') {
+      toggleForcedRegister(k, true);
+    } else {
+      return;
+    }
+  }
+
+  // Insert at the drop position within the target section
+  const targetRow = e.target.closest('.var-row[data-var]');
+  const targetKey = targetRow ? targetRow.dataset.var : null;
+  const secs = computeVarSections();
+  const lists = { input: secs.inputKeys, reg: secs.regKeys, comb: secs.combKeys };
+  const list = lists[sec].filter(x => x !== k);
+  let idx = -1;
+  if (targetKey && targetKey !== k) {
+    const rect = targetRow.getBoundingClientRect();
+    const inBottomHalf = e.clientY > rect.top + rect.height / 2;
+    idx = list.indexOf(targetKey);
+    if (inBottomHalf) idx += 1; // insert after
+  }
+  if (idx < 0 || idx >= list.length) list.push(k); else list.splice(idx, 0, k);
+  lists[sec] = list;
+  varOrder = [...lists.input, ...lists.reg, ...lists.comb];
+
+  refreshPanels();
+  saveToStorage();
 }
 
 function onInputVarChange(key, rawVal, inputEl) {
   if (!rawVal || rawVal === '-') return;
-  const val = parseInBase(rawVal, getVarBase(key), varBits[key] ?? varBitDefault);
+  const val = parseInBase(rawVal, getVarBase(key), varBits[key] ?? varBitDefault, signedVars.has(key));
   if (val === null) return; // not a valid integer yet
   const prev = userVars[key];
   userVars[key] = val;
   prevSimVars = { ...simVars };
   simVars[key] = val;
+  saveToStorage();
   // Log input changes so students can see what triggered a path change
   if (simStep > 0 && prev !== val) {
     addLog('output', `  ✎ input ${key}: ${prev} → ${val}`);
@@ -1878,21 +2190,16 @@ function onInputVarChange(key, rawVal, inputEl) {
   traceAsmBlock();
   evalCombinationalPath();
   render();
-  const oorBefore = bitRangeVarNames.has(key);
   checkBitRanges();
-  const oorAfter = bitRangeVarNames.has(key);
-  if (oorBefore !== oorAfter) {
-    refreshPanels();
-  } else {
-    // Don't fully re-render (would kill focus); just update display values
-    updateVarDisplayValues();
-    if (activeTab === 'log') renderLogPanel();
-  }
+  // Never fully re-render here — it would kill focus and limit the user to one
+  // keystroke. Flag the out-of-range error in place and let them keep typing.
+  updateVarDisplayValues();
+  if (activeTab === 'log') renderLogPanel();
 }
 
 function setCombDefault(key, rawVal, inputEl) {
   if (!rawVal || rawVal === '-') return;
-  const val = parseInBase(rawVal, getVarBase(key), varBits[key] ?? varBitDefault);
+  const val = parseInBase(rawVal, getVarBase(key), varBits[key] ?? varBitDefault, signedVars.has(key));
   if (val === null) return;
   combDefaults[key] = val;
   prevSimVars = {};
@@ -1900,6 +2207,7 @@ function setCombDefault(key, rawVal, inputEl) {
   // Re-evaluate immediately so the var reflects new default if off-path
   traceAsmBlock(); evalCombinationalPath(); render();
   updateVarDisplayValues();
+  saveToStorage();
 }
 
 // Parse a string as an integer (supports negatives). Returns null if incomplete/invalid.
@@ -1927,15 +2235,123 @@ function splitCodeStatements(code, options = {}) {
 }
 
 function parseAssignmentStatement(stmt) {
-  const m = stmt.match(/^([A-Za-z_$][A-Za-z0-9_$]*)\s*(=|\+=|-=|\*=|&=|\|=|\^=|<<=|>>=|>>>=)\s*(.+)$/);
+  // `=(?!=)` so comparisons like `a == 1` are NOT parsed as assignments
+  // LHS may be: varName, varName[n], varName[hi:lo], or {varA,varB,...}
+  const op = /=(?!=)|\+=|-=|\*=|&=|\|=|\^=|<<=|>>=|>>>=/.source;
+  const plainVar = /[A-Za-z_$][A-Za-z0-9_$]*/.source;
+  const m = stmt.match(new RegExp(
+    `^(\\{[^}]+\\}|${plainVar}(?:\\[\\d+(?::\\d+)?\\])?)\\s*(${op})\\s*(.+)$`
+  ));
   if (!m) return null;
-  return { lhs:m[1], op:m[2], rhs:m[3].trim(), raw:stmt };
+  return { lhs:m[1].trim(), op:m[2], rhs:m[3].trim(), raw:stmt };
+}
+
+// Parse an LHS token into a descriptor for execution.
+// Returns one of:
+//   { kind:'var', name }
+//   { kind:'bit', name, bit }
+//   { kind:'slice', name, hi, lo }
+//   { kind:'concat', parts: [{kind, name, ...}] }
+function parseLhs(lhs) {
+  if (lhs.startsWith('{')) {
+    const inner = lhs.slice(1, -1).split(',').map(p => p.trim());
+    return { kind:'concat', parts: inner.map(parseLhs) };
+  }
+  const slice = lhs.match(/^([A-Za-z_$][A-Za-z0-9_$]*)\[(\d+):(\d+)\]$/);
+  if (slice) return { kind:'slice', name:slice[1], hi:parseInt(slice[2],10), lo:parseInt(slice[3],10) };
+  const bit = lhs.match(/^([A-Za-z_$][A-Za-z0-9_$]*)\[(\d+)\]$/);
+  if (bit) return { kind:'bit', name:bit[1], bit:parseInt(bit[2],10) };
+  return { kind:'var', name:lhs };
+}
+
+// Given an lhs descriptor, apply a value to the current scope writes.
+// For bit/slice, reads current value from scope to merge.
+// Returns array of {varName, value} pairs.
+function applyLhsWrite(lhsDesc, value, scope) {
+  function partWidth(d) {
+    if (d.kind === 'slice') return d.hi - d.lo + 1;
+    if (d.kind === 'bit')   return 1;
+    return varBits[d.name] ?? varBitDefault;
+  }
+  if (lhsDesc.kind === 'var') return [{ varName:lhsDesc.name, value }];
+  if (lhsDesc.kind === 'bit') {
+    const cur = scope[lhsDesc.name] ?? 0;
+    const bit = lhsDesc.bit;
+    const v = value & 1 ? (cur | (1 << bit)) : (cur & ~(1 << bit));
+    return [{ varName:lhsDesc.name, value: v | 0 }];
+  }
+  if (lhsDesc.kind === 'slice') {
+    const cur = scope[lhsDesc.name] ?? 0;
+    const { hi, lo } = lhsDesc;
+    const width = hi - lo + 1;
+    const mask = width >= 32 ? 0xFFFFFFFF : (1 << width) - 1;
+    const v = (cur & ~(mask << lo)) | ((value & mask) << lo);
+    return [{ varName:lhsDesc.name, value: v | 0 }];
+  }
+  if (lhsDesc.kind === 'concat') {
+    // Split value bits from LSB upward into parts (right-to-left)
+    const result = [];
+    let shift = 0;
+    for (let i = lhsDesc.parts.length - 1; i >= 0; i--) {
+      const part = lhsDesc.parts[i];
+      const w = partWidth(part);
+      const mask = w >= 32 ? 0xFFFFFFFF : (1 << w) - 1;
+      const slice = (value >>> shift) & mask;
+      result.push(...applyLhsWrite(part, slice, scope));
+      shift += w;
+    }
+    return result;
+  }
+  return [];
 }
 
 function ensureIntegerResult(value, stmt, blockType) {
   if (!Number.isFinite(value) || !Number.isInteger(value)) {
     throw new Error(`${blockType === 'state' ? 'State box' : 'Assignment'} must produce an integer: ${stmt}`);
   }
+}
+
+// Implied bit width of a bare hex/bin literal from its digit count:
+// 0x006 → 12 bits, 0b00110 → 5 bits. Returns null if not a single such literal.
+function literalBitWidth(expr) {
+  const s = expr.trim();
+  let m = s.match(/^0x([0-9a-fA-F]+)$/i);
+  if (m) return m[1].length * 4;
+  m = s.match(/^0b([01]+)$/i);
+  if (m) return m[1].length;
+  return null;
+}
+
+// Total declared bit-width of an LHS descriptor (concat sums its parts).
+function lhsBitWidth(d) {
+  if (d.kind === 'concat') return d.parts.reduce((s, p) => s + lhsBitWidth(p), 0);
+  if (d.kind === 'slice')  return d.hi - d.lo + 1;
+  if (d.kind === 'bit')    return 1;
+  return varBits[d.name] ?? varBitDefault;
+}
+
+// Declared bit-width of an RHS operand, but ONLY for forms where width is
+// well-defined: concatenation, slice, single-bit, or a plain variable.
+// Returns null for general arithmetic/logic expressions (width not inferable).
+function rhsBitWidth(rhs) {
+  rhs = rhs.trim();
+  // Concatenation: sum of part widths
+  const cat = rhs.match(/^\{([^{}]+)\}$/);
+  if (cat) {
+    const parts = cat[1].split(',').map(p => p.trim()).filter(Boolean);
+    let total = 0;
+    for (const p of parts) {
+      const w = rhsBitWidth(p);
+      if (w === null) return null;
+      total += w;
+    }
+    return total;
+  }
+  let m = rhs.match(/^[A-Za-z_$][A-Za-z0-9_$]*\[(\d+):(\d+)\]$/);
+  if (m) return parseInt(m[1], 10) - parseInt(m[2], 10) + 1;
+  if (/^[A-Za-z_$][A-Za-z0-9_$]*\[\d+\]$/.test(rhs)) return 1;
+  if (/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(rhs)) return varBits[rhs] ?? varBitDefault;
+  return null; // not a width-defined form
 }
 
 // Pre-process Verilog-style bit operations into JavaScript equivalents.
@@ -2048,35 +2464,31 @@ function evaluateAssignmentBlock(code, baseScope, options = {}) {
   const statements = splitCodeStatements(code, options);
 
   // STATE BOXES
-  // concurrent semantics (your old behavior)
+  // concurrent semantics 
   if (!isConditional) {
 
     statements.forEach(stmt => {
       const parsed = parseAssignmentStatement(stmt);
       if (!parsed) return;
 
-      const lhs = parsed.lhs;
+      const lhsDesc = parseLhs(parsed.lhs);
 
-      const oldVal = lhs in baseScope ? baseScope[lhs] : 0;
-
-      const rhsVal = evalExprInScope(parsed.rhs, baseScope);
-
-      const value = applyCompoundAssignment(
-        oldVal,
-        parsed.op,
-        rhsVal
-      );
+      // For plain var, support compound ops; for bit/slice/concat only = makes sense
+      let value;
+      if (lhsDesc.kind === 'var') {
+        const oldVal = parsed.lhs in baseScope ? baseScope[parsed.lhs] : 0;
+        value = applyCompoundAssignment(oldVal, parsed.op, evalExprInScope(parsed.rhs, baseScope));
+      } else {
+        value = evalExprInScope(parsed.rhs, baseScope);
+      }
 
       ensureIntegerResult(value, parsed.raw, blockType);
 
-      writes.push({
-        varName: lhs,
-        value,
-        raw: parsed.raw
+      const subWrites = applyLhsWrite(lhsDesc, value, baseScope);
+      subWrites.forEach(w => {
+        writes.push({ varName: w.varName, value: w.value, raw: parsed.raw });
+        assignedCounts[w.varName] = (assignedCounts[w.varName] || 0) + 1;
       });
-
-      assignedCounts[lhs] =
-        (assignedCounts[lhs] || 0) + 1;
     });
 
   }
@@ -2085,22 +2497,30 @@ function evaluateAssignmentBlock(code, baseScope, options = {}) {
 // combinational fixed-point evaluation
 else {
 
-  // count assignments ONCE
+  // count assignments ONCE (expand concat/bit/slice LHS to real var names)
   statements.forEach(stmt => {
     const parsed = parseAssignmentStatement(stmt);
     if (!parsed) return;
-
-    assignedCounts[parsed.lhs] =
-      (assignedCounts[parsed.lhs] || 0) + 1;
+    function countLhs(d) {
+      if (d.kind === 'concat') d.parts.forEach(countLhs);
+      else assignedCounts[d.name] = (assignedCounts[d.name] || 0) + 1;
+    }
+    countLhs(parseLhs(parsed.lhs));
   });
 
   // Dependency-graph cycle detection for combinational vars
   {
-    const combDeps = {}; // lhs -> [dep var names that are also comb-assigned here]
+    const combDeps = {}; // varName -> [dep var names that are also comb-assigned here]
     statements.forEach(stmt => {
       const parsed = parseAssignmentStatement(stmt);
-      if (!parsed || isRegisterVar(parsed.lhs)) return;
-      combDeps[parsed.lhs] = (parsed.rhs.match(/\b[A-Za-z_$][A-Za-z0-9_$]*\b/g) || []);
+      if (!parsed) return;
+      const lhsVars = [];
+      function collectV(d) { if (d.kind==='concat') d.parts.forEach(collectV); else lhsVars.push(d.name); }
+      collectV(parseLhs(parsed.lhs));
+      lhsVars.forEach(name => {
+        if (isRegisterVar(name)) return;
+        combDeps[name] = (parsed.rhs.match(/\b[A-Za-z_$][A-Za-z0-9_$]*\b/g) || []);
+      });
     });
     const combLhs = new Set(Object.keys(combDeps));
     const GRAY = 1, BLACK = 2;
@@ -2141,60 +2561,33 @@ else {
       const parsed = parseAssignmentStatement(stmt);
       if (!parsed) return;
 
-      const lhs = parsed.lhs;
+      const lhsDesc = parseLhs(parsed.lhs);
 
-      const oldVal =
-        lhs in scope ? scope[lhs] : 0;
-
-      const rhsVal =
-        evalExprInScope(parsed.rhs, scope);
-
-      const value =
-        applyCompoundAssignment(
-          oldVal,
-          parsed.op,
-          rhsVal
-        );
-
-      // REGISTER VARIABLE
-      if (isRegisterVar(lhs)) {
-
-        let existing =
-          writes.find(w => w.varName === lhs);
-
-        if (existing) {
-          existing.value = value;
-        } else {
-          writes.push({
-            varName: lhs,
-            value,
-            raw: parsed.raw
-          });
-        }
-
+      let rhsValue;
+      if (lhsDesc.kind === 'var') {
+        const oldVal = parsed.lhs in scope ? scope[parsed.lhs] : 0;
+        rhsValue = applyCompoundAssignment(oldVal, parsed.op, evalExprInScope(parsed.rhs, scope));
+      } else {
+        rhsValue = evalExprInScope(parsed.rhs, scope);
       }
 
-      // COMBINATIONAL VARIABLE
-      else {
+      const subWrites = applyLhsWrite(lhsDesc, rhsValue, scope);
 
-        if (scope[lhs] !== value) {
-          scope[lhs] = value;
-          changed = true;
+      subWrites.forEach(({ varName, value }) => {
+        // REGISTER VARIABLE
+        if (isRegisterVar(varName)) {
+          let existing = writes.find(w => w.varName === varName);
+          if (existing) { existing.value = value; }
+          else { writes.push({ varName, value, raw: parsed.raw }); }
         }
-
-        let existing =
-          writes.find(w => w.varName === lhs);
-
-        if (existing) {
-          existing.value = value;
-        } else {
-          writes.push({
-            varName: lhs,
-            value,
-            raw: parsed.raw
-          });
+        // COMBINATIONAL VARIABLE
+        else {
+          if (scope[varName] !== value) { scope[varName] = value; changed = true; }
+          let existing = writes.find(w => w.varName === varName);
+          if (existing) { existing.value = value; }
+          else { writes.push({ varName, value, raw: parsed.raw }); }
         }
-      }
+      });
 
     });
 
@@ -2205,9 +2598,13 @@ else {
     const circularVars = [];
     statements.forEach(stmt => {
       const parsed = parseAssignmentStatement(stmt);
-      if (!parsed || isRegisterVar(parsed.lhs)) return;
+      if (!parsed) return;
       const rhsNames = (parsed.rhs.match(/\b[A-Za-z_$][A-Za-z0-9_$]*\b/g) || []);
-      if (rhsNames.includes(parsed.lhs)) circularVars.push(parsed.lhs);
+      function checkCirc(d) {
+        if (d.kind === 'concat') { d.parts.forEach(checkCirc); return; }
+        if (!isRegisterVar(d.name) && rhsNames.includes(d.name)) circularVars.push(d.name);
+      }
+      checkCirc(parseLhs(parsed.lhs));
     });
     const label = circularVars.length ? circularVars.join(', ') : 'unknown variable(s)';
     throw new Error(`Circular combinational assignment: ${label} depends on itself. Remove the self-dependency.`);
@@ -2232,12 +2629,14 @@ function handleVarValKey(event, id, inputEl) {
   const el = inputEl || (id ? document.getElementById(id) : null);
   const allowed = ['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Enter','Home','End'];
   if (allowed.includes(event.key)) return;
-  if (simDisplayBase === 'hex') {
-    if (/^[0-9a-fA-FxX]$/.test(event.key)) return;
+  // Use the per-variable base (data-key) rather than the global display base
+  const base = (el && el.dataset.key) ? getVarBase(el.dataset.key) : simDisplayBase;
+  if (base === 'hex') {
+    if (/^[0-9a-fA-F]$/.test(event.key)) return;
     event.preventDefault(); return;
   }
-  if (simDisplayBase === 'bin') {
-    if (/^[01bB]$/.test(event.key)) return;
+  if (base === 'bin') {
+    if (/^[01]$/.test(event.key)) return;
     event.preventDefault(); return;
   }
   if (event.key === '-' && el && el.selectionStart === 0 && !el.value.includes('-')) return;
@@ -2251,6 +2650,62 @@ function updateVarDisplayValues() {
     if (k in simVars) {
       const bw = varBits[k] ?? varBitDefault;
       el.textContent = formatInBase(simVars[k], getVarBase(k), bw);
+    }
+  });
+  updateVarOutOfRangeFlags();
+}
+
+// Minimum bit width implied by what's currently typed in a value input, from its
+// digit count. H hex digits span [4H-3, 4H] bits (0x0 → 1..4, 0x000 → 9..12), so
+// the minimum is 4H-3; H binary digits are exactly H bits. Only the minimum is an
+// error threshold — a wider declared width is fine. Returns null for dec/empty/invalid.
+function typedImpliedWidth(rawVal, base) {
+  const s = String(rawVal == null ? '' : rawVal).trim();
+  if (!s) return null;
+  if (base === 'hex') {
+    const digits = s.replace(/^0x/i, '');
+    if (/^[0-9a-fA-F]+$/.test(digits)) return digits.length * 4 - 3;
+  } else if (base === 'bin') {
+    const digits = s.replace(/^0b/i, '');
+    if (/^[01]+$/.test(digits)) return digits.length;
+  }
+  return null;
+}
+
+// Update the out-of-range warning/border in place (no DOM rebuild → preserves typing focus)
+function updateVarOutOfRangeFlags() {
+  document.querySelectorAll('.var-row[data-var]').forEach(row => {
+    const k = row.dataset.var;
+    const bw = varBits[k] ?? varBitDefault;
+    const r = varRange(k);
+    // value input border (input section uses .var-int-input; others: first text input)
+    const valInput = row.querySelector('.var-int-input') || row.querySelector('input[type="text"]');
+    const base = getVarBase(k);
+    // A hex/bin literal whose digit count implies more bits than declared is an
+    // error even when its value fits (e.g. 0x004 implies 12 bits, not 8).
+    const implied = valInput ? typedImpliedWidth(valInput.value, base) : null;
+    const litErr = implied !== null && implied > bw ? implied : null;
+    // Decimal inputs report the value out-of-range error; hex/bin inputs report
+    // the implied-bit-width error. Gating by base keeps the two from overlapping.
+    const rangeErr = base === 'dec' && bitRangeVarNames.has(k);
+    const oor = rangeErr || litErr !== null;
+    if (valInput) valInput.style.borderColor = oor ? 'var(--red)' : '';
+    row.querySelectorAll('.var-name').forEach(n => { n.style.color = oor ? 'var(--red)' : ''; });
+    // inline warning line
+    let warn = row.querySelector('.oor-warn');
+    if (oor) {
+      const msg = rangeErr
+        ? `⚠ out of range (${bw}-bit: ${r.min} to ${r.max})`
+        : `⚠ literal implies ≥${litErr} bits but ${k} is ${bw}-bit — drop leading zeros or widen the variable`;
+      if (!warn) {
+        warn = document.createElement('div');
+        warn.className = 'oor-warn';
+        warn.style.cssText = 'grid-column:1/-1;flex-basis:100%;color:var(--red);font-size:14px';
+        row.appendChild(warn);
+      }
+      warn.textContent = msg;
+    } else if (warn) {
+      warn.remove();
     }
   });
 }
@@ -2268,9 +2723,34 @@ function revalidateAllBlocks() {
   });
 }
 
+function toggleSigned(key) {
+  if (signedVars.has(key)) signedVars.delete(key); else signedVars.add(key);
+  checkBitRanges();
+  revalidateAllBlocks(); render();
+  refreshPanels();
+  saveToStorage();
+}
+function toggleForcedCombinational(key) {
+  if (forcedCombinational.has(key)) {
+    forcedCombinational.delete(key);
+  } else {
+    forcedCombinational.add(key);
+    forcedRegisters.delete(key); // can't be both
+    if (!(key in combDefaults)) combDefaults[key] = key in simVars ? simVars[key] : 0;
+  }
+  revalidateAllBlocks(); traceAsmBlock(); evalCombinationalPath(); render(); refreshPanels();
+  renderSideEditor();
+  updateCodeValidationDisplay();
+  saveToStorage();
+}
 function toggleForcedRegister(key, checked) {
   if (checked) {
-    forcedRegisters.add(key);
+    // A state-assigned var demoted via forcedCombinational just needs the
+    // demotion removed — only force-register vars with no state-box driver
+    forcedCombinational.delete(key);
+    const stateAssigned = blocks.some(b => b.type === 'state' &&
+      extractAssignedNames(b.code, { blockType: 'state' }).has(key));
+    if (!stateAssigned) forcedRegisters.add(key);
     if (!(key in regInitValues)) {
       regInitValues[key] = key in simVars ? simVars[key]
         : (key in combDefaults ? combDefaults[key] : 0);
@@ -2279,7 +2759,9 @@ function toggleForcedRegister(key, checked) {
     forcedRegisters.delete(key);
   }
   revalidateAllBlocks(); traceAsmBlock(); evalCombinationalPath(); render(); refreshPanels();
+  renderSideEditor();
   updateCodeValidationDisplay();
+  saveToStorage();
 }
 
 function toggleRegisterConditional(key, checked) {
@@ -2290,17 +2772,30 @@ function toggleRegisterConditional(key, checked) {
       : (key in regInitValues ? regInitValues[key] : 0);
   }
   revalidateAllBlocks(); traceAsmBlock(); evalCombinationalPath(); render(); refreshPanels();
+  renderSideEditor();
   updateCodeValidationDisplay();
+  saveToStorage();
 }
 
 function setRegInitValue(key, rawVal, inputEl) {
   if (!rawVal || rawVal === '-') return;
-  const val = parseInBase(rawVal, getVarBase(key), varBits[key] ?? varBitDefault);
+  const val = parseInBase(rawVal, getVarBase(key), varBits[key] ?? varBitDefault, signedVars.has(key));
   if (val === null) return;
   regInitValues[key] = val;
   prevSimVars = {};
   lastWrittenVars = new Set();
-  // Don't change simVars live — only takes effect on Reset
+  if (activeBlock === startBlockId) {
+    simVars[key] = val;
+    traceAsmBlock();
+    evalCombinationalPath();
+    render();
+    checkBitRanges();
+  }
+  // Update in place — a full refreshPanels() here would steal focus and limit
+  // the user to a single keystroke.
+  updateVarDisplayValues();
+  if (activeTab === 'log') renderLogPanel();
+  saveToStorage();
 }
 
 function setVarBits(key, rawVal) {
@@ -2308,6 +2803,8 @@ function setVarBits(key, rawVal) {
   if (!isNaN(n)) varBits[key] = Math.min(64, Math.max(1, n));
   else delete varBits[key];
   checkBitRanges(); refreshPanels(); updateCodeValidationDisplay();
+  revalidateAllBlocks(); render();
+  saveToStorage();
 }
 
 function setVarBitDefault(rawVal) {
@@ -2318,6 +2815,15 @@ function setVarBitDefault(rawVal) {
 function removeVar(k) {
   delete userVars[k];
   traceAsmBlock(); evalCombinationalPath(); render(); refreshPanels();
+  saveToStorage();
+}
+function quickAddVar(name) {
+  userVars[name] = 0;
+  simVars[name]  = 0;
+  if (!(name in varBits)) varBits[name] = 1; // 1-bit default for input signals
+  traceAsmBlock(); evalCombinationalPath(); render(); refreshPanels();
+  updateCodeValidationDisplay();
+  saveToStorage();
 }
 function addVar() {
   const n = document.getElementById('vn').value.trim();
@@ -2327,6 +2833,7 @@ function addVar() {
   userVars[n] = v !== null ? v : 0;
   simVars[n]  = userVars[n];
   traceAsmBlock(); evalCombinationalPath(); render(); refreshPanels();
+  saveToStorage();
 }
 function renderTablePanel() {
   const stateBlocks = blocks.filter(b=>b.type==='state');
@@ -2577,14 +3084,23 @@ function buildSynthesisData() {
   return { registers, ctrlRows, allConditions, stateEncoding, stateBits, combSummary };
 }
 
+// Valid value range for a variable: 2's-complement when signed, 0..2^n-1 when unsigned
+function varRange(v) {
+  const bits = varBits[v] ?? varBitDefault;
+  if (signedVars.has(v)) {
+    const half = Math.pow(2, bits - 1);
+    return { min: -half, max: half - 1 };
+  }
+  return { min: 0, max: Math.pow(2, bits) - 1 };
+}
+
 function checkBitRanges() {
   bitRangeVarNames.clear();
   const registeredNames = getRegisteredVarNames();
   const check = (v, val) => {
     if (typeof val !== 'number' || !Number.isInteger(val)) return;
-    const bits = varBits[v] ?? varBitDefault;
-    const half = Math.pow(2, bits - 1);
-    if (val < -half || val > half - 1) bitRangeVarNames.add(v);
+    const { min, max } = varRange(v);
+    if (val < min || val > max) bitRangeVarNames.add(v);
   };
   registeredNames.forEach(v => { if (v in simVars) check(v, simVars[v]); });
   Object.keys(userVars).forEach(v => check(v, userVars[v]));
@@ -2598,7 +3114,16 @@ function toggleSynthPanel() {
   panel.style.display   = synthPanelOpen ? 'flex'  : 'none';
   resizer.style.display = synthPanelOpen ? 'block' : 'none';
   if (btn) btn.classList.toggle('active', synthPanelOpen);
-  if (synthPanelOpen) { renderDatapathPanel(); renderCtrlPanel(); }
+  if (synthPanelOpen) { renderDatapathPanel(); renderCtrlPanel(); syncSynthTitles(); }
+}
+
+// Keep the DATAPATH/CONTROLLER bar titles aligned with the pane divider below
+function syncSynthTitles() {
+  const title = document.getElementById('synthTitleDpath');
+  const pane  = document.getElementById('synthDpath');
+  if (!title || !pane || !synthPanelOpen) return;
+  title.style.flex  = 'none';
+  title.style.width = (pane.offsetWidth + 5) + 'px'; // +5 = pane resizer width
 }
 
 // ── DPATH pane ──────────────────────────────────────────
@@ -2641,15 +3166,29 @@ function renderDatapathPanel() {
     html += `<div style="font-size:13px;color:var(--text3);margin-bottom:14px">Mux size rounded to next power of 2.</div>`;
   }
 
-  // Section 2: Required operations
-  const allOps = new Set();
-  registers.forEach(reg => reg.inputs.filter(i => i.label !== 'hold').forEach(inp => allOps.add(inp.expr)));
+  // Section 2: Classify mux data inputs into ops / constants / plain vars
+  const allOps = new Set(), allConsts = new Set();
+  const isConstExpr = e => /^-?\d+$/.test(e) || /^0x[0-9a-fA-F]+$/i.test(e) || /^0b[01]+$/i.test(e);
+  const isVarExpr   = e => /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(e);
+  registers.forEach(reg => reg.inputs.filter(i => i.label !== 'hold').forEach(inp => {
+    if (isConstExpr(inp.expr)) allConsts.add(inp.expr);
+    else if (!isVarExpr(inp.expr)) allOps.add(inp.expr);
+    // plain variable references need no hardware block — skip
+  }));
   if (allOps.size) {
-    html += `<div class="editor-label" style="margin-bottom:6px">Other Required Datapath Blocks</div>`;
+    html += `<div class="editor-label" style="margin-bottom:6px">Required Datapath Blocks</div>`;
     html += `<div style="font-size:14px;color:var(--red);margin-bottom:8px">These expressions must be implemented as combinational circuits feeding the register muxes:</div>`;
     html += `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px">`;
     allOps.forEach(op => {
       html += `<span style="font-family:var(--mono);background:var(--bg2);color:var(--green);padding:5px 12px;border-radius:4px;font-size:14px;border:1px solid var(--border2);display:inline-block">${h(op)}</span>`;
+    });
+    html += `</div>`;
+  }
+  if (allConsts.size) {
+    html += `<div class="editor-label" style="margin-bottom:6px">Constants</div>`;
+    html += `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px">`;
+    allConsts.forEach(c => {
+      html += `<span style="font-family:var(--mono);background:var(--bg2);color:var(--amber);padding:5px 12px;border-radius:4px;font-size:14px;border:1px solid var(--border2);display:inline-block">${h(c)}</span>`;
     });
     html += `</div>`;
   }
@@ -2866,10 +3405,11 @@ function stepSim() {
 function getRegisteredVarNames() {
   const registered = new Set();
   blocks.filter(b => b.type === 'state').forEach(b => {
-    extractAssignedNames(b.code, { blockType: b.type }).forEach(n => registered.add(n));
+    extractAssignedNames(b.code, { blockType: b.type }).forEach(n => {
+      if (!forcedCombinational.has(n)) registered.add(n);
+    });
   });
-  // Also include any comb vars the user has promoted to register
-  forcedRegisters.forEach(n => registered.add(n));
+  forcedRegisters.forEach(n => { if (!forcedCombinational.has(n)) registered.add(n); });
   return registered;
 }
 
@@ -2890,9 +3430,23 @@ function extractAssignedNames(code, options = {}) {
   const names = new Set();
   splitCodeStatements(code, options).forEach(stmt => {
     const parsed = parseAssignmentStatement(stmt);
-    if (parsed) names.add(parsed.lhs);
+    if (!parsed) return;
+    // Extract all variable names from potentially complex LHS
+    function collectNames(d) {
+      if (d.kind === 'concat') d.parts.forEach(collectNames);
+      else names.add(d.name);
+    }
+    collectNames(parseLhs(parsed.lhs));
   });
   return names;
+}
+
+// Extract all variable names referenced anywhere in a code snippet
+// (used to seed unknown decision-box vars with 0 before evaluation).
+function extractReferencedNames(code) {
+  const names = (code || '').match(/\b[A-Za-z_$][A-Za-z0-9_$]*\b/g) || [];
+  const skip = ['true','false','null','undefined','NaN','Infinity','Math','if','else','return','let','var','const'];
+  return [...new Set(names.filter(n => !skip.includes(n)))];
 }
 
 // Run code against a given variable scope and return only the
@@ -2979,6 +3533,12 @@ function evalCombinationalPath() {
     liveDoubleDriverVarNames.add(varName);
   });
 
+  // Forced-comb vars assigned in the active state box behave combinationally:
+  // apply their writes immediately so values reflect right away
+  stateEval.writes.forEach(({ varName, value }) => {
+    if (!registeredNames.has(varName)) simVars[varName] = value;
+  });
+
   const activeOutputWrites = new Map();
 
   // Step 2: Walk path
@@ -2991,7 +3551,7 @@ function evalCombinationalPath() {
       let res = false;
       try {
         const scope = { ...simVars };
-        extractAssignedNames(curBlock.code, { blockType: curBlock.type }).forEach(n => { if (!(n in scope)) scope[n] = 0; });
+        extractReferencedNames(curBlock.code).forEach(n => { if (!(n in scope)) scope[n] = 0; });
         const kn = Object.keys(scope), kv = Object.values(scope);
         res = !!(new Function(...kn, 'return (' + preprocessBitExpr(curBlock.code) + ');'))(...kv);
       } catch(e) {}
@@ -3297,6 +3857,14 @@ function traceAsmBlock() {
     }
   });
 
+  // Forced-comb vars assigned in the active state box apply immediately
+  try {
+    const { writes } = evaluateAssignmentBlock(stateB.code, { ...workScope }, { blockType: 'state' });
+    writes.forEach(({ varName, value }) => {
+      if (!registeredNames.has(varName)) workScope[varName] = value;
+    });
+  } catch(e) {}
+
   let cur = stateB.id, safety = 0;
   while (true) {
     if (++safety > 50) break;
@@ -3406,9 +3974,12 @@ function saveJSON() {
     userVars,
     combDefaults,
     forcedRegisters:[...forcedRegisters],
+    forcedCombinational:[...forcedCombinational],
+    signedVars:[...signedVars],
     regInitValues,
     varBits,
     varBitDefault,
+    varOrder,
     simDisplayBase,
     idCounter,
     view
@@ -3432,9 +4003,12 @@ function loadJSON(e) {
       startBlockId=data.startBlockId||null; userVars=data.userVars||{};
       combDefaults=data.combDefaults||{};
       forcedRegisters=new Set(data.forcedRegisters||[]);
+      forcedCombinational=new Set(data.forcedCombinational||[]);
+      signedVars=new Set(data.signedVars||[]);
       regInitValues=data.regInitValues||{};
       varBits=data.varBits||{};
       varBitDefault=data.varBitDefault||8;
+      varOrder=data.varOrder||[];
       simDisplayBase=data.simDisplayBase||'dec';
       idCounter=data.idCounter||200; view=data.view||{x:0,y:0,scale:1};
       selectedId=null; selectedConnId=null;
@@ -3460,7 +4034,8 @@ function clearAll() {
   activeBlock=null; startBlockId=null;
   activeTrail=new Set(); activeConnTrail=new Set();
   simStep=0; simVars={}; simLog=[]; userVars={};
-  varBits={}; varBitDefault=8; simDisplayBase='dec';
+  varBits={}; varBitDefault=8; simDisplayBase='dec'; varOrder=[];
+  forcedRegisters=new Set(); forcedCombinational=new Set(); signedVars=new Set();
   render(); updateEmptyState(); refreshPanels();
   document.getElementById('stepCounter').textContent='CLK 0';
 }
@@ -3537,7 +4112,11 @@ function exportVerilog() {
 }
  
 function getVarBitWidth(v) { return varBits[v] ?? varBitDefault; }
-function vBits(v) { const b = getVarBitWidth(v); return b > 1 ? `[${b-1}:0] ` : ''; }
+function vBits(v) {
+  const b = getVarBitWidth(v);
+  const sign = signedVars.has(v) ? 'signed ' : '';
+  return b > 1 ? `${sign}[${b-1}:0] ` : sign;
+}
 function vLit(v, val) { return `${getVarBitWidth(v)}'d${val}`; }
 
 function generateVerilog(internalVarList = []) {
@@ -3634,7 +4213,8 @@ function generateVerilog(internalVarList = []) {
         stmts.forEach(stmt => {
           const parsed = parseAssignmentStatement(stmt);
           if (parsed) {
-            newAssigns.push(`${parsed.lhs} = ${parsed.rhs}`);
+            // conds captured at the box — decisions AFTER it must not widen the guard
+            newAssigns.push({ lhs: parsed.lhs, rhs: parsed.rhs, conds: condStack });
           }
         });
         
@@ -3662,7 +4242,76 @@ function generateVerilog(internalVarList = []) {
     walk(stateId, [], [], 0);
     return paths;
   }
- 
+
+  // Decision tree of registered output-box assignments hanging off a state box.
+  // Node: { assigns:[{lhs,rhs}], decision:null | { expr, t:node|null, f:node|null } }
+  function buildRegTree(blockId, depth) {
+    const node = { assigns: [], decision: null };
+    let curId = blockId;
+    while (true) {
+      if (depth++ > 50) return node;
+      const cur = blocks.find(b => b.id === curId);
+      if (!cur || cur.type === 'state') return node;
+      if (cur.type === 'output') {
+        splitCodeStatements(cur.code, { blockType: 'output' }).forEach(stmt => {
+          const p = parseAssignmentStatement(stmt);
+          if (p && registeredNames.has(p.lhs)) node.assigns.push({ lhs: p.lhs, rhs: p.rhs });
+        });
+        const conn = connections.find(c => c.from === curId);
+        if (!conn) return node;
+        curId = conn.to;
+        continue;
+      }
+      if (cur.type === 'decision') {
+        const outs = connections.filter(c => c.from === curId);
+        const fConn = outs.find(c => c.label === 'false');
+        const tConn = outs.find(c => c !== fConn);
+        node.decision = {
+          expr: cur.code.trim(),
+          t: tConn ? buildRegTree(tConn.to, depth) : null,
+          f: fConn ? buildRegTree(fConn.to, depth) : null,
+        };
+        return node;
+      }
+      return node;
+    }
+  }
+  function treeHasRegAssigns(n) {
+    if (!n) return false;
+    if (n.assigns.length) return true;
+    if (!n.decision) return false;
+    return treeHasRegAssigns(n.decision.t) || treeHasRegAssigns(n.decision.f);
+  }
+  function emitRegTree(n, ind) {
+    if (!n) return '';
+    let s = '';
+    n.assigns.forEach(a => { s += `${ind}${a.lhs} <= ${a.rhs};\n`; });
+    if (n.decision) {
+      const { expr, t, f } = n.decision;
+      const tH = treeHasRegAssigns(t), fH = treeHasRegAssigns(f);
+      if (tH && fH) {
+        s += `${ind}if (${expr}) begin\n${emitRegTree(t, ind + '    ')}${ind}end${emitElseChain(f, ind)}`;
+      } else if (tH) {
+        s += `${ind}if (${expr}) begin\n${emitRegTree(t, ind + '    ')}${ind}end\n`;
+      } else if (fH) {
+        s += `${ind}if (!(${expr})) begin\n${emitRegTree(f, ind + '    ')}${ind}end\n`;
+      }
+    }
+    return s;
+  }
+  function emitElseChain(n, ind) {
+    // Collapse an else branch that is purely another decision into `else if`
+    if (!n.assigns.length && n.decision) {
+      const { expr, t, f } = n.decision;
+      const tH = treeHasRegAssigns(t), fH = treeHasRegAssigns(f);
+      if (tH && fH)
+        return ` else if (${expr}) begin\n${emitRegTree(t, ind + '    ')}${ind}end${emitElseChain(f, ind)}`;
+      if (tH) return ` else if (${expr}) begin\n${emitRegTree(t, ind + '    ')}${ind}end\n`;
+      if (fH) return ` else if (!(${expr})) begin\n${emitRegTree(f, ind + '    ')}${ind}end\n`;
+    }
+    return ` else begin\n${emitRegTree(n, ind + '    ')}${ind}end\n`;
+  }
+
   let stateTransitions = `  always@(posedge clk) begin\n`;
   stateTransitions += `    if (!nrst) begin\n`;
   stateTransitions += `      state <= S${startIdx};\n`;
@@ -3678,6 +4327,8 @@ function generateVerilog(internalVarList = []) {
     if (paths.length === 0 || (paths.length === 1 && paths[0].conds.length === 0 && paths[0].nextState === null)) {
       stateTransitions += `          state <= S${idx};\n`;
     } else if (paths.length === 1 && paths[0].conds.length === 0) {
+      stateTransitions += `          state <= ${paths[0].nextState};\n`;
+    } else if (paths.every(p => p.nextState !== null && p.nextState === paths[0].nextState)) {
       stateTransitions += `          state <= ${paths[0].nextState};\n`;
     } else {
       paths.forEach((p, pi) => {
@@ -3718,8 +4369,9 @@ function generateVerilog(internalVarList = []) {
   stateBlocks.forEach((stateB, idx) => {
     const stateName = `S${idx}`;
     const stmts = splitCodeStatements(stateB.code, { blockType: 'state' });
-    
+
     stateAssignments += `        ${stateName}: begin\n`;
+    // Unconditional state-box assignments
     if (stmts.length > 0) {
       stmts.forEach(stmt => {
         const parsed = parseAssignmentStatement(stmt);
@@ -3728,6 +4380,10 @@ function generateVerilog(internalVarList = []) {
         }
       });
     }
+    // Conditional output-box assignments (registered vars only), emitted as a
+    // nested if / else if / else tree mirroring the ASM decision structure.
+    const outConn = connections.find(c => c.from === stateB.id);
+    if (outConn) stateAssignments += emitRegTree(buildRegTree(outConn.to, 0), '          ');
     stateAssignments += `        end\n`;
   });
  
@@ -3748,16 +4404,15 @@ function generateVerilog(internalVarList = []) {
       const paths = walkFromState(stateB.id);
  
       paths.forEach((p) => {
-        p.assigns.forEach(assign => {
-          const parsed = parseAssignmentStatement(assign);
-          if (parsed && combVars.includes(parsed.lhs)) {
-            const varName = parsed.lhs;
-            if (!combPathsByVar[varName]) combPathsByVar[varName] = [];
-            
-            const guard = p.conds.length > 0 
-              ? `((state == ${stateName}) && (${p.conds.join(' && ')}))`
+        p.assigns.forEach(a => {
+          if (combVars.includes(a.lhs)) {
+            if (!combPathsByVar[a.lhs]) combPathsByVar[a.lhs] = [];
+            const guard = a.conds.length > 0
+              ? `((state == ${stateName}) && (${a.conds.join(' && ')}))`
               : `(state == ${stateName})`;
-            combPathsByVar[varName].push({ guard, rhs: parsed.rhs });
+            // path splits after the box revisit the same assignment — keep one
+            if (!combPathsByVar[a.lhs].some(e => e.guard === guard && e.rhs === a.rhs))
+              combPathsByVar[a.lhs].push({ guard, rhs: a.rhs });
           }
         });
       });
@@ -3766,14 +4421,25 @@ function generateVerilog(internalVarList = []) {
     combVars.forEach(v => {
       const paths = combPathsByVar[v] || [];
       const def = (v in combDefaults) ? combDefaults[v] : 0;
- 
+
       if (paths.length === 0) {
         combOutputs += `    ${v} = ${vLit(v, def)};\n`;
       } else {
-        paths.forEach((p, pi) => {
-          const keyword = pi === 0 ? 'if' : 'else if';
-          combOutputs += `    ${keyword} ${p.guard} begin\n`;
-          combOutputs += `      ${v} = ${p.rhs};\n`;
+        // Merge paths with the same RHS into a single branch (OR-ed guards)
+        const merged = [];
+        paths.forEach(p => {
+          const existing = merged.find(m => m.rhs === p.rhs);
+          if (existing) {
+            existing.guards.push(p.guard);
+          } else {
+            merged.push({ rhs: p.rhs, guards: [p.guard] });
+          }
+        });
+        merged.forEach((m, mi) => {
+          const keyword = mi === 0 ? 'if' : 'else if';
+          const guard = m.guards.length === 1 ? m.guards[0] : '(' + m.guards.join(' || ') + ')';
+          combOutputs += `    ${keyword} ${guard} begin\n`;
+          combOutputs += `      ${v} = ${m.rhs};\n`;
           combOutputs += `    end\n`;
         });
         combOutputs += `    else begin\n`;
@@ -3784,58 +4450,10 @@ function generateVerilog(internalVarList = []) {
  
     combOutputs += `  end\n`;
   }
- //internal comb var
-  let internalOutputs = '';
-  if (forcedRegs.length > 0) {
-    internalOutputs = `  // Regs Combinational outputs\n`;
-    internalOutputs += `  always@(posedge clk) begin\n`;
-    internalOutputs += `    if (!nrst) begin\n`;
-    
-    const internalCombPathsByVar = {};
-    stateBlocks.forEach((stateB, idx) => {
-      const stateName = `S${idx}`;
-      const paths = walkFromState(stateB.id);
- 
-      paths.forEach((p) => {
-        p.assigns.forEach(assign => {
-          const parsed = parseAssignmentStatement(assign);
-          if (parsed && forcedRegs.includes(parsed.lhs)) {
-            const varName = parsed.lhs;
-            if (!internalCombPathsByVar[varName]) internalCombPathsByVar[varName] = [];
-            
-            const guard = p.conds.length > 0 
-              ? `((state == ${stateName}) && (${p.conds.join(' && ')}))`
-              : `(state == ${stateName})`;
-            internalCombPathsByVar[varName].push({ guard, rhs: parsed.rhs });
-          }
-        });
-      });
-    });
- 
-    forcedRegs.forEach(v => {
-      const paths = internalCombPathsByVar[v] || [];
-      const def = (v in combDefaults) ? combDefaults[v] : 0;
- 
-      if (paths.length === 0) {
-        internalOutputs += `    ${v} <= ${vLit(v, def)};\n`;
-      } else {
-        internalOutputs += `        ${v} <= ${vLit(v, def)};\n`;
-        internalOutputs += `    end else begin\n`;
-        paths.forEach((p, pi) => {
-          const keyword = pi === 0 ? 'if' : 'else if';
-          internalOutputs += `      ${keyword} ${p.guard} begin\n`;
-          internalOutputs += `        ${v} <= ${vLit(v, p.rhs)};\n`;
-          internalOutputs += `      end\n`;
-        });
-        internalOutputs += `    end\n`;
-        
-      }
-    });
- 
-    internalOutputs += `  end\n`;
-  }  
+  // Forced-register vars are part of registeredNames, so their reset and
+  // conditional assignments are emitted in the single clocked always block
+  // above — a separate always would double-drive them (illegal in Verilog).
 
-  
   // Build module
   let module = `module asm (\n`;
   
@@ -3886,7 +4504,6 @@ function generateVerilog(internalVarList = []) {
   module += `  // state box assignments\n`;
   module += stateAssignments + '\n';
   if (combOutputs) module += combOutputs + '\n';
-  if (internalCombs) module += internalOutputs + '\n';
   module += `endmodule\n`;
  
   return module;

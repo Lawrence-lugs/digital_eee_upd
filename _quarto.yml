@@ -5,7 +5,7 @@ project:
     - pages/**/*.qmd  
   post-render:
     - cp static_apps/FSM_simulatEEE.html _site/
-    - cp static_apps/timing_simulator.html _site/
+    - cp static_apps/timing_simulatEEE.html _site/
     - cp static_apps/asm_simulatEEE.html _site/
   resources:
     - "googleba81d2991a90411e.html"
