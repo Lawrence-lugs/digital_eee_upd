@@ -187,6 +187,26 @@ include-in-header:
         </p>
       </a>
 
+      <!-- RV32I Encoding Simulator -->
+      <a href="RV32I_encoding_simulator.html"
+         class="block bg-white rounded-xl border border-gray-200 p-6
+                hover:shadow-md hover:border-red-300 transition-all group">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
+             style="background: #fee2e2;">
+          <svg class="w-5 h-5" style="color: #7B0D1E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 9h8M8 15h8M5 6v12m14-12v12M3 9h4m10 0h4M3 15h4m10 0h4"/>
+          </svg>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">
+          RV32I Encoding Simulator
+        </h3>
+        <p class="text-sm text-gray-500 leading-relaxed">
+          Assemble and inspect RISC-V RV32I instructions, including their
+          encoded fields, binary representation, and hexadecimal output.
+        </p>
+      </a>
+
     </div>
   </div>
 </section>

@@ -7,6 +7,7 @@ project:
     - cp static_apps/FSM_simulatEEE.html _site/
     - cp static_apps/timing_simulatEEE.html _site/
     - cp static_apps/ASM_simulatEEE.html _site/
+    - cp static_apps/RV32I_encoding_simulator.html _site/
   resources:
     - "googleba81d2991a90411e.html"
 
@@ -33,6 +34,8 @@ website:
         text: kmap-gamEEE
       - href: FSM_simulatEEE.html
         text: FSMsimulatEEE
+      - href: RV32I_encoding_simulator.html
+        text: RV32I Encoding Simulator
   
 format:
   html:

@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RISC-V RV32I Assembler</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --up-maroon:#7b1113;
+    --up-maroon-dark:#5d0d0f;
+    --ink:#17212b;
+    --muted:#667085;
+    --line:#d6dde5;
+    --panel:#ffffff;
+    --page:#f3f5f7;
+    --good:#466a58;
+    --good-bg:#f0f6f2;
+    --bad:#8a4a50;
+    --bad-bg:#faf1f2;
+    --warn:#79673e;
+    --warn-bg:#faf6ea;
+    --opcode:#e8ecef;
+    --opcode-strong:#626d78;
+    --rd:#e4eef6;
+    --rd-strong:#5e7890;
+    --rs1:#e5efe2;
+    --rs1-strong:#667d60;
+    --rs2:#eee7f3;
+    --rs2-strong:#786987;
+    --funct:#f1e4e7;
+    --funct-strong:#87636b;
+    --imm:#f5efd3;
+    --imm-strong:#80734c;
+    --neutral:#edf1f4;
+    --neutral-strong:#59636e;
+    --shadow:0 10px 28px rgba(28,39,49,.07);
+  }
+  * { box-sizing:border-box; }
+  html { color-scheme:light; }
+  body {
+    margin:0;
+    background:var(--page);
+    color:var(--ink);
+    font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  button,input { font:inherit; }
+  button { cursor:pointer; }
+  header {
+    background:linear-gradient(135deg,var(--up-maroon),var(--up-maroon-dark));
+    color:#fff;
+    padding:27px 22px 29px;
+  }
+  header .wrap, main { max-width:1500px; margin:0 auto; }
+  .banner-inner { display:flex; align-items:center; justify-content:space-between; gap:28px; min-width:0; }
+  .banner-copy { min-width:0; flex:1 1 auto; }
+  .riscv-logo-wrap { flex:0 1 405px; display:flex; justify-content:flex-end; align-items:center; }
+  .riscv-logo-card { display:flex; align-items:center; justify-content:center; width:min(405px,100%); min-height:111px; padding:13px 20px; border-radius:14px; background:rgba(255,255,255,.96); border:1px solid rgba(255,255,255,.55); }
+  .riscv-logo { display:block; width:100%; max-width:353px; height:auto; max-height:87px; object-fit:contain; }
+  .riscv-logo-fallback { color:#243d82; font-weight:950; letter-spacing:.04em; font-size:1.55rem; }
+  h1 { margin:0 0 8px; font-size:clamp(1.65rem,3vw,2.45rem); line-height:1.08; }
+  header p { margin:0; max-width:920px; color:#f5e8e8; line-height:1.55; }
+  .banner-subtitle { font-size:1rem; }
+  .banner-course { display:block; margin-top:2px; }
+  .banner-credit { display:block; margin-top:14px; font-size:.78rem; color:#ead7d8; }
+  @media(max-width:720px){
+    .banner-inner { gap:16px; }
+    .riscv-logo-wrap { flex-basis:255px; }
+    .riscv-logo-card { min-height:82px; padding:10px 14px; }
+    .riscv-logo { max-height:63px; }
+  }
+  @media(max-width:520px){
+    .banner-inner { align-items:flex-start; }
+    .riscv-logo-wrap { flex-basis:165px; }
+    .riscv-logo-card { min-height:62px; padding:8px 10px; border-radius:10px; }
+    .riscv-logo { max-height:48px; }
+    header p { font-size:.9rem; }
+  }
+  main { padding:22px 18px 50px; }
+  .panel {
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:16px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .section { padding:20px 22px; border-top:1px solid #e7ebef; }
+  .section:first-child { border-top:none; }
+  .section h2 { margin:0 0 6px; font-size:1.18rem; }
+  .section-lead { margin:0 0 15px; color:var(--muted); line-height:1.52; }
+  .source-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .source-card { border:1px solid #d8dde3; border-radius:12px; padding:15px; background:#f6f7f8; min-width:0; }
+  .source-card h3 { margin:0 0 9px; font-size:.98rem; color:var(--ink); }
+  label { display:block; font-weight:800; margin-bottom:7px; }
+  .input-line { display:block; }
+  input[type=text] {
+    width:100%; min-width:0; border:1px solid #bfc7d1; background:#fff; border-radius:9px;
+    padding:11px 12px; color:#16202a; outline:none;
+    font:650 .96rem ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  input[type=text]:focus { border-color:var(--up-maroon); box-shadow:0 0 0 3px rgba(123,17,19,.12); }
+  input[type=text].live-valid { border-color:#94ac9e; background:#fcfefd; }
+  input[type=text].live-invalid { border-color:#c9a0a4; background:#fffdfd; }
+  .primary { border:0; border-radius:9px; padding:11px 15px; background:var(--up-maroon); color:#fff; font-weight:850; }
+  .primary:hover { background:var(--up-maroon-dark); }
+  .secondary { border:1px solid #c7ced7; border-radius:8px; padding:8px 11px; background:#fff; color:var(--ink); font-weight:750; }
+  .secondary:hover { background:#f6f8fa; }
+  .hint { margin-top:7px; color:var(--muted); font-size:.86rem; line-height:1.45; }
+  .examples { display:flex; gap:6px; flex-wrap:wrap; margin-top:9px; }
+  .chip { border:1px solid #d8dde4; background:#fff; border-radius:999px; padding:5px 9px; font:650 .78rem ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  .message { margin-top:11px; border-radius:9px; padding:10px 12px; line-height:1.4; display:none; }
+  .message.error { display:block; color:var(--bad); background:var(--bad-bg); border:1px solid #e3cdd0; }
+  .message.ok { display:block; color:var(--good); background:var(--good-bg); border:1px solid #d0dfd5; }
+  .current-head { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+  .asm-display {
+    font:850 clamp(1.1rem,2.4vw,1.55rem) ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    overflow-wrap:anywhere;
+  }
+  .asm-display.invalid { color:var(--bad); font-family:inherit; font-size:1.05rem; font-weight:800; }
+  .badges { display:flex; gap:6px; flex-wrap:wrap; }
+  .badge { background:#eef1f5; border-radius:999px; padding:5px 9px; font-size:.76rem; font-weight:850; }
+  .code-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
+  .code-box { border:1px solid #dce2e8; border-radius:10px; padding:11px 12px; background:#fbfcfd; min-width:0; }
+  .eyebrow { color:var(--muted); text-transform:uppercase; letter-spacing:.06em; font-size:.72rem; font-weight:850; margin-bottom:5px; }
+  .code-value { font:850 clamp(1.12rem,1.55vw,1.38rem)/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; word-break:break-all; letter-spacing:.015em; color:var(--up-maroon); }
+  .current-head .eyebrow, .code-box .eyebrow { color:var(--muted); }
+  .asm-display:not(.invalid) { color:var(--up-maroon); }
+
+  .bit-workbench { margin-top:14px; }
+  .bit-scroll { overflow-x:visible; padding:2px 0 9px; }
+  .bit-stage { min-width:0; width:100%; }
+  .bit-index-row, .bit-checkbox-row, .bit-value-row { display:grid; grid-template-columns:repeat(32, minmax(0,1fr)); width:100%; }
+  .bit-index { min-width:0; text-align:center; color:#737d87; font:700 clamp(.48rem,1vw,.68rem) ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; padding:0 0 3px; overflow:hidden; }
+  .bit-cell { position:relative; min-width:0; display:flex; align-items:center; justify-content:center; min-height:43px; border-top:1px solid #aab2ba; border-bottom:1px solid #aab2ba; border-right:1px solid rgba(95,106,118,.22); }
+  .bit-cell:first-child { border-left:1px solid #9fa9b4; border-radius:7px 0 0 7px; }
+  .bit-cell:last-child { border-radius:0 7px 7px 0; }
+  .bit-cell input[type=checkbox] { appearance:none; -webkit-appearance:none; width:clamp(7px,1.25vw,18px); height:clamp(7px,1.25vw,18px); min-width:0; margin:0; border:1px solid rgba(62,72,82,.55); border-radius:3px; background:rgba(255,255,255,.82); cursor:pointer; transition:background .08s ease,border-color .08s ease,box-shadow .08s ease; }
+  .bit-cell input[type=checkbox]:checked { background:#66717d; border-color:#66717d; box-shadow:inset 0 0 0 clamp(1px,.18vw,2px) rgba(255,255,255,.9); }
+  .bit-cell input[type=checkbox]:focus-visible { outline:2px solid #7f8994; outline-offset:2px; }
+  .bit-digit { min-width:0; text-align:center; font:850 clamp(.52rem,1vw,.78rem) ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; padding:4px 0 0; color:#55606a; overflow:hidden; }
+  .bit-cell.kind-opcode,.field-segment.kind-opcode,.format-cell.kind-opcode,.explain-card.kind-opcode { background:var(--opcode); }
+  .bit-cell.kind-rd,.field-segment.kind-rd,.format-cell.kind-rd,.explain-card.kind-rd { background:var(--rd); }
+  .bit-cell.kind-rs1,.field-segment.kind-rs1,.format-cell.kind-rs1,.explain-card.kind-rs1 { background:var(--rs1); }
+  .bit-cell.kind-rs2,.field-segment.kind-rs2,.format-cell.kind-rs2,.explain-card.kind-rs2 { background:var(--rs2); }
+  .bit-cell.kind-funct,.field-segment.kind-funct,.format-cell.kind-funct,.explain-card.kind-funct { background:var(--funct); }
+  .bit-cell.kind-imm,.field-segment.kind-imm,.format-cell.kind-imm,.explain-card.kind-imm { background:var(--imm); }
+  .bit-cell.kind-neutral,.field-segment.kind-neutral,.format-cell.kind-neutral,.explain-card.kind-neutral { background:var(--neutral); }
+  .bit-cell.selected { outline:none; z-index:auto; }
+  .field-bar { display:flex; margin-top:8px; border:1px solid #929eaa; border-radius:8px; overflow:hidden; min-height:72px; }
+  .field-segment { border:0; border-right:1px solid #929eaa; min-width:0; padding:7px 4px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; color:#202a34; }
+  .field-segment:last-child { border-right:0; }
+  .field-segment:hover,.field-segment:focus-visible { filter:brightness(.97); outline:2px solid rgba(92,102,112,.42); outline-offset:-2px; }
+  .field-segment.selected { outline:none; }
+  .field-segment.error-field { position:relative; z-index:3; outline:3px solid var(--up-maroon); outline-offset:-3px; }
+  .field-segment.error-field:hover,.field-segment.error-field:focus-visible { outline:3px solid var(--up-maroon); outline-offset:-3px; }
+  .field-segment .range { font-size:.64rem; color:#59636e; }
+  .field-segment .name { font-size:.78rem; font-weight:900; margin:2px 0; }
+  .field-segment .bits { font:800 clamp(.52rem,1vw,.72rem) ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space:normal; overflow-wrap:anywhere; }
+  .field-arrow { display:block; margin-top:3px; color:#5e6670; font-size:.76rem; line-height:1; font-weight:950; }
+  .field-segment.expanded .field-arrow { color:#323a43; }
+  .interaction-note { margin:8px 0 0; color:#596572; font-size:.88rem; line-height:1.45; }
+  .sw-opcode{background:var(--opcode)} .sw-rd{background:var(--rd)} .sw-rs1{background:var(--rs1)} .sw-rs2{background:var(--rs2)} .sw-funct{background:var(--funct)} .sw-imm{background:var(--imm)}
+
+
+  .subgrid { display:grid; grid-template-columns:1.1fr .9fr; gap:14px; margin-top:14px; }
+  .subpanel { border:1px solid #dde3e8; border-radius:12px; padding:14px; min-width:0; }
+  .subpanel h3 { margin:0 0 8px; font-size:.98rem; }
+  .subpanel p { margin:0; color:var(--muted); line-height:1.45; font-size:.88rem; }
+  .explain-list { display:grid; gap:8px; margin-top:10px; }
+  .explain-card { border:1px solid rgba(82,93,104,.22); border-radius:9px; padding:9px 10px; }
+  .explain-card strong { display:block; font-size:.82rem; margin-bottom:2px; }
+  .explain-card span { font-size:.82rem; line-height:1.38; color:#38444f; }
+
+  .imm-visual { margin-top:10px; }
+  .imm-summary { border-radius:9px; background:#fff9dd; border:1px solid #ead883; padding:9px 10px; font:760 .86rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  .imm-map { display:grid; gap:7px; margin-top:9px; }
+  .imm-map-row { display:grid; grid-template-columns:minmax(110px,1fr) 34px minmax(130px,1fr); gap:7px; align-items:center; }
+  .imm-piece { border:1px solid #d5c16b; background:var(--imm); border-radius:8px; padding:7px 8px; min-width:0; }
+  .imm-piece .small { display:block; color:#6f5d0e; font-size:.7rem; font-weight:750; }
+  .imm-piece .mono { display:block; font:850 .78rem ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; overflow-wrap:anywhere; }
+  .imm-arrow { text-align:center; color:#8a6a00; font-size:1.2rem; font-weight:900; }
+  .imm-implied { background:#f1f3f5; border-color:#cfd5db; color:#59636e; }
+  .imm-note { margin-top:9px; color:#5c6670; font-size:.82rem; line-height:1.45; }
+
+  /* Immediate bit-routing visualization */
+  .imm-flow { margin-top:10px; border:1px solid #e1d8aa; border-radius:12px; background:#fffdf7; padding:12px; overflow:hidden; }
+  .immediate-heading { font-weight:900 !important; }
+  .imm-flow-title { margin:0 0 6px; font-size:clamp(.9rem,1.1vw,1.05rem); font-weight:800; color:#5d5540; text-transform:none; letter-spacing:normal; }
+  .imm-flow-subtitle { margin:0 0 10px; color:#756c56; font-size:clamp(.82rem,1vw,.94rem); line-height:1.42; }
+  .imm-flow-row { display:flex; width:100%; min-width:0; align-items:stretch; overflow:visible; background:transparent; }
+  .imm-flow-group { display:flex; min-width:0; border:1px solid #cabf8e; border-radius:8px; overflow:hidden; background:#fff; }
+  .imm-flow-group + .imm-flow-group { margin-left:clamp(14px,2.4vw,28px); }
+  .imm-flow-segment { min-width:0; padding:7px 4px 6px; border-right:1px solid #cabf8e; background:var(--imm); text-align:center; display:flex; flex-direction:column; justify-content:center; gap:2px; }
+  .imm-flow-segment:last-child { border-right:0; }
+  .imm-flow-segment.implied { background:#f0f2f4; color:#5f6872; border-color:#cfd5da; }
+  .imm-flow-segment .seg-name { font-size:clamp(.72rem,.98vw,.9rem); font-weight:400; line-height:1.18; overflow-wrap:anywhere; }
+  .imm-flow-segment .seg-bits { font:800 clamp(.98rem,1.35vw,1.28rem)/1.12 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing:.025em; overflow-wrap:anywhere; }
+  .imm-flow-segment .seg-pos { font-size:clamp(.68rem,.88vw,.82rem); color:#746b50; font-weight:400; line-height:1.18; overflow-wrap:anywhere; }
+  .imm-flow-segment.implied .seg-pos { color:#6a737c; }
+  .imm-connectors { display:block; width:100%; height:94px; margin:2px 0; overflow:visible; }
+  .imm-connectors path { fill:none; stroke:#9b8b51; stroke-width:2.1; opacity:.76; vector-effect:non-scaling-stroke; stroke-linecap:square; stroke-linejoin:miter; }
+  .imm-connectors circle { fill:#9b8b51; opacity:.88; }
+  .imm-flow-divider { margin:9px 0 7px; border:0; border-top:1px dashed #d9cfaa; }
+  .imm-extra { margin-top:9px; padding:8px 9px; border:1px dashed #cfd5db; border-radius:8px; background:#f7f8f9; color:#59636e; font-size:.78rem; line-height:1.42; }
+  .imm-equation { margin-top:10px; border-radius:9px; background:#fff9dd; border:1px solid #ead883; padding:9px 10px; font:400 .84rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; overflow-wrap:anywhere; }
+  @media(max-width:620px){
+    .imm-flow { padding:9px; }
+    .imm-flow-segment { padding:6px 2px 5px; }
+    .imm-connectors { height:78px; }
+    .imm-flow-segment .seg-name { font-size:.68rem; }
+    .imm-flow-segment .seg-bits { font-size:.86rem; }
+    .imm-flow-segment .seg-pos { font-size:.6rem; }
+  }
+
+  details { margin-top:18px; background:#fff; border:1px solid var(--line); border-radius:14px; overflow:hidden; }
+  summary { cursor:pointer; padding:14px 17px; font-weight:850; }
+  .details-body { padding:0 17px 17px; }
+  .format-scroll { overflow-x:visible; }
+  .format-table { min-width:0; width:100%; }
+  .format-scale { display:grid; grid-template-columns:44px 1fr; margin-bottom:3px; }
+  .scale-grid { display:grid; grid-template-columns:repeat(32,1fr); color:#67717c; font:650 .62rem ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  .scale-grid span { text-align:center; }
+  .format-row { display:grid; grid-template-columns:44px 1fr; margin-top:4px; align-items:stretch; }
+  .format-row.active .format-type { background:var(--up-maroon); color:#fff; }
+  .format-row.active .format-bar { outline:3px solid rgba(123,17,19,.35); outline-offset:1px; }
+  .format-type { border:1px solid #9ca7b3; border-right:0; border-radius:6px 0 0 6px; display:flex; align-items:center; justify-content:center; font-weight:900; font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  .format-bar { display:grid; grid-template-columns:repeat(32,minmax(0,1fr)); column-gap:0; border:1px solid #9ca7b3; border-radius:0 6px 6px 0; overflow:hidden; min-height:38px; }
+  .format-cell { min-width:0; border-right:1px solid #9ca7b3; display:flex; align-items:center; justify-content:center; text-align:center; padding:4px 2px; font:750 clamp(.48rem,1vw,.72rem) ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; overflow-wrap:anywhere; }
+  .format-cell:last-child { border-right:0; }
+  .format-note { margin-top:10px; color:#5e6873; font-size:.82rem; line-height:1.45; }
+
+  .groups { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+  .group { border:1px solid #e0e5ea; border-radius:9px; padding:11px; background:#fbfcfd; }
+  .group h3 { font-size:.88rem; margin:0 0 6px; }
+  .inst-list { font:600 .78rem/1.62 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color:#26323d; }
+  .note { border-left:4px solid #d0a12b; background:#fff9e9; padding:9px 11px; border-radius:7px; line-height:1.45; margin-top:11px; font-size:.88rem; }
+  footer { color:#697480; font-size:.82rem; line-height:1.5; margin-top:16px; padding:0 4px; }
+  .mono { font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  @media(max-width:850px){
+    .source-grid,.subgrid,.groups,.code-grid { grid-template-columns:1fr; }
+    .section { padding:17px; }
+  }
+  @media(max-width:560px){
+    .field-segment .range { font-size:.55rem; }
+    .field-segment .name { font-size:.66rem; }
+    .imm-map-row { grid-template-columns:1fr; }
+    .imm-arrow { transform:rotate(90deg); }
+  }
+
+  /* interaction/readability refinements */
+  .bit-digit { font-size:clamp(.72rem,1.18vw,.94rem); line-height:1.2; padding-top:6px; }
+  .field-segment .range { font-size:clamp(.68rem,.85vw,.82rem); }
+  .field-segment .name { font-size:clamp(.82rem,1vw,1rem); }
+  .field-segment .bits { font-size:clamp(.68rem,.92vw,.88rem); line-height:1.25; }
+  .field-bar { min-height:82px; }
+  .partition-panel { margin-top:14px; }
+  .field-expand-panel { margin-top:10px; border:1px solid #d9e0e6; border-radius:11px; background:#fbfcfd; overflow:hidden; }
+  .field-expand-panel.kind-opcode { background:#fbf7f2; border-color:#e8dacb; }
+  .field-expand-panel.kind-funct { background:#fbf5f6; border-color:#ead8dc; }
+  .field-expand-panel.kind-rd { background:#f6f9fc; border-color:#d8e4ee; }
+  .field-expand-panel.kind-rs1 { background:#f6faf5; border-color:#d9e7d5; }
+  .field-expand-panel.kind-rs2 { background:#faf7fc; border-color:#e2d9e8; }
+  .field-expand-panel.kind-imm { background:#fcfaf0; border-color:#e9e1bb; }
+  .field-expand-panel.kind-neutral { background:#f7f9fa; border-color:#dde2e6; }
+  .field-expand-panel .field-expand-head, .field-expand-panel .field-expand-body { background:transparent; }
+  .field-expand-panel[hidden] { display:none !important; }
+  .field-expand-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:11px 13px; border-bottom:1px solid #e1e6eb; }
+  .field-expand-title { font-weight:900; font-size:.94rem; }
+  .field-expand-body { padding:11px 12px 12px; }
+  .field-definition { margin:0 0 12px; padding:11px 12px; border:1px solid rgba(78,89,100,.16); border-radius:9px; background:rgba(255,255,255,.62); }
+  .field-definition-label { margin:0 0 5px; color:#58636e; font-size:.72rem; font-weight:900; text-transform:uppercase; letter-spacing:.055em; }
+  .field-definition-main { color:#27323c; line-height:1.48; font-size:.9rem; }
+  .field-definition-main .mono { font-weight:850; }
+  .field-definition-kind { margin-top:5px; color:#5b6671; line-height:1.42; font-size:.82rem; }
+  .field-more { border-top:1px solid rgba(78,89,100,.15); padding-top:11px; }
+  .field-expand-close { border:1px solid #cfd5dc; border-radius:7px; background:#fff; color:#4e5964; min-width:34px; min-height:34px; font-weight:900; line-height:1; }
+  .field-expand-close:hover,.field-expand-close:focus-visible { background:#f4f6f8; outline:2px solid #89939e; outline-offset:1px; }
+  .immediate-panel { margin-top:14px; }
+  .immediate-panel h3, .immediate-panel p, .immediate-panel .imm-note, .immediate-panel .imm-extra { font-weight:400; }
+  .immediate-panel[hidden] { display:none !important; }
+  .explain-list { grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); align-items:start; }
+  .explain-card { padding:0; overflow:hidden; }
+  .explain-toggle {
+    width:100%; border:0; background:transparent; color:inherit; text-align:left; padding:12px 13px;
+    display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; cursor:pointer;
+  }
+  .explain-toggle:hover,.explain-toggle:focus-visible { filter:brightness(.975); outline:3px solid rgba(123,17,19,.26); outline-offset:-3px; }
+  .explain-main strong { display:block; font-size:.91rem; margin-bottom:3px; }
+  .explain-main span { font-size:.86rem; line-height:1.4; color:#394550; }
+  .explain-chevron { font-size:1.05rem; font-weight:900; color:#59636e; transition:transform .15s ease; }
+  .explain-card.expanded .explain-chevron { transform:rotate(180deg); }
+  .field-options { display:none; border-top:1px solid rgba(82,93,104,.20); padding:10px 11px 12px; background:rgba(255,255,255,.58); }
+  .explain-card.expanded .field-options { display:block; }
+  .field-option-intro { margin:0 0 8px; color:#4d5965; font-size:.82rem; line-height:1.45; }
+  .field-option-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(118px,1fr)); gap:5px; }
+  .field-option { border:1px solid rgba(78,89,100,.20); border-radius:7px; padding:6px 7px; background:rgba(255,255,255,.72); min-width:0; }
+  .field-option.current { outline:2px solid rgba(123,17,19,.42); outline-offset:-2px; background:#fff; }
+  .field-option .mono { display:block; font-size:.75rem; font-weight:850; overflow-wrap:anywhere; }
+  .field-option small { display:block; margin-top:2px; color:#58636d; font-size:.7rem; line-height:1.3; }
+  .field-option-table { width:100%; border-collapse:collapse; table-layout:fixed; font-size:.76rem; }
+  .field-option-table th,.field-option-table td { border:1px solid rgba(87,98,109,.22); padding:5px 6px; text-align:left; overflow-wrap:anywhere; }
+  .field-option-table th { background:rgba(255,255,255,.58); font-size:.7rem; text-transform:uppercase; letter-spacing:.04em; }
+  .field-option-table tr.current td { font-weight:850; outline:1px solid rgba(123,17,19,.25); outline-offset:-1px; }
+
+  details.reference-details { margin-top:18px; background:#fff; border:1px solid var(--line); border-radius:14px; overflow:hidden; }
+  details.reference-details > summary { cursor:pointer; padding:14px 17px; font-weight:850; }
+  .reference-sheet-table table { width:100%; border-collapse:collapse; table-layout:fixed; font-size:clamp(.68rem,.82vw,.82rem); }
+  .reference-sheet-table th,.reference-sheet-table td { border:1px solid #cfd5dc; padding:6px 7px; vertical-align:top; overflow-wrap:anywhere; }
+  .reference-sheet-table th { background:#f4f6f8; font-size:.72rem; text-transform:uppercase; letter-spacing:.035em; }
+  .reference-sheet-table td.syntax,.reference-sheet-table td.code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-weight:700; }
+  .reference-sheet-table tr.category-start td { border-top:2px solid #9da6af; }
+  .reference-sheet-table .cat { font-weight:850; color:#49545f; }
+  .reference-subheading { margin:20px 0 9px; font-size:1rem; }
+  .encoding-summary { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:9px; }
+  .encoding-card { border:1px solid #dbe1e7; border-radius:10px; padding:10px; background:#fbfcfd; min-width:0; }
+  .encoding-card h4 { margin:0 0 5px; font-size:.87rem; }
+  .encoding-card .opcode-line { margin-bottom:7px; color:#4f5a65; font-size:.78rem; }
+  .encoding-card .opcode-line .mono { font-weight:850; color:#26313b; }
+  .encoding-mini { width:100%; border-collapse:collapse; table-layout:fixed; font-size:.73rem; }
+  .encoding-mini th,.encoding-mini td { border:1px solid #d9dfe5; padding:4px 5px; overflow-wrap:anywhere; }
+  .encoding-mini th { background:#f3f5f7; text-align:left; }
+  .register-reference { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:5px; }
+  .reg-ref { display:grid; grid-template-columns:34px 40px 1fr; gap:5px; align-items:center; border:1px solid #dde2e7; border-radius:7px; padding:5px 7px; background:#fbfcfd; font-size:.74rem; min-width:0; }
+  .reg-ref .mono { font-weight:850; }
+  .reg-ref span:last-child { color:#5f6974; overflow-wrap:anywhere; }
+  @media(max-width:900px){
+    .register-reference { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .reference-sheet-table table { font-size:.69rem; }
+    .reference-sheet-table th,.reference-sheet-table td { padding:5px 4px; }
+  }
+  @media(max-width:560px){
+    .explain-list { grid-template-columns:1fr; }
+    .register-reference { grid-template-columns:1fr; }
+    .reference-sheet-table table { font-size:.61rem; }
+    .reference-sheet-table th,.reference-sheet-table td { padding:4px 2px; }
+    .reference-sheet-table th:nth-child(3),.reference-sheet-table td:nth-child(3) { display:none; }
+    .field-bar { min-height:88px; }
+  }
+
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap banner-inner">
+    <div class="banner-copy">
+      <h1>RISC-V RV32I Assembler</h1>
+      <p class="banner-subtitle">See how an assembly instruction is converted to its binary equivalent and vice versa.<span class="banner-course">Designed for EEE 153 (Computer Organization and Embedded Systems I) class.</span><span class="banner-credit">Conceptualized by Adelson Chua</span></p>
+    </div>
+    <div class="riscv-logo-wrap" aria-label="RISC-V logo">
+      <div class="riscv-logo-card">
+        <img class="riscv-logo" src="https://riscv.org/wp-content/uploads/2023/07/RISC-V_Horizontal_Color.svg" alt="RISC-V" onerror="this.hidden=true;this.nextElementSibling.hidden=false" />
+        <span class="riscv-logo-fallback" hidden>RISC-V</span>
+      </div>
+    </div>
+  </div>
+</header>
+<main>
+  <section class="panel">
+    <div class="section">
+      <h2>Assembly and machine code</h2>
+      <div class="source-grid" style="margin-top:12px">
+        <div class="source-card">
+          <h3>From assembly</h3>
+          <div class="input-line">
+            <div>
+              <label for="asmInput">Supported RV32I instruction</label>
+              <input id="asmInput" type="text" spellcheck="false" autocomplete="off" value="beq x1, x0, 16" aria-describedby="asmMessage" />
+            </div>
+          </div>
+          <div class="message" id="asmMessage" aria-live="polite"></div>
+        </div>
+        <div class="source-card">
+          <h3>From machine code</h3>
+          <div class="input-line">
+            <div>
+              <label for="machineInput">Binary or hexadecimal</label>
+              <input id="machineInput" type="text" spellcheck="false" autocomplete="off" value="0x00008863" aria-describedby="machineMessage" />
+            </div>
+          </div>
+          <div class="message" id="machineMessage" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="current-head">
+        <div>
+          <div class="eyebrow">Current decoded instruction</div>
+          <div class="asm-display" id="decodedAssembly" aria-live="polite"></div>
+        </div>
+        <div class="badges"><span class="badge" id="typeBadge">—</span><span class="badge" id="validBadge">—</span></div>
+      </div>
+      <div class="code-grid">
+        <div class="code-box"><div class="eyebrow">32-bit binary</div><div class="code-value" id="binaryOutput"></div></div>
+        <div class="code-box"><div class="eyebrow">Hexadecimal</div><div class="code-value" id="hexOutput"></div></div>
+      </div>
+
+      <div class="bit-workbench">
+        <h2 style="margin-top:18px">Interactive 32-bit instruction</h2>
+        <p class="interaction-note">Tick or untick the checkboxes to directly change the individual instruction bits.</p>
+        <div class="bit-scroll" aria-label="Interactive 32-bit instruction" style="margin-top:12px">
+          <div class="bit-stage">
+            <div class="bit-index-row" id="bitIndexRow"></div>
+            <div class="bit-checkbox-row" id="bitCheckboxRow"></div>
+            <div class="bit-value-row" id="bitValueRow"></div>
+            <div class="field-bar" id="fieldBar"></div>
+            <div class="field-expand-panel" id="fieldExpandPanel" hidden aria-live="polite">
+              <div class="field-expand-head">
+                <div>
+                  <div class="field-expand-title" id="fieldExpandTitle"></div>
+                </div>
+                <button type="button" class="field-expand-close" id="fieldExpandClose" aria-label="Collapse field details">×</button>
+              </div>
+              <div class="field-expand-body" id="fieldExpandBody"></div>
+            </div>
+          </div>
+        </div>
+        <p class="interaction-note" id="fieldExpandInstruction">Click any colored field below the bit checkboxes to expand it for a more detailed explanation.</p>
+      </div>
+
+      <div class="subpanel immediate-panel" id="immediatePanel" hidden>
+        <h3 class="immediate-heading"><strong>Immediate formation / reconstruction</strong></h3>
+        <p id="immLead">Select an immediate field above to inspect how its logical bits map into the 32-bit instruction.</p>
+        <div class="imm-visual" id="immVisual"></div>
+      </div>
+    </div>
+  </section>
+
+  <details open class="reference-details">
+    <summary>Instruction-format encoding table</summary>
+    <div class="details-body">
+      <p class="section-lead">This mirrors the R/I/I*/S/B/U/J summary on the reference sheet: most register and opcode fields stay aligned, while S/B/J rearrange immediate bits.</p>
+      <div class="format-scroll">
+        <div class="format-table" id="formatTable"></div>
+      </div>
+      <div class="format-note">Bit numbers run from 31 at the left to 0 at the right. The highlighted row follows the current word whenever its opcode identifies a supported format.</div>
+      <div class="note"><b>Immediate range checks:</b> I/S signed immediates [−2048, 2047]; shift amounts [0, 31]; B offsets [−4096, 4094] and even; J offsets [−1,048,576, 1,048,574] and even; U-type <span class="mono">immu</span> is a 20-bit field [0, 0xFFFFF].</div>
+    </div>
+  </details>
+
+  <details class="reference-details">
+    <summary>RV32I reference sheet — supported class subset</summary>
+    <div class="details-body">
+      <p class="section-lead">RISC-V RV32I instruction set subset based on the University of California, Berkeley CS 61C class (<a href="https://cs61c.org/" target="_blank" rel="noopener noreferrer">https://cs61c.org/</a>). Simplified for instructional purposes.</p>
+      <div class="reference-sheet-table" id="referenceInstructionTable"></div>
+      <h3 class="reference-subheading">Pseudoinstruction translations</h3>
+      <div class="reference-sheet-table" id="pseudoInstructionTable"></div>
+      <h3 class="reference-subheading">Opcode / funct summary by instruction family</h3>
+      <div class="encoding-summary" id="encodingSummary"></div>
+      <h3 class="reference-subheading">Register number / ABI-name quick reference</h3>
+      <div class="register-reference" id="registerReference"></div>
+    </div>
+  </details>
+
+
+</main>
+<script>
+(() => {
+  "use strict";
+  const REG_ALIASES = {
+    zero:0, ra:1, sp:2, gp:3, tp:4,
+    t0:5, t1:6, t2:7,
+    s0:8, fp:8, s1:9,
+    a0:10, a1:11, a2:12, a3:13, a4:14, a5:15, a6:16, a7:17,
+    s2:18, s3:19, s4:20, s5:21, s6:22, s7:23, s8:24, s9:25, s10:26, s11:27,
+    t3:28, t4:29, t5:30, t6:31
+  };
+  const ALIAS_BY_REG = ["zero","ra","sp","gp","tp","t0","t1","t2","s0","s1","a0","a1","a2","a3","a4","a5","a6","a7","s2","s3","s4","s5","s6","s7","s8","s9","s10","s11","t3","t4","t5","t6"];
+
+  const R = {
+    add:[0b000,0b0000000], sub:[0b000,0b0100000], sll:[0b001,0b0000000], slt:[0b010,0b0000000], sltu:[0b011,0b0000000],
+    xor:[0b100,0b0000000], srl:[0b101,0b0000000], sra:[0b101,0b0100000], or:[0b110,0b0000000], and:[0b111,0b0000000]
+  };
+  const I_ARITH = { addi:0b000, slli:0b001, slti:0b010, sltiu:0b011, xori:0b100, srli:0b101, srai:0b101, ori:0b110, andi:0b111 };
+  const LOAD = { lb:0b000, lh:0b001, lw:0b010, lbu:0b100, lhu:0b101 };
+  const STORE = { sb:0b000, sh:0b001, sw:0b010 };
+  const BRANCH = { beq:0b000, bne:0b001, blt:0b100, bge:0b101, bltu:0b110, bgeu:0b111 };
+  const PSEUDOS = new Set(["beqz","bnez","j","jr","la","li","mv","neg","nop","not","ret"]);
+  const EXCLUDED = new Set(["ecall","ebreak"]);
+
+  const SPECS = {};
+  Object.entries(R).forEach(([mn,[funct3,funct7]]) => SPECS[mn] = {mn,type:"R",syntax:"rrr",opcode:0x33,funct3,funct7});
+  Object.entries(I_ARITH).forEach(([mn,funct3]) => SPECS[mn] = {mn,type:(mn.endsWith("lli")||mn.endsWith("rli")||mn==="srai")?"I*":"I",syntax:"rri",opcode:0x13,funct3,funct7:mn==="srai"?0x20:0});
+  Object.entries(LOAD).forEach(([mn,funct3]) => SPECS[mn] = {mn,type:"I",syntax:"load",opcode:0x03,funct3});
+  Object.entries(STORE).forEach(([mn,funct3]) => SPECS[mn] = {mn,type:"S",syntax:"store",opcode:0x23,funct3});
+  Object.entries(BRANCH).forEach(([mn,funct3]) => SPECS[mn] = {mn,type:"B",syntax:"branch",opcode:0x63,funct3});
+  SPECS.jal = {mn:"jal",type:"J",syntax:"jal",opcode:0x6f};
+  SPECS.jalr = {mn:"jalr",type:"I",syntax:"jalr",opcode:0x67,funct3:0};
+  SPECS.lui = {mn:"lui",type:"U",syntax:"upper",opcode:0x37};
+  SPECS.auipc = {mn:"auipc",type:"U",syntax:"upper",opcode:0x17};
+
+  function fail(msg){ const e = new Error(msg); e.userMessage = msg; throw e; }
+  function cleanInstruction(s){ return s.split("#")[0].trim(); }
+  function parseIntegerLiteral(token){
+    let s = String(token).trim().toLowerCase().replaceAll("_","");
+    if(!s) fail("Missing immediate value.");
+    let sign = 1n;
+    if(s[0] === "+") s = s.slice(1);
+    else if(s[0] === "-"){ sign = -1n; s = s.slice(1); }
+    let v;
+    if(/^0x[0-9a-f]+$/.test(s)) v = BigInt(s);
+    else if(/^0b[01]+$/.test(s)) v = BigInt(s);
+    else if(/^\d+$/.test(s)) v = BigInt(s);
+    else fail(`Invalid integer literal “${token}”. Use decimal, 0x… hexadecimal, or 0b… binary notation.`);
+    return sign * v;
+  }
+  function inRange(v,min,max,label){ if(v < BigInt(min) || v > BigInt(max)) fail(`${label} is out of range. Expected ${min} through ${max}, but got ${v}.`); }
+  function parseReg(token){
+    const s = String(token).trim().toLowerCase();
+    const m = /^x(\d+)$/.exec(s);
+    if(m){ const n = Number(m[1]); if(n >= 0 && n <= 31) return n; fail(`Register “${token}” does not exist. Valid numbered registers are x0 through x31.`); }
+    if(Object.prototype.hasOwnProperty.call(REG_ALIASES,s)) return REG_ALIASES[s];
+    fail(`Unknown register “${token}”. Use x0–x31 or a standard alias such as zero, ra, sp, a0, s0, or t0.`);
+  }
+  function flatOperands(rest,count,mn){
+    const s = rest.trim();
+    if(!s) fail(`Missing operands for ${mn}.`);
+    let a;
+    if(s.includes(",")){
+      a = s.split(",").map(x=>x.trim());
+      if(a.some(x=>!x)) fail(`Malformed comma placement in ${mn}.`);
+      if(a.some(x=>/\s/.test(x))) fail(`Unexpected whitespace inside an operand for ${mn}.`);
+    } else a = s.split(/\s+/);
+    if(a.length !== count) fail(`${mn} expects ${count} operand${count===1?"":"s"}, but ${a.length} ${a.length===1?"was":"were"} provided.`);
+    return a;
+  }
+  function memoryOperands(rest,mn){
+    const m = /^\s*([^,\s]+)(?:\s*,\s*|\s+)([^,\s()]+)\s*\(\s*([^,\s()]+)\s*\)\s*$/.exec(rest);
+    if(!m) fail(`${mn} expects the form ${STORE[mn] !== undefined ? "rs2" : "rd"}, imm(rs1), for example “${mn} x3, 8(x4)”.`);
+    return [m[1],m[2],m[3]];
+  }
+  function regText(n){ return `x${n}`; }
+  function regMeaning(role,n){ return `${role} = x${n} (${n}; alias ${ALIAS_BY_REG[n]})`; }
+  function bits(v,width){ return BigInt.asUintN(width,BigInt(v)).toString(2).padStart(width,"0"); }
+  function hex32(word){ return "0x" + BigInt.asUintN(32,word).toString(16).padStart(8,"0"); }
+  function groupedBinary(word){ return bits(word,32).match(/.{1,4}/g).join(" "); }
+  function field(label,range,width,value,kind,meaning){ return {label,range,width,value:bits(value,width),kind,meaning}; }
+
+  function pseudoOperands(rest,count,mn){
+    return flatOperands(rest,count,mn);
+  }
+
+  function pseudoInfo(source,equivalent,sequence=false,note=""){
+    return {source,equivalent:Array.isArray(equivalent)?equivalent:[equivalent],sequence,note};
+  }
+
+  function resolvePseudoAssembly(line){
+    const src=cleanInstruction(line);
+    if(!src) return null;
+    const m=/^([A-Za-z][A-Za-z0-9]*)\b(.*)$/.exec(src);
+    if(!m) return null;
+    const mn=m[1].toLowerCase(), rest=m[2].trim();
+
+    // jal is both a real instruction (two operands) and a pseudoinstruction (one operand).
+    if(mn==="jal"){
+      const raw=rest.trim();
+      if(raw && !raw.includes(",") && raw.split(/\s+/).length===1){
+        const target=raw;
+        const equiv=`jal ra, ${target}`;
+        try{
+          const imm=parseIntegerLiteral(target);
+          return {kind:"single",parsed:parseAssembly(`jal x1, ${imm}`),pseudo:pseudoInfo(src,equiv)};
+        } catch(e){
+          return {kind:"symbolic",pseudo:pseudoInfo(src,equiv,false,"A symbolic label needs program-layout information before it can become a PC-relative byte offset.")};
+        }
+      }
+      return null;
+    }
+
+    if(!PSEUDOS.has(mn)) return null;
+
+    if(mn==="beqz" || mn==="bnez"){
+      const [rs1,target]=pseudoOperands(rest,2,mn);
+      const base=mn==="beqz"?"beq":"bne";
+      const equiv=`${base} ${rs1}, x0, ${target}`;
+      let imm;
+      try{ imm=parseIntegerLiteral(target); }
+      catch(e){ return {kind:"symbolic",pseudo:pseudoInfo(src,equiv,false,"A symbolic label needs program-layout information before it can become a PC-relative byte offset.")}; }
+      return {kind:"single",parsed:parseAssembly(`${base} ${rs1}, x0, ${imm}`),pseudo:pseudoInfo(src,equiv)};
+    }
+
+    if(mn==="j"){
+      const [target]=pseudoOperands(rest,1,mn);
+      const equiv=`jal x0, ${target}`;
+      let imm;
+      try{ imm=parseIntegerLiteral(target); }
+      catch(e){ return {kind:"symbolic",pseudo:pseudoInfo(src,equiv,false,"A symbolic label needs program-layout information before it can become a PC-relative byte offset.")}; }
+      return {kind:"single",parsed:parseAssembly(`jal x0, ${imm}`),pseudo:pseudoInfo(src,equiv)};
+    }
+
+    if(mn==="jr"){
+      const [rs1]=pseudoOperands(rest,1,mn);
+      const equiv=`jalr x0, ${rs1}, 0`;
+      return {kind:"single",parsed:parseAssembly(equiv),pseudo:pseudoInfo(src,equiv)};
+    }
+
+    if(mn==="mv"){
+      const [rd,rs1]=pseudoOperands(rest,2,mn);
+      const equiv=`addi ${rd}, ${rs1}, 0`;
+      return {kind:"single",parsed:parseAssembly(equiv),pseudo:pseudoInfo(src,equiv)};
+    }
+
+    if(mn==="neg"){
+      const [rd,rs1]=pseudoOperands(rest,2,mn);
+      const equiv=`sub ${rd}, x0, ${rs1}`;
+      return {kind:"single",parsed:parseAssembly(equiv),pseudo:pseudoInfo(src,equiv)};
+    }
+
+    if(mn==="nop"){
+      if(rest) fail("nop does not take operands.");
+      const equiv="addi x0, x0, 0";
+      return {kind:"single",parsed:parseAssembly(equiv),pseudo:pseudoInfo(src,equiv)};
+    }
+
+    if(mn==="not"){
+      const [rd,rs1]=pseudoOperands(rest,2,mn);
+      const equiv=`xori ${rd}, ${rs1}, -1`;
+      return {kind:"single",parsed:parseAssembly(equiv),pseudo:pseudoInfo(src,equiv)};
+    }
+
+    if(mn==="ret"){
+      if(rest) fail("ret does not take operands.");
+      const equiv="jalr x0, x1, 0";
+      return {kind:"single",parsed:parseAssembly(equiv),pseudo:pseudoInfo(src,equiv)};
+    }
+
+    if(mn==="li"){
+      const [rd,immTok]=pseudoOperands(rest,2,mn);
+      parseReg(rd);
+      const original=parseIntegerLiteral(immTok);
+      // Allow a signed 32-bit value or a non-negative 32-bit bit pattern.
+      if(original < -2147483648n || original > 4294967295n) fail(`li immediate is outside a 32-bit value. Expected -2147483648 through 4294967295, but got ${original}.`);
+      const signed32=BigInt.asIntN(32,BigInt.asUintN(32,original));
+      if(signed32>=-2048n && signed32<=2047n){
+        const equiv=`addi ${rd}, x0, ${signed32}`;
+        return {kind:"single",parsed:parseAssembly(equiv),pseudo:pseudoInfo(src,equiv)};
+      }
+      const hi=(signed32 + 0x800n) >> 12n;
+      const lo=signed32 - (hi << 12n);
+      const hi20=BigInt.asUintN(20,hi);
+      const seq=[`lui ${rd}, 0x${hi20.toString(16)}`,`addi ${rd}, ${rd}, ${lo}`];
+      return {kind:"sequence",sequence:seq,pseudo:pseudoInfo(src,seq,true,"This pseudoinstruction expands to two 32-bit instructions, so there is no single machine word for the complete pseudoinstruction.")};
+    }
+
+    if(mn==="la"){
+      const [rd,label]=pseudoOperands(rest,2,mn);
+      parseReg(rd);
+      const seq=["auipc","addi"];
+      return {kind:"sequence-symbolic",sequence:seq,pseudo:pseudoInfo(src,seq,true,`The reference-card translation is auipc followed by addi. The exact operands/immediates for “${label}” require program-layout information, so they cannot be determined from one line alone.`)};
+    }
+
+    return null;
+  }
+
+  function resolveAssemblyInput(line){
+    const pseudo=resolvePseudoAssembly(line);
+    if(pseudo) return pseudo;
+    return {kind:"single",parsed:parseAssembly(line),pseudo:null};
+  }
+
+  function parseAssembly(line){
+    const src = cleanInstruction(line);
+    if(!src) fail("Enter one assembly instruction.");
+    const m = /^([A-Za-z][A-Za-z0-9]*)\b(.*)$/.exec(src);
+    if(!m) fail("Could not read an instruction mnemonic.");
+    const mn = m[1].toLowerCase(), rest = m[2].trim();
+    if(EXCLUDED.has(mn)) fail(`${mn} is intentionally excluded from this simulator.`);
+    const spec = SPECS[mn];
+    if(!spec) fail(`Unsupported mnemonic “${mn}”. Open the RV32I reference sheet below the simulator to see the supported set.`);
+    const p = {spec,mn,source:src};
+
+    if(spec.syntax === "rrr"){
+      const [rd,rs1,rs2] = flatOperands(rest,3,mn); Object.assign(p,{rd:parseReg(rd),rs1:parseReg(rs1),rs2:parseReg(rs2)});
+    } else if(spec.syntax === "rri"){
+      const [rd,rs1,immTok] = flatOperands(rest,3,mn); Object.assign(p,{rd:parseReg(rd),rs1:parseReg(rs1)});
+      const imm = parseIntegerLiteral(immTok);
+      if(spec.type === "I*") { inRange(imm,0,31,"Shift amount"); p.imm = imm; }
+      else { inRange(imm,-2048,2047,"12-bit signed immediate"); p.imm = imm; }
+    } else if(spec.syntax === "load"){
+      const [rd,immTok,rs1] = memoryOperands(rest,mn); Object.assign(p,{rd:parseReg(rd),rs1:parseReg(rs1)});
+      p.imm = parseIntegerLiteral(immTok); inRange(p.imm,-2048,2047,"12-bit signed load offset");
+    } else if(spec.syntax === "store"){
+      const [rs2,immTok,rs1] = memoryOperands(rest,mn); Object.assign(p,{rs2:parseReg(rs2),rs1:parseReg(rs1)});
+      p.imm = parseIntegerLiteral(immTok); inRange(p.imm,-2048,2047,"12-bit signed store offset");
+    } else if(spec.syntax === "branch"){
+      const [rs1,rs2,immTok] = flatOperands(rest,3,mn); Object.assign(p,{rs1:parseReg(rs1),rs2:parseReg(rs2)});
+      try { p.imm = parseIntegerLiteral(immTok); } catch(e){ fail(`A single-instruction encoder cannot resolve the label “${immTok}”. Replace it with the PC-relative byte offset, such as 16 or -12.`); }
+      inRange(p.imm,-4096,4094,"B-type branch byte offset"); if((p.imm & 1n) !== 0n) fail(`B-type branch offsets must be multiples of 2 bytes because imm[0] is not stored. Got ${p.imm}.`);
+    } else if(spec.syntax === "jal"){
+      const a = flatOperands(rest, rest.includes(",") ? rest.split(",").length : rest.split(/\s+/).length, mn);
+      if(a.length === 1) fail("The one-operand form of jal is a pseudoinstruction. Use the assembly input normally and the simulator will expand it before encoding.");
+      if(a.length !== 2) fail("jal expects exactly two operands: rd, offset.");
+      p.rd = parseReg(a[0]);
+      try { p.imm = parseIntegerLiteral(a[1]); } catch(e){ fail(`A single-instruction encoder cannot resolve the label “${a[1]}”. Replace it with the PC-relative byte offset.`); }
+      inRange(p.imm,-1048576,1048574,"J-type jump byte offset"); if((p.imm & 1n) !== 0n) fail(`J-type jump offsets must be multiples of 2 bytes because imm[0] is not stored. Got ${p.imm}.`);
+    } else if(spec.syntax === "jalr"){
+      const [rd,rs1,immTok] = flatOperands(rest,3,mn); Object.assign(p,{rd:parseReg(rd),rs1:parseReg(rs1)});
+      p.imm = parseIntegerLiteral(immTok); inRange(p.imm,-2048,2047,"12-bit signed jalr immediate");
+    } else if(spec.syntax === "upper"){
+      const [rd,immTok] = flatOperands(rest,2,mn); p.rd = parseReg(rd); p.imm = parseIntegerLiteral(immTok);
+      inRange(p.imm,0,1048575,"20-bit upper immediate field");
+    }
+    return p;
+  }
+
+  function encodeParsed(p){
+    const s = p.spec;
+    let word = 0n, fields = [], steps = [];
+    const op = BigInt(s.opcode);
+    if(s.type === "R"){
+      word = (BigInt(s.funct7)<<25n)|(BigInt(p.rs2)<<20n)|(BigInt(p.rs1)<<15n)|(BigInt(s.funct3)<<12n)|(BigInt(p.rd)<<7n)|op;
+      fields = [field("funct7","31:25",7,s.funct7,"funct",`Fixed by ${p.mn}`),field("rs2","24:20",5,p.rs2,"rs2",regMeaning("rs2",p.rs2)),field("rs1","19:15",5,p.rs1,"rs1",regMeaning("rs1",p.rs1)),field("funct3","14:12",3,s.funct3,"funct",`Fixed by ${p.mn}`),field("rd","11:7",5,p.rd,"rd",regMeaning("rd",p.rd)),field("opcode","6:0",7,s.opcode,"opcode","R-type arithmetic opcode")];
+      steps = [`${p.mn} uses the R-type format: funct7 | rs2 | rs1 | funct3 | rd | opcode.`,`${regText(p.rd)} → ${bits(p.rd,5)}, ${regText(p.rs1)} → ${bits(p.rs1,5)}, and ${regText(p.rs2)} → ${bits(p.rs2,5)} because 32 registers require 5 bits each.`,`The mnemonic selects opcode ${bits(s.opcode,7)}, funct3 ${bits(s.funct3,3)}, and funct7 ${bits(s.funct7,7)}.`,`Concatenating the fields from bit 31 down to bit 0 produces ${groupedBinary(word)}.`];
+    } else if(s.type === "I" && s.opcode === 0x13){
+      const imm12 = BigInt.asUintN(12,p.imm);
+      word = (imm12<<20n)|(BigInt(p.rs1)<<15n)|(BigInt(s.funct3)<<12n)|(BigInt(p.rd)<<7n)|op;
+      fields = [field("imm[11:0]","31:20",12,imm12,"imm",`Immediate ${p.imm} as 12-bit two's complement`),field("rs1","19:15",5,p.rs1,"rs1",regMeaning("rs1",p.rs1)),field("funct3","14:12",3,s.funct3,"funct",`Fixed by ${p.mn}`),field("rd","11:7",5,p.rd,"rd",regMeaning("rd",p.rd)),field("opcode","6:0",7,s.opcode,"opcode","Arithmetic I-type opcode")];
+      steps = [`${p.mn} uses the I-type arithmetic format.`,`The signed immediate ${p.imm} is represented in 12-bit two's complement as ${bits(imm12,12)}.`,`${regText(p.rs1)} becomes ${bits(p.rs1,5)} and ${regText(p.rd)} becomes ${bits(p.rd,5)}.`,`The mnemonic selects funct3 ${bits(s.funct3,3)} and opcode ${bits(s.opcode,7)}. Concatenate all fields to obtain ${groupedBinary(word)}.`];
+    } else if(s.type === "I*"){
+      word = (BigInt(s.funct7)<<25n)|(BigInt(p.imm)<<20n)|(BigInt(p.rs1)<<15n)|(BigInt(s.funct3)<<12n)|(BigInt(p.rd)<<7n)|op;
+      fields = [field("funct7","31:25",7,s.funct7,"funct",`Distinguishes ${p.mn}`),field("shamt[4:0]","24:20",5,p.imm,"imm",`Unsigned shift amount ${p.imm}`),field("rs1","19:15",5,p.rs1,"rs1",regMeaning("rs1",p.rs1)),field("funct3","14:12",3,s.funct3,"funct",`Fixed by ${p.mn}`),field("rd","11:7",5,p.rd,"rd",regMeaning("rd",p.rd)),field("opcode","6:0",7,s.opcode,"opcode","Arithmetic I-type opcode")];
+      steps = [`${p.mn} is the lecture's modified I-type (I*) format. Its immediate is a 5-bit unsigned shift amount, not a signed 12-bit value.`,`Shift amount ${p.imm} → ${bits(p.imm,5)}. ${regText(p.rs1)} → ${bits(p.rs1,5)} and ${regText(p.rd)} → ${bits(p.rd,5)}.`,`funct7 = ${bits(s.funct7,7)} and funct3 = ${bits(s.funct3,3)} distinguish this shift operation; opcode = ${bits(s.opcode,7)}.`,`The complete instruction is ${groupedBinary(word)}.`];
+    } else if(s.type === "I"){
+      const imm12 = BigInt.asUintN(12,p.imm);
+      word = (imm12<<20n)|(BigInt(p.rs1)<<15n)|(BigInt(s.funct3)<<12n)|(BigInt(p.rd)<<7n)|op;
+      const family = s.opcode===0x03?"load":(s.opcode===0x67?"jalr":"I-type");
+      fields = [field("imm[11:0]","31:20",12,imm12,"imm",`Immediate ${p.imm} as 12-bit two's complement`),field("rs1","19:15",5,p.rs1,"rs1",regMeaning("rs1",p.rs1)),field("funct3","14:12",3,s.funct3,"funct",`Fixed by ${p.mn}`),field("rd","11:7",5,p.rd,"rd",regMeaning("rd",p.rd)),field("opcode","6:0",7,s.opcode,"opcode",`${family} opcode`)];
+      steps = [`${p.mn} uses the I-type format with a 12-bit signed immediate.`,`Immediate ${p.imm} → ${bits(imm12,12)} in 12-bit two's complement.`,`rs1 = ${regText(p.rs1)} → ${bits(p.rs1,5)}; rd = ${regText(p.rd)} → ${bits(p.rd,5)}.`,`funct3 = ${bits(s.funct3,3)} and opcode = ${bits(s.opcode,7)} identify ${p.mn}. The final 32 bits are ${groupedBinary(word)}.`];
+    } else if(s.type === "S"){
+      const imm12 = BigInt.asUintN(12,p.imm), hi=(imm12>>5n)&0x7fn, lo=imm12&0x1fn;
+      word = (hi<<25n)|(BigInt(p.rs2)<<20n)|(BigInt(p.rs1)<<15n)|(BigInt(s.funct3)<<12n)|(lo<<7n)|op;
+      fields = [field("imm[11:5]","31:25",7,hi,"imm",`Upper 7 bits of ${bits(imm12,12)}`),field("rs2","24:20",5,p.rs2,"rs2",regMeaning("rs2",p.rs2)),field("rs1","19:15",5,p.rs1,"rs1",regMeaning("rs1",p.rs1)),field("funct3","14:12",3,s.funct3,"funct",`Fixed by ${p.mn}`),field("imm[4:0]","11:7",5,lo,"imm",`Lower 5 bits of ${bits(imm12,12)}`),field("opcode","6:0",7,s.opcode,"opcode","S-type store opcode")];
+      steps = [`${p.mn} is S-type. The source registers stay in the same rs1/rs2 bit positions used by R-type instructions.`,`Immediate ${p.imm} becomes ${bits(imm12,12)} in 12-bit two's complement.`,`Split it into imm[11:5] = ${bits(hi,7)} and imm[4:0] = ${bits(lo,5)}.`,`Place rs2 = ${regText(p.rs2)} (${bits(p.rs2,5)}) and rs1 = ${regText(p.rs1)} (${bits(p.rs1,5)}), then add funct3 ${bits(s.funct3,3)} and opcode ${bits(s.opcode,7)}.`,`The complete instruction is ${groupedBinary(word)}.`];
+    } else if(s.type === "B"){
+      const imm13=BigInt.asUintN(13,p.imm), b12=(imm13>>12n)&1n, b10_5=(imm13>>5n)&0x3fn, b4_1=(imm13>>1n)&0xfn, b11=(imm13>>11n)&1n;
+      word=(b12<<31n)|(b10_5<<25n)|(BigInt(p.rs2)<<20n)|(BigInt(p.rs1)<<15n)|(BigInt(s.funct3)<<12n)|(b4_1<<8n)|(b11<<7n)|op;
+      fields=[field("imm[12|10:5]","31,30:25",7,(b12<<6n)|b10_5,"imm",`imm[12]=${b12}, imm[10:5]=${bits(b10_5,6)}`),field("rs2","24:20",5,p.rs2,"rs2",regMeaning("rs2",p.rs2)),field("rs1","19:15",5,p.rs1,"rs1",regMeaning("rs1",p.rs1)),field("funct3","14:12",3,s.funct3,"funct",`Fixed by ${p.mn}`),field("imm[4:1|11]","11:7",5,(b4_1<<1n)|b11,"imm",`imm[4:1]=${bits(b4_1,4)}, imm[11]=${b11}`),field("opcode","6:0",7,s.opcode,"opcode","B-type branch opcode")];
+      steps=[`${p.mn} is B-type. The operand ${p.imm} is a PC-relative byte offset.`,`As a signed 13-bit value, ${p.imm} → ${bits(imm13,13)}. Bit imm[0] is always 0 for an encodable branch offset and is not stored in the instruction.`,`The remaining bits are rearranged: imm[12]=${b12}, imm[10:5]=${bits(b10_5,6)}, imm[4:1]=${bits(b4_1,4)}, imm[11]=${b11}.`,`rs1 = ${regText(p.rs1)} (${bits(p.rs1,5)}), rs2 = ${regText(p.rs2)} (${bits(p.rs2,5)}), funct3 = ${bits(s.funct3,3)}, opcode = ${bits(s.opcode,7)}.`,`Concatenation yields ${groupedBinary(word)}.`];
+    } else if(s.type === "U"){
+      const imm20=BigInt.asUintN(20,p.imm);
+      word=(imm20<<12n)|(BigInt(p.rd)<<7n)|op;
+      fields=[field("immu[31:12]","31:12",20,imm20,"imm",`20-bit field ${p.imm} (effective value 0x${(imm20<<12n).toString(16)})`),field("rd","11:7",5,p.rd,"rd",regMeaning("rd",p.rd)),field("opcode","6:0",7,s.opcode,"opcode",`${p.mn} opcode`)];
+      steps=[`${p.mn} uses the U-type format.`,`The supplied immu is a 20-bit field: ${p.imm} → ${bits(imm20,20)}. It occupies instruction bits 31:12 directly.`,`At execution, this field corresponds to 0x${(imm20<<12n).toString(16)} because it is effectively shifted left by 12 bits.`,`rd = ${regText(p.rd)} → ${bits(p.rd,5)} and opcode = ${bits(s.opcode,7)}. The result is ${groupedBinary(word)}.`];
+    } else if(s.type === "J"){
+      const imm21=BigInt.asUintN(21,p.imm), b20=(imm21>>20n)&1n, b10_1=(imm21>>1n)&0x3ffn, b11=(imm21>>11n)&1n, b19_12=(imm21>>12n)&0xffn;
+      word=(b20<<31n)|(b10_1<<21n)|(b11<<20n)|(b19_12<<12n)|(BigInt(p.rd)<<7n)|op;
+      fields=[field("imm[20|10:1|11|19:12]","31:12",20,(b20<<19n)|(b10_1<<9n)|(b11<<8n)|b19_12,"imm",`Reordered bits of byte offset ${p.imm}`),field("rd","11:7",5,p.rd,"rd",regMeaning("rd",p.rd)),field("opcode","6:0",7,s.opcode,"opcode","J-type jal opcode")];
+      steps=[`jal uses the J-type format; ${p.imm} is a PC-relative byte offset.`,`As a signed 21-bit value, ${p.imm} → ${bits(imm21,21)}. imm[0] is always 0 and is not stored.`,`The stored immediate order is imm[20]=${b20}, imm[10:1]=${bits(b10_1,10)}, imm[11]=${b11}, imm[19:12]=${bits(b19_12,8)}.`,`rd = ${regText(p.rd)} → ${bits(p.rd,5)} and opcode = ${bits(s.opcode,7)}.`,`The final machine instruction is ${groupedBinary(word)}.`];
+    }
+    return {word,fields,steps,type:s.type,mn:p.mn,assembly:canonicalAssembly(p)};
+  }
+
+  function canonicalAssembly(p){
+    const s=p.spec;
+    if(s.syntax==="rrr") return `${p.mn} x${p.rd}, x${p.rs1}, x${p.rs2}`;
+    if(s.syntax==="rri") return `${p.mn} x${p.rd}, x${p.rs1}, ${p.imm}`;
+    if(s.syntax==="load") return `${p.mn} x${p.rd}, ${p.imm}(x${p.rs1})`;
+    if(s.syntax==="store") return `${p.mn} x${p.rs2}, ${p.imm}(x${p.rs1})`;
+    if(s.syntax==="branch") return `${p.mn} x${p.rs1}, x${p.rs2}, ${p.imm}`;
+    if(s.syntax==="jal") return `${p.mn} x${p.rd}, ${p.imm}`;
+    if(s.syntax==="jalr") return `${p.mn} x${p.rd}, x${p.rs1}, ${p.imm}`;
+    if(s.syntax==="upper") return `${p.mn} x${p.rd}, 0x${p.imm.toString(16)}`;
+    return p.source;
+  }
+
+  function parseMachineCode(input){
+    let s=String(input).trim().toLowerCase().replaceAll("_","");
+    if(!s) fail("Enter a 32-bit binary instruction or an 8-digit hexadecimal instruction.");
+    if(s.startsWith("0x")){
+      const h=s.slice(2).replace(/\s/g,""); if(!/^[0-9a-f]{8}$/.test(h)) fail("Hexadecimal input must contain exactly 8 hex digits (32 bits), for example 0x000001b3."); return BigInt("0x"+h);
+    }
+    if(s.startsWith("0b")) s=s.slice(2);
+    const compact=s.replace(/\s/g,"");
+    if(/^[01]{32}$/.test(compact)) return BigInt("0b"+compact);
+    if(/^[0-9a-f]{8}$/.test(compact)) return BigInt("0x"+compact);
+    fail("Input must be exactly 32 binary bits or exactly 8 hexadecimal digits. Spaces and underscores may be used as separators.");
+  }
+  const get=(w,lo,width)=>(w>>BigInt(lo))&((1n<<BigInt(width))-1n);
+  const signed=(v,width)=>BigInt.asIntN(width,v);
+
+  function decodeWord(word){
+    word=BigInt.asUintN(32,word);
+    const opcode=Number(get(word,0,7)), rd=Number(get(word,7,5)), funct3=Number(get(word,12,3)), rs1=Number(get(word,15,5)), rs2=Number(get(word,20,5)), funct7=Number(get(word,25,7));
+    let mn,type,assembly,fields,steps=[];
+    if(opcode===0x33){
+      const key=Object.entries(R).find(([,v])=>v[0]===funct3&&v[1]===funct7); if(!key) fail(`Opcode 0110011 is R-type arithmetic, but funct3=${bits(funct3,3)} and funct7=${bits(funct7,7)} do not identify a supported instruction.`);
+      mn=key[0]; type="R"; assembly=`${mn} x${rd}, x${rs1}, x${rs2}`;
+      fields=[field("funct7","31:25",7,funct7,"funct",`Selects ${mn}`),field("rs2","24:20",5,rs2,"rs2",regMeaning("rs2",rs2)),field("rs1","19:15",5,rs1,"rs1",regMeaning("rs1",rs1)),field("funct3","14:12",3,funct3,"funct",`Selects ${mn}`),field("rd","11:7",5,rd,"rd",regMeaning("rd",rd)),field("opcode","6:0",7,opcode,"opcode","R-type arithmetic")];
+      steps=[`Bits 6:0 are ${bits(opcode,7)}, identifying the R-type arithmetic opcode.`,`funct3=${bits(funct3,3)} together with funct7=${bits(funct7,7)} identifies ${mn}.`,`rd=${bits(rd,5)} → x${rd}; rs1=${bits(rs1,5)} → x${rs1}; rs2=${bits(rs2,5)} → x${rs2}.`,`Therefore the instruction is ${assembly}.`];
+    } else if(opcode===0x13){
+      type="I";
+      if(funct3===1 || funct3===5){
+        type="I*"; if(funct3===1 && funct7===0) mn="slli"; else if(funct3===5&&funct7===0) mn="srli"; else if(funct3===5&&funct7===0x20) mn="srai"; else fail(`The I* shift encoding uses an unsupported/reserved funct7 value ${bits(funct7,7)}.`);
+        const shamt=BigInt(rs2); assembly=`${mn} x${rd}, x${rs1}, ${shamt}`;
+        fields=[field("funct7","31:25",7,funct7,"funct",`Selects ${mn}`),field("shamt[4:0]","24:20",5,shamt,"imm",`Shift amount ${shamt}`),field("rs1","19:15",5,rs1,"rs1",regMeaning("rs1",rs1)),field("funct3","14:12",3,funct3,"funct",`Selects ${mn}`),field("rd","11:7",5,rd,"rd",regMeaning("rd",rd)),field("opcode","6:0",7,opcode,"opcode","Arithmetic I-type")];
+        steps=[`Opcode ${bits(opcode,7)} indicates arithmetic I-type.`,`funct3=${bits(funct3,3)} plus funct7=${bits(funct7,7)} identifies the modified I-type shift ${mn}.`,`The 5-bit shift amount is ${bits(shamt,5)} = ${shamt}; rs1 → x${rs1}; rd → x${rd}.`,`Decoded assembly: ${assembly}.`];
+      } else {
+        const map={0:"addi",2:"slti",3:"sltiu",4:"xori",6:"ori",7:"andi"}; mn=map[funct3]; if(!mn) fail(`Arithmetic I-type funct3=${bits(funct3,3)} is not supported.`);
+        const raw=get(word,20,12), imm=signed(raw,12); assembly=`${mn} x${rd}, x${rs1}, ${imm}`;
+        fields=[field("imm[11:0]","31:20",12,raw,"imm",`12-bit two's complement = ${imm}`),field("rs1","19:15",5,rs1,"rs1",regMeaning("rs1",rs1)),field("funct3","14:12",3,funct3,"funct",`Selects ${mn}`),field("rd","11:7",5,rd,"rd",regMeaning("rd",rd)),field("opcode","6:0",7,opcode,"opcode","Arithmetic I-type")];
+        steps=[`Opcode ${bits(opcode,7)} identifies arithmetic I-type.`,`funct3=${bits(funct3,3)} identifies ${mn}.`,`imm[11:0]=${bits(raw,12)} interpreted as signed 12-bit two's complement gives ${imm}.`,`rs1 → x${rs1}, rd → x${rd}; therefore ${assembly}.`];
+      }
+    } else if(opcode===0x03){
+      type="I"; const map={0:"lb",1:"lh",2:"lw",4:"lbu",5:"lhu"}; mn=map[funct3]; if(!mn) fail(`Load opcode detected, but funct3=${bits(funct3,3)} is not one of the supported load instructions.`);
+      const raw=get(word,20,12),imm=signed(raw,12); assembly=`${mn} x${rd}, ${imm}(x${rs1})`;
+      fields=[field("imm[11:0]","31:20",12,raw,"imm",`Load offset ${imm}`),field("rs1","19:15",5,rs1,"rs1",regMeaning("rs1",rs1)),field("funct3","14:12",3,funct3,"funct",`Selects ${mn}`),field("rd","11:7",5,rd,"rd",regMeaning("rd",rd)),field("opcode","6:0",7,opcode,"opcode","Load opcode")];
+      steps=[`Opcode ${bits(opcode,7)} identifies an I-type load.`,`funct3=${bits(funct3,3)} identifies ${mn}.`,`The signed 12-bit offset ${bits(raw,12)} is ${imm}. rs1 is x${rs1}; rd is x${rd}.`,`Decoded assembly: ${assembly}.`];
+    } else if(opcode===0x23){
+      type="S"; const map={0:"sb",1:"sh",2:"sw"}; mn=map[funct3]; if(!mn) fail(`Store opcode detected, but funct3=${bits(funct3,3)} is not supported.`);
+      const hi=get(word,25,7),lo=get(word,7,5),raw=(hi<<5n)|lo,imm=signed(raw,12); assembly=`${mn} x${rs2}, ${imm}(x${rs1})`;
+      fields=[field("imm[11:5]","31:25",7,hi,"imm",`Upper immediate bits`),field("rs2","24:20",5,rs2,"rs2",regMeaning("rs2",rs2)),field("rs1","19:15",5,rs1,"rs1",regMeaning("rs1",rs1)),field("funct3","14:12",3,funct3,"funct",`Selects ${mn}`),field("imm[4:0]","11:7",5,lo,"imm",`Lower immediate bits`),field("opcode","6:0",7,opcode,"opcode","Store opcode")];
+      steps=[`Opcode ${bits(opcode,7)} identifies S-type store.`,`funct3=${bits(funct3,3)} identifies ${mn}.`,`Recombine imm[11:5]=${bits(hi,7)} and imm[4:0]=${bits(lo,5)} → ${bits(raw,12)}. As signed two's complement, this is ${imm}.`,`rs2 → x${rs2}; rs1 → x${rs1}. Decoded assembly: ${assembly}.`];
+    } else if(opcode===0x63){
+      type="B"; const map={0:"beq",1:"bne",4:"blt",5:"bge",6:"bltu",7:"bgeu"}; mn=map[funct3]; if(!mn) fail(`Branch opcode detected, but funct3=${bits(funct3,3)} is not supported.`);
+      const b12=get(word,31,1),b10_5=get(word,25,6),b4_1=get(word,8,4),b11=get(word,7,1),raw=(b12<<12n)|(b11<<11n)|(b10_5<<5n)|(b4_1<<1n),imm=signed(raw,13); assembly=`${mn} x${rs1}, x${rs2}, ${imm}`;
+      fields=[field("imm[12|10:5]","31,30:25",7,(b12<<6n)|b10_5,"imm",`imm[12]=${b12}, imm[10:5]=${bits(b10_5,6)}`),field("rs2","24:20",5,rs2,"rs2",regMeaning("rs2",rs2)),field("rs1","19:15",5,rs1,"rs1",regMeaning("rs1",rs1)),field("funct3","14:12",3,funct3,"funct",`Selects ${mn}`),field("imm[4:1|11]","11:7",5,(b4_1<<1n)|b11,"imm",`imm[4:1]=${bits(b4_1,4)}, imm[11]=${b11}`),field("opcode","6:0",7,opcode,"opcode","Branch opcode")];
+      steps=[`Opcode ${bits(opcode,7)} identifies B-type; funct3=${bits(funct3,3)} identifies ${mn}.`,`Reorder the stored pieces into imm[12:0]: imm[12]=${b12}, imm[11]=${b11}, imm[10:5]=${bits(b10_5,6)}, imm[4:1]=${bits(b4_1,4)}, and implied imm[0]=0.`,`That produces ${bits(raw,13)}, which as a signed 13-bit byte offset is ${imm}.`,`rs1 → x${rs1}; rs2 → x${rs2}. Therefore ${assembly}.`];
+    } else if(opcode===0x6f){
+      type="J"; mn="jal"; const b20=get(word,31,1),b10_1=get(word,21,10),b11=get(word,20,1),b19_12=get(word,12,8),raw=(b20<<20n)|(b19_12<<12n)|(b11<<11n)|(b10_1<<1n),imm=signed(raw,21); assembly=`jal x${rd}, ${imm}`;
+      fields=[field("imm[20|10:1|11|19:12]","31:12",20,get(word,12,20),"imm",`Reordered J-type immediate bits`),field("rd","11:7",5,rd,"rd",regMeaning("rd",rd)),field("opcode","6:0",7,opcode,"opcode","jal opcode")];
+      steps=[`Opcode ${bits(opcode,7)} directly identifies jal (J-type).`,`Reconstruct the offset from imm[20]=${b20}, imm[19:12]=${bits(b19_12,8)}, imm[11]=${b11}, imm[10:1]=${bits(b10_1,10)}, and implied imm[0]=0.`,`The signed 21-bit result is ${bits(raw,21)} = ${imm} bytes.`,`rd → x${rd}; decoded assembly: ${assembly}.`];
+    } else if(opcode===0x67){
+      type="I"; mn="jalr"; if(funct3!==0) fail(`jalr requires funct3=000; this word has ${bits(funct3,3)}.`); const raw=get(word,20,12),imm=signed(raw,12); assembly=`jalr x${rd}, x${rs1}, ${imm}`;
+      fields=[field("imm[11:0]","31:20",12,raw,"imm",`jalr immediate ${imm}`),field("rs1","19:15",5,rs1,"rs1",regMeaning("rs1",rs1)),field("funct3","14:12",3,funct3,"funct","jalr uses 000"),field("rd","11:7",5,rd,"rd",regMeaning("rd",rd)),field("opcode","6:0",7,opcode,"opcode","jalr opcode")];
+      steps=[`Opcode ${bits(opcode,7)} identifies jalr; funct3 must be 000 and is ${bits(funct3,3)}.`,`The 12-bit immediate ${bits(raw,12)} sign-extends to ${imm}.`,`rs1 → x${rs1}; rd → x${rd}.`,`Decoded assembly: ${assembly}.`];
+    } else if(opcode===0x37 || opcode===0x17){
+      type="U"; mn=opcode===0x37?"lui":"auipc"; const imm20=get(word,12,20); assembly=`${mn} x${rd}, 0x${imm20.toString(16)}`;
+      fields=[field("immu[31:12]","31:12",20,imm20,"imm",`20-bit upper field; effective value 0x${(imm20<<12n).toString(16)}`),field("rd","11:7",5,rd,"rd",regMeaning("rd",rd)),field("opcode","6:0",7,opcode,"opcode",`${mn} opcode`)];
+      steps=[`Opcode ${bits(opcode,7)} identifies ${mn} and the U-type format.`,`Bits 31:12 are the 20-bit immu field: ${bits(imm20,20)} = 0x${imm20.toString(16)}.`,`rd=${bits(rd,5)} → x${rd}.`,`Decoded assembly: ${assembly}.`];
+    } else if(opcode===0x73){
+      if(word===0x00000073n) fail("This word encodes ecall, which is intentionally excluded from the simulator.");
+      if(word===0x00100073n) fail("This word encodes ebreak, which is intentionally excluded from the simulator.");
+      fail("SYSTEM opcode 1110011 is outside the supported instruction subset.");
+    } else fail(`Opcode ${bits(opcode,7)} does not correspond to an instruction in the supported subset.`);
+    return {word,mn,type,assembly,fields,steps};
+  }
+
+
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+  function setMessage(el,type,text){ el.className=`message ${type}`; el.textContent=text; }
+  function setPseudoMessage(el,pseudo,suffix=""){
+    el.className="message ok";
+    el.replaceChildren();
+    const lead=document.createTextNode("Pseudoinstruction recognized. Equivalent RV32I instruction"+(pseudo.equivalent.length>1?" sequence: ":": "));
+    el.appendChild(lead);
+    pseudo.equivalent.forEach((inst,i)=>{
+      if(i) el.appendChild(document.createTextNode(" ; "));
+      const strong=document.createElement("strong"); strong.className="mono"; strong.textContent=inst; el.appendChild(strong);
+    });
+    if(pseudo.note){ el.appendChild(document.createElement("br")); el.appendChild(document.createTextNode(pseudo.note)); }
+    if(suffix){ el.appendChild(document.createElement("br")); el.appendChild(document.createTextNode(suffix)); }
+  }
+  function clearMessage(el){ el.className="message"; el.textContent=""; }
+
+  function expandRange(range){
+    const out=[];
+    String(range).split(",").forEach(part=>{
+      part=part.trim();
+      if(!part) return;
+      if(part.includes(":")){
+        const [a,b]=part.split(":").map(Number);
+        const step=a>=b?-1:1;
+        for(let i=a;;i+=step){ out.push(i); if(i===b) break; }
+      } else out.push(Number(part));
+    });
+    return out.filter(n=>Number.isInteger(n)&&n>=0&&n<=31);
+  }
+
+  function inferType(word){
+    const opcode=Number(word & 0x7fn);
+    if(opcode===0x33) return "R";
+    if(opcode===0x13){
+      const f3=Number((word>>12n)&7n);
+      return (f3===1 || f3===5) ? "I*" : "I";
+    }
+    if(opcode===0x03 || opcode===0x67) return "I";
+    if(opcode===0x23) return "S";
+    if(opcode===0x63) return "B";
+    if(opcode===0x37 || opcode===0x17) return "U";
+    if(opcode===0x6f) return "J";
+    return null;
+  }
+
+  function genericFields(word,type){
+    const v=(hi,lo)=>Number((word>>BigInt(lo)) & ((1n<<BigInt(hi-lo+1))-1n));
+    const f=(label,range,width,value,kind,meaning)=>field(label,range,width,value,kind,meaning);
+    if(type==="R") return [f("funct7","31:25",7,v(31,25),"funct","Function selector"),f("rs2","24:20",5,v(24,20),"rs2",regMeaning("rs2",v(24,20))),f("rs1","19:15",5,v(19,15),"rs1",regMeaning("rs1",v(19,15))),f("funct3","14:12",3,v(14,12),"funct","Function selector"),f("rd","11:7",5,v(11,7),"rd",regMeaning("rd",v(11,7))),f("opcode","6:0",7,v(6,0),"opcode","Instruction-family selector")];
+    if(type==="I") return [f("imm[11:0]","31:20",12,v(31,20),"imm","12-bit immediate field"),f("rs1","19:15",5,v(19,15),"rs1",regMeaning("rs1",v(19,15))),f("funct3","14:12",3,v(14,12),"funct","Function selector"),f("rd","11:7",5,v(11,7),"rd",regMeaning("rd",v(11,7))),f("opcode","6:0",7,v(6,0),"opcode","Instruction-family selector")];
+    if(type==="I*") return [f("funct7","31:25",7,v(31,25),"funct","Shift-operation selector"),f("shamt[4:0]","24:20",5,v(24,20),"imm","5-bit shift amount"),f("rs1","19:15",5,v(19,15),"rs1",regMeaning("rs1",v(19,15))),f("funct3","14:12",3,v(14,12),"funct","Shift-operation selector"),f("rd","11:7",5,v(11,7),"rd",regMeaning("rd",v(11,7))),f("opcode","6:0",7,v(6,0),"opcode","Arithmetic I-type opcode")];
+    if(type==="S") return [f("imm[11:5]","31:25",7,v(31,25),"imm","Upper immediate bits"),f("rs2","24:20",5,v(24,20),"rs2",regMeaning("rs2",v(24,20))),f("rs1","19:15",5,v(19,15),"rs1",regMeaning("rs1",v(19,15))),f("funct3","14:12",3,v(14,12),"funct","Store selector"),f("imm[4:0]","11:7",5,v(11,7),"imm","Lower immediate bits"),f("opcode","6:0",7,v(6,0),"opcode","Store opcode")];
+    if(type==="B") return [f("imm[12|10:5]","31,30:25",7,v(31,25),"imm","Reordered branch immediate bits"),f("rs2","24:20",5,v(24,20),"rs2",regMeaning("rs2",v(24,20))),f("rs1","19:15",5,v(19,15),"rs1",regMeaning("rs1",v(19,15))),f("funct3","14:12",3,v(14,12),"funct","Branch-condition selector"),f("imm[4:1|11]","11:7",5,v(11,7),"imm","Reordered branch immediate bits"),f("opcode","6:0",7,v(6,0),"opcode","Branch opcode")];
+    if(type==="U") return [f("immu[31:12]","31:12",20,v(31,12),"imm","20-bit upper immediate field"),f("rd","11:7",5,v(11,7),"rd",regMeaning("rd",v(11,7))),f("opcode","6:0",7,v(6,0),"opcode","Upper-immediate opcode")];
+    if(type==="J") return [f("imm[20|10:1|11|19:12]","31:12",20,v(31,12),"imm","Reordered J-type immediate bits"),f("rd","11:7",5,v(11,7),"rd",regMeaning("rd",v(11,7))),f("opcode","6:0",7,v(6,0),"opcode","jal opcode")];
+    return [f("unclassified","31:7",25,Number((word>>7n)&0x1ffffffn),"neutral","Opcode is not in the supported subset"),f("opcode","6:0",7,Number(word&0x7fn),"opcode","The low 7 bits still form the opcode field")];
+  }
+
+  function diagnoseInvalidFields(word,type){
+    const opcode=Number(get(word,0,7));
+    const funct3=Number(get(word,12,3));
+    const funct7=Number(get(word,25,7));
+    if(!type) return ["opcode"];
+    if(opcode===0x33){
+      const pairs=Object.values(R);
+      const sameF3=pairs.filter(([f3])=>f3===funct3);
+      if(!sameF3.length) return ["funct3"];
+      if(!sameF3.some(([,f7])=>f7===funct7)) return ["funct7"];
+      return ["funct3","funct7"];
+    }
+    if(opcode===0x13){
+      if(funct3===1 && funct7!==0x00) return ["funct7"];
+      if(funct3===5 && funct7!==0x00 && funct7!==0x20) return ["funct7"];
+      return ["funct3"];
+    }
+    if(opcode===0x03 || opcode===0x23 || opcode===0x63 || opcode===0x67) return ["funct3"];
+    return ["opcode"];
+  }
+
+  function analyzeWord(word){
+    try {
+      const decoded=decodeWord(word);
+      return {word,valid:true,decoded,type:decoded.type,fields:decoded.fields,error:"",errorFields:[]};
+    } catch(e){
+      const type=inferType(word);
+      return {word,valid:false,decoded:null,type:type||"?",fields:genericFields(word,type),error:e.userMessage||e.message||String(e),errorFields:diagnoseInvalidFields(word,type)};
+    }
+  }
+
+  function fieldKindDescription(kind){
+    return {
+      opcode:"The opcode is the 7-bit instruction-family identifier. It always occupies bits 6:0 in the formats used here.",
+      funct:"funct3/funct7 refine the opcode so multiple operations can share the same major opcode.",
+      rd:"rd identifies the destination register. A 5-bit register field can select one of 32 registers.",
+      rs1:"rs1 identifies the first source register (or the base register for loads/stores).",
+      rs2:"rs2 identifies the second source register. Stores use rs2 as the value being written.",
+      imm:"Immediate bits encode a constant, memory offset, branch/jump displacement, or shift amount. Some formats split/reorder these bits.",
+      neutral:"These bits cannot yet be assigned to a supported format because the current opcode is not recognized."
+    }[kind] || "";
+  }
+
+  const state={word:0n,analysis:null,selectedField:0,openFieldIndex:null};
+  const bitCells=[];
+  const bitChecks=[];
+  const bitDigits=[];
+
+  function buildBitGrid(){
+    const idx=document.getElementById("bitIndexRow"), checks=document.getElementById("bitCheckboxRow"), vals=document.getElementById("bitValueRow");
+    for(let bit=31;bit>=0;bit--){
+      const i=document.createElement("div"); i.className="bit-index"; i.textContent=bit; idx.appendChild(i);
+      const cell=document.createElement("div"); cell.className="bit-cell kind-neutral"; cell.dataset.bit=bit; cell.dataset.fieldIndex="-1"; cell.title=`Instruction bit ${bit}`;
+      const cb=document.createElement("input"); cb.type="checkbox"; cb.setAttribute("aria-label",`Instruction bit ${bit}`); cb.dataset.bit=bit;
+      cb.addEventListener("click",e=>e.stopPropagation());
+      cb.addEventListener("change",()=>{
+        const mask=1n<<BigInt(bit);
+        state.word=cb.checked ? (state.word|mask) : (state.word & ~mask);
+        state.word=BigInt.asUintN(32,state.word);
+        state.selectedField=Math.max(0,Number(cell.dataset.fieldIndex));
+        refreshAll("bit");
+        const machineInput=document.getElementById("machineInput"), asmInput=document.getElementById("asmInput");
+        const machineMsg=document.getElementById("machineMessage"), asmMsg=document.getElementById("asmMessage");
+        if(state.analysis.valid){
+          setInputState(machineInput,"valid"); setInputState(asmInput,"valid");
+          setMessage(machineMsg,"ok",`Valid supported encoding: ${state.analysis.decoded.assembly}.`);
+          setMessage(asmMsg,"ok",`Updated directly from the 32-bit grid · ${hex32(state.word)}.`);
+        } else {
+          setInputState(machineInput,"invalid"); setInputState(asmInput,"invalid");
+          setMessage(machineMsg,"error",`The 32-bit word is well-formed, but not a supported instruction: ${state.analysis.error}`);
+          setMessage(asmMsg,"error","No supported assembly instruction corresponds to the current 32-bit word.");
+        }
+      });
+      cell.addEventListener("click",()=>cb.click());
+      cell.appendChild(cb); checks.appendChild(cell);
+      const digit=document.createElement("div"); digit.className="bit-digit"; digit.textContent="0"; vals.appendChild(digit);
+      bitCells.push(cell); bitChecks.push(cb); bitDigits.push(digit);
+    }
+  }
+
+  const REFERENCE_ROWS = [
+    ["Arithmetic","add rd, rs1, rs2","ADD","rd = rs1 + rs2","R","0110011","000","0000000"],
+    ["Arithmetic","sub rd, rs1, rs2","SUBtract","rd = rs1 − rs2","R","0110011","000","0100000"],
+    ["Arithmetic","and rd, rs1, rs2","bitwise AND","rd = rs1 & rs2","R","0110011","111","0000000"],
+    ["Arithmetic","or rd, rs1, rs2","bitwise OR","rd = rs1 | rs2","R","0110011","110","0000000"],
+    ["Arithmetic","xor rd, rs1, rs2","bitwise XOR","rd = rs1 ^ rs2","R","0110011","100","0000000"],
+    ["Arithmetic","sll rd, rs1, rs2","Shift Left Logical","rd = rs1 << rs2","R","0110011","001","0000000"],
+    ["Arithmetic","srl rd, rs1, rs2","Shift Right Logical","rd = rs1 >> rs2 (zero-extend)","R","0110011","101","0000000"],
+    ["Arithmetic","sra rd, rs1, rs2","Shift Right Arithmetic","rd = rs1 >> rs2 (sign-extend)","R","0110011","101","0100000"],
+    ["Arithmetic","slt rd, rs1, rs2","Set Less Than (signed)","rd = (rs1 < rs2) ? 1 : 0","R","0110011","010","0000000"],
+    ["Arithmetic","sltu rd, rs1, rs2","Set Less Than (unsigned)","rd = (rs1 < rs2) ? 1 : 0","R","0110011","011","0000000"],
+    ["Arithmetic","addi rd, rs1, imm","ADD Immediate","rd = rs1 + imm","I","0010011","000","—"],
+    ["Arithmetic","andi rd, rs1, imm","bitwise AND Immediate","rd = rs1 & imm","I","0010011","111","—"],
+    ["Arithmetic","ori rd, rs1, imm","bitwise OR Immediate","rd = rs1 | imm","I","0010011","110","—"],
+    ["Arithmetic","xori rd, rs1, imm","bitwise XOR Immediate","rd = rs1 ^ imm","I","0010011","100","—"],
+    ["Arithmetic","slli rd, rs1, imm","Shift Left Logical Immediate","rd = rs1 << imm","I*","0010011","001","0000000"],
+    ["Arithmetic","srli rd, rs1, imm","Shift Right Logical Immediate","rd = rs1 >> imm (zero-extend)","I*","0010011","101","0000000"],
+    ["Arithmetic","srai rd, rs1, imm","Shift Right Arithmetic Immediate","rd = rs1 >> imm (sign-extend)","I*","0010011","101","0100000"],
+    ["Arithmetic","slti rd, rs1, imm","Set Less Than Immediate (signed)","rd = (rs1 < imm) ? 1 : 0","I","0010011","010","—"],
+    ["Arithmetic","sltiu rd, rs1, imm","Set Less Than Immediate (unsigned)","rd = (rs1 < imm) ? 1 : 0","I","0010011","011","—"],
+    ["Memory","lb rd, imm(rs1)","Load Byte","rd = byte at address rs1 + imm, sign-extended","I","0000011","000","—"],
+    ["Memory","lbu rd, imm(rs1)","Load Byte (Unsigned)","rd = byte at address rs1 + imm, zero-extended","I","0000011","100","—"],
+    ["Memory","lh rd, imm(rs1)","Load Half-word","rd = 2 bytes at address rs1 + imm, sign-extended","I","0000011","001","—"],
+    ["Memory","lhu rd, imm(rs1)","Load Half-word (Unsigned)","rd = 2 bytes at address rs1 + imm, zero-extended","I","0000011","101","—"],
+    ["Memory","lw rd, imm(rs1)","Load Word","rd = 4 bytes at address rs1 + imm","I","0000011","010","—"],
+    ["Memory","sb rs2, imm(rs1)","Store Byte","Store least-significant byte of rs2 at address rs1 + imm","S","0100011","000","—"],
+    ["Memory","sh rs2, imm(rs1)","Store Half-word","Store 2 least-significant bytes of rs2 at address rs1 + imm","S","0100011","001","—"],
+    ["Memory","sw rs2, imm(rs1)","Store Word","Store rs2 at address rs1 + imm","S","0100011","010","—"],
+    ["Control","beq rs1, rs2, imm","Branch if Equal","if (rs1 == rs2) PC = PC + offset","B","1100011","000","—"],
+    ["Control","bge rs1, rs2, imm","Branch if Greater or Equal (signed)","if (rs1 >= rs2) PC = PC + offset","B","1100011","101","—"],
+    ["Control","bgeu rs1, rs2, imm","Branch if Greater or Equal (unsigned)","if (rs1 >= rs2) PC = PC + offset","B","1100011","111","—"],
+    ["Control","blt rs1, rs2, imm","Branch if Less Than (signed)","if (rs1 < rs2) PC = PC + offset","B","1100011","100","—"],
+    ["Control","bltu rs1, rs2, imm","Branch if Less Than (unsigned)","if (rs1 < rs2) PC = PC + offset","B","1100011","110","—"],
+    ["Control","bne rs1, rs2, imm","Branch if Not Equal","if (rs1 != rs2) PC = PC + offset","B","1100011","001","—"],
+    ["Control","jal rd, imm","Jump And Link","rd = PC + 4; PC = PC + offset","J","1101111","—","—"],
+    ["Control","jalr rd, rs1, imm","Jump And Link Register","rd = PC + 4; PC = rs1 + imm","I","1100111","000","—"],
+    ["Other","auipc rd, immu","Add Upper Immediate to PC","imm = immu << 12; rd = PC + imm","U","0010111","—","—"],
+    ["Other","lui rd, immu","Load Upper Immediate","imm = immu << 12; rd = imm","U","0110111","—","—"]
+  ];
+
+  const PSEUDO_REFERENCE_ROWS = [
+    ["beqz rs1, label","Branch if Equals Zero","beq rs1, x0, label"],
+    ["bnez rs1, label","Branch if Not Equals Zero","bne rs1, x0, label"],
+    ["j label","Jump","jal x0, label"],
+    ["jal label","Jump and Link","jal ra, label"],
+    ["jr rs1","Jump Register","jalr x0, rs1, 0"],
+    ["la rd, label","Load absolute Address","auipc, addi"],
+    ["li rd, imm","Load Immediate","lui (if needed), addi"],
+    ["mv rd, rs1","MoVe","addi rd, rs1, 0"],
+    ["neg rd, rs1","NEGate","sub rd, x0, rs1"],
+    ["nop","No OPeration","addi x0, x0, 0"],
+    ["not rd, rs1","bitwise NOT","xori rd, rs1, -1"],
+    ["ret","RETurn","jalr x0, x1, 0"]
+  ];
+
+  const ENCODING_SUMMARY = [
+    ["R-type arithmetic","0110011",[["add","000","0000000"],["sub","000","0100000"],["sll","001","0000000"],["slt","010","0000000"],["sltu","011","0000000"],["xor","100","0000000"],["srl","101","0000000"],["sra","101","0100000"],["or","110","0000000"],["and","111","0000000"]]],
+    ["Arithmetic I / I*","0010011",[["addi","000","—"],["slli","001","0000000"],["slti","010","—"],["sltiu","011","—"],["xori","100","—"],["srli","101","0000000"],["srai","101","0100000"],["ori","110","—"],["andi","111","—"]]],
+    ["Loads","0000011",[["lb","000","—"],["lh","001","—"],["lw","010","—"],["lbu","100","—"],["lhu","101","—"]]],
+    ["Stores","0100011",[["sb","000","—"],["sh","001","—"],["sw","010","—"]]],
+    ["Branches","1100011",[["beq","000","—"],["bne","001","—"],["blt","100","—"],["bge","101","—"],["bltu","110","—"],["bgeu","111","—"]]],
+    ["jal","1101111",[["jal","—","—"]]],
+    ["jalr","1100111",[["jalr","000","—"]]],
+    ["lui","0110111",[["lui","—","—"]]],
+    ["auipc","0010111",[["auipc","—","—"]]]
+  ];
+
+  function renderReferenceTables(){
+    const root=document.getElementById("referenceInstructionTable");
+    let prev="";
+    root.innerHTML=`<table><colgroup><col style="width:8%"><col style="width:19%"><col style="width:16%"><col style="width:27%"><col style="width:5%"><col style="width:9%"><col style="width:7%"><col style="width:9%"></colgroup><thead><tr><th>Group</th><th>Instruction</th><th>Name</th><th>Description / effect</th><th>Type</th><th>Opcode</th><th>funct3</th><th>funct7</th></tr></thead><tbody>${REFERENCE_ROWS.map(r=>{const first=r[0]!==prev; prev=r[0]; return `<tr class="${first?"category-start":""}"><td class="cat">${first?escapeHtml(r[0]):""}</td><td class="syntax">${escapeHtml(r[1])}</td><td>${escapeHtml(r[2])}</td><td>${escapeHtml(r[3])}</td><td class="code">${escapeHtml(r[4])}</td><td class="code">${escapeHtml(r[5])}</td><td class="code">${escapeHtml(r[6])}</td><td class="code">${escapeHtml(r[7])}</td></tr>`;}).join("")}</tbody></table>`;
+
+    const pseudoRoot=document.getElementById("pseudoInstructionTable");
+    pseudoRoot.innerHTML=`<table><colgroup><col style="width:30%"><col style="width:28%"><col style="width:42%"></colgroup><thead><tr><th>Pseudoinstruction</th><th>Name</th><th>Translation</th></tr></thead><tbody>${PSEUDO_REFERENCE_ROWS.map(([pseudo,name,translation])=>`<tr><td class="syntax">${escapeHtml(pseudo)}</td><td>${escapeHtml(name)}</td><td class="syntax">${escapeHtml(translation)}</td></tr>`).join("")}</tbody></table>`;
+
+    const enc=document.getElementById("encodingSummary");
+    enc.innerHTML=ENCODING_SUMMARY.map(([title,opcode,rows])=>`<div class="encoding-card"><h4>${escapeHtml(title)}</h4><div class="opcode-line">opcode = <span class="mono">${opcode}</span></div><table class="encoding-mini"><thead><tr><th>Instruction</th><th>funct3</th><th>funct7</th></tr></thead><tbody>${rows.map(([mn,f3,f7])=>`<tr><td class="mono">${mn}</td><td class="mono">${f3}</td><td class="mono">${f7}</td></tr>`).join("")}</tbody></table></div>`).join("");
+
+    const reg=document.getElementById("registerReference");
+    const meanings=["Constant 0","Return Address","Stack Pointer","Global Pointer","Thread Pointer","Temporary","Temporary","Temporary","Saved register / frame pointer","Saved register","Function argument / return","Function argument / return","Function argument","Function argument","Function argument","Function argument","Function argument","Function argument","Saved register","Saved register","Saved register","Saved register","Saved register","Saved register","Saved register","Saved register","Saved register","Saved register","Temporary","Temporary","Temporary","Temporary"];
+    reg.innerHTML=ALIAS_BY_REG.map((a,n)=>`<div class="reg-ref"><span class="mono">x${n}</span><span class="mono">${escapeHtml(a)}</span><span>${escapeHtml(meanings[n])}</span></div>`).join("");
+  }
+
+  function renderFormatTable(){
+    const defs=[
+      ["R",[["funct7",7,"funct"],["rs2",5,"rs2"],["rs1",5,"rs1"],["funct3",3,"funct"],["rd",5,"rd"],["opcode",7,"opcode"]]],
+      ["I",[["imm[11:0]",12,"imm"],["rs1",5,"rs1"],["funct3",3,"funct"],["rd",5,"rd"],["opcode",7,"opcode"]]],
+      ["I*",[["funct7",7,"funct"],["imm[4:0]",5,"imm"],["rs1",5,"rs1"],["funct3",3,"funct"],["rd",5,"rd"],["opcode",7,"opcode"]]],
+      ["S",[["imm[11:5]",7,"imm"],["rs2",5,"rs2"],["rs1",5,"rs1"],["funct3",3,"funct"],["imm[4:0]",5,"imm"],["opcode",7,"opcode"]]],
+      ["B",[["imm[12|10:5]",7,"imm"],["rs2",5,"rs2"],["rs1",5,"rs1"],["funct3",3,"funct"],["imm[4:1|11]",5,"imm"],["opcode",7,"opcode"]]],
+      ["U",[["immu[31:12]",20,"imm"],["rd",5,"rd"],["opcode",7,"opcode"]]],
+      ["J",[["imm[20|10:1|11|19:12]",20,"imm"],["rd",5,"rd"],["opcode",7,"opcode"]]]
+    ];
+    const root=document.getElementById("formatTable");
+    const scale=document.createElement("div"); scale.className="format-scale";
+    const blank=document.createElement("div"); scale.appendChild(blank);
+    const grid=document.createElement("div"); grid.className="scale-grid";
+    for(let b=31;b>=0;b--){ const s=document.createElement("span"); s.textContent=[31,25,24,20,19,15,14,12,11,7,6,0].includes(b)?b:""; grid.appendChild(s); }
+    scale.appendChild(grid); root.appendChild(scale);
+    defs.forEach(([type,cells])=>{
+      const row=document.createElement("div"); row.className="format-row"; row.dataset.type=type;
+      const t=document.createElement("div"); t.className="format-type"; t.textContent=type; row.appendChild(t);
+      const bar=document.createElement("div"); bar.className="format-bar";
+      cells.forEach(([name,w,kind])=>{ const c=document.createElement("div"); c.className=`format-cell kind-${kind}`; c.style.gridColumn=`span ${w}`; c.textContent=name; bar.appendChild(c); });
+      row.appendChild(bar); root.appendChild(row);
+    });
+  }
+
+  function syncBitGrid(fields){
+    const byBit=Array.from({length:32},()=>({kind:"neutral",fieldIndex:-1,label:"unclassified"}));
+    fields.forEach((f,fi)=>expandRange(f.range).forEach(b=>byBit[b]={kind:f.kind,fieldIndex:fi,label:f.label}));
+    for(let pos=0;pos<32;pos++){
+      const bit=31-pos;
+      const one=((state.word>>BigInt(bit))&1n)===1n;
+      bitChecks[pos].checked=one; bitDigits[pos].textContent=one?"1":"0";
+      bitCells[pos].dataset.fieldIndex=String(byBit[bit].fieldIndex);
+      bitCells[pos].className=`bit-cell kind-${byBit[bit].kind}`;
+      bitCells[pos].title=`bit ${bit} · ${byBit[bit].label}`;
+    }
+  }
+
+  function renderFieldBar(){
+    const bar=document.getElementById("fieldBar"); bar.innerHTML="";
+    const badLabels=new Set(state.analysis.valid?[]:(state.analysis.errorFields||[]));
+    state.analysis.fields.forEach((f,fi)=>{
+      const btn=document.createElement("button");
+      btn.type="button";
+      const isOpen=state.openFieldIndex===fi;
+      const isError=badLabels.has(f.label);
+      btn.className=`field-segment kind-${f.kind}${isOpen?" expanded":""}${isError?" error-field":""}`;
+      btn.style.flex=`${f.width} 0 0`;
+      btn.dataset.fieldIndex=fi;
+      btn.setAttribute("aria-expanded",isOpen?"true":"false");
+      btn.innerHTML=`<span class="range">bits ${escapeHtml(f.range)}</span><span class="name">${escapeHtml(f.label)}</span><span class="bits">${escapeHtml(f.value)}</span><span class="field-arrow" aria-hidden="true">${isOpen?"▴":"▾"}</span>`;
+      btn.title=`${f.label}: ${f.meaning}. Click to ${isOpen?"collapse":"expand"} field details.${isError?" This field makes the current encoding unsupported.":""}`;
+      btn.addEventListener("click",()=>{
+        state.selectedField=fi;
+        state.openFieldIndex=isOpen?null:fi;
+        renderFieldBar();
+        renderFieldExpansion();
+        renderImmediate();
+      });
+      bar.appendChild(btn);
+    });
+  }
+
+  function opcodeOptionRows(){
+    return [
+      ["0110011","R","R-type arithmetic","add, sub, sll, slt, sltu, xor, srl, sra, or, and"],
+      ["0010011","I / I*","Arithmetic immediate","addi, slti, sltiu, xori, ori, andi, slli, srli, srai"],
+      ["0000011","I","Loads","lb, lh, lw, lbu, lhu"],
+      ["0100011","S","Stores","sb, sh, sw"],
+      ["1100011","B","Branches","beq, bne, blt, bge, bltu, bgeu"],
+      ["1101111","J","Jump and link","jal"],
+      ["1100111","I","Jump and link register","jalr"],
+      ["0110111","U","Load upper immediate","lui"],
+      ["0010111","U","Add upper immediate to PC","auipc"]
+    ];
+  }
+
+  function functOptionRows(){
+    const opcode=Number(state.word & 0x7fn);
+    if(opcode===0x33) return Object.entries(R).map(([mn,[f3,f7]])=>[mn,bits(f3,3),bits(f7,7)]);
+    if(opcode===0x13) return [
+      ["addi","000","—"],["slli","001","0000000"],["slti","010","—"],["sltiu","011","—"],
+      ["xori","100","—"],["srli","101","0000000"],["srai","101","0100000"],["ori","110","—"],["andi","111","—"]
+    ];
+    if(opcode===0x03) return Object.entries(LOAD).map(([mn,f3])=>[mn,bits(f3,3),"—"]);
+    if(opcode===0x23) return Object.entries(STORE).map(([mn,f3])=>[mn,bits(f3,3),"—"]);
+    if(opcode===0x63) return Object.entries(BRANCH).map(([mn,f3])=>[mn,bits(f3,3),"—"]);
+    if(opcode===0x67) return [["jalr","000","—"]];
+    return [];
+  }
+
+  function currentLogicalImmediateText(type){
+    const w=state.word;
+    if(type==="I"){ const raw=get(w,20,12); return `Current signed 12-bit immediate: ${bits(raw,12)} = ${signed(raw,12)}`; }
+    if(type==="I*"){ const sh=get(w,20,5); return `Current 5-bit unsigned shift amount: ${bits(sh,5)} = ${sh}`; }
+    if(type==="S"){ const raw=(get(w,25,7)<<5n)|get(w,7,5); return `Current reconstructed signed 12-bit immediate: ${bits(raw,12)} = ${signed(raw,12)}`; }
+    if(type==="B"){ const raw=(get(w,31,1)<<12n)|(get(w,7,1)<<11n)|(get(w,25,6)<<5n)|(get(w,8,4)<<1n); return `Current reconstructed signed 13-bit byte offset: ${bits(raw,13)} = ${signed(raw,13)}`; }
+    if(type==="U"){ const imm=get(w,12,20); return `Current 20-bit upper field: ${bits(imm,20)} = 0x${imm.toString(16)}`; }
+    if(type==="J"){ const raw=(get(w,31,1)<<20n)|(get(w,12,8)<<12n)|(get(w,20,1)<<11n)|(get(w,21,10)<<1n); return `Current reconstructed signed 21-bit byte offset: ${bits(raw,21)} = ${signed(raw,21)}`; }
+    return "No immediate interpretation is available for this word.";
+  }
+
+  function fieldOptionsHtml(f){
+    if(f.kind==="opcode"){
+      const current=bits(state.word & 0x7fn,7);
+      return `<p class="field-option-intro">The opcode chooses the instruction family. The supported major opcodes are:</p><div class="field-option-grid">${opcodeOptionRows().map(([b,t,n,inst])=>`<div class="field-option${b===current?" current":""}"><span class="mono">${b} · ${escapeHtml(t)}</span><small>${escapeHtml(n)}<br>${escapeHtml(inst)}</small></div>`).join("")}</div>`;
+    }
+    if(f.kind==="rd" || f.kind==="rs1" || f.kind==="rs2"){
+      const current=parseInt(f.value,2);
+      return `<p class="field-option-intro">A 5-bit register field has 32 possible values:</p><div class="field-option-grid">${Array.from({length:32},(_,n)=>`<div class="field-option${n===current?" current":""}"><span class="mono">${bits(n,5)} → x${n}</span><small>${escapeHtml(ALIAS_BY_REG[n])}</small></div>`).join("")}</div>`;
+    }
+    if(f.kind==="funct"){
+      const rows=functOptionRows();
+      if(!rows.length) return `<p class="field-option-intro">This instruction family has no supported funct choices to compare here.</p>`;
+      const currentMn=state.analysis.valid?state.analysis.decoded.mn:"";
+      return `<p class="field-option-intro">For the current opcode, funct3 and (when needed) funct7 select the specific operation:</p><table class="field-option-table"><thead><tr><th>Instruction</th><th>funct3</th><th>funct7</th></tr></thead><tbody>${rows.map(([mn,f3,f7])=>`<tr class="${mn===currentMn?"current":""}"><td class="mono">${escapeHtml(mn)}</td><td class="mono">${f3}</td><td class="mono">${f7}</td></tr>`).join("")}</tbody></table>`;
+    }
+    if(f.kind==="imm"){
+      const ranges={I:"signed 12-bit: −2048…2047","I*":"unsigned shamt: 0…31",S:"signed 12-bit: −2048…2047",B:"signed even byte offset: −4096…4094",U:"20-bit field: 0…0xFFFFF",J:"signed even byte offset: −1,048,576…1,048,574"};
+      return `<p class="field-option-intro">${escapeHtml(currentLogicalImmediateText(state.analysis.type))}</p><div class="field-option"><span class="mono">Allowed logical range</span><small>${escapeHtml(ranges[state.analysis.type]||"depends on the format")}</small></div><p class="field-option-intro" style="margin-top:8px">The detailed formation/reconstruction diagram is shown below while this immediate field is expanded.</p>`;
+    }
+    return `<p class="field-option-intro">${escapeHtml(fieldKindDescription(f.kind))}</p>`;
+  }
+
+  function renderFieldExpansion(){
+    const panel=document.getElementById("fieldExpandPanel");
+    const title=document.getElementById("fieldExpandTitle");
+    const body=document.getElementById("fieldExpandBody");
+    const instructionNote=document.getElementById("fieldExpandInstruction");
+    const fi=state.openFieldIndex;
+    if(fi==null || fi<0 || fi>=state.analysis.fields.length){
+      panel.hidden=true;
+      panel.className="field-expand-panel";
+      title.textContent=""; body.innerHTML="";
+      if(instructionNote) instructionNote.hidden=false;
+      return;
+    }
+    if(instructionNote) instructionNote.hidden=true;
+    const f=state.analysis.fields[fi];
+    panel.hidden=false;
+    panel.className=`field-expand-panel kind-${f.kind}`;
+    title.textContent=`${f.label} · instruction bits ${f.range}`;
+    const definition=`<div class="field-definition"><div class="field-definition-label">Field definition</div><div class="field-definition-main"><span class="mono">${escapeHtml(f.value)}</span> — ${escapeHtml(f.meaning)}</div><div class="field-definition-kind">${escapeHtml(fieldKindDescription(f.kind))}</div></div>`;
+    body.innerHTML=`${definition}<div class="field-more">${fieldOptionsHtml(f)}</div>`;
+  }
+
+  function immSegmentRowHtml(segments,role){
+    const groups=[];
+    for(const seg of segments){
+      const groupKey=seg.group || "main";
+      let group=groups[groups.length-1];
+      if(!group || group.key!==groupKey){ group={key:groupKey,segments:[]}; groups.push(group); }
+      group.segments.push(seg);
+    }
+    return `<div class="imm-flow-row" data-role="${escapeHtml(role)}">${groups.map(group=>{
+      const groupWidth=group.segments.reduce((sum,seg)=>sum+seg.width,0) || 1;
+      return `<div class="imm-flow-group" data-group="${escapeHtml(group.key)}" style="flex:${groupWidth} 1 0">${group.segments.map(seg=>{
+        const cls=`imm-flow-segment${seg.implied?" implied":""}`;
+        const pos=seg.position?`<span class="seg-pos">${escapeHtml(seg.position)}</span>`:"";
+        const straight=seg.straight?' data-straight="1"':'';
+        const content=role==="encoded"
+          ? `${pos}<span class="seg-bits">${escapeHtml(seg.bits)}</span><span class="seg-name">${escapeHtml(seg.label)}</span>`
+          : `<span class="seg-name">${escapeHtml(seg.label)}</span><span class="seg-bits">${escapeHtml(seg.bits)}</span>${pos}`;
+        return `<div class="${cls}" data-key="${escapeHtml(seg.key)}"${straight} style="flex:${seg.width} 1 0">${content}</div>`;
+      }).join("")}</div>`;
+    }).join("")}</div>`;
+  }
+
+  function immediateConnectorShell(){
+    return `<svg class="imm-connectors" id="immConnectors" aria-label="Orthogonal arrows showing how logical immediate partitions move into encoded instruction groups" role="img"><defs><marker id="immArrowHead" markerWidth="8" markerHeight="8" refX="6.5" refY="3.5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L7,3.5 L0,7 z" fill="#9b8b51"></path></marker></defs><g id="immConnectorPaths"></g></svg>`;
+  }
+
+  function drawImmediateConnectors(){
+    const svg=document.getElementById("immConnectors"), pathRoot=document.getElementById("immConnectorPaths");
+    if(!svg || !pathRoot) return;
+    const logicalRow=document.querySelector('.imm-flow-row[data-role="logical"]');
+    const encodedRow=document.querySelector('.imm-flow-row[data-role="encoded"]');
+    if(!logicalRow || !encodedRow) return;
+
+    const svgRect=svg.getBoundingClientRect();
+    const width=Math.max(1,svgRect.width), height=Math.max(1,svgRect.height);
+    svg.setAttribute("viewBox",`0 0 ${width} ${height}`);
+    svg.setAttribute("preserveAspectRatio","none");
+
+    const logical=[...logicalRow.querySelectorAll(".imm-flow-segment[data-key]")];
+    const encodedByKey=new Map([...encodedRow.querySelectorAll(".imm-flow-segment[data-key]")].map(el=>[el.dataset.key,el]));
+    const pairs=logical.filter(el=>encodedByKey.has(el.dataset.key)).map(el=>({from:el,to:encodedByKey.get(el.dataset.key)}));
+    const yStart=5, yEnd=height-10;
+    const laneTop=Math.max(17,height*.20), laneBottom=Math.min(height-20,height*.80);
+    const laneSpan=Math.max(0,laneBottom-laneTop);
+
+    pathRoot.innerHTML=pairs.map((pair,i)=>{
+      const a=pair.from.getBoundingClientRect(), b=pair.to.getBoundingClientRect();
+      const x1=(a.left+a.width/2)-svgRect.left;
+      const x2=(b.left+b.width/2)-svgRect.left;
+      const forceStraight=pair.from.dataset.straight==="1" || pair.to.dataset.straight==="1";
+      if(forceStraight){
+        const overlapLeft=Math.max(a.left,b.left)-svgRect.left;
+        const overlapRight=Math.min(a.right,b.right)-svgRect.left;
+        if(overlapRight-overlapLeft>4){
+          const x=(overlapLeft+overlapRight)/2;
+          return `<circle cx="${x.toFixed(1)}" cy="${yStart}" r="3.1"></circle><path d="M ${x.toFixed(1)} ${yStart+3} V ${yEnd.toFixed(1)}" marker-end="url(#immArrowHead)"></path>`;
+        }
+      }
+      if(Math.abs(x1-x2)<1){
+        return `<circle cx="${x1.toFixed(1)}" cy="${yStart}" r="3.1"></circle><path d="M ${x1.toFixed(1)} ${yStart+3} V ${yEnd.toFixed(1)}" marker-end="url(#immArrowHead)"></path>`;
+      }
+      const lane=pairs.length<=1 ? (laneTop+laneBottom)/2 : laneTop+(laneSpan*i/(pairs.length-1));
+      return `<circle cx="${x1.toFixed(1)}" cy="${yStart}" r="3.1"></circle><path d="M ${x1.toFixed(1)} ${yStart+3} V ${lane.toFixed(1)} H ${x2.toFixed(1)} V ${yEnd.toFixed(1)}" marker-end="url(#immArrowHead)"></path>`;
+    }).join("");
+  }
+
+  function immFlowHtml(logicalSegments,encodedSegments,extra=""){
+    return `<div class="imm-flow"><div class="imm-flow-title">Logical immediate / offset</div><p class="imm-flow-subtitle">Read this row in normal immediate-bit order, from the most significant immediate bit at the left to the least significant bit at the right.</p>${immSegmentRowHtml(logicalSegments,"logical")}${immediateConnectorShell()}<div class="imm-flow-title">Encoding-level groups</div><p class="imm-flow-subtitle">Each outlined block below is a contiguous immediate group in the 32-bit encoding. A gap means other instruction fields lie between those groups.</p>${immSegmentRowHtml(encodedSegments,"encoded")}${extra?`<div class="imm-extra">${escapeHtml(extra)}</div>`:""}</div>`;
+  }
+
+  function renderImmediate(){
+    const panel=document.getElementById("immediatePanel"), root=document.getElementById("immVisual"), lead=document.getElementById("immLead");
+    const w=state.word, type=state.analysis.type;
+    const chosen=state.openFieldIndex==null?null:state.analysis.fields[state.openFieldIndex];
+    if(!chosen || chosen.kind!=="imm"){ panel.hidden=true; root.innerHTML=""; return; }
+    panel.hidden=false; root.innerHTML="";
+    if(type==="R" || type==="?"){ panel.hidden=true; return; }
+    lead.textContent="Follow the arrows from the immediate in its natural bit order to the groups that are physically stored in the 32-bit instruction.";
+
+    let logical=[], encoded=[], equation="", note="", extra="";
+    if(type==="I"){
+      const raw=get(w,20,12), val=signed(raw,12), b=bits(raw,12);
+      logical=[{key:"imm",label:"imm[11:0]",bits:b,width:12}];
+      encoded=[{key:"imm",label:"imm[11:0]",bits:b,width:12,position:"instruction[31:20]"}];
+      equation=`imm[11:0] = ${b} = ${val}`;
+      note="I-type keeps all 12 immediate bits contiguous. Signed I-type immediates are interpreted using two's complement.";
+    } else if(type==="I*"){
+      const sh=get(w,20,5), f7=get(w,25,7), b=bits(sh,5);
+      logical=[{key:"shamt",label:"shamt[4:0]",bits:b,width:5}];
+      encoded=[{key:"shamt",label:"shamt[4:0]",bits:b,width:5,position:"instruction[24:20]"}];
+      equation=`shamt[4:0] = ${b} = ${sh}`;
+      extra=`Instruction bits 31:25 are not part of the immediate; they remain funct7 = ${bits(f7,7)}.`;
+      note="Shift-immediate instructions therefore carry only a 5-bit unsigned shift amount.";
+    } else if(type==="S"){
+      const hi=get(w,25,7), lo=get(w,7,5), raw=(hi<<5n)|lo, val=signed(raw,12);
+      logical=[
+        {key:"hi",label:"imm[11:5]",bits:bits(hi,7),width:7,straight:true},
+        {key:"lo",label:"imm[4:0]",bits:bits(lo,5),width:5,straight:true}
+      ];
+      encoded=[
+        {key:"hi",label:"imm[11:5]",bits:bits(hi,7),width:7,position:"instruction[31:25]",group:"upper",straight:true},
+        {key:"lo",label:"imm[4:0]",bits:bits(lo,5),width:5,position:"instruction[11:7]",group:"lower",straight:true}
+      ];
+      equation=`${bits(hi,7)} | ${bits(lo,5)} = ${bits(raw,12)} = ${val}`;
+      note="The two encoded pieces are separated by rs2, rs1, and funct3 in the full instruction. Concatenating imm[11:5] with imm[4:0] reconstructs the signed 12-bit immediate.";
+    } else if(type==="B"){
+      const b12=get(w,31,1), b10_5=get(w,25,6), b4_1=get(w,8,4), b11=get(w,7,1), raw=(b12<<12n)|(b11<<11n)|(b10_5<<5n)|(b4_1<<1n), val=signed(raw,13);
+      logical=[
+        {key:"b12",label:"imm[12]",bits:bits(b12,1),width:1,straight:true},
+        {key:"b11",label:"imm[11]",bits:bits(b11,1),width:1},
+        {key:"b10_5",label:"imm[10:5]",bits:bits(b10_5,6),width:6},
+        {key:"b4_1",label:"imm[4:1]",bits:bits(b4_1,4),width:4},
+        {key:"b0",label:"imm[0]",bits:"0",width:1,implied:true,straight:true}
+      ];
+      encoded=[
+        {key:"b12",label:"imm[12]",bits:bits(b12,1),width:1,position:"instruction[31]",group:"upper",straight:true},
+        {key:"b10_5",label:"imm[10:5]",bits:bits(b10_5,6),width:6,position:"instruction[30:25]",group:"upper"},
+        {key:"b4_1",label:"imm[4:1]",bits:bits(b4_1,4),width:4,position:"instruction[11:8]",group:"lower"},
+        {key:"b11",label:"imm[11]",bits:bits(b11,1),width:1,position:"instruction[7]",group:"lower"},
+        {key:"b0",label:"imm[0]",bits:"0",width:1,position:"not stored",implied:true,group:"implied",straight:true}
+      ];
+      equation=`imm[12] | imm[11] | imm[10:5] | imm[4:1] | 0 = ${bits(raw,13)} = ${val} bytes`;
+      extra="The gray imm[0] box is part of the logical 13-bit offset but is omitted from the instruction because branch offsets are always even.";
+      note="Notice the crossing arrows: imm[11] moves to instruction bit 7, while imm[10:5] and imm[4:1] occupy the other two encoded immediate groups.";
+    } else if(type==="U"){
+      const imm20=get(w,12,20), effective=imm20<<12n, b=bits(imm20,20);
+      logical=[{key:"immu",label:"immu[19:0]",bits:b,width:20}];
+      encoded=[{key:"immu",label:"immu[19:0]",bits:b,width:20,position:"instruction[31:12]"}];
+      equation=`immu = ${b} = 0x${imm20.toString(16)}; effective value after << 12 = 0x${effective.toString(16)}`;
+      extra="Conceptually, using the U-type field as a 32-bit value appends 12 zero bits on the right.";
+      note="The 20-bit field itself stays contiguous in the instruction; the lower 12 zeros appear when the field contributes its upper-immediate value.";
+    } else if(type==="J"){
+      const b20=get(w,31,1), b10_1=get(w,21,10), b11=get(w,20,1), b19_12=get(w,12,8), raw=(b20<<20n)|(b19_12<<12n)|(b11<<11n)|(b10_1<<1n), val=signed(raw,21);
+      logical=[
+        {key:"b20",label:"imm[20]",bits:bits(b20,1),width:1},
+        {key:"b19_12",label:"imm[19:12]",bits:bits(b19_12,8),width:8},
+        {key:"b11",label:"imm[11]",bits:bits(b11,1),width:1},
+        {key:"b10_1",label:"imm[10:1]",bits:bits(b10_1,10),width:10},
+        {key:"b0",label:"imm[0]",bits:"0",width:1,implied:true,straight:true}
+      ];
+      encoded=[
+        {key:"b20",label:"imm[20]",bits:bits(b20,1),width:1,position:"instruction[31]"},
+        {key:"b10_1",label:"imm[10:1]",bits:bits(b10_1,10),width:10,position:"instruction[30:21]"},
+        {key:"b11",label:"imm[11]",bits:bits(b11,1),width:1,position:"instruction[20]"},
+        {key:"b19_12",label:"imm[19:12]",bits:bits(b19_12,8),width:8,position:"instruction[19:12]"},
+        {key:"b0",label:"imm[0]",bits:"0",width:1,position:"not stored",implied:true,group:"implied",straight:true}
+      ];
+      equation=`imm[20] | imm[19:12] | imm[11] | imm[10:1] | 0 = ${bits(raw,21)} = ${val} bytes`;
+      extra="The gray imm[0] box is implied rather than stored, so every J-type byte offset is even.";
+      note="The arrows make the J-type shuffle explicit: imm[19:12] moves to the last stored immediate group, while imm[10:1] moves directly after the sign bit in the encoding.";
+    }
+
+    root.innerHTML=`<div class="imm-equation">${escapeHtml(equation)}</div>${immFlowHtml(logical,encoded,extra)}<div class="imm-note">${escapeHtml(note)}</div>`;
+    requestAnimationFrame(drawImmediateConnectors);
+  }
+
+  function highlightFormatRow(){
+    document.querySelectorAll(".format-row").forEach(r=>r.classList.toggle("active",r.dataset.type===state.analysis.type));
+  }
+
+  function setInputState(el,status){
+    el.classList.remove("live-valid","live-invalid");
+    if(status==="valid") el.classList.add("live-valid");
+    else if(status==="invalid") el.classList.add("live-invalid");
+  }
+
+  function refreshAll(origin){
+    state.analysis=analyzeWord(state.word);
+    const a=state.analysis;
+    const asm=document.getElementById("decodedAssembly");
+    if(a.valid){ asm.className="asm-display"; asm.textContent=a.decoded.assembly; document.getElementById("validBadge").textContent="valid supported encoding"; }
+    else { asm.className="asm-display invalid"; asm.textContent=`Invalid / unsupported encoding: ${a.error}`; document.getElementById("validBadge").textContent="not a supported instruction"; }
+    document.getElementById("typeBadge").textContent=a.type==="?"?"format unknown":`${a.type}-type`;
+    document.getElementById("binaryOutput").textContent=groupedBinary(state.word);
+    document.getElementById("hexOutput").textContent=hex32(state.word);
+
+    const asmInput=document.getElementById("asmInput");
+    const machineInput=document.getElementById("machineInput");
+    if(origin!=="machine-live") machineInput.value=hex32(state.word);
+    if(origin!=="asm-live") asmInput.value=a.valid?a.decoded.assembly:"";
+
+    state.selectedField=Math.min(state.selectedField,Math.max(0,a.fields.length-1));
+    if(state.openFieldIndex!=null && state.openFieldIndex>=a.fields.length) state.openFieldIndex=null;
+    renderFieldBar(); syncBitGrid(a.fields); renderFieldExpansion(); renderImmediate(); highlightFormatRow();
+  }
+
+  function updateFromAssemblyLive(){
+    const input=document.getElementById("asmInput"), msg=document.getElementById("asmMessage");
+    clearMessage(msg);
+    if(!input.value.trim()){
+      setInputState(input,"invalid");
+      setMessage(msg,"error","Enter one supported RV32I instruction or pseudoinstruction.");
+      return;
+    }
+    try{
+      const resolved=resolveAssemblyInput(input.value);
+      if(resolved.kind==="single"){
+        const enc=encodeParsed(resolved.parsed);
+        state.word=enc.word; state.selectedField=0; state.openFieldIndex=null; refreshAll("asm-live");
+        setInputState(input,"valid");
+        setInputState(document.getElementById("machineInput"),"valid");
+        if(resolved.pseudo) setPseudoMessage(msg,resolved.pseudo,`Encoded as ${hex32(enc.word)}.`);
+        else setMessage(msg,"ok",`Valid ${enc.type}-type instruction · ${hex32(enc.word)}.`);
+        const machineMsg=document.getElementById("machineMessage");
+        setMessage(machineMsg,"ok",`Valid supported encoding: ${enc.assembly}.`);
+        return;
+      }
+
+      // Recognized pseudoinstructions that need either two real instructions or symbol resolution.
+      setInputState(input,"valid");
+      setPseudoMessage(msg,resolved.pseudo);
+      const machineInput=document.getElementById("machineInput");
+      const machineMsg=document.getElementById("machineMessage");
+      setInputState(machineInput,"invalid");
+      setMessage(machineMsg,"error","This pseudoinstruction does not correspond to one complete 32-bit word. The current bit grid is unchanged.");
+    } catch(e){
+      setInputState(input,"invalid");
+      setMessage(msg,"error",e.userMessage||e.message||String(e));
+    }
+  }
+
+  function updateFromMachineLive(){
+    const input=document.getElementById("machineInput"), msg=document.getElementById("machineMessage");
+    clearMessage(msg);
+    if(!input.value.trim()){
+      setInputState(input,"invalid");
+      setMessage(msg,"error","Enter a 32-bit binary instruction or an 8-digit hexadecimal instruction.");
+      return;
+    }
+    try{
+      state.word=parseMachineCode(input.value); state.selectedField=0; state.openFieldIndex=null; refreshAll("machine-live");
+      if(state.analysis.valid){
+        setInputState(input,"valid");
+        setInputState(document.getElementById("asmInput"),"valid");
+        setMessage(msg,"ok",`Valid supported encoding: ${state.analysis.decoded.assembly}.`);
+        setMessage(document.getElementById("asmMessage"),"ok",`Decoded from the current 32-bit word · ${hex32(state.word)}.`);
+      } else {
+        setInputState(input,"invalid");
+        setInputState(document.getElementById("asmInput"),"invalid");
+        setMessage(msg,"error",`The 32-bit value is well-formed, but it is not a supported instruction: ${state.analysis.error}`);
+        setMessage(document.getElementById("asmMessage"),"error","No supported assembly instruction corresponds to the current 32-bit word.");
+      }
+    } catch(e){
+      setInputState(input,"invalid");
+      setMessage(msg,"error",e.userMessage||e.message||String(e));
+    }
+  }
+
+  function runSelfTests(){
+    const exact={
+      "add x3, x0, x0":"0x000001b3","lui x4, 0x10000":"0x10000237","lw x1, 0(x4)":"0x00022083","lw x2, 4(x4)":"0x00422103",
+      "beq x1, x0, 16":"0x00008863","addi x1, x1, -1":"0xfff08093","jal x0, -12":"0xff5ff06f","sw x3, 8(x4)":"0x00322423"
+    };
+    const results=[];
+    for(const [asm,h] of Object.entries(exact)){
+      try{ const enc=encodeParsed(parseAssembly(asm)); const dec=decodeWord(enc.word); results.push({asm,pass:hex32(enc.word)===h && encodeParsed(parseAssembly(dec.assembly)).word===enc.word}); }
+      catch(e){ results.push({asm,pass:false,error:e.message}); }
+    }
+    const every=[
+      "sub x5, x6, x7","and x31, x1, x2","or x8, x9, x10","xor x11, x12, x13","sll x1, x2, x3","srl x4, x5, x6","sra x7, x8, x9","slt x10, x11, x12","sltu x13, x14, x15",
+      "addi x1, x2, -2048","andi x1, x2, 2047","ori x2, x3, 17","xori x3, x4, -1","slti x4, x5, 0","sltiu x5, x6, 31","slli x6, x7, 31","srli x7, x8, 0","srai x8, x9, 1",
+      "lb x1, -8(x2)","lbu x2, 7(x3)","lh x3, 2(x4)","lhu x4, 4(x5)","lw x5, -16(x6)","sb x7, -1(x8)","sh x9, 6(x10)","sw x11, 12(x12)",
+      "beq x1, x2, 2","bne x1, x2, -2","blt x3, x4, 4094","bge x5, x6, -4096","bltu x7, x8, 10","bgeu x9, x10, -10","jal x1, 1048574","jalr x2, x3, -12","auipc x4, 0xfffff","lui x5, 0x12345"
+    ];
+    every.forEach(asm=>{ try{ const e=encodeParsed(parseAssembly(asm)); const d=decodeWord(e.word); const r=encodeParsed(parseAssembly(d.assembly)); results.push({asm,pass:r.word===e.word}); }catch(err){results.push({asm,pass:false,error:err.message});} });
+    const pseudoSingles={
+      "beqz x3, 16":"beq x3, x0, 16",
+      "bnez x4, -4":"bne x4, x0, -4",
+      "j 12":"jal x0, 12",
+      "jal 20":"jal x1, 20",
+      "jr x5":"jalr x0, x5, 0",
+      "li x6, -7":"addi x6, x0, -7",
+      "mv x7, x8":"addi x7, x8, 0",
+      "neg x9, x10":"sub x9, x0, x10",
+      "nop":"addi x0, x0, 0",
+      "not x11, x12":"xori x11, x12, -1",
+      "ret":"jalr x0, x1, 0"
+    };
+    Object.entries(pseudoSingles).forEach(([pseudo,equiv])=>{
+      try{
+        const r=resolveAssemblyInput(pseudo);
+        const a=encodeParsed(r.parsed), b=encodeParsed(parseAssembly(equiv));
+        results.push({asm:pseudo,pass:r.kind==="single" && !!r.pseudo && a.word===b.word});
+      } catch(err){ results.push({asm:pseudo,pass:false,error:err.message}); }
+    });
+    try{
+      const r=resolveAssemblyInput("li x5, 0x12345");
+      results.push({asm:"li x5, 0x12345",pass:r.kind==="sequence" && r.sequence.length===2});
+    } catch(err){ results.push({asm:"li x5, 0x12345",pass:false,error:err.message}); }
+    try{
+      const r=resolveAssemblyInput("la x5, target");
+      results.push({asm:"la x5, target",pass:r.kind==="sequence-symbolic" && r.sequence.length===2});
+    } catch(err){ results.push({asm:"la x5, target",pass:false,error:err.message}); }
+
+    window.__SELF_TESTS__={passed:results.filter(r=>r.pass).length,total:results.length,results};
+    document.documentElement.dataset.selfTests=`${window.__SELF_TESTS__.passed}/${window.__SELF_TESTS__.total}`;
+  }
+
+  buildBitGrid();
+  renderReferenceTables();
+  renderFormatTable();
+  document.getElementById("fieldExpandClose").addEventListener("click",()=>{
+    state.openFieldIndex=null;
+    renderFieldBar();
+    renderFieldExpansion();
+    renderImmediate();
+  });
+  document.getElementById("asmInput").addEventListener("input",updateFromAssemblyLive);
+  document.getElementById("machineInput").addEventListener("input",updateFromMachineLive);
+  window.addEventListener("resize",()=>{
+    const panel=document.getElementById("immediatePanel");
+    if(panel && !panel.hidden) requestAnimationFrame(drawImmediateConnectors);
+  });
+  runSelfTests();
+  updateFromAssemblyLive();
+})();
+</script>
+</body>
+</html>
