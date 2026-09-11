@@ -207,6 +207,26 @@ include-in-header:
         </p>
       </a>
 
+      <!-- Systolic Array Simulator -->
+      <a href="systolic_array_simulator.html"
+         class="block bg-white rounded-xl border border-gray-200 p-6
+                hover:shadow-md hover:border-red-300 transition-all group">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
+             style="background: #fee2e2;">
+          <svg class="w-5 h-5" style="color: #7B0D1E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6zM10 7h4M10 17h4M7 10v4M17 10v4"/>
+          </svg>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">
+          Systolic Array Simulator
+        </h3>
+        <p class="text-sm text-gray-500 leading-relaxed">
+          Step through an output-stationary systolic array cycle by cycle
+          and visualize data flow and accumulation.
+        </p>
+      </a>
+
     </div>
   </div>
 </section>

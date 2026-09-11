@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Output-stationary systolic array cycle simulator</title>
+<style>
+  :root {
+    --bg: #f6f7fb;
+    --panel: #ffffff;
+    --text: #18181b;
+    --muted: #6b7280;
+    --line: #d4d4d8;
+    --accent: #7f1d1d;
+    --accent2: #991b1b;
+    --feat: #2563eb;
+    --filt: #7c3aed;
+    --prod: #ea580c;
+    --accu: #15803d;
+    --shift: #0f766e;
+    --good: #166534;
+    --edgecell: 32px;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: auto;
+  }
+  header {
+    background: var(--accent);
+    color: white;
+    padding: 18px 0;
+  }
+  .header-inner {
+    max-width: 1900px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+  header h1 { margin: 0 0 6px; font-size: 1.65rem; }
+  .header-subtitle {
+    margin: 0;
+    opacity: .95;
+    font-size: .94rem;
+    line-height: 1.4;
+    max-width: 1200px;
+  }
+  .header-credit {
+    margin: 5px 0 0;
+    opacity: .78;
+    font-size: .74rem;
+    letter-spacing: .01em;
+  }
+
+  main { max-width: 1900px; margin: 0 auto; padding: 16px; }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 16px;
+  }
+  .panel h2, .panel h3 { margin: 0 0 10px; }
+  .panel h2 { font-size: 1.05rem; }
+  .panel h3 { font-size: .95rem; }
+  .muted { color: var(--muted); }
+  .tiny { font-size: .75rem; }
+
+  .config-panel {
+    padding: 0;
+    overflow: visible;
+  }
+  .config-panel > summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 10px 14px;
+    font-weight: 800;
+    font-size: 1.02rem;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+  }
+  .config-summary-title {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+  }
+  .config-summary-legend {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    font-size: .78rem;
+    font-weight: 500;
+    margin-left: auto;
+  }
+  .config-summary-legend span::before {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    margin-right: 5px;
+    vertical-align: -1px;
+    background: currentColor;
+  }
+  .config-panel > summary::-webkit-details-marker { display: none; }
+  .config-summary-title::before {
+    content: "▸";
+    display: inline-block;
+    width: 1.2em;
+    color: var(--accent);
+  }
+  .config-panel[open] .config-summary-title::before { content: "▾"; }
+  .config-panel[open] > summary { border-bottom: 1px solid var(--line); }
+  .config-body { padding: 14px; }
+
+  .topbar {
+    display: grid;
+    grid-template-columns: auto minmax(260px, 330px) minmax(260px, 330px) 1fr;
+    gap: 14px;
+    align-items: start;
+    width: 100%;
+  }
+  .view-controls {
+    border-left: 1px solid var(--line);
+    padding-left: 14px;
+    min-height: 100%;
+    width: 170px;
+    justify-self: end;
+  }
+  .toggle-button {
+    width: 100%;
+  }
+  .toggle-button.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  .toggle-help {
+    margin-top: 8px;
+    font-size: .72rem;
+    line-height: 1.35;
+    color: var(--muted);
+  }
+  .controls-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: end;
+  }
+  .control-card { min-width: 76px; }
+  label { font-size: .8rem; color: var(--muted); display: block; margin-bottom: 4px; }
+  input[type="number"], textarea {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: white;
+    color: var(--text);
+    padding: 8px 9px;
+    font: inherit;
+  }
+  textarea {
+    min-height: 156px;
+    resize: vertical;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 1.28rem;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+  button {
+    border: 1px solid var(--line);
+    background: white;
+    color: var(--text);
+    border-radius: 8px;
+    padding: 9px 12px;
+    min-height: 40px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button.primary { background: var(--accent); color: white; border-color: var(--accent); }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+
+  .error { color: #b91c1c; font-size: .82rem; min-height: 1.2em; margin-top: 8px; }
+  .status {
+    border-left: 4px solid var(--accent);
+    background: #fafafa;
+    padding: 9px 10px;
+    border-radius: 6px;
+    margin-top: 10px;
+    font-size: .86rem;
+    text-align: left;
+  }
+
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 10px 14px;
+    font-size: .78rem; margin: 10px 0 0;
+  }
+  .legend span::before {
+    content: "";
+    display: inline-block;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    margin-right: 5px;
+    vertical-align: -1px;
+    background: currentColor;
+  }
+  .feat { color: var(--feat); }
+  .filt { color: var(--filt); }
+  .prod { color: var(--prod); }
+  .accu { color: var(--accu); }
+  .shift { color: var(--shift); }
+  .good { color: var(--good); }
+
+  .cycle-info {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(120px, 1fr));
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .kpi {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 9px;
+    background: #fafafa;
+  }
+  .kpi .label { color: var(--muted); font-size: .72rem; }
+  .kpi .value { font-weight: 800; margin-top: 2px; font-size: .94rem; }
+
+  .hero-panel { text-align: center; }
+  .hero-message {
+    margin: 2px auto 12px;
+    max-width: 1280px;
+    border: 1px solid var(--line);
+    border-left: 5px solid var(--accent);
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-size: .96rem;
+    line-height: 1.38;
+    font-weight: 600;
+  }
+  .hero-message .phase-badge {
+    margin-right: 8px;
+    vertical-align: 1px;
+  }
+  .hero-message .controls {
+    display: block;
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: .70rem;
+    font-weight: 500;
+  }
+  .stage-shell { display: inline-block; max-width: none; }
+  .expected-panel {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 10px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: hidden;
+  }
+  .expected-title {
+    font-size: .82rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: var(--muted);
+  }
+  .expected-panel .matrix-wrap { margin-bottom: 6px; }
+  .expected-panel table.matrix { font-size: .78rem; }
+  .output-panel {
+    position: relative;
+  }
+  .output-panel .feed-title { left: 8px; top: 6px; }
+  .output-lane {
+    position: absolute;
+    left: 0;
+    width: 100%;
+  }
+  .output-cell {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 800;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    border-radius: 8px;
+    border: 2px solid #99f6e4;
+    background: #f0fdfa;
+    color: #0f766e;
+    box-shadow: 0 2px 6px rgba(15,118,110,.12);
+    transition: left 420ms cubic-bezier(.25,.8,.25,1), opacity 260ms ease, transform 260ms ease;
+    opacity: 0;
+    transform: scale(.92);
+    z-index: 2;
+  }
+  .output-cell.visible { opacity: 1; transform: scale(1); }
+  .output-cell.current {
+    background: #ccfbf1;
+    border-color: #14b8a6;
+    box-shadow: 0 0 0 3px rgba(20,184,166,.14), 0 6px 14px rgba(15,118,110,.22);
+    transform: scale(1.06);
+    z-index: 3;
+  }
+  .output-panel .feed-boundary-label {
+    left: 8px;
+    top: 34px;
+    bottom: auto;
+  }
+  .stage {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto auto;
+    gap: 12px;
+    align-items: start;
+  }
+  .stage-corner {
+    position: relative;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 10px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+  }
+  .corner-step {
+    width: 100%;
+    min-height: 48px;
+    font-size: .88rem;
+  }
+  .corner-reset {
+    width: 100%;
+    min-height: 38px;
+  }
+
+
+  .feed-panel {
+    position: relative;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .feed-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, transparent calc(var(--edgecell) - 1px), #f0f0f2 calc(var(--edgecell) - 1px)),
+      linear-gradient(to bottom, transparent calc(var(--edgecell) - 1px), #f0f0f2 calc(var(--edgecell) - 1px));
+    background-size: var(--edgecell) var(--edgecell), var(--edgecell) var(--edgecell);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .feed-title {
+    position: absolute;
+    left: 8px; top: 6px;
+    font-size: .72rem;
+    color: var(--muted);
+    z-index: 5;
+    background: rgba(255,255,255,.94);
+    padding: 2px 6px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+  }
+  .feed-boundary {
+    position: absolute;
+    background: #fca5a5;
+    z-index: 3;
+  }
+  .feed-boundary-label {
+    position: absolute;
+    font-size: .62rem;
+    color: #991b1b;
+    background: rgba(255,255,255,.94);
+    border: 1px solid #fecaca;
+    border-radius: 999px;
+    padding: 1px 6px;
+    z-index: 4;
+  }
+  .lane-label {
+    position: absolute;
+    font-size: .66rem;
+    color: var(--muted);
+    background: rgba(255,255,255,.95);
+    padding: 1px 4px;
+    border-radius: 4px;
+    border: 1px solid #ececf0;
+    z-index: 4;
+  }
+  .feed-track {
+    position: absolute;
+    transition: transform 420ms cubic-bezier(.25,.8,.25,1);
+    will-change: transform;
+    z-index: 2;
+  }
+  .feed-cell {
+    position: absolute;
+    width: var(--edgecell);
+    height: var(--edgecell);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.28rem;
+    font-weight: 800;
+    border-radius: 5px;
+    border: 1px solid #c7d2fe;
+    background: #eff6ff;
+    color: #1d4ed8;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+  }
+  .feed-cell.filt {
+    border-color: #ddd6fe;
+    background: #f5f3ff;
+    color: #6d28d9;
+  }
+  .feed-cell.current {
+    box-shadow: 0 0 0 2px rgba(250,204,21,.35), 0 4px 10px rgba(0,0,0,.08);
+    background: #fef3c7;
+    color: #92400e;
+    border-color: #fcd34d;
+  }
+
+  .array {
+    --cellW: 208px;
+    --cellH: 148px;
+    display: grid;
+    width: max-content;
+    justify-self: start;
+    gap: 22px 40px;
+    min-width: max-content;
+    padding: 34px 52px 44px 72px;
+    position: relative;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  .pe {
+    width: var(--cellW);
+    min-height: var(--cellH);
+    border: 2px solid #a1a1aa;
+    border-radius: 14px;
+    background: white;
+    padding: 7px 9px 8px;
+    position: relative;
+    box-shadow: 0 1px 1px rgba(0,0,0,.03);
+  }
+  .pe.active { border-color: var(--accent2); box-shadow: 0 0 0 2px rgba(153,27,27,.10); }
+  .pe.wave {
+    background: linear-gradient(180deg, #fffdf4 0%, #ffffff 100%);
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 2px rgba(245,158,11,.12);
+  }
+  .pe-title {
+    font-weight: 800; font-size: .80rem; margin-bottom: 4px;
+    display: flex; justify-content: space-between;
+  }
+  .pair-note {
+    font-size: .64rem;
+    border: 1px solid #fde68a;
+    background: #fffbeb;
+    color: #92400e;
+    border-radius: 8px;
+    padding: 3px 6px;
+    line-height: 1.2;
+    min-height: 34px;
+  }
+  .pair-note.inactive {
+    border-style: dashed;
+    background: #fafafa;
+    color: var(--muted);
+    border-color: #e5e7eb;
+  }
+  .center-math {
+    margin: 7px 0 6px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #fcfcfd, #f8fafc);
+    padding: 7px 8px;
+    text-align: center;
+  }
+  .big-reg {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+  }
+  .big-line {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 8px;
+  }
+  .big-label {
+    font-size: .69rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    color: var(--muted);
+  }
+  .big-value {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-weight: 800;
+    font-size: 1.28rem;
+    line-height: 1;
+  }
+  .big-value.prod { color: var(--prod); }
+  .big-value.accu { color: var(--accu); }
+
+  .pe-stage {
+    display: grid;
+    grid-template-columns: 62px 1fr;
+    gap: 2px 6px;
+    font-size: .68rem;
+    line-height: 1.22;
+  }
+  .pe-stage .v {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    text-align: right;
+  }
+
+  .array.minimalist {
+    gap: 16px 24px;
+    padding: 28px 44px 36px 58px;
+  }
+  .array.minimalist .pe {
+    width: 136px;
+    min-height: 94px;
+    padding: 6px 7px 7px;
+    border-radius: 11px;
+  }
+  .array.minimalist .pe-title {
+    margin-bottom: 5px;
+  }
+  .array.minimalist .center-math {
+    margin: 0;
+    padding: 7px 4px;
+    border-radius: 9px;
+  }
+  .array.minimalist .big-reg {
+    gap: 6px;
+  }
+  .array.minimalist .big-line {
+    gap: 6px;
+  }
+  .array.minimalist .wire-h {
+    width: 24px;
+    right: -26px;
+  }
+  .array.minimalist .wire-v {
+    height: 16px;
+    bottom: -18px;
+    left: 66px;
+  }
+  .array.minimalist .token.left {
+    left: -56px;
+    top: 16px;
+  }
+  .array.minimalist .token.top {
+    top: -26px;
+    left: 34px;
+  }
+  .array.minimalist .token.psum-left {
+    left: -56px;
+    bottom: 13px;
+  }
+  .array.minimalist .token.psum-right {
+    bottom: 12px;
+  }
+
+  .token {
+    position: absolute;
+    font-size: .65rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 2px 5px;
+    white-space: nowrap;
+    z-index: 2;
+  }
+  .token.left { left: -68px; top: 18px; color: var(--feat); }
+  .token.top { top: -26px; left: 58px; color: var(--filt); }
+  .token.psum-left { left: -68px; bottom: 16px; color: var(--shift); }
+  .token.psum-right {
+    right: -76px;
+    bottom: 14px;
+    color: var(--shift);
+    font-size: .84rem;
+    font-weight: 800;
+    padding: 5px 8px;
+    border: 2px solid #5eead4;
+    background: #f0fdfa;
+    box-shadow: 0 3px 10px rgba(15,118,110,.18);
+    border-radius: 8px;
+    z-index: 5;
+  }
+  .token.psum-right.drain-pop {
+    font-size: 1.05rem;
+    padding: 7px 10px;
+    right: -92px;
+    border-color: #14b8a6;
+    background: #ccfbf1;
+    box-shadow: 0 0 0 3px rgba(20,184,166,.14), 0 6px 14px rgba(15,118,110,.22);
+  }
+
+  .wire-h, .wire-v {
+    position: absolute;
+    background: #d4d4d8;
+    z-index: 0;
+  }
+  .wire-h { height: 2px; width: 40px; right: -42px; top: 28px; }
+  .wire-v { width: 2px; height: 22px; bottom: -24px; left: 100px; }
+  .wire-h.psum { top: auto; bottom: 23px; background: #99f6e4; }
+  .pe.drain-active .wire-h.psum {
+    height: 4px;
+    background: #14b8a6;
+  }
+
+  .matrix-wrap { overflow-x: auto; margin-bottom: 12px; }
+  table.matrix { border-collapse: collapse; font-size: .82rem; }
+  .matrix th, .matrix td { border: 1px solid var(--line); padding: 5px 7px; text-align: right; min-width: 42px; }
+  .matrix th { background: #f4f4f5; font-weight: 600; text-align: center; }
+  .matrix td.hot { background: #fff7ed; font-weight: 700; }
+  .matrix td.done { background: #f0fdf4; }
+
+  .timeline { overflow-x: auto; }
+  .timeline-split {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 36px;
+    text-align: center;
+    width: 100%;
+  }
+  .timing-table-group {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1 1 460px;
+    max-width: 760px;
+  }
+  .timing-table-title {
+    font-weight: 800;
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+  .timeline table {
+    border-collapse: collapse;
+    font-size: .92rem;
+    min-width: 0;
+    margin: 0 auto;
+  }
+  .timeline th, .timeline td {
+    border: 1px solid var(--line);
+    padding: 7px 12px;
+    text-align: center;
+    min-width: 68px;
+  }
+  .timeline th { background: #f4f4f5; }
+  .timeline .current { background: #fef3c7; font-weight: 800; }
+  .valid-list { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .76rem; line-height: 1.45; }
+
+  @media (max-width: 1200px) {
+    .topbar { grid-template-columns: 1fr; }
+    .view-controls { border-left: 0; padding-left: 0; }
+    .cycle-info { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+    .bottom-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <h1>Output-stationary systolic array cycle simulator</h1>
+    <p class="header-subtitle"><strong>See how a systolic array performs a matrix computation cycle by cycle.</strong></p>
+    <p class="header-credit">Conceptualized by Adelson Chua.</p>
+  </div>
+</header>
+
+<main>
+  <details id="configDetails" class="panel config-panel" open>
+    <summary>
+      <span class="config-summary-title">Configuration</span>
+      <span class="config-summary-legend" aria-label="Dataflow legend">
+        <span class="feat">feature / A</span>
+        <span class="filt">filter / B</span>
+        <span class="prod">product</span>
+        <span class="accu">accumulator</span>
+        <span class="shift">output shift</span>
+      </span>
+    </summary>
+    <div class="config-body">
+    <div class="topbar">
+      <div>
+        <h3>Dimensions &amp; actions</h3>
+        <div class="controls-group">
+          <div class="control-card"><label for="rows">ROWS</label><input id="rows" type="number" min="1" max="8" value="4"></div>
+          <div class="control-card"><label for="k">K</label><input id="k" type="number" min="1" max="16" value="3"></div>
+          <div class="control-card"><label for="cols">COLS</label><input id="cols" type="number" min="1" max="8" value="4"></div>
+        </div>
+        <div class="controls-group" style="margin-top:10px;">
+          <button id="knownBtn" type="button">Load worked example</button>
+          <button id="applyBtn" class="primary" type="button">Apply / restart</button>
+        </div>
+        <div id="error" class="error" aria-live="polite"></div>
+      </div>
+
+      <div>
+        <label for="matA">A (ROWS × K), one row per line</label>
+        <textarea id="matA">1 2 3
+4 5 6
+7 8 9
+-1 -2 -3</textarea>
+      </div>
+
+      <div>
+        <label for="matB">B (K × COLS), one row per line</label>
+        <textarea id="matB">1 0 -1 2
+0 1 2 -1
+1 1 0 1</textarea>
+      </div>
+
+      <div class="view-controls">
+        <label>PE display</label>
+        <button id="minimalistBtn" class="toggle-button" type="button" aria-pressed="false">Minimalist: Off</button>
+        <div class="toggle-help">Shows only the PE/C indices, <span class="prod">reg_prod</span>, and <span class="accu">reg_accu</span> inside each PE.</div>
+      </div>
+    </div>
+    </div>
+  </details>
+
+  <section class="panel hero-panel">
+    <div class="cycle-info">
+      <div class="kpi"><div class="label">Positive edges stepped</div><div id="edgeKpi" class="value">0</div></div>
+      <div class="kpi"><div class="label">Prepared feed cycle t</div><div id="feedKpi" class="value">—</div></div>
+      <div class="kpi"><div class="label">Drain cycle d</div><div id="drainKpi" class="value">—</div></div>
+      <div class="kpi"><div class="label">Feed length (K+R+C)</div><div id="feedLenKpi" class="value">11</div></div>
+    </div>
+    <div id="heroMessage" class="hero-message" aria-live="polite"></div>
+    <div class="stage-shell">
+      <div id="stage" class="stage">
+        <div id="stageCorner" class="stage-corner">
+          <button id="stepBtn" class="primary corner-step" type="button">Step</button>
+          <button id="undoBtn" class="corner-reset" type="button">Undo</button>
+          <button id="resetBtn" class="corner-reset" type="button">Reset</button>
+        </div>
+        <div id="topFeed" class="feed-panel"></div>
+        <div id="expectedPanel" class="expected-panel">
+          <div class="expected-title">Expected C = A × B</div>
+          <div id="expectedC" class="matrix-wrap"></div>
+          <div id="compareMsg" class="tiny muted"></div>
+        </div>
+        <div id="leftFeed" class="feed-panel"></div>
+        <div id="array" class="array"></div>
+        <div id="rightFeed" class="feed-panel output-panel"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="bottom-grid">
+    <section class="panel">
+      <h2>Exercise timing table</h2>
+      <div class="tiny muted" style="margin-bottom:8px;">
+        During feed cycle <code>t</code>: row <code>r</code> carries <code>A[r][t-r]</code> for <code>r ≤ t &lt; r+K</code>; column <code>c</code> carries <code>B[t-c][c]</code> for <code>c ≤ t &lt; c+K</code>. The highlighted row below is the currently prepared feed cycle.
+      </div>
+      <div id="timeline" class="timeline timeline-split"></div>
+    </section>
+  </div>
+</main>
+
+<script>
+(() => {
+  "use strict";
+
+  const DATA_WIDTH = 8;
+  const ACCU_WIDTH = 32;
+  const MAX_ROWS_COLS = 8;
+  const MAX_K = 16;
+  const PE_W = 208;
+  const PE_H = 148;
+  const H_GAP = 40;
+  const V_GAP = 22;
+  const EDGE_CELL = 32;
+  const SCHEDULE_SLOTS = 8;
+  const ARRAY_PAD_LEFT = 72;
+  const ARRAY_PAD_RIGHT = 52;
+  const ARRAY_PAD_TOP = 34;
+  const ARRAY_PAD_BOTTOM = 44;
+  const OUTPUT_CELL = 54;
+
+  const $ = (id) => document.getElementById(id);
+  const ui = {
+    rows: $("rows"), k: $("k"), cols: $("cols"),
+    matA: $("matA"), matB: $("matB"), error: $("error"),
+    knownBtn: $("knownBtn"), applyBtn: $("applyBtn"), minimalistBtn: $("minimalistBtn"),
+    stepBtn: $("stepBtn"), undoBtn: $("undoBtn"), resetBtn: $("resetBtn"),
+    heroMessage: $("heroMessage"),
+    stageCorner: $("stageCorner"), topFeed: $("topFeed"), leftFeed: $("leftFeed"), rightFeed: $("rightFeed"), expectedPanel: $("expectedPanel"), array: $("array"),
+    edgeKpi: $("edgeKpi"), feedKpi: $("feedKpi"),
+    drainKpi: $("drainKpi"), feedLenKpi: $("feedLenKpi"),
+    expectedC: $("expectedC"), compareMsg: $("compareMsg"),
+    timeline: $("timeline")
+  };
+
+  let sim = null;
+  let history = [];
+  let minimalist = false;
+  let dom = { aTracks: [], bTracks: [], aCells: [], bCells: [], aLanes: [], bLanes: [], outLanes: [], outCells: [] };
+
+  function wrapSigned(value, width) {
+    if (width === 32) return value | 0;
+    const mod = 2 ** width;
+    let v = ((value % mod) + mod) % mod;
+    if (v >= 2 ** (width - 1)) v -= mod;
+    return v;
+  }
+
+  function parseMatrix(text, rows, cols, name) {
+    const lines = text.trim().split(/\n+/).map(s => s.trim()).filter(Boolean);
+    if (lines.length !== rows) throw new Error(`${name}: expected ${rows} rows, found ${lines.length}.`);
+    const out = [];
+    for (let r = 0; r < rows; r++) {
+      const vals = lines[r].split(/[\s,]+/).filter(Boolean).map(Number);
+      if (vals.length !== cols) throw new Error(`${name}: row ${r} needs ${cols} values, found ${vals.length}.`);
+      vals.forEach((v, c) => {
+        if (!Number.isInteger(v) || v < -128 || v > 127) throw new Error(`${name}[${r}][${c}] must be an 8-bit signed integer (-128..127).`);
+      });
+      out.push(vals);
+    }
+    return out;
+  }
+
+  function gemm(A, B, R, K, C) {
+    return Array.from({length:R}, (_, r) =>
+      Array.from({length:C}, (_, c) => {
+        let accu = 0;
+        for (let k = 0; k < K; k++) accu = wrapSigned(accu + A[r][k] * B[k][c], ACCU_WIDTH);
+        return accu;
+      })
+    );
+  }
+
+  function newPE() { return { regFeat:0, regFilt:0, regProd:0, regAccu:0, regShift:0 }; }
+
+  function makeSim(A, B, R, K, C) {
+    return {
+      R, K, C, A, B, expected: gemm(A, B, R, K, C),
+      pe: Array.from({length:R}, () => Array.from({length:C}, newPE)),
+      observed: Array.from({length:R}, () => Array(C).fill(null)),
+      edges: 0,
+      phase: "clear",
+      feedT: 0,
+      drainD: 0,
+      complete: false,
+      lastControls: { pipelineEn:0, pipelineClr:1, accuClr:1, shiftLoad:0, shiftEn:0 },
+      laneFeat: Array(R).fill(null),
+      laneFilt: Array(C).fill(null),
+      note: "Next edge clears all PE pipeline and accumulator registers."
+    };
+  }
+
+  function computeWires(s) {
+    const feat = Array.from({length:s.R}, () => Array(s.C + 1).fill(0));
+    const filt = Array.from({length:s.R + 1}, () => Array(s.C).fill(0));
+    const psum = Array.from({length:s.R}, () => Array(s.C + 1).fill(0));
+    for (let r = 0; r < s.R; r++) feat[r][0] = s.laneFeat[r] == null ? 0 : s.laneFeat[r];
+    for (let c = 0; c < s.C; c++) filt[0][c] = s.laneFilt[c] == null ? 0 : s.laneFilt[c];
+    for (let r = 0; r < s.R; r++) {
+      psum[r][0] = 0;
+      for (let c = 0; c < s.C; c++) {
+        if (c > 0) psum[r][c] = s.pe[r][c-1].regShift;
+        feat[r][c+1] = s.pe[r][c].regFeat;
+        filt[r+1][c] = s.pe[r][c].regFilt;
+        psum[r][c+1] = s.pe[r][c].regShift;
+      }
+    }
+    return { feat, filt, psum };
+  }
+
+  function setFeedLanes(s, t) {
+    for (let r = 0; r < s.R; r++) {
+      const valid = t >= r && t < r + s.K;
+      s.laneFeat[r] = valid ? s.A[r][t-r] : null;
+    }
+    for (let c = 0; c < s.C; c++) {
+      const valid = t >= c && t < c + s.K;
+      s.laneFilt[c] = valid ? s.B[t-c][c] : null;
+    }
+  }
+
+  function zeroLanes(s) { s.laneFeat.fill(null); s.laneFilt.fill(null); }
+
+  function clockPEs(s, ctrl) {
+    const wires = computeWires(s);
+    const next = Array.from({length:s.R}, () => Array.from({length:s.C}, newPE));
+    for (let r = 0; r < s.R; r++) {
+      for (let c = 0; c < s.C; c++) {
+        const old = s.pe[r][c];
+        const n = { ...old };
+        if (ctrl.pipelineClr) {
+          n.regFeat = 0; n.regFilt = 0; n.regProd = 0;
+        } else if (ctrl.pipelineEn) {
+          n.regFeat = wrapSigned(wires.feat[r][c], DATA_WIDTH);
+          n.regFilt = wrapSigned(wires.filt[r][c], DATA_WIDTH);
+          n.regProd = wrapSigned(old.regFeat * old.regFilt, 2 * DATA_WIDTH);
+        }
+        if (ctrl.accuClr) n.regAccu = 0;
+        else if (ctrl.pipelineEn) n.regAccu = wrapSigned(old.regAccu + old.regProd, ACCU_WIDTH);
+
+        if (ctrl.shiftLoad) n.regShift = old.regAccu;
+        else if (ctrl.shiftEn) n.regShift = c === 0 ? 0 : s.pe[r][c-1].regShift;
+        next[r][c] = n;
+      }
+    }
+    s.pe = next;
+  }
+
+  function captureDrain(s, d) {
+    const col = s.C - 1 - d;
+    for (let r = 0; r < s.R; r++) s.observed[r][col] = s.pe[r][s.C - 1].regShift;
+  }
+
+  function currentPrepT(s) {
+    const totalFeed = s.K + s.R + s.C;
+    return (s.phase === "feed" && s.feedT < totalFeed) ? s.feedT : null;
+  }
+
+  function snapshotSim(s) {
+    return JSON.parse(JSON.stringify(s));
+  }
+
+  function undoStep() {
+    if (!history.length) return;
+    sim = history.pop();
+    render();
+  }
+
+  function pairInfo(s, r, c) {
+    const t = currentPrepT(s);
+    if (t == null) return null;
+    const k = t - r - c;
+    if (k < 0 || k >= s.K) return null;
+    return { k, a: s.A[r][k], b: s.B[k][c], product: s.A[r][k] * s.B[k][c] };
+  }
+
+  function step() {
+    if (!sim || sim.complete) return;
+    history.push(snapshotSim(sim));
+    const s = sim;
+    let ctrl = { pipelineEn:0, pipelineClr:0, accuClr:0, shiftLoad:0, shiftEn:0 };
+    if (s.phase === "clear") {
+      zeroLanes(s);
+      ctrl.pipelineClr = 1;
+      ctrl.accuClr = 1;
+      clockPEs(s, ctrl);
+      s.phase = "feed";
+      s.feedT = 0;
+      setFeedLanes(s, 0);
+      s.note = "Clear edge completed. Feed cycle t=0 is now prepared on the boundary, and the highlighted schedules show what will enter the array on the next rising edge.";
+    } else if (s.phase === "feed") {
+      const t = s.feedT;
+      setFeedLanes(s, t);
+      ctrl.pipelineEn = 1;
+      clockPEs(s, ctrl);
+      s.feedT++;
+      const totalFeed = s.K + s.R + s.C;
+      if (s.feedT >= totalFeed) {
+        zeroLanes(s);
+        s.phase = "load";
+        s.note = `Feed completed after ${totalFeed} enabled edges. The next edge asserts shift_load and accu_clr together.`;
+      } else {
+        setFeedLanes(s, s.feedT);
+        s.note = `Feed edge t=${t} completed. The A and B schedules shifted by one slot, and feed cycle t=${s.feedT} is now prepared.`;
+      }
+    } else if (s.phase === "load") {
+      zeroLanes(s);
+      ctrl.shiftLoad = 1;
+      ctrl.accuClr = 1;
+      clockPEs(s, ctrl);
+      s.phase = "drain";
+      s.drainD = 0;
+      captureDrain(s, 0);
+      s.note = `shift_load copied each accumulator into reg_shift. o_psum now shows column ${s.C - 1}; each shift_en edge moves the loaded outputs rightward.`;
+    } else if (s.phase === "drain") {
+      const d = s.drainD;
+      if (d >= s.C - 1) {
+        s.complete = true;
+        s.phase = "done";
+        s.note = "All columns have been observed. Simulation complete.";
+      } else {
+        ctrl.shiftEn = 1;
+        clockPEs(s, ctrl);
+        s.drainD++;
+        captureDrain(s, s.drainD);
+        s.note = s.drainD >= s.C - 1
+          ? "Drain edge completed. o_psum now shows column 0. One more Step marks the simulation complete without changing the data."
+          : `Drain edge d=${s.drainD} completed. o_psum now shows column ${s.C - 1 - s.drainD}.`;
+      }
+    }
+    s.edges++;
+    s.lastControls = ctrl;
+    render();
+  }
+
+  function matrixTable(M, kind, currentCol = null) {
+    let h = '<table class="matrix"><thead><tr><th></th>';
+    for (let c = 0; c < M[0].length; c++) h += `<th>${c}</th>`;
+    h += '</tr></thead><tbody>';
+    for (let r = 0; r < M.length; r++) {
+      h += `<tr><th>${r}</th>`;
+      for (let c = 0; c < M[r].length; c++) {
+        const v = M[r][c];
+        const cls = c === currentCol ? 'hot' : (kind === 'observed' && v !== null ? 'done' : '');
+        h += `<td class="${cls}">${v === null ? '·' : v}</td>`;
+      }
+      h += '</tr>';
+    }
+    return h + '</tbody></table>';
+  }
+
+  function currentOutputCol(s) {
+    if (s.phase === 'drain' || s.phase === 'done') return s.C - 1 - Math.min(s.drainD, s.C - 1);
+    return null;
+  }
+
+  function phaseText(s) {
+    if (s.phase === 'clear') return 'Clear';
+    if (s.phase === 'feed') return 'Feed';
+    if (s.phase === 'load') return 'Shift-load';
+    if (s.phase === 'drain') return 'Drain';
+    return 'Done';
+  }
+
+  function currentPEWidth() { return minimalist ? 136 : PE_W; }
+  function currentPEHeight() { return minimalist ? 94 : PE_H; }
+  function currentHGap() { return minimalist ? 24 : H_GAP; }
+  function currentVGap() { return minimalist ? 16 : V_GAP; }
+  function currentPadLeft() { return minimalist ? 58 : ARRAY_PAD_LEFT; }
+  function currentPadRight() { return minimalist ? 44 : ARRAY_PAD_RIGHT; }
+  function currentPadTop() { return minimalist ? 28 : ARRAY_PAD_TOP; }
+  function currentPadBottom() { return minimalist ? 36 : ARRAY_PAD_BOTTOM; }
+
+  function laneCenterX(c) {
+    const w = currentPEWidth(), gap = currentHGap();
+    return c * (w + gap) + w / 2;
+  }
+  function laneCenterY(r) {
+    const h = currentPEHeight(), gap = currentVGap();
+    return r * (h + gap) + h / 2;
+  }
+  function totalArrayWidth(C) {
+    const w = currentPEWidth(), gap = currentHGap();
+    return C * w + (C - 1) * gap;
+  }
+  function totalArrayHeight(R) {
+    const h = currentPEHeight(), gap = currentVGap();
+    return R * h + (R - 1) * gap;
+  }
+
+  function buildStage(s) {
+    dom = { aTracks: [], bTracks: [], aCells: [], bCells: [], aLanes: [], bLanes: [], outLanes: [], outCells: [] };
+    const totalFeed = s.K + s.R + s.C;
+    const arrayW = totalArrayWidth(s.C) + currentPadLeft() + currentPadRight() + 2;
+    const arrayH = totalArrayHeight(s.R) + currentPadTop() + currentPadBottom() + 2;
+    const leftW = SCHEDULE_SLOTS * EDGE_CELL;
+    const topH = SCHEDULE_SLOTS * EDGE_CELL;
+    const rightW = Math.max(s.C * OUTPUT_CELL + 20, 250);
+
+    ui.stageCorner.style.width = leftW + 'px';
+    ui.stageCorner.style.height = topH + 'px';
+    ui.expectedPanel.style.width = rightW + 'px';
+    ui.expectedPanel.style.minHeight = topH + 'px';
+    ui.expectedPanel.style.height = 'auto';
+
+    ui.topFeed.style.width = arrayW + 'px';
+    ui.topFeed.style.height = topH + 'px';
+    ui.leftFeed.style.width = leftW + 'px';
+    ui.leftFeed.style.height = arrayH + 'px';
+    ui.rightFeed.style.width = rightW + 'px';
+    ui.rightFeed.style.height = arrayH + 'px';
+    ui.rightFeed.style.setProperty('--edgecell', OUTPUT_CELL + 'px');
+    ui.array.classList.toggle('minimalist', minimalist);
+    ui.array.style.gridTemplateColumns = `repeat(${s.C}, ${currentPEWidth()}px)`;
+
+    ui.topFeed.innerHTML = `<div class="feed-title">Shifted B launch schedule</div>`;
+    ui.leftFeed.innerHTML = `<div class="feed-title">Shifted A launch schedule</div>`;
+    ui.rightFeed.innerHTML = `<div class="feed-title">Shifted output reconstruction</div>`;
+
+    const topBoundary = document.createElement('div');
+    topBoundary.className = 'feed-boundary';
+    topBoundary.style.left = '0'; topBoundary.style.right = '0'; topBoundary.style.bottom = '0'; topBoundary.style.height = '3px';
+    ui.topFeed.appendChild(topBoundary);
+    const topBoundaryLabel = document.createElement('div');
+    topBoundaryLabel.className = 'feed-boundary-label';
+    topBoundaryLabel.style.right = '8px'; topBoundaryLabel.style.bottom = '5px'; topBoundaryLabel.textContent = 'into array ↓';
+    ui.topFeed.appendChild(topBoundaryLabel);
+
+    const leftBoundary = document.createElement('div');
+    leftBoundary.className = 'feed-boundary';
+    leftBoundary.style.top = '0'; leftBoundary.style.bottom = '0'; leftBoundary.style.right = '0'; leftBoundary.style.width = '3px';
+    ui.leftFeed.appendChild(leftBoundary);
+    const leftBoundaryLabel = document.createElement('div');
+    leftBoundaryLabel.className = 'feed-boundary-label';
+    leftBoundaryLabel.style.right = '5px'; leftBoundaryLabel.style.top = '8px'; leftBoundaryLabel.textContent = 'into array →';
+    ui.leftFeed.appendChild(leftBoundaryLabel);
+
+    const rightBoundary = document.createElement('div');
+    rightBoundary.className = 'feed-boundary';
+    rightBoundary.style.top = '0'; rightBoundary.style.bottom = '0'; rightBoundary.style.left = '0'; rightBoundary.style.width = '3px';
+    ui.rightFeed.appendChild(rightBoundary);
+    const rightBoundaryLabel = document.createElement('div');
+    rightBoundaryLabel.className = 'feed-boundary-label';
+    rightBoundaryLabel.textContent = 'from array →';
+    ui.rightFeed.appendChild(rightBoundaryLabel);
+
+    for (let c = 0; c < s.C; c++) {
+      const lane = document.createElement('div');
+      lane.style.position = 'absolute'; lane.style.left = `${currentPadLeft() + laneCenterX(c) - EDGE_CELL/2}px`; lane.style.top = '0'; lane.style.width = `${EDGE_CELL}px`; lane.style.height = `${topH}px`;
+      const label = document.createElement('div');
+      label.className = 'lane-label'; label.style.left = '-1px'; label.style.bottom = '6px'; label.textContent = `c${c}`; lane.appendChild(label);
+      const track = document.createElement('div');
+      track.className = 'feed-track'; track.style.left = '0'; track.style.bottom = '0'; track.style.width = `${EDGE_CELL}px`; track.style.height = `${totalFeed * EDGE_CELL}px`;
+      lane.appendChild(track); dom.bTracks.push(track);
+      const cells = [];
+      for (let k = 0; k < s.K; k++) {
+        const t = c + k;
+        const cell = document.createElement('div');
+        cell.className = 'feed-cell filt'; cell.style.left = '0'; cell.style.top = `${(totalFeed - 1 - t) * EDGE_CELL}px`; cell.textContent = s.B[k][c];
+        track.appendChild(cell); cells.push({ el: cell, t });
+      }
+      dom.bCells.push(cells);
+      dom.bLanes.push(lane);
+      ui.topFeed.appendChild(lane);
+    }
+
+    for (let r = 0; r < s.R; r++) {
+      const lane = document.createElement('div');
+      lane.style.position = 'absolute'; lane.style.left = '0'; lane.style.top = `${currentPadTop() + laneCenterY(r) - EDGE_CELL/2}px`; lane.style.width = `${leftW}px`; lane.style.height = `${EDGE_CELL}px`;
+      const label = document.createElement('div');
+      label.className = 'lane-label'; label.style.right = '6px'; label.style.top = '-2px'; label.textContent = `r${r}`; lane.appendChild(label);
+      const track = document.createElement('div');
+      track.className = 'feed-track'; track.style.right = '0'; track.style.top = '0'; track.style.width = `${totalFeed * EDGE_CELL}px`; track.style.height = `${EDGE_CELL}px`;
+      lane.appendChild(track); dom.aTracks.push(track);
+      const cells = [];
+      for (let k = 0; k < s.K; k++) {
+        const t = r + k;
+        const cell = document.createElement('div');
+        cell.className = 'feed-cell'; cell.style.top = '0'; cell.style.left = `${(totalFeed - 1 - t) * EDGE_CELL}px`; cell.textContent = s.A[r][k];
+        track.appendChild(cell); cells.push({ el: cell, t });
+      }
+      dom.aCells.push(cells);
+      dom.aLanes.push(lane);
+      ui.leftFeed.appendChild(lane);
+    }
+
+    for (let r = 0; r < s.R; r++) {
+      const lane = document.createElement('div');
+      lane.className = 'output-lane';
+      lane.style.left = '10px';
+      lane.style.width = `${s.C * OUTPUT_CELL}px`;
+      lane.style.height = `${OUTPUT_CELL}px`;
+      const cells = [];
+      for (let i = 0; i < s.C; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'output-cell';
+        cell.style.width = `${OUTPUT_CELL - 4}px`;
+        cell.style.height = `${OUTPUT_CELL - 4}px`;
+        cell.style.left = '0px';
+        cell.style.top = '2px';
+        lane.appendChild(cell);
+        cells.push(cell);
+      }
+      dom.outLanes.push(lane);
+      dom.outCells.push(cells);
+      ui.rightFeed.appendChild(lane);
+    }
+  }
+
+  function syncLaunchGeometry(s) {
+    const arrayHeight = ui.array.offsetHeight;
+    const arrayWidth = ui.array.offsetWidth;
+
+    ui.leftFeed.style.height = arrayHeight + 'px';
+    ui.topFeed.style.width = arrayWidth + 'px';
+    ui.rightFeed.style.height = arrayHeight + 'px';
+
+    for (let r = 0; r < s.R; r++) {
+      const pe = ui.array.querySelector(`.pe[style*="grid-row:${r+1}"]`);
+      if (pe && dom.aLanes[r]) {
+        const centerY = pe.offsetTop + pe.offsetHeight / 2;
+        dom.aLanes[r].style.top = `${centerY - EDGE_CELL/2}px`;
+        dom.aLanes[r].style.height = `${EDGE_CELL}px`;
+      }
+      if (pe && dom.outLanes[r]) {
+        const centerY = pe.offsetTop + pe.offsetHeight / 2;
+        dom.outLanes[r].style.top = `${centerY - OUTPUT_CELL/2}px`;
+        dom.outLanes[r].style.height = `${OUTPUT_CELL}px`;
+      }
+    }
+
+    for (let c = 0; c < s.C; c++) {
+      const pe = ui.array.querySelector(`.pe[style*="grid-row:1"][style*="grid-column:${c+1}"]`);
+      if (pe && dom.bLanes[c]) {
+        const centerX = pe.offsetLeft + pe.offsetWidth / 2;
+        dom.bLanes[c].style.left = `${centerX - EDGE_CELL/2}px`;
+        dom.bLanes[c].style.width = `${EDGE_CELL}px`;
+      }
+    }
+  }
+
+  function updateFeedPanels(s) {
+    const totalFeed = s.K + s.R + s.C;
+    const prep = currentPrepT(s);
+    const progress = s.phase === 'feed' ? Math.min(s.feedT, totalFeed - 1) : (s.phase === 'clear' ? 0 : totalFeed - 1);
+    dom.aTracks.forEach(track => { track.style.transform = `translateX(${progress * EDGE_CELL}px)`; });
+    dom.bTracks.forEach(track => { track.style.transform = `translateY(${progress * EDGE_CELL}px)`; });
+    dom.aCells.forEach(rowCells => rowCells.forEach(({el, t}) => el.classList.toggle('current', prep === t)));
+    dom.bCells.forEach(colCells => colCells.forEach(({el, t}) => el.classList.toggle('current', prep === t)));
+  }
+
+  function updateOutputReconstruction(s) {
+    let count = 0;
+    if (s.phase === 'drain' || s.phase === 'done') count = Math.min(s.drainD + 1, s.C);
+
+    for (let r = 0; r < s.R; r++) {
+      for (let i = 0; i < s.C; i++) {
+        const cell = dom.outCells[r][i];
+        if (i < count) {
+          const col = s.C - 1 - i;
+          const value = s.observed[r][col];
+          cell.textContent = value == null ? '·' : value;
+          cell.style.left = `${(count - 1 - i) * OUTPUT_CELL}px`;
+          cell.classList.add('visible');
+          cell.classList.toggle('current', i === count - 1);
+        } else {
+          cell.textContent = '';
+          cell.style.left = '0px';
+          cell.classList.remove('visible');
+          cell.classList.remove('current');
+        }
+      }
+    }
+  }
+
+  function maybeToken(text, cls) {
+    return text ? `<span class="token ${cls}">${text}</span>` : '';
+  }
+
+  function renderArray(s) {
+    const wires = computeWires(s);
+    let h = '';
+    for (let r = 0; r < s.R; r++) {
+      for (let c = 0; c < s.C; c++) {
+        const p = s.pe[r][c];
+        const pair = pairInfo(s, r, c);
+        const active = (p.regFeat !== 0 || p.regFilt !== 0 || p.regProd !== 0 || p.regAccu !== 0 || p.regShift !== 0) ? 'active' : '';
+        const wave = pair ? 'wave' : '';
+        const drainActive = (c === s.C - 1 && (s.phase === 'drain' || s.phase === 'done')) ? 'drain-active' : '';
+        const note = pair
+          ? `Next matched pair:<br><strong>A[${r}][${pair.k}] = ${pair.a}</strong> and <strong>B[${pair.k}][${c}] = ${pair.b}</strong>`
+          : `No matched A/B pair on the incoming wires for the currently prepared feed cycle.`;
+
+        const leftA = wires.feat[r][c] !== 0 ? `A:${wires.feat[r][c]}` : '';
+        const topB = wires.filt[r][c] !== 0 ? `B:${wires.filt[r][c]}` : '';
+        const leftS = wires.psum[r][c] !== 0 ? `S:${wires.psum[r][c]}` : '';
+        const outS = (c === s.C - 1 && wires.psum[r][c+1] !== 0) ? `out:${wires.psum[r][c+1]}` : '';
+
+        const peBody = minimalist
+          ? `
+          <div class="pe-title"><span>PE(${r},${c})</span><span class="muted">C[${r}][${c}]</span></div>
+          <div class="center-math">
+            <div class="big-reg">
+              <div class="big-line"><span class="big-label">reg_prod</span><span class="big-value prod">${p.regProd}</span></div>
+              <div class="big-line"><span class="big-label">reg_accu</span><span class="big-value accu">${p.regAccu}</span></div>
+            </div>
+          </div>`
+          : `
+          <div class="pe-title"><span>PE(${r},${c})</span><span class="muted">C[${r}][${c}]</span></div>
+          <div class="pair-note ${pair ? '' : 'inactive'}">${note}</div>
+          <div class="center-math">
+            <div class="big-reg">
+              <div class="big-line"><span class="big-label">reg_prod</span><span class="big-value prod">${p.regProd}</span></div>
+              <div class="big-line"><span class="big-label">reg_accu</span><span class="big-value accu">${p.regAccu}</span></div>
+            </div>
+          </div>
+          <div class="pe-stage">
+            <span class="feat">reg_feat</span><span class="v feat">${p.regFeat}</span>
+            <span class="filt">reg_filt</span><span class="v filt">${p.regFilt}</span>
+            <span class="shift">reg_shift</span><span class="v shift">${p.regShift}</span>
+          </div>`;
+
+        h += `<div class="pe ${active} ${wave} ${drainActive}" style="grid-row:${r+1};grid-column:${c+1}">
+          ${peBody}
+          ${maybeToken(leftA, 'left')}
+          ${maybeToken(topB, 'top')}
+          ${maybeToken(leftS, 'psum-left')}
+          ${c < s.C - 1 ? `<span class="wire-h"></span><span class="wire-h psum"></span>` : ''}
+          ${r < s.R - 1 ? `<span class="wire-v"></span>` : ''}
+          ${outS ? `<span class="token psum-right ${(s.phase === 'drain' || s.phase === 'done') ? 'drain-pop' : ''}">${outS}</span>` : ''}
+        </div>`;
+      }
+    }
+    ui.array.innerHTML = h;
+  }
+
+  function renderTimeline(s) {
+    const totalFeed = s.K + s.R + s.C;
+    const prep = currentPrepT(s);
+
+    let a = '<div class="timing-table-group"><div class="timing-table-title feat">A input schedule</div>';
+    a += '<table><thead><tr><th>t</th>';
+    for (let r = 0; r < s.R; r++) a += `<th>row ${r}</th>`;
+    a += '</tr></thead><tbody>';
+    for (let t = 0; t < totalFeed; t++) {
+      const current = prep === t ? 'current' : '';
+      a += `<tr class="${current}"><th>${t}</th>`;
+      for (let r = 0; r < s.R; r++) {
+        a += `<td>${(t >= r && t < r + s.K) ? s.A[r][t-r] : '–'}</td>`;
+      }
+      a += '</tr>';
+    }
+    a += '</tbody></table></div>';
+
+    let b = '<div class="timing-table-group"><div class="timing-table-title filt">B input schedule</div>';
+    b += '<table><thead><tr><th>t</th>';
+    for (let c = 0; c < s.C; c++) b += `<th>col ${c}</th>`;
+    b += '</tr></thead><tbody>';
+    for (let t = 0; t < totalFeed; t++) {
+      const current = prep === t ? 'current' : '';
+      b += `<tr class="${current}"><th>${t}</th>`;
+      for (let c = 0; c < s.C; c++) {
+        b += `<td>${(t >= c && t < c + s.K) ? s.B[t-c][c] : '–'}</td>`;
+      }
+      b += '</tr>';
+    }
+    b += '</tbody></table></div>';
+
+    ui.timeline.innerHTML = a + b;
+  }
+
+  function render() {
+    if (!sim) return;
+    const s = sim;
+    ui.edgeKpi.textContent = s.edges;
+    ui.feedKpi.textContent = currentPrepT(s) == null ? '—' : currentPrepT(s);
+    ui.drainKpi.textContent = s.phase === 'drain' ? s.drainD : '—';
+    ui.feedLenKpi.textContent = s.K + s.R + s.C;
+
+    const ctrl = s.lastControls;
+    ui.heroMessage.innerHTML = `
+      <span class="phase-badge">${phaseText(s)}</span>
+      ${s.note}
+      <span class="controls">pipeline_en=${ctrl.pipelineEn}, pipeline_clr=${ctrl.pipelineClr}, accu_clr=${ctrl.accuClr}, shift_load=${ctrl.shiftLoad}, shift_en=${ctrl.shiftEn}</span>`;
+
+    renderArray(s);
+    syncLaunchGeometry(s);
+    updateFeedPanels(s);
+    ui.expectedC.innerHTML = matrixTable(s.expected, 'expected', currentOutputCol(s));
+    updateOutputReconstruction(s);
+    renderTimeline(s);
+
+    const filled = s.observed.flat().filter(v => v !== null).length;
+    if (filled === s.R * s.C) {
+      let ok = true;
+      for (let r = 0; r < s.R; r++) for (let c = 0; c < s.C; c++) if (s.observed[r][c] !== s.expected[r][c]) ok = false;
+      ui.compareMsg.innerHTML = ok ? '<span class="good">Reconstructed output matches the expected matrix.</span>' : '<span style="color:#b91c1c;">Reconstructed output differs from the expected matrix.</span>';
+    } else {
+      ui.compareMsg.textContent = `${filled}/${s.R * s.C} output elements shifted into the reconstruction window so far.`;
+    }
+
+    ui.stepBtn.disabled = s.complete;
+    ui.undoBtn.disabled = history.length === 0;
+  }
+
+
+  function toggleMinimalist() {
+    minimalist = !minimalist;
+    ui.minimalistBtn.classList.toggle('active', minimalist);
+    ui.minimalistBtn.setAttribute('aria-pressed', minimalist ? 'true' : 'false');
+    ui.minimalistBtn.textContent = minimalist ? 'Minimalist: On' : 'Minimalist: Off';
+
+    if (sim) {
+      buildStage(sim);
+      render();
+    }
+  }
+
+  function applyFromInputs() {
+    try {
+      const R = Math.max(1, Math.min(MAX_ROWS_COLS, Number(ui.rows.value) | 0));
+      const K = Math.max(1, Math.min(MAX_K, Number(ui.k.value) | 0));
+      const C = Math.max(1, Math.min(MAX_ROWS_COLS, Number(ui.cols.value) | 0));
+      ui.rows.value = R; ui.k.value = K; ui.cols.value = C;
+      const A = parseMatrix(ui.matA.value, R, K, 'A');
+      const B = parseMatrix(ui.matB.value, K, C, 'B');
+      sim = makeSim(A, B, R, K, C);
+      history = [];
+      buildStage(sim);
+      ui.error.textContent = '';
+      render();
+    } catch (e) {
+      ui.error.textContent = e.message;
+    }
+  }
+
+  function resetSim() {
+    if (!sim) return applyFromInputs();
+    sim = makeSim(sim.A.map(r => r.slice()), sim.B.map(r => r.slice()), sim.R, sim.K, sim.C);
+    history = [];
+    buildStage(sim);
+    render();
+  }
+
+  function loadKnown() {
+    ui.rows.value = 4; ui.k.value = 3; ui.cols.value = 4;
+    ui.matA.value = `1 2 3\n4 5 6\n7 8 9\n-1 -2 -3`;
+    ui.matB.value = `1 0 -1 2\n0 1 2 -1\n1 1 0 1`;
+    applyFromInputs();
+  }
+
+  ui.minimalistBtn.addEventListener('click', toggleMinimalist);
+  ui.stepBtn.addEventListener('click', step);
+  ui.undoBtn.addEventListener('click', undoStep);
+  ui.applyBtn.addEventListener('click', applyFromInputs);
+  ui.resetBtn.addEventListener('click', resetSim);
+  ui.knownBtn.addEventListener('click', loadKnown);
+
+  loadKnown();
+})();
+</script>
+</body>
+</html>

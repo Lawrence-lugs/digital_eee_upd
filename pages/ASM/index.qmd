@@ -11,7 +11,7 @@ format:
     toc-depth: 3
 ---
 
-::: {.callout-tip title="The proposal in one sentence"}
+::: {.callout-tip title="Key idea"}
 
 An ASM used for hardware instruction should contain enough information that a student can determine, from the chart and its declarations alone, what the current hardware is doing during the clock cycle, what will be captured at the next clock edge, what holds its previous value, what returns to a default, what reset establishes, and what datapath and controller structures are required to implement the design.
 
