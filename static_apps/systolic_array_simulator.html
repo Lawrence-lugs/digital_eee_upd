@@ -122,10 +122,28 @@
 
   .topbar {
     display: grid;
-    grid-template-columns: auto minmax(260px, 330px) minmax(260px, 330px) 1fr;
+    grid-template-columns: auto minmax(0, 1fr) 170px;
     gap: 14px;
     align-items: start;
     width: 100%;
+  }
+
+  .matrix-editor-strip {
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: visible;
+    padding-bottom: 4px;
+  }
+  .matrix-editor-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    width: max-content;
+    min-width: 100%;
+  }
+  .matrix-editor-block {
+    flex: 0 0 auto;
+    width: max-content;
   }
   .view-controls {
     border-left: 1px solid var(--line);
@@ -156,7 +174,7 @@
   }
   .control-card { min-width: 76px; }
   label { font-size: .8rem; color: var(--muted); display: block; margin-bottom: 4px; }
-  input[type="number"], textarea {
+  input[type="number"] {
     width: 100%;
     border: 1px solid var(--line);
     border-radius: 8px;
@@ -165,13 +183,50 @@
     padding: 8px 9px;
     font: inherit;
   }
-  textarea {
-    min-height: 156px;
-    resize: vertical;
+
+  .matrix-editor-wrap {
+    width: max-content;
+    max-width: none;
+    overflow: visible;
+    padding-bottom: 2px;
+  }
+  .matrix-editor {
+    border-collapse: collapse;
+    margin: 0;
+    background: white;
+  }
+  .matrix-editor th,
+  .matrix-editor td {
+    border: 1px solid var(--line);
+    padding: 0;
+    text-align: center;
+  }
+  .matrix-editor th {
+    min-width: 32px;
+    padding: 5px 7px;
+    background: #f4f4f5;
+    color: var(--muted);
+    font-size: .72rem;
+    font-weight: 700;
+  }
+  .matrix-editor input {
+    width: 68px;
+    min-width: 68px;
+    height: 48px;
+    border: 0;
+    border-radius: 0;
+    padding: 4px 6px;
+    text-align: center;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 1.28rem;
     font-weight: 700;
-    line-height: 1.35;
+    line-height: 1;
+    background: white;
+    outline: none;
+  }
+  .matrix-editor input:focus {
+    background: #fff7ed;
+    box-shadow: inset 0 0 0 2px #f59e0b;
   }
   button {
     border: 1px solid var(--line);
@@ -676,7 +731,13 @@
 
   @media (max-width: 1200px) {
     .topbar { grid-template-columns: 1fr; }
-    .view-controls { border-left: 0; padding-left: 0; }
+    .matrix-editor-strip { overflow-x: auto; }
+    .matrix-editor-row { min-width: max-content; }
+    .view-controls {
+      border-left: 0;
+      padding-left: 0;
+      justify-self: start;
+    }
     .cycle-info { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
     .bottom-grid { grid-template-columns: 1fr; }
   }
@@ -719,19 +780,18 @@
         <div id="error" class="error" aria-live="polite"></div>
       </div>
 
-      <div>
-        <label for="matA">A (ROWS × K), one row per line</label>
-        <textarea id="matA">1 2 3
-4 5 6
-7 8 9
--1 -2 -3</textarea>
-      </div>
+      <div class="matrix-editor-strip">
+        <div class="matrix-editor-row">
+          <div class="matrix-editor-block">
+            <label>A (ROWS × K)</label>
+            <div id="matA" class="matrix-editor-wrap"></div>
+          </div>
 
-      <div>
-        <label for="matB">B (K × COLS), one row per line</label>
-        <textarea id="matB">1 0 -1 2
-0 1 2 -1
-1 1 0 1</textarea>
+          <div class="matrix-editor-block">
+            <label>B (K × COLS)</label>
+            <div id="matB" class="matrix-editor-wrap"></div>
+          </div>
+        </div>
       </div>
 
       <div class="view-controls">
@@ -829,19 +889,81 @@
     return v;
   }
 
-  function parseMatrix(text, rows, cols, name) {
-    const lines = text.trim().split(/\n+/).map(s => s.trim()).filter(Boolean);
-    if (lines.length !== rows) throw new Error(`${name}: expected ${rows} rows, found ${lines.length}.`);
+  function readMatrixEditor(container) {
+    const rows = [...container.querySelectorAll('tbody tr')];
+    return rows.map(tr =>
+      [...tr.querySelectorAll('input.matrix-value')].map(input => {
+        const v = Number(input.value);
+        return Number.isFinite(v) ? v : 0;
+      })
+    );
+  }
+
+  function buildMatrixEditor(container, rows, cols, seed = [], matrixName = 'M') {
+    let h = '<table class="matrix-editor"><thead><tr><th></th>';
+    for (let c = 0; c < cols; c++) h += `<th>${c}</th>`;
+    h += '</tr></thead><tbody>';
+
+    for (let r = 0; r < rows; r++) {
+      h += `<tr><th>${r}</th>`;
+      for (let c = 0; c < cols; c++) {
+        const seeded = seed?.[r]?.[c];
+        const value = Number.isFinite(Number(seeded)) ? Number(seeded) : 0;
+        h += `<td><input class="matrix-value" type="number" min="-128" max="127" step="1" value="${value}" aria-label="${matrixName}[${r}][${c}]"></td>`;
+      }
+      h += '</tr>';
+    }
+    h += '</tbody></table>';
+
+    container.innerHTML = h;
+    container.dataset.rows = rows;
+    container.dataset.cols = cols;
+  }
+
+  function collectMatrix(container, rows, cols, name) {
+    const tableRows = [...container.querySelectorAll('tbody tr')];
+    if (tableRows.length !== rows) {
+      throw new Error(`${name}: expected ${rows} rows, found ${tableRows.length}.`);
+    }
+
     const out = [];
     for (let r = 0; r < rows; r++) {
-      const vals = lines[r].split(/[\s,]+/).filter(Boolean).map(Number);
-      if (vals.length !== cols) throw new Error(`${name}: row ${r} needs ${cols} values, found ${vals.length}.`);
-      vals.forEach((v, c) => {
-        if (!Number.isInteger(v) || v < -128 || v > 127) throw new Error(`${name}[${r}][${c}] must be an 8-bit signed integer (-128..127).`);
+      const inputs = [...tableRows[r].querySelectorAll('input.matrix-value')];
+      if (inputs.length !== cols) {
+        throw new Error(`${name}: row ${r} needs ${cols} values, found ${inputs.length}.`);
+      }
+
+      const vals = inputs.map((input, c) => {
+        const v = Number(input.value);
+        if (!Number.isInteger(v) || v < -128 || v > 127) {
+          input.focus();
+          throw new Error(`${name}[${r}][${c}] must be an 8-bit signed integer (-128..127).`);
+        }
+        return v;
       });
       out.push(vals);
     }
     return out;
+  }
+
+  function currentDimensions() {
+    const R = Number(ui.rows.value);
+    const K = Number(ui.k.value);
+    const C = Number(ui.cols.value);
+    if (!Number.isInteger(R) || !Number.isInteger(K) || !Number.isInteger(C)) return null;
+    if (R < 1 || R > MAX_ROWS_COLS || C < 1 || C > MAX_ROWS_COLS || K < 1 || K > MAX_K) return null;
+    return { R, K, C };
+  }
+
+  function resizeMatrixEditors() {
+    const dims = currentDimensions();
+    if (!dims) return;
+
+    const oldA = readMatrixEditor(ui.matA);
+    const oldB = readMatrixEditor(ui.matB);
+
+    buildMatrixEditor(ui.matA, dims.R, dims.K, oldA, 'A');
+    buildMatrixEditor(ui.matB, dims.K, dims.C, oldB, 'B');
   }
 
   function gemm(A, B, R, K, C) {
@@ -1405,8 +1527,8 @@
       const K = Math.max(1, Math.min(MAX_K, Number(ui.k.value) | 0));
       const C = Math.max(1, Math.min(MAX_ROWS_COLS, Number(ui.cols.value) | 0));
       ui.rows.value = R; ui.k.value = K; ui.cols.value = C;
-      const A = parseMatrix(ui.matA.value, R, K, 'A');
-      const B = parseMatrix(ui.matB.value, K, C, 'B');
+      const A = collectMatrix(ui.matA, R, K, 'A');
+      const B = collectMatrix(ui.matB, K, C, 'B');
       sim = makeSim(A, B, R, K, C);
       history = [];
       buildStage(sim);
@@ -1426,11 +1548,30 @@
   }
 
   function loadKnown() {
-    ui.rows.value = 4; ui.k.value = 3; ui.cols.value = 4;
-    ui.matA.value = `1 2 3\n4 5 6\n7 8 9\n-1 -2 -3`;
-    ui.matB.value = `1 0 -1 2\n0 1 2 -1\n1 1 0 1`;
+    ui.rows.value = 4;
+    ui.k.value = 3;
+    ui.cols.value = 4;
+
+    const knownA = [
+      [1, 2, 3],
+      [4, 5, 6],
+      [7, 8, 9],
+      [-1, -2, -3]
+    ];
+    const knownB = [
+      [1, 0, -1, 2],
+      [0, 1, 2, -1],
+      [1, 1, 0, 1]
+    ];
+
+    buildMatrixEditor(ui.matA, 4, 3, knownA, 'A');
+    buildMatrixEditor(ui.matB, 3, 4, knownB, 'B');
     applyFromInputs();
   }
+
+  ui.rows.addEventListener('change', resizeMatrixEditors);
+  ui.k.addEventListener('change', resizeMatrixEditors);
+  ui.cols.addEventListener('change', resizeMatrixEditors);
 
   ui.minimalistBtn.addEventListener('click', toggleMinimalist);
   ui.stepBtn.addEventListener('click', step);
