@@ -1253,7 +1253,7 @@
       const lane = document.createElement('div');
       lane.style.position = 'absolute'; lane.style.left = `${currentPadLeft() + laneCenterX(c) - EDGE_CELL/2}px`; lane.style.top = '0'; lane.style.width = `${EDGE_CELL}px`; lane.style.height = `${topH}px`;
       const label = document.createElement('div');
-      label.className = 'lane-label'; label.style.left = '-1px'; label.style.bottom = '6px'; label.textContent = `c${c}`; lane.appendChild(label);
+      label.className = 'lane-label'; label.style.left = `${EDGE_CELL + 4}px`; label.style.bottom = '6px'; label.textContent = `c${c}`; lane.appendChild(label);
       const track = document.createElement('div');
       track.className = 'feed-track'; track.style.left = '0'; track.style.bottom = '0'; track.style.width = `${EDGE_CELL}px`; track.style.height = `${totalFeed * EDGE_CELL}px`;
       lane.appendChild(track); dom.bTracks.push(track);
@@ -1273,7 +1273,7 @@
       const lane = document.createElement('div');
       lane.style.position = 'absolute'; lane.style.left = '0'; lane.style.top = `${currentPadTop() + laneCenterY(r) - EDGE_CELL/2}px`; lane.style.width = `${leftW}px`; lane.style.height = `${EDGE_CELL}px`;
       const label = document.createElement('div');
-      label.className = 'lane-label'; label.style.right = '6px'; label.style.top = '-2px'; label.textContent = `r${r}`; lane.appendChild(label);
+      label.className = 'lane-label'; label.style.right = '6px'; label.style.top = `${EDGE_CELL + 4}px`; label.textContent = `r${r}`; lane.appendChild(label);
       const track = document.createElement('div');
       track.className = 'feed-track'; track.style.right = '0'; track.style.top = '0'; track.style.width = `${totalFeed * EDGE_CELL}px`; track.style.height = `${EDGE_CELL}px`;
       lane.appendChild(track); dom.aTracks.push(track);
