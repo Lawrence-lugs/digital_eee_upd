@@ -36,6 +36,74 @@ website:
         text: FSMsimulatEEE
       - href: RV32I_encoding_simulator.html
         text: RV32I Encoding Simulator
+
+  sidebar:
+    - id: verilog-crash-course
+      title: "Verilog Crash Course"
+      style: floating
+      collapse-level: 1
+      contents:
+        - href: pages/verilogCrashCourse/index.qmd
+          text: Overview
+        - href: pages/verilogCrashCourse/00-fundamentals.qmd
+          text: "1: Basic Structure and Syntax"
+        - href: pages/verilogCrashCourse/001-combinational.qmd
+          text: "2: Writing Combinational Logic"
+        - href: pages/verilogCrashCourse/01-combinational.qmd
+          text: "3: Advanced Combinational Logic"
+        - href: pages/verilogCrashCourse/02-sequential.qmd
+          text: "4: Writing Sequential Logic"
+        - href: pages/verilogCrashCourse/100-advanced-sequential.qmd
+          text: "5: Advanced Sequential Logic"
+        - href: pages/verilogCrashCourse/03-verification.qmd
+          text: "6: Testbench Basics and Verification"
+        - href: pages/verilogCrashCourse/110-advanced-verification.qmd
+          text: "7: Advanced Verification Ideas"
+        - href: pages/verilogCrashCourse/04-practices.qmd
+          text: "8: Best Practices and Wrap-Up"
+        - href: pages/verilogCrashCourse/extra00-structural.qmd
+          text: "A: Structural Verilog Coding"
+        - href: pages/verilogCrashCourse/extra01-advanced-syntax.qmd
+          text: "B: Advanced Verilog Syntax"
+        - href: pages/verilogCrashCourse/extra10-systemverilog-constructs.qmd
+          text: "C: SystemVerilog Constructs"
+        - href: pages/verilogCrashCourse/credits.qmd
+          text: "Credits: About the team"
+    - id: hardware-mappable-asm
+      title: "Hardware-Mappable ASM"
+      style: floating
+      collapse-level: 1
+      footer: |
+        **Formal Specifications for ASM interpretation**
+
+        A compact checklist of the timing, storage, and assignment rules.
+
+        [Read the specifications](/pages/ASM/formal-specification.html){.btn .btn-outline-primary .btn-sm .w-100}
+
+        ---
+
+        **ASM SimulatEEE**
+
+        Draw, step, synthesize, and export an ASM using these semantics.
+
+        [Read more about it](/pages/ASM/asm-simulateee.html){.btn .btn-outline-primary .btn-sm .w-100}
+
+        [Open the simulator](https://digital.eee.upd.edu.ph/ASM_simulatEEE.html){.btn .btn-outline-primary .btn-sm .w-100 target="_blank"}
+      contents:
+        - href: pages/ASM/index.qmd
+          text: Overview
+        - href: pages/ASM/01-timing.qmd
+          text: "1. Why Timing Matters"
+        - href: pages/ASM/02-existing-practice.qmd
+          text: "2. Existing Practice"
+        - href: pages/ASM/03-semantics.qmd
+          text: "3. Proposed Semantics"
+        - href: pages/ASM/04-hardware-mapping.qmd
+          text: "4. From ASM to Hardware"
+        - href: pages/ASM/05-origins.qmd
+          text: "5. Short History and Acknowledgments"
+        - href: pages/ASM/references.qmd
+          text: References
   
 format:
   html:
@@ -49,7 +117,3 @@ format:
     code-block-bg: true
     code-line-numbers: true
     code-block-border-left: "#6B0D1A"
-
-
-
-

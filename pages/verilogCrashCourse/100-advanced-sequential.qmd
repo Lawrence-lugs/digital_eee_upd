@@ -5,11 +5,6 @@ format:
     css: vcc-v2.css
 ---
 
-::: {.vcc-nav}
-[Overview](index.qmd) | [M000](00-fundamentals.qmd) | [M001](001-combinational.qmd) | [M010](01-combinational.qmd) | [M011](02-sequential.qmd) | [M100](100-advanced-sequential.qmd) | [M101](03-verification.qmd) | [M110](110-advanced-verification.qmd) | [M111](04-practices.qmd) | [Extras](05-extras.qmd) | [Credits](credits.qmd)
-:::
-# Module 100: Advanced Sequential Logic
-
 In the last module, we built registers and counters, then capped it off with a pipelined multiplier design. Such designs are very structural, meaning we can already imagine what the hardware would look like; we are merely describing the hardware connections.
 But what if we want to implement a whole **algorithm**?
 
@@ -541,7 +536,3 @@ This module's activity is in this **[Jupyter Notebook](https://colab.research.go
 A **[stack](https://en.wikipedia.org/wiki/Stack_(abstract_data_type))** is a programming data structure (or type of memory, really) where you can write data (called **pushing to the top of the stack**). When you read data (called a **popping from the top of the stack**), the data comes out in reverse order of how it came in. For tasks that need you to backtrack, like *depth-first searches, or text-processing*, the stack is useful. Implementing these algorithms in hardware can require the use of a stack-type memory.
 
 In this activity, your task is to implement **a stack** using advanced sequential logic. As a guide, remember to use a *finite state machine* to model the behavior of a stack before writing your code.
-
-::: {.vcc-nextprev}
-[← M011](02-sequential.qmd){.vcc-prev} [M101 →](03-verification.qmd){.vcc-next}
-:::

@@ -1,0 +1,44 @@
+---
+title: "Formal Specifications for ASM interpretation"
+subtitle: "A compact reference for hardware-mappable ASM semantics"
+description: "The concise rules governing declarations, active paths, assignment consistency, combinational timing, and registered timing."
+format:
+  html:
+    toc: true
+    toc-depth: 2
+---
+
+These five rules follow [Chapter 3](03-semantics.qmd) in the same order. **Boxes determine control activity; declarations determine hardware timing.**
+
+[← Back to Overview](index.qmd){.btn .btn-outline-secondary .btn-sm}
+
+## 1. Variable declarations {#declarations-and-assignment}
+
+- Declare external inputs as read-only signals that may change independently of the clock. Declare every assignable variable as **registered**, with a reset value, or **combinational**, with a default. Define one initial/reset state.
+- Declarations, not assignment punctuation (`=` or `←`) or box type, determine storage and timing.
+
+## 2. ASM elements and the active path {#the-current-state-and-active-asm-path}
+
+- An ASM consists of state boxes, decision boxes, and conditional boxes. **You move from one state box to another state box at every active clock edge.** Decision and conditional boxes may follow any of the boxes; they add no clock boundary. 
+- **Exactly one state is current.** Its state-box assignments are active; decisions select branches, and reached conditional boxes activate their assignments. For fixed inputs and register values, the path must reach exactly one next state.
+
+## 3. Assignment rules {#assignment-rules}
+
+- Each destination may have **at most one assignment per active path per ASM step**, across all state and conditional boxes. Mutually exclusive branches may assign the same destination.
+- Express alternatives and priority through decisions, not the written order of conflicting assignments. An active assignment may override a declared default, but not another assignment on that path.
+
+## 4. Combinational variables {#timing-of-combinational-variables}
+
+- **An active assignment determines the current-cycle value after some logic propagation delay; otherwise the declared default value applies.** Input changes may change the active path and combinational values before the next clock edge.
+- All combinational dependencies, including those through decisions, must be acyclic. The path and values must settle deterministically from the current state, stored register outputs, and inputs.
+
+## 5. Registered variables {#timing-of-registered-variables}
+
+- **An active assignment prepares a next value; without one, the register holds.** Registers take their reset values during the initial/reset state. During ordinary execution, stored outputs remain unchanged between active edges.
+- At the active edge, all selected register updates and the next state are captured concurrently. Expressions read current register outputs, so reordering assignments to distinct registers on the same active path does not change behavior.
+
+::: {.callout-tip title="See the specification in action"}
+
+The [ASM SimulatEEE showcase](asm-simulateee.qmd) connects these rules to simulation and hardware mapping.
+
+:::

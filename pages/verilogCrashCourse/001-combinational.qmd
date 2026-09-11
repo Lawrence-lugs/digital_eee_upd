@@ -5,11 +5,6 @@ format:
     css: vcc-v2.css
 ---
 
-::: {.vcc-nav}
-[Overview](index.qmd) | [M000](00-fundamentals.qmd) | [M001](001-combinational.qmd) | [M010](01-combinational.qmd) | [M011](02-sequential.qmd) | [M100](100-advanced-sequential.qmd) | [M101](03-verification.qmd) | [M110](110-advanced-verification.qmd) | [M111](04-practices.qmd) | [Extras](05-extras.qmd) | [Credits](credits.qmd)
-:::
-# Module 001: Writing Combinational Logic
-
 In programming, you often write a sequence of instructions that run in order. In hardware, however, **combinational logic evaluates everything at the same time**. Verilog models this with the `assign` keyword and logical/arithmetic operators.
 
 ## The `assign` Keyword
@@ -450,7 +445,3 @@ This module's activity is in this **[Jupyter Notebook](https://colab.research.go
 Like in the previous activity, we'll be implementing an ALU. But this time, **NONE OF THE MODULES ARE PROVIDED.** Hence, you'll have to write all the logic yourself using *assign statements.*
 
 Good luck!
-
-::: {.vcc-nextprev}
-[← M000](00-fundamentals.qmd){.vcc-prev} [M010 →](01-combinational.qmd){.vcc-next}
-:::

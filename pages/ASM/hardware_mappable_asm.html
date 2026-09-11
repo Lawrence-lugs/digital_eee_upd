@@ -1,0 +1,820 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Toward a Truly Hardware-Mappable Algorithmic State Machine</title>
+<meta content="A student-oriented proposal for timing-explicit, syntax-independent semantics for Algorithmic State Machines that map directly to synchronous datapath and controller hardware." name="description"/>
+<style>
+    :root {
+      --bg: #f5f7f9;
+      --paper: #ffffff;
+      --ink: #17212d;
+      --muted: #5b6777;
+      --line: #dce3e9;
+      --accent: #7a1f2b;
+      --accent2: #1d527c;
+      --green: #376844;
+      --amber: #9a6300;
+      --soft-red: #faf1f2;
+      --soft-blue: #eef6fb;
+      --soft-green: #eef7f0;
+      --soft-amber: #fff7e7;
+      --code: #f1f4f6;
+      --shadow: 0 12px 34px rgba(23,33,45,.08);
+      --max: 1180px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.76;
+    }
+    a { color: var(--accent2); text-decoration-thickness: .08em; text-underline-offset: .18em; }
+    a:hover { color: var(--accent); }
+    header.hero {
+      background: linear-gradient(135deg, #172532 0%, #263e52 58%, #75202a 145%);
+      color: #fff;
+      padding: 74px 24px 62px;
+    }
+    .hero-inner { max-width: var(--max); margin: 0 auto; }
+    .eyebrow { text-transform: uppercase; letter-spacing: .13em; font-weight: 760; font-size: .82rem; opacity: .78; }
+    h1 { font-size: clamp(2.45rem, 5.4vw, 4.8rem); line-height: 1.02; letter-spacing: -.038em; margin: .38rem 0 1.1rem; max-width: 1040px; }
+    .subtitle { font-size: clamp(1.08rem, 2vw, 1.38rem); max-width: 980px; color: rgba(255,255,255,.87); margin: 0; }
+    .hero-meta { display:flex; flex-wrap:wrap; gap:9px; margin-top:28px; }
+    .chip { border:1px solid rgba(255,255,255,.24); border-radius:999px; padding:6px 11px; font-size:.86rem; color:rgba(255,255,255,.9); }
+    .layout { max-width:var(--max); margin:34px auto 82px; padding:0 22px; display:grid; grid-template-columns:minmax(0, 1fr) 285px; gap:34px; align-items:start; }
+    article { background:var(--paper); border:1px solid var(--line); box-shadow:var(--shadow); border-radius:18px; padding:clamp(25px, 5vw, 60px); min-width:0; }
+    aside { position:sticky; top:18px; background:rgba(255,255,255,.95); backdrop-filter:blur(9px); border:1px solid var(--line); border-radius:14px; padding:18px; box-shadow:var(--shadow); font-size:.9rem; }
+    aside h2 { font-size:.82rem; text-transform:uppercase; letter-spacing:.1em; margin:0 0 8px; color:var(--muted); }
+    aside ol { margin:0; padding-left:1.2rem; }
+    aside li { margin:.4rem 0; line-height:1.35; }
+    aside a { text-decoration:none; color:#344154; }
+    aside a:hover { color:var(--accent); }
+    .toc-backmatter { margin-top:.75rem; padding-top:.72rem; border-top:1px solid var(--line); }
+    .toc-backmatter a { font-weight:700; }
+    .sidebar-simulator { margin-top:1rem; padding-top:1rem; border-top:1px solid var(--line); }
+    .sidebar-simulator details { border:1px solid #cfdae4; border-radius:10px; background:var(--soft-blue); overflow:hidden; }
+    .sidebar-simulator summary { cursor:pointer; padding:10px 11px; font-weight:780; color:#244d6c; line-height:1.3; }
+    .sidebar-simulator summary:hover { color:var(--accent); }
+    .sidebar-simulator .simulator-sidebar-body { padding:0 11px 11px; color:#445264; line-height:1.5; }
+    .sidebar-simulator p { margin:.35rem 0 .7rem; font-size:.84rem; }
+    .sidebar-simulator .sidebar-button { display:block; text-align:center; padding:7px 9px; border-radius:8px; background:var(--accent2); color:#fff; font-weight:750; text-decoration:none; }
+    .sidebar-simulator .sidebar-button:hover { background:var(--accent); color:#fff; }
+    h2 { font-size:clamp(1.65rem, 3.1vw, 2.3rem); line-height:1.17; letter-spacing:-.023em; margin:2.65rem 0 .9rem; }
+    h3 { font-size:1.28rem; line-height:1.3; margin:2rem 0 .58rem; }
+    h4 { font-size:1.05rem; margin:1.45rem 0 .4rem; }
+    p { margin:.88rem 0 1.08rem; }
+    strong { font-weight:750; }
+    .lead { font-size:1.17rem; color:#303b49; }
+    .proposal, .note, .warning, .definition, .student-question {
+      padding:19px 21px;
+      border-radius:12px;
+      margin:1.5rem 0;
+      border-left:5px solid var(--accent);
+      background:var(--soft-red);
+    }
+    .note { border-left-color:var(--accent2); background:var(--soft-blue); }
+    .warning { border-left-color:var(--amber); background:var(--soft-amber); }
+    .definition { border-left-color:var(--green); background:var(--soft-green); }
+    .student-question { border-left-color:#626b7d; background:#f3f5f7; }
+    .proposal b, .note b, .warning b, .definition b, .student-question b { display:block; margin-bottom:.28rem; }
+    blockquote { margin:1.4rem 0; padding:0 0 0 18px; border-left:3px solid #aeb8c4; color:#465263; }
+    code, pre { font-family:"SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; }
+    code { background:var(--code); padding:.08em .3em; border-radius:4px; font-size:.93em; }
+    pre { background:#17222c; color:#eaf0f5; border-radius:12px; padding:18px 20px; overflow:auto; line-height:1.52; font-size:.9rem; }
+    .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:1.25rem 0; }
+    .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:1.25rem 0; }
+    .card { border:1px solid var(--line); border-radius:12px; padding:17px 18px; background:#fff; }
+    .card h3, .card h4 { margin-top:0; }
+    table { width:100%; border-collapse:collapse; margin:1.45rem 0 1.9rem; font-size:.92rem; }
+    th, td { text-align:left; vertical-align:top; border:1px solid var(--line); padding:10px 11px; }
+    th { background:#f2f5f7; line-height:1.36; }
+    tr:nth-child(even) td { background:#fcfcfd; }
+    .small { font-size:.9rem; color:var(--muted); }
+    .tag { display:inline-block; font-size:.75rem; font-weight:720; letter-spacing:.025em; padding:3px 7px; border-radius:999px; background:#edf1f5; color:#3d4a59; margin-right:4px; }
+    .timeline { border:1px solid var(--line); border-radius:14px; overflow:hidden; margin:1.55rem 0; }
+    .timeline .row { display:grid; grid-template-columns:145px 1fr; border-top:1px solid var(--line); }
+    .timeline .row:first-child { border-top:none; }
+    .timeline .label { background:#f4f6f8; padding:12px; font-weight:750; }
+    .timeline .value { padding:12px 14px; }
+    .rule-list { counter-reset:rule; list-style:none; padding:0; }
+    .rule-list li { counter-increment:rule; margin:.82rem 0; padding:15px 17px 15px 54px; border:1px solid var(--line); border-radius:10px; position:relative; }
+    .rule-list li::before { content:counter(rule); position:absolute; left:14px; top:14px; width:27px; height:27px; display:grid; place-items:center; border-radius:50%; background:var(--accent); color:#fff; font-weight:820; font-size:.82rem; }
+    .simulator-feature { border:1px solid var(--line); border-radius:16px; padding:24px; margin:2rem 0; background:linear-gradient(135deg,#f4f9fc,#fff); box-shadow:0 7px 20px rgba(29,82,124,.06); }
+    .simulator-feature h3 { margin-top:0; font-size:1.42rem; }
+    .simulator-actions { display:flex; flex-wrap:wrap; gap:8px; margin:.95rem 0 0; }
+    .simulator-actions span { border:1px solid var(--line); background:#fff; border-radius:999px; padding:5px 9px; font-size:.82rem; font-weight:670; color:#435064; }
+    .button-link { display:inline-block; margin-top:.85rem; padding:10px 14px; border-radius:9px; background:var(--accent2); color:#fff; text-decoration:none; font-weight:740; }
+    .button-link:hover { color:#fff; background:var(--accent); }
+    .refs { padding-left:1.35rem; }
+    .refs li { margin:.82rem 0; padding-left:.2rem; }
+    sup a { text-decoration:none; font-weight:720; }
+    hr { border:0; border-top:1px solid var(--line); margin:2.5rem 0; }
+    footer { max-width:var(--max); margin:0 auto 60px; padding:0 24px; color:var(--muted); font-size:.86rem; }
+    .asm { margin:1.45rem 0 1.8rem; padding:18px; border:1px solid var(--line); border-radius:14px; background:#fbfcfd; overflow-x:auto; }
+    .asm-flow { min-width:600px; display:flex; flex-direction:column; align-items:center; gap:8px; }
+    .state-box, .conditional-box, .decision-box { text-align:center; background:white; border:2px solid #596575; color:#1f2a37; }
+    .state-box { min-width:300px; border-radius:4px; padding:12px 18px; }
+    .conditional-box { min-width:280px; border-radius:28px; padding:10px 18px; }
+    .decision-box { width:165px; min-height:82px; display:grid; place-items:center; transform:rotate(45deg); margin:18px 0; }
+    .decision-box > span { transform:rotate(-45deg); max-width:115px; line-height:1.25; }
+    .arrow { color:#627080; font-weight:780; line-height:1; font-size:1.25rem; }
+    .branch-row { display:grid; grid-template-columns:1fr 1fr; gap:70px; width:100%; align-items:start; }
+    .branch { display:flex; flex-direction:column; align-items:center; gap:7px; }
+    .branch-label { font-size:.82rem; font-weight:780; color:var(--muted); }
+    .hardware-map { display:grid; grid-template-columns:1fr auto 1fr; gap:12px; align-items:center; margin:1.4rem 0; }
+    .hardware-map .left, .hardware-map .right { border:1px solid var(--line); border-radius:12px; padding:16px; }
+    .hardware-map .middle { font-size:1.6rem; color:var(--muted); }
+    .equation { font-family:"SFMono-Regular", Consolas, monospace; background:#f4f6f8; border:1px solid var(--line); border-radius:8px; padding:9px 11px; margin:.5rem 0; overflow:auto; }
+    .checklist li { margin:.5rem 0; }
+
+    .editorial-placeholder {
+      margin:1.6rem 0 1.9rem;
+      border:2px dashed #97a5b5;
+      border-radius:14px;
+      padding:20px 22px;
+      background:#f8fafb;
+      color:#394758;
+    }
+    .editorial-placeholder .placeholder-label {
+      display:inline-block;
+      margin-bottom:.55rem;
+      padding:4px 8px;
+      border-radius:999px;
+      background:#e9eef3;
+      color:#4a596a;
+      font-size:.75rem;
+      font-weight:800;
+      letter-spacing:.075em;
+      text-transform:uppercase;
+    }
+    .editorial-placeholder p:last-child { margin-bottom:0; }
+    .editorial-placeholder ul { margin:.55rem 0 .2rem; }
+    .spec-list { list-style:none; padding:0; margin:1.2rem 0 1.8rem; }
+    .spec-list > li { border:1px solid var(--line); border-radius:12px; padding:17px 19px; margin:.8rem 0; background:#fff; }
+    .spec-list > li > strong { display:block; color:#26394b; margin-bottom:.35rem; }
+    .spec-list ul { margin:.55rem 0 .1rem; padding-left:1.35rem; }
+    .spec-list li li { margin:.42rem 0; }
+    .credits-intro { margin:1.35rem 0 1.8rem; padding:22px 24px; border-left:4px solid var(--accent2); background:#f5f8fa; border-radius:0 12px 12px 0; }
+    .credits-intro p:first-child { margin-top:0; }
+    .credits-intro p:last-child { margin-bottom:0; }
+    .credits-signoff { margin-top:1rem; font-weight:750; color:#455366; }
+    .people-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:1.35rem 0 1.8rem; }
+    .person-card { border:1px solid var(--line); border-radius:14px; overflow:hidden; background:#fff; }
+    .portrait-placeholder { min-height:230px; display:grid; place-items:center; text-align:center; padding:18px; background:#f1f4f6; color:#6a7685; border-bottom:1px dashed #aab5c1; font-size:.82rem; font-weight:760; letter-spacing:.05em; text-transform:uppercase; }
+    .person-body { padding:18px 19px 20px; }
+    .person-body h3 { margin:0 0 .15rem; font-size:1.22rem; }
+    .credit-role { color:var(--accent2); font-weight:760; font-size:.9rem; margin-bottom:.65rem; }
+    .person-body p:last-child { margin-bottom:0; }
+
+    @media (max-width:960px) { .layout { grid-template-columns:1fr; } aside { position:static; order:-1; } aside ol { columns:2; column-gap:26px; } }
+    @media (max-width:720px) { .people-grid { grid-template-columns:1fr; } header.hero { padding-top:52px; } article { padding:25px 20px; } .grid2,.grid3 { grid-template-columns:1fr; } aside ol { columns:1; } .timeline .row { grid-template-columns:1fr; } .timeline .label { border-bottom:1px solid var(--line); } table { font-size:.83rem; display:block; overflow-x:auto; } th,td { padding:8px; } .hardware-map { grid-template-columns:1fr; } .hardware-map .middle { transform:rotate(90deg); text-align:center; } }
+    @media print { body { background:#fff; } header.hero { background:#fff; color:#000; padding:20px 0; } .subtitle,.hero-meta { color:#333; } .chip { border-color:#999; color:#333; } .layout { display:block; margin:0; padding:0; } aside { display:none; } article { border:0; box-shadow:none; padding:0; } a { color:inherit; text-decoration:none; } }
+  </style>
+</head>
+<body>
+<header class="hero">
+<div class="hero-inner">
+<div class="eyebrow">Proposal / teaching note</div>
+<h1>Toward a Truly Hardware-Mappable Algorithmic State Machine</h1>
+<p class="subtitle">Crafting the formal specifications of a truly hardware-mappable Algorithmic State Machine for early digital systems design instruction.</p>
+<div class="hero-meta">
+<span class="chip">Algorithmic State Machines</span>
+<span class="chip">Explicit Timing</span>
+<span class="chip">Register Transfer Level</span>
+<span class="chip">Datapath + Controller</span>
+<span class="chip">Digital Logic Education</span>
+</div>
+</div>
+</header>
+<div class="layout">
+<article>
+<div class="proposal">
+<b>The proposal in one sentence</b>
+    An ASM used for hardware instruction should contain enough information that a student can determine, from the chart and its declarations alone, what the current hardware is doing during the clock cycle, what will be captured at the next clock edge, what holds its previous value, what returns to a default, what reset establishes, and what datapath and controller structures are required to implement the design.
+  </div>
+<p class="lead">Algorithmic State Machine (ASM) charts are often introduced as <strong>“flowcharts for hardware.”</strong> That description is useful because a student who already understands software flowcharts can immediately recognize the basic idea: begin somewhere, make decisions, perform operations, and follow arrows toward what happens next. Hardware asks one more question that a software flowchart can often leave implicit: <strong>when does this value actually change?</strong></p>
+<p>A software flowchart mainly tells us <em>what happens next</em>. Synchronous digital hardware must also tell us whether a result is produced by combinational logic during the present clock period or stored in a register and made visible only after a clock edge. A combinational output may react to a changing input while the machine remains in the same state. A register output cannot behave that way. Its input logic may change throughout the cycle, but the stored value changes only when the register is clocked.</p>
+<p>That difference can disappear visually when both behaviors are written as ordinary assignments inside the same kind of diagram. A chart may look perfectly reasonable while two readers imagine two different circuits. One reader may interpret <code>X ← expression</code> as a value that appears immediately through combinational logic. Another may interpret the same line as a next value that will be captured by flip-flops at the next edge. Both readers understand the arithmetic. They disagree about the hardware.</p>
+<p>The convention proposed here makes that hardware meaning part of the ASM itself. Every assignable variable has an explicit hardware type. A <strong>registered variable</strong> has a reset value and changes only on the active clock edge. A <strong>combinational variable</strong> has a default value and responds within the current clock period according to the active ASM path. State transitions and registered writes occur together at the edge. Decisions and combinational assignments operate on values currently visible during the cycle.</p>
+<p>This small addition changes what the ASM can do pedagogically. The same chart can now support an algorithmic explanation, a cycle-by-cycle simulation, a timing diagram, a datapath/controller decomposition, and an HDL implementation without silently changing interpretation between those representations.</p>
+<h2 id="timing">1. Why Timing Matters</h2>
+<h3>Flowcharts describe sequence. Hardware describes sequence and storage.</h3>
+<p>Consider a familiar software fragment:</p>
+<pre>A = A * B;
+B = B - 1;</pre>
+<p>In many programming languages, those statements are read from top to bottom. The first statement changes <code>A</code>. The second statement then changes <code>B</code>. If a third statement uses <code>A</code>, it normally sees the newly assigned value unless the language says otherwise.</p>
+<p>Now suppose <code>A</code> and <code>B</code> are physical registers in a synchronous circuit. The hardware picture is different. The multiplier can continuously form <code>A * B</code> from the values currently coming out of the two registers. A subtractor can continuously form <code>B - 1</code>. Those two candidate next values exist as combinational signals before the edge. At the next positive edge, both registers capture their inputs together.</p>
+<div class="grid2">
+<div class="card">
+<h3>Software-style reading</h3>
+<p><code>A = A * B</code> appears to happen first. Then <code>B = B - 1</code> happens. Statement order is part of the meaning.</p>
+</div>
+<div class="card">
+<h3>Synchronous hardware reading</h3>
+<p><code>A * B</code> and <code>B - 1</code> are formed concurrently. The registered values of <code>A</code> and <code>B</code> remain unchanged until the clock edge, then both update together.</p>
+</div>
+</div>
+<p>This is the first major mental shift when moving from software algorithms to RTL design. An ASM should help the student make that shift rather than hide it.</p>
+<h3>Two kinds of change happen around one clock cycle</h3>
+<p>At the abstraction level used in introductory synchronous design, it is helpful to distinguish two kinds of visible change:</p>
+<div class="grid2">
+<div class="card">
+<h3>Combinational change</h3>
+<p>A combinational signal reacts when its inputs or the active control path change. The new value appears after ordinary logic propagation delay. It can therefore change while the machine remains in the same state and before another clock edge occurs.</p>
+</div>
+<div class="card">
+<h3>Registered change</h3>
+<p>A register may have a changing candidate value at its input throughout the cycle, but its stored output remains fixed. A new stored value becomes visible only after the active clock edge.</p>
+</div>
+</div>
+<p>A single ASM step contains both behaviors. The active state and current register values feed combinational logic. Decisions resolve. The active path determines combinational outputs and candidate register inputs. The next clock edge captures the selected registered values and the next state. The next ASM step then begins from those newly visible stored values.</p>
+<div class="timeline">
+<div class="row"><div class="label">Just after edge k</div><div class="value">The current state register and all data registers expose their newly captured values. Combinational logic begins propagating from them.</div></div>
+<div class="row"><div class="label">During cycle k</div><div class="value">Decision conditions are evaluated from currently visible inputs and signals. The active path can change if a combinational input changes. Combinational outputs follow the active path after logic delay. Candidate next values for registers are also formed.</div></div>
+<div class="row"><div class="label">Just before edge k+1</div><div class="value">The currently resolved path determines the next-state input of the state register and the selected inputs or write enables of the data registers.</div></div>
+<div class="row"><div class="label">At edge k+1</div><div class="value">The state register and all enabled data registers capture concurrently.</div></div>
+<div class="row"><div class="label">Just after edge k+1</div><div class="value">The next state and new registered data become visible. Combinational logic begins responding to the new values.</div></div>
+</div>
+<h3>The same assignment text can describe different circuits</h3>
+<p>Take the simple assignment <code>Y ← X</code>. The arithmetic content is trivial, yet the hardware depends completely on what <code>Y</code> is.</p>
+<div class="hardware-map">
+<div class="left"><strong>If Y is combinational</strong><br/><code>Y ← X</code> describes a direct logic relationship. When <code>X</code> changes, <code>Y</code> can follow during the same cycle after propagation delay.</div>
+<div class="middle">→</div>
+<div class="right"><strong>If Y is registered</strong><br/><code>Y ← X</code> describes the next input of a bank of flip-flops. <code>Y</code> keeps its old stored value until the next active clock edge.</div>
+</div>
+<p>The proposed standard resolves this before the chart is executed. The declaration of <code>Y</code> determines its hardware behavior everywhere it is assigned. The box containing the assignment determines <em>when that assignment is active</em>. The variable type determines <em>how the assignment takes effect in hardware</em>.</p>
+<div class="note">
+<b>Cycle-level timing, not gate-level timing</b>
+    The standard distinguishes changes that may occur within the current clock period from changes that wait for the active clock edge. Exact nanosecond delays, setup time, hold time, clock skew, and post-route timing remain part of physical implementation and timing analysis.
+  </div>
+<h2 id="practice">2. Existing Practice</h2>
+<p>Established ASM references already treat the ASM as a hardware-oriented, clocked representation. The literature does not present a single completely uniform notation, however. Different books and teaching materials place the timing cue in different places. Sometimes the cue is the box type. Sometimes it is the assignment symbol. Sometimes the timing becomes clear once the reader knows which objects belong to the datapath. Sometimes the ASM establishes the clock-cycle structure while the HDL or circuit implementation completes the storage interpretation.</p>
+<div class="student-question">
+<b>A useful way for a student to compare ASM conventions</b>
+    Imagine seeing an assignment to a variable called <code>X</code>. Ask one question: <strong>“What information tells me whether X can change during this clock cycle or only after the next clock edge?”</strong> The answer reveals where each ASM interpretation stores its timing semantics.
+  </div>
+<h3>Several common ways to carry the timing meaning</h3>
+<div class="grid3">
+<div class="card">
+<h4>Box and output category</h4>
+<p>State-box outputs are commonly associated with Moore behavior, while conditional outputs are associated with Mealy behavior. This gives a natural interpretation for controller outputs.</p>
+</div>
+<div class="card">
+<h4>Assignment notation</h4>
+<p>Some treatments use different assignment symbols or forms to distinguish a value asserted during the state from a value stored at the end of the state.</p>
+</div>
+<div class="card">
+<h4>Datapath context</h4>
+<p>A name known to be a register is understood to update through clocked storage. A name known to be a control output is understood through combinational state or path decode.</p>
+</div>
+</div>
+<p>All three approaches can teach useful hardware ideas. The difficulty for a beginning student appears when those cues are distributed across several representations. A student may have to remember that one symbol in a state box is a register operation, another symbol in the same box is a Moore output, an oval contains a Mealy output, and a later datapath drawing decides which values are actually stored. The interpretation works once the conventions are mastered, but the ASM itself may not carry every piece of that contract in one place.</p>
+<h3>How several widely used sources answer the student question</h3>
+<table>
+<thead>
+<tr>
+<th>Source or tradition</th>
+<th>Where the timing cue lives</th>
+<th>How a student reads an assignment</th>
+<th>What this contributes to hardware thinking</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Mano-style ASM</strong><sup><a href="#ref-mano">[1]</a></sup></td>
+<td>The ASM block represents a state interval. State boxes can contain outputs and register operations, and conditional boxes can also contain operations associated with a branch.</td>
+<td>The reader combines the chart location with knowledge of what the named object represents. A control output and a data register can appear within the same state interval even though their physical behaviors differ.</td>
+<td>It strongly connects ASM blocks, register transfers, controller states, and one-clock-cycle operation. It also gives the classic state-box, decision-box, and conditional-box vocabulary used by later texts.</td>
+</tr>
+<tr>
+<td><strong>Brown &amp; Vranesic</strong><sup><a href="#ref-brown">[2]</a></sup></td>
+<td>The chart itself implies clocked state transitions. Moore and Mealy outputs are identified by state and conditional output boxes. In full digital-system examples, the datapath identifies which values are stored in registers.</td>
+<td>The student combines ASM timing with the hardware identity of the object. In the text's bit-counting discussion, values stored in flip-flops change after the active edge even though the corresponding operations are drawn in the ASM block.</td>
+<td>The treatment explicitly bridges ASM, timing information, datapath, control circuit, simulation, and HDL. It demonstrates that an ASM is much more than a software flowchart.</td>
+</tr>
+<tr>
+<td><strong>Zwolinski</strong><sup><a href="#ref-zwolinski">[3]</a></sup></td>
+<td>The notation itself carries a substantial part of the timing meaning. Ordinary state outputs hold values for the duration of the clock cycle, while the <code>X ← value</code> form denotes an assignment made at the end of the state and then held.</td>
+<td>The student looks at the assignment form. A change in notation can mean a change in hardware timing.</td>
+<td>This is a particularly explicit attempt to distinguish level behavior from stored behavior inside the ASM notation itself. It makes the timing difference visible early.</td>
+</tr>
+<tr>
+<td><strong>AMD/Xilinx educational ASM workbook</strong><sup><a href="#ref-xilinx">[4]</a></sup></td>
+<td>State boxes carry state outputs, conditional output boxes carry outputs dependent on state and inputs, and the complete SM block describes operation while the machine is in that state. Hardware realization follows from the sequential-system design flow.</td>
+<td>The student reads box type as a controller-output cue and then connects the ASM to the surrounding hardware implementation.</td>
+<td>The workbook makes the software-flowchart analogy while keeping the goal of hardware realization explicit, which is valuable for teaching controller design.</td>
+</tr>
+<tr>
+<td><strong>University lecture treatments emphasizing datapath/control</strong><sup><a href="#ref-pdx">[5]</a></sup><sup><a href="#ref-gmu">[6]</a></sup></td>
+<td>The ASM block is associated with one synchronous clock cycle, and the chart is paired with datapath and controller design.</td>
+<td>The student understands that the operations between state boxes belong to the same clock cycle, then uses register and control structure to determine the detailed hardware response.</td>
+<td>This makes the ASM useful as a bridge from RTL operations to datapath/controller partitioning and highlights the concurrency of operations inside one cycle.</td>
+</tr>
+<tr>
+<td><strong>Timing-explicit standard proposed here</strong></td>
+<td>The variable declaration is the authoritative timing cue. Every assignable destination is declared <em>registered</em> or <em>combinational</em>. Registered variables also declare reset values; combinational variables declare defaults.</td>
+<td>The student checks the destination type. The same assignment symbol can be used in a state box or conditional box without changing the destination's timing semantics.</td>
+<td>The chart becomes self-contained enough for deterministic cycle simulation and direct datapath/controller mapping while retaining familiar ASM box conventions.</td>
+</tr>
+</tbody>
+</table>
+<p>The proposed standard therefore grows out of ideas already present in established ASM teaching: one state interval per clock cycle, state and conditional outputs, register transfers, hardware timing, and datapath/controller partitioning. The main standardization step is to place the storage class directly on every assignable variable so that timing does not depend on remembering a special drawing location, guessing the kind of object from its name, or assigning hardware meaning to a particular punctuation mark.</p>
+<h3>Why avoid making the assignment symbol the timing rule?</h3>
+<p>Using different symbols for different timing behaviors can be clear when everyone follows the same notation. It also couples hardware semantics to syntax. A student moving between textbooks, software tools, HDL conventions, or handwritten notes may encounter <code>←</code>, <code>&lt;=</code>, <code>:=</code>, or <code>=</code> with different meanings. The conceptual question then becomes partly a punctuation question.</p>
+<p>In the proposed interpretation, the assignment glyph is intentionally boring. It means <em>assign this expression to this destination when this box lies on the active path</em>. The declaration of the destination answers the timing question.</p>
+<pre>register A[7:0] reset 0
+combinational out_bit default 0
+
+A       ← A + 1       // A is captured on the next active edge
+out_bit ← Flag        // out_bit responds within the current cycle</pre>
+<p>A course or tool may choose to spell the same two assignments using <code>:=</code> or even <code>=</code>. The hardware interpretation stays unchanged because <code>A</code> remains a register and <code>out_bit</code> remains combinational. A consistent notation is still desirable for readability, especially because decision expressions also need an equality operator, but punctuation no longer determines storage behavior.</p>
+<h2 id="semantics">3. Proposed Semantics</h2>
+<p>The standard can be summarized by one sentence: <strong>boxes determine control activity; declarations determine hardware timing.</strong> State boxes, decisions, conditional boxes, and arrows determine which operations are active. Variable declarations determine whether an active assignment produces a current-cycle combinational response or a next-edge register update.</p>
+<h3>3.1 Declarations come first</h3>
+<p>Before interpreting assignments, the chart declares every assignable variable. At minimum, two hardware classes are required.</p>
+<pre>input Flag
+input N[7:0]
+
+register A[7:0] reset 0
+register B[7:0] reset 0
+
+combinational out_bit default 0
+combinational done    default 0
+
+reset_state S0</pre>
+<p>A <strong>registered variable</strong> represents stored state. It therefore has a defined reset value. When the ASM selects an assignment to that variable, the right-hand side determines the value to capture at the next active clock edge. When no assignment is selected, the register holds its current value.</p>
+<p>A <strong>combinational variable</strong> represents current-cycle logic. It therefore has a defined default value. When the ASM selects an assignment to that variable, the variable responds to the selected expression after ordinary combinational propagation delay. When no assignment is selected, the variable returns to its declared default.</p>
+<p>The reset state is also defined. Reset therefore establishes a deterministic stored starting point: the controller goes to its reset state, and each registered variable goes to its declared reset value. After reset changes the stored state, combinational variables are evaluated from that state and the current inputs. A combinational variable may consequently take an active state-box value immediately after the reset state becomes visible rather than remaining at its default.</p>
+<div class="definition">
+<b>Reset value versus default value</b>
+    A <strong>reset value</strong> belongs to storage. It specifies what a register contains when reset is applied. A <strong>default value</strong> belongs to combinational logic. It specifies what a combinational destination produces whenever no active-path assignment overrides it. The two concepts solve different hardware problems and should be declared separately.
+  </div>
+<p>The standard requires the reset result to be defined. A larger RTL specification may separately declare whether the implementation uses synchronous reset, asynchronous reset, reset polarity, or device-specific initialization. Those choices affect the physical reset circuit but do not change the cycle semantics of ordinary ASM execution after reset.</p>
+<h3>3.2 Assignment syntax does not determine timing</h3>
+<p>Once a variable has been declared, its behavior remains the same wherever it appears. A register assigned inside a conditional box is still a register. A combinational signal assigned inside a state box is still combinational. Moving an assignment between boxes may change the control condition under which it is active, but it does not change the storage class of the destination.</p>
+<p>The following three notational styles can therefore represent the same semantics if the surrounding notation standard says they are assignment operators:</p>
+<pre>A ← A + 1       out_bit ← Flag
+A := A + 1      out_bit := Flag
+A = A + 1       out_bit = Flag</pre>
+<p>Because <code>A</code> is declared registered, its update waits for the edge in all three styles. Because <code>out_bit</code> is declared combinational, it can respond within the cycle in all three styles. The assignment symbol can be selected for familiarity or visual clarity without becoming a hidden timing operator.</p>
+<h3>3.3 The current state and active ASM path</h3>
+<p>At any instant during normal operation, exactly one state box represents the <strong>current state</strong>. Starting at that state box, follow the branch selected by each decision box and include every conditional box encountered until the input of a next state box is reached. That complete traversal is the <strong>active ASM path</strong>.</p>
+<p>The active path is important because hardware does not execute every box in the chart at once. It activates the operations associated with the current state and the branch conditions that are currently true. If an input to a decision changes during the cycle, the selected branch may also change before the next clock edge. Combinational assignments on those branches can follow that change. Registered assignments simply change which next value is being presented to the register before the edge.</p>
+<div class="editorial-placeholder">
+<span class="placeholder-label">Author image / GIF placeholder: active-path timing example</span>
+<p><strong>Insert an ASM chart generated from ASM SimulatEEE here.</strong> The figure should contain state <code>S1</code>, followed by a decision <code>Flag = 1?</code>. The false branch should proceed directly toward <code>S2</code>. The true branch should pass through one conditional box containing both <code>out_bit ← 1</code> and <code>B ← 0</code>, then proceed toward <code>S2</code>. If desired, <code>S1</code> may also show <code>out_bit ← 0</code> to make the state-dependent output visible in the chart.</p>
+<p><strong>Declarations to show beside or below the image:</strong> <code>out_bit</code> is combinational with default 0; <code>B</code> is registered with a defined reset value. The visual purpose is to show that two assignments in the same conditional box can have different timing because timing follows the destination declaration.</p>
+<p class="small"><strong>Suggested caption:</strong> The active ASM path can change during a clock period as <code>Flag</code> changes. A combinational assignment responds within the cycle, while a registered assignment only prepares a value for the next active clock edge.</p>
+</div>
+<p>Assume <code>out_bit</code> is combinational with default 0 and <code>B</code> is a register. If <code>Flag</code> becomes 1 while the machine is still in <code>S1</code>, the active path moves to the true branch. After combinational propagation, <code>out_bit</code> becomes 1 during the current cycle. The assignment <code>B ← 0</code> also becomes active, but the stored output of <code>B</code> does not immediately become 0. Its input is prepared for 0, and the register captures 0 only if that assignment is still selected at the active clock edge.</p>
+<p>The example is intentionally important: <strong>two assignments can sit in the same conditional box and still have different timing because their destinations have different declared hardware types.</strong> The box controls whether the assignments are active. The declarations control how those active assignments behave.</p>
+<h3>3.4 Decisions use currently visible values</h3>
+<p>A decision expression reads the values that are currently visible in the circuit. For a register, that means the present stored output, not the candidate value waiting at its input. For a combinational signal or external input, that means its current logic value after propagation through the logic feeding it.</p>
+<p>This rule is what makes cycle-sensitive examples understandable. Suppose <code>B</code> currently stores 1 and the active path also contains <code>B ← B - 1</code>. The subtractor can already be producing 0 at the register input during the cycle, but a decision testing <code>B == 1</code> still sees the register output 1 until the clock edge. After the edge, the register output becomes 0.</p>
+<h3>3.5 Combinational variables respond during the cycle</h3>
+<p>For a combinational destination, an assignment on the active path defines its current-cycle logic. If several chart paths could assign that variable, those mutually exclusive paths become selection logic. When none of the assignments is active, the declared default supplies the value.</p>
+<p>For example:</p>
+<pre>combinational grant default 0
+
+State WAIT:
+    if request:
+        grant ← 1</pre>
+<p>When the machine is in <code>WAIT</code>, <code>grant</code> is 0 while <code>request</code> is 0. If <code>request</code> rises, the decision path changes and <code>grant</code> rises after logic propagation. If <code>request</code> falls again before the next clock edge, <code>grant</code> can fall again during the same state interval. No flip-flop is required for <code>grant</code>.</p>
+<p>The default is essential. It tells the hardware what <code>grant</code> should be when the true branch is inactive. Without a default or some other complete assignment rule, the specification could accidentally imply storage, which would contradict the declaration that <code>grant</code> is combinational.</p>
+<h3>3.6 Combinational feedback loops are not allowed</h3>
+<p>The within-cycle portion of an ASM must eventually settle to a stable set of logic values. Decisions may depend on combinational signals, and combinational assignments may depend on decisions, but those dependencies must not form a cycle. A cycle would mean that the value of a combinational signal can influence the path that determines that same signal, directly or indirectly.</p>
+<p>Consider a combinational flag with default 0:</p>
+<pre>combinational flag default 0
+
+State S1:
+    if flag == 0:
+        flag ← 1</pre>
+<p>This looks simple when read like software, but the corresponding hardware has no stable interpretation under these rules. Start with the default <code>flag = 0</code>. The decision is true, so the conditional assignment drives <code>flag = 1</code>. That makes the decision false, so the assignment disappears and the default drives <code>flag = 0</code> again. The path can then switch back. The decision logic and the assignment logic feed each other with no register to separate one evaluation from the next.</p>
+<div class="warning">
+<b>A combinational path must settle</b>
+A valid ASM shall not contain a combinational dependency cycle. The active path and all combinational destinations must be resolvable from the current state, current register outputs, and external inputs without requiring a combinational signal to feed back into itself through only combinational logic.
+</div>
+<p>A direct self-reference is another form of the same problem:</p>
+<pre>combinational toggle default 0
+
+State S1:
+    toggle ← !toggle      // invalid combinational feedback</pre>
+<p>The hardware translation is an inverter whose output is connected back to its own input. There is no clocked storage element to define an old value and a new value. Likewise, a longer dependency chain can still be a loop even when no assignment visibly refers to itself:</p>
+<pre>combinational a default 0
+combinational b default 0
+
+State S1:
+    a ← !b
+    b ← a               // invalid: a and b form a combinational cycle</pre>
+<p>Feedback through a <strong>register</strong> is different and is a normal part of synchronous design. An assignment such as <code>count ← count + 1</code> is valid when <code>count</code> is registered. The current register output feeds the adder, the adder forms a candidate next value, and the register captures that value only at the clock edge. The register breaks the combinational cycle by separating the current value from the next value in time.</p>
+<p>The same distinction applies to decision feedback. A decision may test a register and select a new value for that same register because the tested value remains unchanged until the edge. A decision that tests a combinational signal and then selects logic that changes the same combinational signal can create an immediate feedback loop and must be avoided.</p>
+<p>For an introductory hardware-mappable ASM, the cleanest rule is therefore structural: <strong>combinational dependencies must be acyclic.</strong> This keeps within-cycle behavior deterministic, prevents the simulator from needing an arbitrary fixed-point or oscillation rule, and maps naturally to ordinary feed-forward combinational logic between registers.</p>
+<h3>3.7 Registered variables update at the edge</h3>
+<p>For a registered destination, an active assignment defines a candidate next value. The stored output remains unchanged throughout the cycle. At the active clock edge, the register captures the selected candidate. If no assignment to that register is active, it holds its current stored value.</p>
+<pre>register count[7:0] reset 0
+
+State RUN:
+    if enable:
+        count ← count + 1</pre>
+<p>During <code>RUN</code>, an adder can continuously produce <code>count + 1</code>. When <code>enable</code> is 1, the controller selects that sum as the register's next value or asserts the register's write enable. When <code>enable</code> is 0, the register holds. The visible <code>count</code> changes only after an active edge at which the increment assignment is selected.</p>
+<h3>3.8 Registered assignments are concurrent</h3>
+<p>Hardware registers capture together at the active edge. The ASM therefore treats registered assignments within one step as concurrent rather than as a software statement sequence.</p>
+<pre>register A reset 0
+register B reset 0
+
+A ← B
+B ← A</pre>
+<p>If <code>A = 3</code> and <code>B = 9</code> before the edge, the right-hand side of the first assignment sees 9 and the right-hand side of the second sees 3. At the edge, the registers capture together. After the edge, <code>A = 9</code> and <code>B = 3</code>. The two values swap in one ASM step.</p>
+<p>A sequential software interpretation would normally require a temporary variable for the same swap. The synchronous hardware interpretation does not, because both next values are computed from the old visible register outputs and committed together.</p>
+<h3>3.9 One effective assignment per variable per active path</h3>
+<p>The standard requires at most one effective assignment to a destination on the active path in one ASM step. Mutually exclusive branches may each assign the same variable because only one of those branches can be active. Two assignments encountered on the same traversed path are rejected.</p>
+<pre>State S1:
+    B ← B - 1
+    if clear:
+        B ← 0      // invalid if this path also includes the first assignment</pre>
+<p>The hardware reason is simple. Both lines propose a value for the same register on the same edge. A real circuit could implement a priority mux, but the priority would then be an additional semantic rule. Requiring a single effective assignment keeps the ASM unambiguous and makes controller generation straightforward.</p>
+<p>The preferred chart makes the alternatives structurally exclusive:</p>
+<pre>State S1:
+    if clear:
+        B ← 0
+    else:
+        B ← B - 1</pre>
+<p>Now the chart itself defines the mux selection. Only one candidate is active on any path.</p>
+<h3>3.10 Hold, default, and reset are different cases</h3>
+<table>
+<thead><tr><th>Situation</th><th>Registered variable</th><th>Combinational variable</th></tr></thead>
+<tbody>
+<tr><td>An assignment to the variable is active</td><td>Prepare that value for capture at the next active edge.</td><td>Drive that value during the current cycle after propagation delay.</td></tr>
+<tr><td>No assignment to the variable is active</td><td>Hold the current stored value.</td><td>Use the declared default value.</td></tr>
+<tr><td>Reset is asserted</td><td>Take the declared reset value according to the specified reset mechanism.</td><td>Combinational logic follows the reset state, reset inputs, and active/default rules. It has no stored reset value of its own.</td></tr>
+</tbody>
+</table>
+<p>This table prevents a common conceptual mix-up. <strong>Hold</strong> is meaningful because a register has memory. <strong>Default</strong> is meaningful because combinational logic should have a complete value even when no path-specific assignment is active. <strong>Reset</strong> establishes stored initial conditions. They are related parts of a hardware specification, but they are not interchangeable.</p>
+<h3>3.11 One ASM step</h3>
+<p>With the preceding definitions, one ASM step can be read mechanically:</p>
+<ol class="checklist">
+<li>Begin with the currently stored state and register outputs just after a clock edge.</li>
+<li>Evaluate state-dependent and input-dependent combinational logic from currently visible values.</li>
+<li>Trace the active ASM path from the current state through resolved decisions and conditional boxes until the input of a next state box.</li>
+<li>For each combinational variable, apply the active-path assignment if one exists; otherwise use its declared default.</li>
+<li>For each registered variable, form the candidate next value selected by the active path; otherwise select hold.</li>
+<li>Let the acyclic combinational logic propagate and settle during the remainder of the clock period. If an input changes, re-evaluate the affected path and combinational outputs until the new feed-forward result settles.</li>
+<li>At the active clock edge, capture the resolved next state and every selected registered next value concurrently.</li>
+<li>Begin the next ASM step from the newly visible state and register values.</li>
+</ol>
+<h3>3.12 Compact formal specification</h3>
+
+<ul class="spec-list">
+<li><strong>Machine structure and ASM step</strong>
+<ul>
+<li>Exactly one state box shall represent the current state during normal operation.</li>
+<li>An ASM step shall begin at the current state box, traverse the currently resolved decision and conditional boxes, and terminate at the input of a next state box.</li>
+<li>The next state shall be captured on the next active clock edge.</li>
+<li>Decision expressions shall use currently visible signal values. For registered operands, this means the present stored outputs before the upcoming edge.</li>
+</ul>
+</li>
+<li><strong>Declarations and initialization</strong>
+<ul>
+<li>Every variable assigned within the ASM shall be explicitly declared with a hardware class. At minimum, the supported classes shall be <em>registered</em> and <em>combinational</em>.</li>
+<li>Every registered variable shall have a defined reset value. The ASM shall also define a reset state. Reset polarity, synchrony, and other delivery details may be specified separately.</li>
+<li>Every combinational variable shall have a defined default value used whenever no active-path assignment overrides it.</li>
+<li>Assignment punctuation shall carry no storage or timing meaning. The declaration of the destination shall be authoritative, whether the chosen assignment notation is <code>←</code>, <code>:=</code>, <code>=</code>, or another consistently defined symbol.</li>
+</ul>
+</li>
+<li><strong>Combinational destinations</strong>
+<ul>
+<li>An active assignment to a combinational variable shall determine its value within the current clock period after ordinary combinational propagation delay.</li>
+<li>If no assignment to that combinational variable is active, the variable shall take its declared default value.</li>
+<li>A change in an input or decision condition may therefore redirect the active path and change a combinational destination before the next clock edge.</li>
+</ul>
+</li>
+<li><strong>Combinational feedback and settling</strong>
+<ul>
+<li>Combinational dependencies shall be acyclic. No combinational variable may depend on itself, directly or indirectly, through assignments, decision conditions, or other combinational expressions.</li>
+<li>The current active path and all combinational destination values shall be able to settle to a deterministic result from the current state, current registered outputs, and current external inputs.</li>
+<li>Feedback through a registered variable is permitted because the register separates the current value from the candidate next value at the clock boundary.</li>
+</ul>
+</li>
+<li><strong>Registered destinations</strong>
+<ul>
+<li>An active assignment to a registered variable shall define a candidate next value for capture at the next active clock edge.</li>
+<li>If no assignment to that register is active, the register shall hold its current stored value.</li>
+<li>All registered writes selected in one ASM step shall be evaluated from values visible during that step and shall commit concurrently at the active edge.</li>
+</ul>
+</li>
+<li><strong>Assignment consistency</strong>
+<ul>
+<li>A variable shall have at most one effective assignment on any traversed active path in one ASM step.</li>
+<li>The same variable may be assigned on mutually exclusive branches because only one such branch can be active at a time.</li>
+<li>If priority behavior is desired, that priority shall be represented explicitly by the decision structure rather than inferred from textual ordering.</li>
+</ul>
+</li>
+<li><strong>Scope of the specification</strong>
+<ul>
+<li>The ASM shall define synchronous, cycle-level timing and storage behavior clearly enough for simulation and hardware mapping.</li>
+<li>Exact propagation limits, setup and hold requirements, clock distribution, technology mapping, and timing closure remain part of the larger hardware implementation specification.</li>
+</ul>
+</li>
+</ul>
+
+<div class="simulator-feature" id="simulator">
+<h3>ASM SimulatEEE: execute the semantics, then inspect the hardware</h3>
+<p>We built <strong>ASM SimulatEEE</strong> around this interpretation so that the rules above can be experienced as behavior rather than memorized as prose. The editor uses the familiar state, decision, and conditional-output blocks. A design can then be reset, stepped one clock at a time, or run continuously. The variables panel and execution log expose what the machine is doing as the clock advances.</p>
+<p>The simulator is particularly useful for timing questions. A registered assignment becomes visible when a clock step commits the register update. A combinational assignment follows the active path during the current cycle. Changing a decision input can redirect the path before the next edge. This allows the student to ask, “What is visible now?” and “What is merely waiting to be captured?” while watching the same chart execute.</p>
+<p>The <strong>SYNTHESIZE</strong> view then carries the exercise one step further by separating the result into a <strong>DATAPATH</strong> and a <strong>CONTROLLER</strong>. Designs can also be saved or loaded as JSON, and the interface provides Verilog export. The goal is continuity: the ASM semantics used for drawing and simulation are the same semantics used to reason about the eventual hardware structure.</p>
+<div class="simulator-actions">
+<span>State / Decision / Conditional Blocks</span><span>Reset</span><span>Step</span><span>Run</span><span>Variables</span><span>Execution Log</span><span>Synthesize</span><span>Datapath</span><span>Controller</span><span>Export Verilog</span>
+</div>
+
+<div class="editorial-placeholder">
+<span class="placeholder-label">Optional author screenshot / GIF placeholder: ASM SimulatEEE</span>
+<p>Insert a screenshot or short GIF of ASM SimulatEEE executing one of the examples. A useful capture would show the ASM canvas together with the variable panel or execution log so the reader can see a combinational value react within a cycle and a registered value commit on a step.</p>
+<p class="small"><strong>Suggested caption:</strong> ASM SimulatEEE turns the proposed semantics into executable behavior, allowing the same chart to be stepped cycle by cycle before inspecting its datapath and controller interpretation.</p>
+</div><a class="button-link" href="https://digital.eee.upd.edu.ph/ASM_simulatEEE.html">Open ASM SimulatEEE</a>
+</div>
+<h2 id="mapping">4. From ASM to Hardware</h2>
+<p>A timing-complete ASM becomes useful when the student can look at the chart and begin naming the hardware without inventing extra semantics. The mapping does not mean that there is only one possible optimized circuit. Synthesis can still share resources, simplify logic, alter state encodings, or choose different mux structures. The important point is that the required <em>behavioral categories</em> are already clear.</p>
+<h3>A practical mapping recipe</h3>
+<table>
+<thead><tr><th>Read this in the ASM</th><th>Ask this hardware question</th><th>Typical hardware consequence</th></tr></thead>
+<tbody>
+<tr><td>Registered variable</td><td>What value must be stored from one cycle to the next?</td><td>A register or bank of flip-flops, including its declared reset value.</td></tr>
+<tr><td>Several mutually exclusive assignments to one register</td><td>Which candidate value should reach the register input?</td><td>A mux, clock enable, load enable, or equivalent synthesized selection logic.</td></tr>
+<tr><td>Arithmetic expression such as <code>A * B</code> or <code>B - 1</code></td><td>What combinational function must form the candidate value?</td><td>Multiplier, adder, subtractor, shifter, comparator, or general combinational logic.</td></tr>
+<tr><td>Combinational variable</td><td>What logic should be visible during the current state and path?</td><td>State decode, input-dependent Boolean logic, mux logic, or other combinational output logic.</td></tr>
+<tr><td>Decision expression</td><td>What Boolean condition selects a path?</td><td>Comparator, status flag, reduction logic, or external input feeding the controller.</td></tr>
+<tr><td>State boxes and next-state arrows</td><td>What control state is stored and what state comes next?</td><td>State register plus combinational next-state logic.</td></tr>
+<tr><td>Reset state and register reset values</td><td>What known stored configuration must reset establish?</td><td>Controller and datapath reset behavior.</td></tr>
+</tbody>
+</table>
+<p>The next two examples show the same mapping process from different directions. The factorial machine emphasizes register timing and the danger of a one-cycle error. The request counter adds live combinational outputs so that both hardware classes can be seen in one design.</p>
+<h3>Example 1: Factorial and the one-cycle trap</h3>
+<p>Suppose the machine computes <code>N!</code> using a running product <code>A</code> and a countdown value <code>B</code>. The stored variables are declared explicitly:</p>
+<pre>input N[7:0]
+register A[7:0] reset 0
+register B[7:0] reset 0
+combinational done default 0
+reset_state S0</pre>
+<p>The reset values establish a known electrical starting point. The algorithm then performs a separate initialization operation that loads <code>A = 1</code> and <code>B = N</code>. Reset and algorithmic initialization are deliberately distinct ideas. Reset says what the registers contain when the circuit is reset. The initialization state says what values the factorial operation needs when a new computation begins.</p>
+<p>A compact ASM description is:</p>
+<div class="editorial-placeholder">
+<span class="placeholder-label">Author image / GIF placeholder: factorial ASM</span>
+<p><strong>Insert the factorial ASM generated from ASM SimulatEEE here.</strong> The intended flow is: <code>S0: INIT</code> assigns <code>A ← 1</code> and <code>B ← N</code>, then transitions to <code>S1: LOOP</code>. In <code>S1</code>, the active state operations are <code>A ← A * B</code> and <code>B ← B - 1</code>. A decision tests the currently visible register value <code>B = 1?</code>. False returns to <code>S1</code>. True proceeds to <code>S2: DONE</code>, where the combinational output <code>done</code> is asserted.</p>
+<p>A GIF can be especially useful here. One version may animate the highlighted active path and visible values of <code>A</code> and <code>B</code> for <code>N = 5</code>, emphasizing that the multiply and decrement become stored only at the clock edge.</p>
+<p class="small"><strong>Suggested caption:</strong> Factorial ASM with explicit register timing. The decision observes the current stored value of <code>B</code>, while <code>A * B</code> and <code>B - 1</code> are candidate next values until the edge.</p>
+</div>
+<p>The critical detail is that <code>A</code> and <code>B</code> are registers. While the machine is in <code>S1</code>, the multiplier forms <code>A * B</code> and the decrementer forms <code>B - 1</code>, but those are candidate next values. The visible register outputs remain the old <code>A</code> and <code>B</code> until the edge. The decision <code>B = 1?</code> therefore tests the current stored countdown value.</p>
+<p>For <code>N = 5</code>, the machine can be read cycle by cycle:</p>
+<table>
+<thead><tr><th>State interval</th><th>Visible A</th><th>Visible B</th><th>What the datapath forms during the cycle</th><th>What happens at the next edge</th></tr></thead>
+<tbody>
+<tr><td>Reset</td><td>0</td><td>0</td><td>Reset state logic is active.</td><td>Stored reset condition is established according to the reset mechanism.</td></tr>
+<tr><td>S0</td><td>0</td><td>0</td><td>A input selects 1. B input selects N = 5.</td><td>A becomes 1, B becomes 5, state becomes S1.</td></tr>
+<tr><td>S1</td><td>1</td><td>5</td><td>A input = 5. B input = 4. Decision sees B = 5.</td><td>A becomes 5, B becomes 4, state remains S1.</td></tr>
+<tr><td>S1</td><td>5</td><td>4</td><td>A input = 20. B input = 3. Decision sees B = 4.</td><td>A becomes 20, B becomes 3.</td></tr>
+<tr><td>S1</td><td>20</td><td>3</td><td>A input = 60. B input = 2. Decision sees B = 3.</td><td>A becomes 60, B becomes 2.</td></tr>
+<tr><td>S1</td><td>60</td><td>2</td><td>A input = 120. B input = 1. Decision sees B = 2.</td><td>A becomes 120, B becomes 1.</td></tr>
+<tr><td>S1</td><td>120</td><td>1</td><td>A input = 120 × 1 = 120. B input = 0. Decision sees B = 1, so the exit path is selected.</td><td>A remains 120, B becomes 0, state becomes S2.</td></tr>
+<tr><td>S2</td><td>120</td><td>0</td><td><code>done</code> is driven to 1 because it is a combinational output assigned in S2.</td><td>A and B hold unless another operation is defined.</td></tr>
+</tbody>
+</table>
+<p>The machine stops when the <em>visible</em> value of <code>B</code> is 1. The loop still performs the multiply-by-1 and decrement-to-0 operations on the exit edge, but multiplying by 1 preserves the correct factorial result.</p>
+<div class="warning">
+<b>Why B = 0 is one cycle too late</b>
+    If the decision waits for the visible register output <code>B</code> to become 0, then the circuit must first clock <code>B</code> from 1 to 0 while remaining in the loop. During the next state interval, the loop hardware sees <code>A = 120</code> and <code>B = 0</code>, so the multiplier forms <code>120 × 0</code>. If the loop assignment is still active at the exit edge, the register captures 0 and destroys the correct result. The error comes from register timing, not from the mathematical definition of factorial.
+  </div>
+<p>This example is precisely where a software-flowchart intuition can mislead. A programmer may imagine decrementing <code>B</code>, immediately seeing that it became 0, and then exiting before another multiplication. The synchronous circuit cannot observe the newly stored <code>B = 0</code> until after the edge that captures it. A timing-explicit ASM makes the distinction visible while the algorithm is still being designed.</p>
+<h4>Hardware mapping of the factorial ASM</h4>
+<p>Once the semantics are fixed, the datapath is almost a reading exercise:</p>
+<ul>
+<li><code>A</code> and <code>B</code> are declared registers, so the datapath needs two register banks with reset values.</li>
+<li><code>A ← A * B</code> requires a multiplier producing a candidate input for <code>A</code>.</li>
+<li><code>B ← B - 1</code> requires a decrementer or subtractor producing a candidate input for <code>B</code>.</li>
+<li><code>A ← 1</code> requires a constant 1 as another possible input to the <code>A</code> register.</li>
+<li><code>B ← N</code> requires the external input <code>N</code> as another possible input to the <code>B</code> register.</li>
+<li>Because each register has several possible next values, selection logic is required. A mux-based implementation is the natural first drawing.</li>
+<li>The decision <code>B = 1</code> requires an equality comparator or equivalent Boolean logic.</li>
+<li><code>done</code> is combinational and active in <code>S2</code>, so it can be produced by state decode rather than a separate data register.</li>
+</ul>
+<p>The controller then produces the mux selects, enables, and next-state choice. One possible control table is:</p>
+<table>
+<thead><tr><th>State</th><th><code>B_is_1</code></th><th>A action</th><th>B action</th><th><code>done</code></th><th>Next state</th></tr></thead>
+<tbody>
+<tr><td>S0</td><td>x</td><td>load 1</td><td>load N</td><td>0</td><td>S1</td></tr>
+<tr><td>S1</td><td>0</td><td>load A*B</td><td>load B-1</td><td>0</td><td>S1</td></tr>
+<tr><td>S1</td><td>1</td><td>load A*B</td><td>load B-1</td><td>0</td><td>S2</td></tr>
+<tr><td>S2</td><td>x</td><td>hold</td><td>hold</td><td>1</td><td>S2</td></tr>
+</tbody>
+</table>
+<div class="editorial-placeholder">
+<span class="placeholder-label">Author image placeholder: factorial datapath + controller</span>
+<p><strong>Insert the corresponding hardware implementation here.</strong> A two-panel figure works well: one panel for the datapath and one for the controller. The datapath should visibly include registers <code>A</code> and <code>B</code>, their reset behavior, the <code>A * B</code> multiplier, the <code>B - 1</code> decrementer, constants or input sources for initialization, selection logic feeding each register, and the <code>B = 1</code> comparator. The controller panel should show the state register and the logic that produces the register controls, <code>done</code>, and next state.</p>
+<p>It is useful to label the control lines so the reader can trace each line back to an ASM operation. If the simulator's synthesized view can be exported cleanly, that image is especially appropriate here.</p>
+<p class="small"><strong>Suggested caption:</strong> Datapath and controller realization of the factorial ASM. Once storage class, reset behavior, and edge timing are explicit, the major hardware blocks follow directly from the chart.</p>
+</div>
+<p>The same chart could have written its assignments using <code>=</code> or <code>:=</code>. The datapath would be identical because the declarations, rather than the arrows, establish that <code>A</code> and <code>B</code> are clocked storage and <code>done</code> is combinational.</p>
+<h3>Example 2: A request counter with live combinational outputs</h3>
+<p>The factorial machine is dominated by registers. A second example is useful because many real controllers also generate outputs that must react during the current state. Consider a small request-counting block with the following behavior:</p>
+<ul>
+<li>While idle, it asserts <code>ready</code> to show that it can start.</li>
+<li>A <code>start</code> input clears the request count and moves the machine into a running state.</li>
+<li>While running, a <code>request</code> input is acknowledged immediately by a combinational signal called <code>accepted</code>.</li>
+<li>If <code>request</code> is active at the clock edge, the registered request count increments.</li>
+<li>A <code>stop</code> input returns the machine to idle. In this example, stop has priority over request because the chart tests stop first.</li>
+</ul>
+<p>The declarations make the hardware categories explicit:</p>
+<pre>input start
+input request
+input stop
+
+register count[7:0] reset 0
+combinational ready    default 0
+combinational accepted default 0
+
+reset_state IDLE</pre>
+<div class="editorial-placeholder">
+<span class="placeholder-label">Author image / GIF placeholder: request-counter ASM</span>
+<p><strong>Insert the request-counter ASM generated from ASM SimulatEEE here.</strong> The intended flow is: in <code>IDLE</code>, assert combinational <code>ready ← 1</code>. Test <code>start</code>. False loops to <code>IDLE</code>; true passes through a conditional box with registered <code>count ← 0</code> and enters <code>RUN</code>. In <code>RUN</code>, test <code>stop</code> first. True returns to <code>IDLE</code>. False then tests <code>request</code>. False remains in <code>RUN</code>; true passes through a conditional box containing both combinational <code>accepted ← 1</code> and registered <code>count ← count + 1</code>, then remains in <code>RUN</code>.</p>
+<p>If this is animated, let <code>request</code> change between clock edges so the reader can see <code>accepted</code> react before <code>count</code> changes.</p>
+<p class="small"><strong>Suggested caption:</strong> One conditional box can activate both a live combinational output and a next-edge register update. The declarations, rather than the assignment symbol or box shape, determine the timing.</p>
+</div>
+<p>The true <code>request</code> conditional box contains two assignments written with the same arrow. Their timing is completely different because their destinations are different types.</p>
+<div class="grid2">
+<div class="card">
+<h3><code>accepted</code> is combinational</h3>
+<p>When the machine is in <code>RUN</code>, <code>stop = 0</code>, and <code>request</code> becomes 1, the active path reaches <code>accepted ← 1</code>. The signal rises after logic propagation. If <code>request</code> falls again, <code>accepted</code> returns to its default 0 without waiting for a clock.</p>
+</div>
+<div class="card">
+<h3><code>count</code> is registered</h3>
+<p>The same active path selects <code>count + 1</code> as the register's candidate next value. The visible count does not change when <code>request</code> rises. It changes only if the request path is still selected at the active clock edge.</p>
+</div>
+</div>
+<h4>A mid-cycle request</h4>
+<p>Suppose the machine has already entered <code>RUN</code> and <code>count = 7</code>.</p>
+<table>
+<thead><tr><th>Moment</th><th>request</th><th>accepted</th><th>visible count</th><th>candidate register input</th></tr></thead>
+<tbody>
+<tr><td>Just after the clock edge</td><td>0</td><td>0</td><td>7</td><td>hold 7</td></tr>
+<tr><td>request rises mid-cycle</td><td>1</td><td>1 after propagation</td><td>7</td><td>8</td></tr>
+<tr><td>If request remains high until the next edge</td><td>1</td><td>1</td><td>7 before edge</td><td>8 is captured</td></tr>
+<tr><td>Just after that edge</td><td>1</td><td>1 after state/path logic settles</td><td>8</td><td>9 for a possible following edge</td></tr>
+</tbody>
+</table>
+<p>Now consider a short request pulse that rises and falls entirely between two clock edges. <code>accepted</code> can pulse because it is combinational. The count can remain unchanged because the request path is no longer selected when the register samples at the edge. That behavior is a direct consequence of the declarations. No special symbol inside the conditional box is needed.</p>
+<h4>Hardware mapping of the request counter</h4>
+<p>The combinational outputs are simple equations derived from the active path:</p>
+<div class="equation">ready = (state == IDLE)</div>
+<div class="equation">accepted = (state == RUN) AND (stop == 0) AND request</div>
+<p>The <code>count</code> datapath needs an 8-bit register, an incrementer, and selection between hold, zero, and incremented count. Conceptually:</p>
+<div class="equation">count_next = 0, when state == IDLE AND start</div>
+<div class="equation">count_next = count + 1, when state == RUN AND stop == 0 AND request</div>
+<div class="equation">count_next = count, otherwise</div>
+<p>The controller needs only the state register and next-state logic:</p>
+<div class="equation">IDLE → RUN when start = 1; otherwise IDLE → IDLE</div>
+<div class="equation">RUN → IDLE when stop = 1; otherwise RUN → RUN</div>
+<p>Reset establishes <code>state = IDLE</code> and <code>count = 0</code>. Once the reset state is visible, the combinational equation for <code>ready</code> naturally makes <code>ready = 1</code>. The combinational default keeps <code>accepted = 0</code> unless the specific request path is active.</p>
+<div class="editorial-placeholder">
+<span class="placeholder-label">Author image placeholder: request-counter datapath + controller</span>
+<p><strong>Insert the corresponding hardware implementation here.</strong> The datapath should show the <code>count</code> register, its reset to 0, the incrementer, and selection among hold, zero, and <code>count + 1</code>. The controller should show the <code>IDLE</code>/<code>RUN</code> state register, next-state logic driven by <code>start</code> and <code>stop</code>, and combinational output logic for <code>ready</code> and <code>accepted</code>. The <code>request</code> condition should visibly influence both the live <code>accepted</code> path and the registered count-enable/next-value path.</p>
+<p>A two-panel diagram is again recommended because it makes the central teaching point visible: one ASM path can simultaneously control combinational interface logic and a register update scheduled for the edge.</p>
+<p class="small"><strong>Suggested caption:</strong> Hardware mapping of the request counter. <code>accepted</code> is current-cycle combinational logic, while <code>count</code> is stored datapath state, even though both are activated by the same ASM branch.</p>
+</div>
+<p>This small example demonstrates why variable typing is more general than box typing. <code>ready</code> is a combinational state output. <code>accepted</code> is a combinational conditional output. <code>count</code> is a register that is assigned in conditional boxes. The timing of each signal follows its declaration consistently across all of those placements.</p>
+<h3>What “straightforward hardware mapping” really means</h3>
+<p>A hardware-mappable ASM does not claim that a student can draw one fixed gate-level circuit by tracing every line literally. Hardware synthesis still has choices. A multiplier might be a dedicated DSP block or synthesized logic. A register mux might become a clock enable. State encoding might be binary, one-hot, or tool-selected. Boolean logic can be minimized.</p>
+<p>The stronger and more useful claim is that the chart already determines the <strong>required synchronous behavior</strong>. A compliant implementation must preserve:</p>
+<ul>
+<li>which values are stored across cycles,</li>
+<li>which values are combinational,</li>
+<li>the reset contents of every register,</li>
+<li>the default behavior of every combinational destination,</li>
+<li>the currently active path for each input condition,</li>
+<li>the register next values selected at each edge,</li>
+<li>the concurrency of register captures, and</li>
+<li>the state transition selected at the edge.</li>
+</ul>
+<p>That is enough to move confidently among ASM, timing diagram, RTL equations, datapath/controller block diagram, synthesizable HDL, and simulation waveform. The visual representations may change. The machine does not.</p>
+<h2 id="standardize">5. Why Standardize</h2>
+<h3>The ASM becomes a teaching language for synchronous thinking</h3>
+<p>Students often meet ASMs at the exact point where digital design becomes more abstract. Earlier topics may have focused on truth tables, Boolean expressions, Karnaugh maps, flip-flops, counters, and small finite-state machines. Larger designs suddenly require several registers, arithmetic operations, status flags, control signals, loops, and multi-cycle algorithms. The ASM is attractive because it looks like a flowchart, but that familiarity can also carry software intuitions into a hardware problem.</p>
+<p>Explicit storage classes give the instructor a simple recurring question: <strong>“Is this destination a register or combinational logic?”</strong> Once that is answered, several later questions answer themselves. Does the value change before the clock? Does it need a reset value? Does it hold when unassigned? Does it need a default? Does it imply flip-flops? Does it imply combinational decode? The declaration becomes a compact statement of hardware intent.</p>
+<h3>The chart can be self-contained enough to simulate</h3>
+<p>A simulator needs deterministic rules. It must know what values exist at the start of a cycle, which branch is active, what changes immediately through combinational evaluation, what waits for the edge, and what happens when nothing assigns a variable. Explicit register resets and combinational defaults close two important gaps.</p>
+<p>The result is a chart that behaves like executable documentation. A student can step it, write down expected values, compare those values against the simulator, and explain any discrepancy using the same semantic rules that will later guide HDL.</p>
+<h3>The chart becomes less dependent on notation dialect</h3>
+<p>Digital design students encounter many assignment conventions. Mathematics uses <code>=</code> for equality. Programming languages use <code>=</code>, <code>:=</code>, or other forms for assignment. VHDL and Verilog distinguish assignment forms in their own ways. ASM textbooks also use arrows and output labels differently.</p>
+<p>A syntax-independent ASM reduces the amount of meaning attached to a glyph. The notation can still be chosen carefully for readability, and a tool can still enforce one preferred syntax, but the student's hardware understanding is attached to the declared object rather than to a particular arrow. This makes the semantic model more portable across handwritten charts, different textbooks, and software tools.</p>
+<h3>Timing diagrams become derivable rather than decorative</h3>
+<p>When the chart states which variables are registers, the student knows exactly which traces may change only after active clock edges. When the chart states which variables are combinational, the student knows which traces may react between edges. Decision inputs can be moved in a timing exercise, and the student can predict how the active path and combinational outputs respond before asking what gets captured at the edge.</p>
+<p>The timing diagram then becomes another representation of the ASM semantics rather than an extra picture that must be memorized separately.</p>
+<h3>HDL structure becomes easier to motivate</h3>
+<p>Later, when students write synthesizable HDL, the same conceptual separation appears again. Registers belong to clocked logic. Combinational outputs and next-value logic belong to complete combinational descriptions. Reset initializes storage. Defaults prevent unintended storage in combinational logic. Concurrent register updates explain why nonblocking-style sequential modeling is commonly used for flip-flop behavior.</p>
+<p>The ASM therefore prepares the student for RTL coding without requiring the ASM notation itself to mimic a particular HDL language. The semantic ideas come first. Syntax comes later.</p>
+<h3>Datapath and controller partitioning becomes visible early</h3>
+<p>The typed chart contains many architectural clues:</p>
+<ul>
+<li>Registered data variables identify datapath storage.</li>
+<li>Expressions assigned to those registers identify datapath operators.</li>
+<li>Alternative next values identify mux or enable choices.</li>
+<li>Decision expressions identify status logic and comparators.</li>
+<li>State boxes identify controller states.</li>
+<li>Active paths identify controller conditions and control outputs.</li>
+<li>Combinational variables may become controller outputs, datapath status/output logic, or interface signals depending on their role.</li>
+</ul>
+<p>Students can therefore begin asking architectural questions while still looking at the algorithm. “Where is the register?” “What feeds it?” “Why is there a mux?” “What comparator produces this branch?” “Which controller state selects this operation?” Those questions make the ASM a bridge rather than an isolated diagramming topic.</p>
+<h3>Ambiguities become checkable specification errors</h3>
+<p>A formal teaching convention also enables useful automated checks. An ASM tool can require every assigned variable to be declared. It can require a reset value for every register and a default for every combinational variable. It can reject two assignments to the same destination on one active path. It can detect and reject combinational dependency loops before simulation. It can distinguish hold from default behavior. It can warn about unreachable states or missing next-state paths.</p>
+<p>These are valuable educational errors because they are close to the underlying hardware. The student learns why the chart is incomplete before the same issue turns into a latch, an unintended priority mux, an unknown startup value, or a confusing HDL simulation.</p>
+<h3>The scope remains appropriate for an introductory course</h3>
+<p>The proposed standard focuses on synchronous, cycle-level semantics. A complete RTL methodology eventually needs more. Designers must specify bit widths, signedness, overflow behavior, reset polarity and synchrony, asynchronous input synchronization, clock-domain crossings, memories, tri-state interfaces, multi-cycle functional units, handshakes, and physical timing constraints.</p>
+<p>Those topics can be layered onto the same foundation. A multi-cycle multiplier can be represented by additional controller states or a request/done interface. A memory can be given explicit read and write timing rules. An asynchronous external input can be synchronized before entering a decision. The important foundation remains stable: stored values change through defined clocked events, combinational values respond through logic within the cycle, and the ASM says which operations are active.</p>
+<div class="proposal">
+<b>The broader proposal</b>
+    A well-specified instructional ASM should function as executable documentation for a synchronous machine. It should be readable as an algorithm, precise enough to predict a timing trace, deterministic enough to simulate, and explicit enough to reveal the required datapath and controller behavior. Declared variable type, registered reset values, combinational defaults, acyclic combinational behavior, active-path semantics, concurrent edge updates, assignment uniqueness, and syntax-independent timing form the core of that specification.
+  </div>
+<p>The phrase “flowchart for hardware” can then be used with confidence. The familiar flowchart structure explains <em>what path the algorithm follows</em>. The added timing semantics explain <em>what the hardware is doing while it follows that path</em>. A student no longer has to mentally insert the missing clock behavior between the chart and the circuit. The clock behavior is already part of the chart's meaning.</p>
+<hr/>
+
+<h2 id="credits">6. Origins and Credits</h2>
+<div class="credits-intro">
+<p><strong>This proposal grew out of several years of teaching introductory digital design and repeatedly encountering the same gap between the way students first learn circuits and the way larger digital systems are actually conceived.</strong></p>
+<p>After teaching introductory digital design for several years, I became increasingly aware of a gap in the way we introduce students to digital systems. We spend a great deal of time on truth tables, flip-flop excitations, Karnaugh maps, and classical synthesis techniques. Those foundations are essential, but circuits can begin to feel like isolated diagrams rather than machines with behavior, purpose, and flow.</p>
+<p>At some point, a student who wants to understand processors, accelerators, controllers, or other larger architectures has to make a conceptual jump. A state diagram can describe control, but it says very little about the arithmetic and data movement happening alongside that control. A software algorithm can describe those operations, but it does not naturally express the clocked storage behavior that makes the algorithm into hardware. I wanted students to encounter a representation that could sit between those worlds and let them see digital design as the process of describing how hardware thinks, decides, stores, and acts over time.</p>
+<p>Introducing Algorithmic State Machines was the first step. I proposed adding ASMs to EEE 143, Switching Theory and Digital Logic Design, in early 2024. Lawrence Roman Quizon then developed the instructional treatment that explicitly carried ASM flowcharts into datapath and controller architectures. That mapping made the value of ASMs immediately clearer: a chart could become more than a flow description. It could become an architectural plan.</p>
+<p>There was still an unresolved detail. Exact timing sometimes depended on assumptions about what an assigned variable represented. Was it a register? Was it a combinational output? Did the assignment symbol itself imply the distinction? Those questions could be handled informally on a whiteboard, but they became impossible to ignore once we tried to make the ASM executable.</p>
+<p>In early 2026, I began planning an ASM simulator. I had looked for an existing simulator suitable for this style of instruction and could not find one that matched what we needed, which was surprising for a notation taught specifically for digital-system design. I recruited Isaac Sy as a student assistant to develop the simulator I had in mind. The moment the simulator had to decide exactly when every variable changed, the ambiguities that had previously been easy to gloss over became concrete software and hardware questions.</p>
+<p>That development led to many discussions between Lawrence and me about what an instructional ASM should mean if every chart is expected to simulate predictably and map cleanly to hardware. The specification in this article grew from those discussions and from Isaac's work turning the rules into an executable tool.</p>
+<p>The goal became simple: <strong>make the semantics explicit, unambiguous, and syntax-independent.</strong> A student should be able to look at a declaration and know whether a value is stored or combinational, look at a chart and know when an assignment is active, step the machine and predict what changes at the edge, and then carry the same interpretation into a datapath, controller, timing diagram, simulator, or HDL description.</p>
+<p class="credits-signoff">Adelson Chua</p>
+</div>
+<div class="people-grid">
+<div class="person-card">
+<div class="portrait-placeholder">Insert portrait of Adelson Chua</div>
+<div class="person-body">
+<h3>Adelson Chua</h3>
+<div class="credit-role">Concept, specification, and main author</div>
+<p>I am the main author of this proposal and the originator of the ASM SimulatEEE concept. I initiated the effort to bring ASMs into the introductory digital-design curriculum and later pushed for a timing-complete interpretation when the notation had to become executable in a simulator.</p>
+</div>
+</div>
+<div class="person-card">
+<div class="portrait-placeholder">Insert portrait of Lawrence Roman Quizon</div>
+<div class="person-body">
+<h3>Lawrence Roman Quizon</h3>
+<div class="credit-role">ASM and hardware-mapping consultant</div>
+<p>Within this teaching effort, Lawrence was the first to develop the instructional mapping from ASM flowcharts into explicit datapath and controller architectures. His hardware-mapping work and later discussions on cycle semantics were central to shaping the specification presented here.</p>
+</div>
+</div>
+<div class="person-card">
+<div class="portrait-placeholder">Insert portrait of Isaac Sy</div>
+<div class="person-body">
+<h3>Isaac Sy</h3>
+<div class="credit-role">Lead developer, ASM SimulatEEE</div>
+<p>Isaac served as the main developer of ASM SimulatEEE. Implementing the simulator forced the timing rules to become precise enough for software to execute them deterministically, turning previously implicit teaching assumptions into explicit semantics that could be tested and refined.</p>
+</div>
+</div>
+</div>
+<h2 id="references">References</h2>
+<ol class="refs">
+<li id="ref-mano"><strong>M. Morris Mano.</strong> <em>Computer System Architecture</em> and the classic Mano ASM tradition, including state boxes, decision boxes, conditional boxes, register operations, and ASM blocks associated with clocked control. <a href="https://www.mbit.edu.in/wp-content/uploads/2020/05/computer-systems-Architecture.pdf">Available text</a>.</li>
+<li id="ref-brown"><strong>Stephen Brown and Zvonko Vranesic.</strong> <em>Fundamentals of Digital Logic with VHDL Design</em>, 3rd ed., McGraw-Hill, 2009. See the sections on Algorithmic State Machine charts, ASM-implied timing information, and datapath/control implementation. <a href="https://dpvipracollege.ac.in/wp-content/uploads/2023/01/Fundamentals-of-Digital-Logic-with-VHDL-Design-3rd-edition.pdf">PDF</a>. An official author page for later editions is available from the <a href="https://www.eecg.toronto.edu/~brown/VHDL_4e/">University of Toronto</a>.</li>
+<li id="ref-zwolinski"><strong>Mark Zwolinski.</strong> <em>Digital System Design with SystemVerilog</em>, Pearson, 2009/2010. The ASM discussion explicitly distinguishes signals active for the duration of a clock cycle from arrow-form assignments made at the end of a state, and later develops datapath/controller partitioning. <a href="https://eprints.soton.ac.uk/422108/">University of Southampton record</a>.</li>
+<li id="ref-xilinx"><strong>AMD/Xilinx University Program.</strong> <em>Sequential System Design Using ASM Charts</em>, Lab 11, 2015. The workbook introduces ASM charts through the software-flowchart analogy, state and conditional outputs, SM blocks, and sequential-system hardware realization. <a href="https://www.amd.com/content/dam/amd/en/documents/university/vivado-teaching/hdl-design/2015x/VHDL/docs-pdf/lab11.pdf">PDF</a>.</li>
+<li id="ref-pdx"><strong>Portland State University / Engin 112 teaching materials.</strong> Lecture slides on control logic and Algorithmic State Machines, including datapath/control separation and the interpretation that operations between states occur synchronously in one clock cycle. <a href="https://web.cecs.pdx.edu/~mperkows/CLASS_573/573_2007/Engin112-F06-12-06.pdf">Lecture PDF</a>.</li>
+<li id="ref-gmu"><strong>George Mason University, ECE 448.</strong> Teaching materials on ASM charts, timing diagrams, and HDL-oriented implementation, following Brown and Vranesic as recommended reading. <a href="https://people-ece.vse.gmu.edu/coursewebpages/ECE/ECE448/S21/">Course page</a>; <a href="https://people-ece.vse.gmu.edu/coursewebpages/ECE/ECE448/S21/viewgraphs/ECE448_lecture9_ASM_Timing_VHDL_1.pdf">ASM timing slides</a>.</li>
+</ol>
+<p class="small"><strong>Source scope.</strong> The literature comparison intentionally emphasizes textbooks, university teaching materials, and vendor educational workbooks rather than research papers. The goal is to compare conventions that students are likely to encounter in ordinary digital design instruction.</p>
+</article>
+<aside aria-label="Article navigation">
+<h2>Contents</h2>
+<ol>
+<li><a href="#timing">Why Timing Matters</a></li>
+<li><a href="#practice">Existing Practice</a></li>
+<li><a href="#semantics">Proposed Semantics</a></li>
+<li><a href="#mapping">From ASM to Hardware</a></li>
+<li><a href="#standardize">Why Standardize</a></li>
+<li><a href="#credits">Origins and Credits</a></li>
+</ol>
+<div class="toc-backmatter"><a href="#references">References</a></div>
+<div class="sidebar-simulator">
+<details open>
+<summary>ASM SimulatEEE</summary>
+<div class="simulator-sidebar-body">
+<p>Draw, step, and inspect ASMs using the timing semantics proposed in this article. The dedicated discussion appears after the formal specification.</p>
+<a href="#simulator">Read about the simulator</a>
+<a class="sidebar-button" href="https://digital.eee.upd.edu.ph/ASM_simulatEEE.html">Open ASM SimulatEEE</a>
+</div>
+</details>
+</div>
+</aside>
+</div>
+<footer>
+  A web-first proposal for explicit, cycle-level ASM semantics in hardware-mappable digital systems design instruction.
+</footer>
+</body>
+</html>

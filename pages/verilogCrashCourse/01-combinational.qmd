@@ -5,11 +5,6 @@ format:
     css: vcc-v2.css
 ---
 
-::: {.vcc-nav}
-[Overview](index.qmd) | [M000](00-fundamentals.qmd) | [M001](001-combinational.qmd) | [M010](01-combinational.qmd) | [M011](02-sequential.qmd) | [M100](100-advanced-sequential.qmd) | [M101](03-verification.qmd) | [M110](110-advanced-verification.qmd) | [M111](04-practices.qmd) | [Extras](05-extras.qmd) | [Credits](credits.qmd)
-:::
-# Module 010: Advanced Combinational Logic
-
 So far, we’ve used `assign` to build combinational logic. That works great for simple expressions, but as soon as you want more complicated *conditional statements* (`if`, `else`, `case`), you’ll need another construct: the **`always @(*)` block**.
 
 ## The `always @(*)` Block
@@ -423,7 +418,3 @@ Again, we're implementing an ALU. **I promise this is the last time.**
 However, we have another twist this time. This time, you will have to implement the ALU with the **outputs defined as reg!** The **reg** statement is, in fact, incompatible with **assign** statements. Hence, you'll have to use an **always** block.
 
 Good luck!
-
-::: {.vcc-nextprev}
-[← M001](001-combinational.qmd){.vcc-prev} [M011 →](02-sequential.qmd){.vcc-next}
-:::

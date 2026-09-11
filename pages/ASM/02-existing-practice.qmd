@@ -1,0 +1,30 @@
+---
+title: "2. Existing Practice"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+---
+ASM teaching materials share the aim of making an algorithm understandable as hardware. Lam and O'Malley make both clear timing and direct hardware realization explicit requirements of the notation ([§7.4, p. 225](references.qmd#ref-lam)). The practical question for this article is where a reader finds that timing information: in the assignment symbol, in the identity of the variable, or in the box containing the operation.
+
+## Timing attached to assignment notation
+
+Some conventions give assignment punctuation a timing meaning. Zwolinski distinguishes signal values that apply during the current state from arrow-form assignments whose values are stored at the end of the state and held until changed ([§6.3, pp. 116–117](references.qmd#ref-zwolinski)). A reader must therefore know the notation's convention to interpret the assignment.
+
+The proposal in this article makes that distinction explicit in the variable declaration. Once the destination is declared registered or combinational, an assignment written with `=` or `←` has the same timing meaning.
+
+## Storage sometimes comes from context
+
+A chart does not always label every destination explicitly as registered or combinational. Mano permits both register operations and output-signal names inside state and conditional boxes ([§§8-2–8-3, pp. 309–313](references.qmd#ref-mano)). Brown and Vranesic clarify the timing of their bit-counting example by identifying the registers and separating the datapath from its controller ([§§10.2.1–10.2.2, pp. 679–683](references.qmd#ref-brown)). The Portland State materials similarly explain operations alongside the datapath they control ([slides 4–12](references.qmd#ref-pdx)). In these treatments, the surrounding hardware explanation helps establish what each name represents.
+
+This does not mean established sources leave register timing undefined. Chu explicitly explains that a register assigned within an ASMD block retains its current value until the edge leaving that block; a decision using that register therefore reads its old value ([§§6.1.1–6.1.3, pp. 127–131](references.qmd#ref-chu)). Washington's teaching slides also distinguish combinational calculation during the cycle from register capture at the next edge ([Lecture 5, slides 15–16](references.qmd#ref-uw)). 
+
+The proposal makes each variable's timing class a required part of the chart's declarations, so that the reader can identify it directly.
+
+## Meaning attached to the box
+
+The AMD/Xilinx workbook associates state-box outputs with Moore behavior, depending on the state, and conditional-box outputs with Mealy behavior, depending on the state and inputs ([pp. 11-2–11-3](references.qmd#ref-xilinx)). George Mason's slides use the same categories while also allowing register-transfer actions ([slides 24–33](references.qmd#ref-gmu)). These categories describe what activates an output; they do not by themselves declare whether every destination stores a value.
+
+Box placement can carry a structural convention too. Sabancı University's teaching slides require a conditional-output box to follow a decision box and connect it to a state through one or more decisions ([slide 7](references.qmd#ref-sabanci)). That is a documented convention in those materials, rather than a requirement shared by every possible ASM interpretation.
+
+In the proposed semantics, as implemented in the ASM simulator [ASM SimulatEEE](asm-simulateee.html), a conditional box may follow a state box, a decision box, or another conditional box. This lets the author improve flowchart readability by visually separating groups of signals. Splitting or combining boxes changes neither timing nor behavior when the assignments remain in the same ASM step under the same activation conditions. A sequence of conditional boxes can then become one box; assignments active on every path from a state can also be placed inside that state box. Branch-dependent assignments must retain their conditions. [Chapter 3](03-semantics.qmd#grouping-assignments) illustrates these equivalent layouts and their readability tradeoff.

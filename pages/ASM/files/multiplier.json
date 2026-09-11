@@ -1,0 +1,160 @@
+{
+  "version": 6,
+  "blocks": [
+    {
+      "id": "b130",
+      "type": "state",
+      "x": 155,
+      "y": 0,
+      "w": 140,
+      "h": 70,
+      "name": "S0",
+      "code": "a = 0;\nb = n;\n"
+    },
+    {
+      "id": "b131",
+      "type": "decision",
+      "x": 160,
+      "y": 200,
+      "w": 130,
+      "h": 84,
+      "name": "D0",
+      "code": "b > 0"
+    },
+    {
+      "id": "b132",
+      "type": "output",
+      "x": 346.0524800871609,
+      "y": 215.97085584723897,
+      "w": 140,
+      "h": 52,
+      "name": "C0",
+      "code": "done = 1;"
+    },
+    {
+      "id": "b146",
+      "type": "state",
+      "x": 154.2367958670668,
+      "y": 96.2894823758952,
+      "w": 140,
+      "h": 70,
+      "name": "S3",
+      "code": "result = a"
+    },
+    {
+      "id": "b149",
+      "type": "output",
+      "x": 149.94525127850088,
+      "y": 323.6218133191832,
+      "w": 140,
+      "h": 52,
+      "name": "C2",
+      "code": "a = a + x;\nb = b - 1;"
+    }
+  ],
+  "connections": [
+    {
+      "id": "c139",
+      "from": "b131",
+      "to": "b132",
+      "label": "false",
+      "mx": null,
+      "my": null,
+      "loopOff": null,
+      "startAngle": null,
+      "endAngle": null
+    },
+    {
+      "id": "c147",
+      "from": "b130",
+      "to": "b146",
+      "label": "",
+      "mx": null,
+      "my": null,
+      "loopOff": null,
+      "startAngle": null,
+      "endAngle": -1.540954442127787
+    },
+    {
+      "id": "c148",
+      "from": "b146",
+      "to": "b131",
+      "label": "",
+      "mx": null,
+      "my": null,
+      "loopOff": null,
+      "startAngle": null,
+      "endAngle": -1.6086489490161193
+    },
+    {
+      "id": "c150",
+      "from": "b131",
+      "to": "b149",
+      "label": "true",
+      "mx": 225.30968201420825,
+      "my": 306.1699243599539,
+      "loopOff": null,
+      "startAngle": null,
+      "endAngle": -1.3927033885636984
+    },
+    {
+      "id": "c151",
+      "from": "b149",
+      "to": "b146",
+      "label": "",
+      "mx": 111.04730734364233,
+      "my": 245.01541397289043,
+      "loopOff": null,
+      "startAngle": -3.009552891975154,
+      "endAngle": 3.0419240010986317
+    },
+    {
+      "id": "c152",
+      "from": "b132",
+      "to": "b130",
+      "label": "",
+      "mx": 418.96563157324255,
+      "my": 84.61893497524152,
+      "loopOff": null,
+      "startAngle": null,
+      "endAngle": 0.01625214274775192
+    }
+  ],
+  "startBlockId": "b130",
+  "userVars": {
+    "x": 3,
+    "n": 4
+  },
+  "combDefaults": {
+    "result": 0
+  },
+  "forcedRegisters": [
+    "a"
+  ],
+  "forcedCombinational": [
+    "result"
+  ],
+  "signedVars": [
+    "b"
+  ],
+  "regInitValues": {
+    "a": 0
+  },
+  "varBits": {},
+  "varBitDefault": 8,
+  "varOrder": [
+    "x",
+    "n",
+    "a",
+    "b",
+    "done",
+    "result"
+  ],
+  "simDisplayBase": "dec",
+  "idCounter": 153,
+  "view": {
+    "x": -239.2500196980458,
+    "y": -128.34896523233917,
+    "scale": 1.8641306958139818
+  }
+}

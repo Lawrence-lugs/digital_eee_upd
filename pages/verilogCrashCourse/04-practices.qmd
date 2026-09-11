@@ -5,11 +5,6 @@ format:
     css: vcc-v2.css
 ---
 
-::: {.vcc-nav}
-[Overview](index.qmd) | [M000](00-fundamentals.qmd) | [M001](001-combinational.qmd) | [M010](01-combinational.qmd) | [M011](02-sequential.qmd) | [M100](100-advanced-sequential.qmd) | [M101](03-verification.qmd) | [M110](110-advanced-verification.qmd) | [M111](04-practices.qmd) | [Extras](05-extras.qmd) | [Credits](credits.qmd)
-:::
-# Module 111: Best Coding Practices and Wrap-up
-
 We're at the end of this crash course. Let's summarize what we have covered so far. This module distills the habits that keep your “algorithm → single `always @(posedge clk)` block” designs readable, predictable, and bug-resistant: clear names, the golden assignment rule, reset priority, width discipline, no double drivers, and keeping simulation-only tricks in the testbench. Think of these as the guardrails that let you prototype fast **without** stepping on classic HDL landmines like accidental latches, off-by-one flags, or hidden truncations. We’ll illustrate each rule with small, descriptive examples and call out the pitfalls they prevent, so your first-pass hardware works more like your mental model, with fewer surprises later.
 
 ## 1) Use clear, descriptive names (ports, regs, states)
@@ -705,7 +700,3 @@ The rest of the instructions for this activity are written on the Github page it
 ### [Module 110: Advanced Verification Ideas](https://uvle.upd.edu.ph/course/view.php?id=23162&section=7&singlesec=7)
 
 ### [Module 111: Best Coding Practices](https://uvle.upd.edu.ph/course/view.php?id=23162&section=8&singlesec=8)
-
-::: {.vcc-nextprev}
-[← M110](110-advanced-verification.qmd){.vcc-prev} [Extras →](05-extras.qmd){.vcc-next}
-:::

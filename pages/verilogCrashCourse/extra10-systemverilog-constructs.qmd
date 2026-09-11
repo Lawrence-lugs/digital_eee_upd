@@ -1,0 +1,508 @@
+---
+title: "Extra Module 10: SystemVerilog Constructs"
+format:
+  html:
+    css: vcc-v2.css
+---
+
+At this point, you can already describe registers, combinational logic, and state machines in Verilog. You have also seen how parameters and `generate` help us build larger designs. As those designs grow, however, we spend more and more effort keeping track of things: which signals belong together, which slice contains which value, and which blocks are supposed to describe registers.
+
+**SystemVerilog gives us better ways to express those ideas.** We are still describing hardware. The clock still advances the algorithm, registers still hold values between clock edges, and combinational logic still computes from its current inputs. What changes is how clearly we can write down that intent.
+
+In this module, we will take familiar Verilog code and rewrite it using five SystemVerilog constructs: `logic`, packed multidimensional arrays, `always_ff`/`always_comb`, `enum`, and `struct`. Each complete module below can be saved separately; smaller snippets are labeled as additions or alternatives to the surrounding example.
+
+::: {.callout-note}
+## Before you start: enable SystemVerilog
+
+Save the SystemVerilog examples as **`.sv` files** and enable SystemVerilog in your simulator or synthesis project. A `.sv` extension is the usual convention, but the tool's language setting is what matters. The examples labeled **Pure Verilog** use Verilog-2001 syntax.
+
+All clocked examples here use a **synchronous, active-high reset**. Reset takes effect on a rising clock edge, just as it did in the earlier modules.
+:::
+
+## 1) `logic`: describe the signal without the `reg`/`wire` distraction
+
+**Why:** In Verilog, the declaration depends on how we drive a signal. A signal assigned inside an `always` block is typically declared `reg`; a connection driven by `assign` is typically declared `wire`. Unfortunately, the name `reg` makes it sound as though the declaration itself creates a register.
+
+It does not. **The block that drives the signal determines whether storage is described.** A `reg` assigned in a complete combinational block can describe a multiplexer. A `reg` assigned on a clock edge can describe flip-flops.
+
+For the ordinary single-driver signals in this course, SystemVerilog lets us use `logic` in both situations.
+
+### Pure Verilog: an adder followed by an enabled register
+
+Suppose we add two unsigned 8-bit values and capture the result whenever `enable` is high. The sum needs 9 bits so that we retain the carry.
+
+```verilog
+module sum_register_v (
+    input            clk,
+    input            reset,
+    input            enable,
+    input      [7:0] a, b,
+    output reg [8:0] result
+);
+    wire [8:0] sum;
+
+    assign sum = {1'b0, a} + {1'b0, b};
+
+    always @(posedge clk) begin
+        if (reset)
+            result <= 9'd0;
+        else if (enable)
+            result <= sum;
+    end
+endmodule
+```
+
+`sum` is a continuously driven connection. `result` is written by a clocked procedure. Hence the two different declarations.
+
+### SystemVerilog: use `logic` for both
+
+```systemverilog
+module sum_register_sv (
+    input  logic       clk,
+    input  logic       reset,
+    input  logic       enable,
+    input  logic [7:0] a, b,
+    output logic [8:0] result
+);
+    logic [8:0] sum;
+
+    assign sum = {1'b0, a} + {1'b0, b};
+
+    always @(posedge clk) begin
+        if (reset)
+            result <= 9'd0;
+        else if (enable)
+            result <= sum;
+    end
+endmodule
+```
+
+We deliberately kept the old `always` syntax for now. It is legal in SystemVerilog, and it lets us isolate this first change: **the declarations changed; the intended hardware did not.**
+
+`logic` is a four-state data type: it can represent `0`, `1`, `x`, and `z`. It does not initialize itself to zero. Our reset still has a job to do!
+
+::: {.callout-important}
+## `logic` does not eliminate the single-owner rule
+
+For these examples, give each signal one driver: one `assign`, one module output, or one procedural block. Do not drive the same `logic` from both `assign` and `always`.
+
+`wire` still exists because a **net** and a **variable** are different language concepts. Use an appropriate net for resolved multiple-driver connections and bidirectional ports. SystemVerilog can even spell out both the net kind and its data type as `wire logic`. For our ordinary internal RTL signals, `logic` keeps the declarations simple.
+:::
+
+## 2) Packed multidimensional arrays: give a wide port some shape
+
+**Why:** Imagine a block receiving a row of activations: `N` values, each `W` bits wide. In pure Verilog, we usually flatten those values into one wide port, then calculate bit positions whenever we select a value.
+
+SystemVerilog lets us write the shape directly:
+
+```systemverilog
+// Declaration inside a module where N and W are parameters:
+logic signed [N-1:0][W-1:0] act_row;
+```
+
+Read this from the name outward: `act_row` contains **N lanes of W bits each**. Both dimensions appear **before** the name, so both are **packed**. Together they form one contiguous `N*W`-bit vector.
+
+For `N = 4` and `W = 8`:
+
+| Expression | What it selects |
+|---|---|
+| `act_row` | The entire 32-bit row |
+| `act_row[0]` | Lane 0: the least-significant 8 bits |
+| `act_row[3]` | Lane 3: the most-significant 8 bits |
+| `act_row[2][7]` | Bit 7 of lane 2 |
+
+The ordering above follows our descending ranges, `[N-1:0][W-1:0]`. You can still assign or connect the entire row at once.
+
+### Pure Verilog: flatten the port and slice each lane
+
+Let's implement a small activation function: **replace negative values with zero; pass nonnegative values through**. Each lane is a signed two's-complement value. Assume `N >= 1` and `W >= 1`.
+
+```verilog
+module clamp_row_v #(
+    parameter N = 4,
+    parameter W = 8
+)(
+    input  wire signed [N*W-1:0] act_row,
+    output reg  signed [N*W-1:0] clipped_row
+);
+    integer i;
+
+    always @(*) begin
+        for (i = 0; i < N; i = i + 1) begin
+            if ($signed(act_row[i*W +: W]) < 0)
+                clipped_row[i*W +: W] = {W{1'b0}};
+            else
+                clipped_row[i*W +: W] = act_row[i*W +: W];
+        end
+    end
+endmodule
+```
+
+The indexed part-select `i*W +: W` means “start at bit `i*W`, and take `W` bits toward higher indices.” Lane 0 occupies bits `[W-1:0]`; lane 1 occupies bits `[2*W-1:W]`.
+
+This works, but the lane structure is hidden inside index arithmetic.
+
+### SystemVerilog: expose the lanes directly on the port
+
+```systemverilog
+module clamp_row_sv #(
+    parameter int N = 4,
+    parameter int W = 8
+)(
+    input  logic signed [N-1:0][W-1:0] act_row,
+    output logic signed [N-1:0][W-1:0] clipped_row
+);
+    always_comb begin
+        for (int i = 0; i < N; i = i + 1) begin
+            if ($signed(act_row[i]) < 0)
+                clipped_row[i] = '0;
+            else
+                clipped_row[i] = act_row[i];
+        end
+    end
+endmodule
+```
+
+Now the code says exactly what we are operating on: **lane `i`**. The port still carries `N*W` bits. We have not created a memory or added clock cycles by giving those bits two dimensions.
+
+There are two other small changes. `int i` declares the loop variable right where we use it. The literal `'0` fills the destination with zeros, so we do not have to repeat its width. We will discuss `always_comb` in the next section.
+
+The loop describes combinational work for every lane. It does **not** process one lane per clock cycle; there is no clock in this module.
+
+::: {.callout-warning}
+## A signed row does not automatically give you signed lane expressions
+
+In `logic signed [N-1:0][W-1:0] act_row`, `signed` applies to the **whole packed vector**. The selection `act_row[i]` is unsigned for this declaration. That is why the example explicitly uses `$signed(act_row[i])` before comparing it with zero. The cast changes the interpretation of those bits; it does not change their width or their bit pattern.
+
+For an 8-bit lane, `8'hFE` is `254` when interpreted as unsigned and `-2` when interpreted as signed. Without the cast, a negative-value test can silently do the wrong thing. The same issue applies to the part-select in the pure Verilog example. See the [Accellera committee clarification on packed-array signedness](https://www.accellera.org/images/eda/sv-bc/10601.html).
+:::
+
+### Try reading a concrete row
+
+This is a stimulus fragment for a testbench connected to the default `clamp_row_sv` instance:
+
+```systemverilog
+// Testbench declarations and stimulus fragment (N = 4, W = 8):
+logic signed [3:0][7:0] act_row;
+
+initial begin
+    act_row = {8'h03, 8'hFE, 8'h00, 8'h80};
+end
+```
+
+From lane 3 down to lane 0, the values are `3`, `-2`, `0`, and `-128`. After the combinational logic settles, the expected packed output is `32'h03000000`. This is a useful first simulation check because two lanes exercise the signed comparison.
+
+### Packed versus unpacked: watch where the brackets go
+
+These are alternative declarations inside a module with parameters `N` and `W`:
+
+```systemverilog
+logic signed [N-1:0][W-1:0] packed_row;
+logic signed [W-1:0] unpacked_row [N-1:0];
+```
+
+The first is one packed vector with two dimensions. The second is an **unpacked array of N signed W-bit elements**; `unpacked_row[i]` is a signed element. SystemVerilog permits both forms as ports, but they are different types. Choose the shape deliberately and match it at the connection. The fully packed form is convenient here because the entire row can also be treated as one flat vector.
+
+## 3) `always_comb` and `always_ff`: state what the block is for
+
+**Why:** Verilog uses `always` for many jobs. SystemVerilog adds procedures that express whether we intend combinational logic or flip-flops.
+
+| Intended hardware | Pure Verilog | SystemVerilog |
+|---|---|---|
+| Combinational logic | `always @(*)` | `always_comb` |
+| Rising-edge registers | `always @(posedge clk)` | `always_ff @(posedge clk)` |
+
+**`always_ff` does not replace `always @(*)`.** It replaces the clocked form. You still specify its clock edge. `always_comb` needs no explicit sensitivity list. These roles are also described in [AMD's synthesis guide: Always Procedures](https://docs.amd.com/r/2023.1-English/ug901-vivado-synthesis/Always-Procedures).
+
+### Pure Verilog: choose a value, then register it
+
+```verilog
+module select_register_v (
+    input            clk, reset,
+    input            select_b,
+    input      [7:0] a, b,
+    output reg [7:0] q
+);
+    reg [7:0] selected;
+
+    always @(*) begin
+        selected = a;
+        if (select_b)
+            selected = b;
+    end
+
+    always @(posedge clk) begin
+        if (reset)
+            q <= 8'd0;
+        else
+            q <= selected;
+    end
+endmodule
+```
+
+### SystemVerilog: give each block a clear role
+
+```systemverilog
+module select_register_sv (
+    input  logic       clk, reset,
+    input  logic       select_b,
+    input  logic [7:0] a, b,
+    output logic [7:0] q
+);
+    logic [7:0] selected;
+
+    always_comb begin
+        selected = a;
+        if (select_b)
+            selected = b;
+    end
+
+    always_ff @(posedge clk) begin
+        if (reset)
+            q <= '0;
+        else
+            q <= selected;
+    end
+endmodule
+```
+
+The first block continuously chooses between `a` and `b`. The second captures that choice at the rising edge. Changing `select_b` between edges can change `selected`, but `q` waits for the next edge.
+
+The assignment rule from the earlier modules stays with us: **use blocking `=` for these combinational calculations and nonblocking `<=` for these register updates.**
+
+These procedures also add language checks. A variable written by `always_comb` or `always_ff` must not be written by another process. `always_comb` runs once at the start of simulation and also accounts for signals read inside called functions when determining sensitivity. `always_ff` restricts the block to one event control and forbids additional blocking timing controls. They express intent and let tools catch more mistakes; they do not repair incorrect logic for us. The [Accellera SystemVerilog design tutorial](https://www.verilog.org/images/resources/videos/systemverilog-design-tutorial-2015.pdf) discusses these built-in checks.
+
+::: {.callout-warning}
+## A combinational block still needs an assignment on every path
+
+In the example, `selected = a;` is the default. If `select_b` is false, `selected` still receives a value. Without that default or an `else`, the block would ask `selected` to remember its old value, which is latch behavior. Writing `always_comb` does not supply the missing assignment; tools can diagnose the mismatch.
+
+A clocked block is different: omitting an assignment intentionally means the register holds its value, as with `enable` in the first example. Also keep `#` delays and extra `@` waits out of these RTL procedures.
+:::
+
+For combinational temporaries, write calculations in dependency order: compute a value before using it later in the block. Do not expect `always_comb` to repeatedly execute itself until a poorly ordered calculation converges.
+
+## 4) `enum`: make FSM states a named type
+
+**Why:** `localparam` gave our states readable names. An enumeration goes further: it defines a **type whose named values are the states**. We can then declare both `state` and `next_state` using that type.
+
+Let's use a tiny controller. When `start` is sampled in `IDLE`, it enters `RUN`. It spends one cycle there, then one cycle in `DONE`, then returns to `IDLE`. `busy` is high in `RUN`; `done` is high in `DONE`. Requests while it is outside `IDLE` are ignored.
+
+### Pure Verilog: named constants and two-bit state variables
+
+```verilog
+module controller_v (
+    input  wire clk, reset, start,
+    output wire busy, done
+);
+    localparam IDLE = 2'b00,
+               RUN  = 2'b01,
+               DONE = 2'b10;
+
+    reg [1:0] state, next_state;
+
+    always @(posedge clk) begin
+        if (reset)
+            state <= IDLE;
+        else
+            state <= next_state;
+    end
+
+    always @(*) begin
+        next_state = state;
+        case (state)
+            IDLE: if (start) next_state = RUN;
+            RUN:            next_state = DONE;
+            DONE:           next_state = IDLE;
+            default:        next_state = IDLE;
+        endcase
+    end
+
+    assign busy = (state == RUN);
+    assign done = (state == DONE);
+endmodule
+```
+
+### SystemVerilog: declare a reusable state type
+
+```systemverilog
+module controller_sv (
+    input  logic clk, reset, start,
+    output logic busy, done
+);
+    typedef enum logic [1:0] {
+        IDLE = 2'b00,
+        RUN  = 2'b01,
+        DONE = 2'b10
+    } state_t;
+
+    state_t state, next_state;
+
+    always_ff @(posedge clk) begin
+        if (reset)
+            state <= IDLE;
+        else
+            state <= next_state;
+    end
+
+    always_comb begin
+        next_state = state;
+        case (state)
+            IDLE: if (start) next_state = RUN;
+            RUN:            next_state = DONE;
+            DONE:           next_state = IDLE;
+            default:        next_state = IDLE;
+        endcase
+    end
+
+    assign busy = (state == RUN);
+    assign done = (state == DONE);
+endmodule
+```
+
+Read the declaration in pieces:
+
+- `typedef` gives a type a name that we can reuse.
+- `enum` lists the named values belonging to that type.
+- `logic [1:0]` selects a two-bit, four-state underlying representation.
+- `state_t` is our chosen type name; the `_t` suffix is a naming convention.
+- `state_t state, next_state;` creates two variables of that type.
+
+We wrote the encodings explicitly to match the Verilog version. You can omit them and let enumeration values increment from zero. An enum without an explicit base type defaults to `int`, so specifying `logic [1:0]` keeps our RTL declaration deliberate. See [AMD's Enum Types reference](https://docs.amd.com/r/2022.2-English/ug901-vivado-synthesis/Enum-Types).
+
+The advantage is more than shorter spelling. An ordinary vector will happily accept a two-bit value unrelated to the FSM. An enum requires assignments compatible with its type; assigning a raw bit vector generally requires an explicit cast. Prefer `state <= IDLE;` over numeric assignments. Waveform tools can also display the symbolic state names.
+
+::: {.callout-note}
+## An enum does not reset or protect the physical state register
+
+We still reset to `IDLE`. The `default` branch gives the RTL a recovery transition for an unmatched state, but it is not a guarantee of fault-tolerant hardware; synthesis may recode or optimize the FSM. An explicit cast can also put an unnamed encoding into an enum variable without validating that encoding.
+
+You can use enums in the single-clocked-block FSM style from the earlier modules too. The two-block version here makes the state type and the combinational/clocked split easy to see; SystemVerilog does not require you to reorganize every FSM this way.
+:::
+
+## 5) `struct`: keep related signals together
+
+**Why:** A pipeline often carries more than data. It might also carry a `valid` bit and a flag identifying the last item in a batch. Those fields belong together and should advance through the pipeline together.
+
+In pure Verilog, we can use separate signals or manually bundle the fields into a vector. With a struct, we give each field a name while keeping the bundle as one object.
+
+### Pure Verilog: a manually packed pipeline word
+
+This stage captures an 18-bit bundle on every rising edge. There is no backpressure: even an invalid item advances, and downstream logic should ignore its data when `valid` is low.
+
+```verilog
+module sample_stage_v (
+    input  wire        clk, reset,
+    input  wire [17:0] sample_in,
+    output reg  [17:0] sample_out
+);
+    // Bundle layout:
+    // [17]    valid
+    // [16]    last
+    // [15:0]  signed data (two's complement)
+
+    always @(posedge clk) begin
+        if (reset)
+            sample_out <= 18'd0;
+        else
+            sample_out <= sample_in;
+    end
+endmodule
+```
+
+The register itself is simple. The bookkeeping appears in the surrounding modules. To construct the input, we concatenate `{valid, last, data}`. To inspect the result, we remember that `sample_out[17]` means valid and `sample_out[16]` means last. For signed arithmetic on the data field, we use `$signed(sample_out[15:0])`.
+
+### SystemVerilog: define the fields, then pass the struct
+
+```systemverilog
+package sample_types;
+    typedef struct packed {
+        logic               valid;
+        logic               last;
+        logic signed [15:0]  data;
+    } sample_t;
+endpackage
+
+module sample_stage_sv (
+    input  logic                  clk, reset,
+    input  sample_types::sample_t sample_in,
+    output sample_types::sample_t sample_out
+);
+    always_ff @(posedge clk) begin
+        if (reset)
+            sample_out <= '0;
+        else
+            sample_out <= sample_in;
+    end
+endmodule
+```
+
+`struct` groups the fields. **`packed` lays them out as one contiguous vector**, with the first declared field occupying the most-significant bits. This struct therefore has exactly the same 18-bit layout as the Verilog bundle: valid at bit 17, last at bit 16, and data in bits 15 through 0. It has no padding.
+
+`sample_out <= sample_in;` transfers **all three fields together** on the clock edge. The type declaration itself creates no registers; the `always_ff` assignment is what describes this pipeline stage's storage.
+
+We introduced a small `package` so that the type has a shared definition visible to modules using it as a port. `sample_types::sample_t` means “the type `sample_t` from package `sample_types`.” Compile the package before modules that reference it. You can keep the package and module together in the order shown, or put the package in a separate `.sv` file compiled first. Define the shared type once.
+
+### Access fields by name
+
+Here is a complete wrapper that builds the struct from ordinary ports, passes it through the stage above, and exposes the fields again. Compile it with the preceding package and stage.
+
+```systemverilog
+module sample_wrapper_sv (
+    input  logic               clk, reset,
+    input  logic               valid, last,
+    input  logic signed [15:0]  data,
+    output logic               valid_out, last_out,
+    output logic signed [15:0]  data_out
+);
+    sample_types::sample_t incoming, outgoing;
+
+    always_comb begin
+        incoming.valid = valid;
+        incoming.last  = last;
+        incoming.data  = data;
+    end
+
+    sample_stage_sv u_stage (
+        .clk(clk),
+        .reset(reset),
+        .sample_in(incoming),
+        .sample_out(outgoing)
+    );
+
+    assign valid_out = outgoing.valid;
+    assign last_out  = outgoing.last;
+    assign data_out  = outgoing.data;
+endmodule
+```
+
+Every field of `incoming` gets an assignment in the combinational block. `outgoing` has one driver: the stage's output. If we add another field later, its name tells us what it means, and a whole-struct register assignment carries it along automatically. We still need to initialize or assign any new input field.
+
+Unlike selecting a slice from our fully packed activation row, selecting `outgoing.data` gives us the **declared signed member type**. The struct as a whole is unsigned by default; do arithmetic on its data field, not on the whole bundle containing flags. Being packed does not make the bundle itself a meaningful number.
+
+::: {.callout-tip}
+## A struct groups fields; it does not impose a protocol
+
+The names `valid` and `last` are meaningful to us, but SystemVerilog does not automatically stall the pipeline, ignore invalid data, or detect the end of a batch. Those behaviors still come from the logic we write. This example is simply a one-stage register for a group of related signals.
+:::
+
+## Moving an existing design to SystemVerilog
+
+You can adopt these constructs a little at a time. Start with a module you already understand and keep its behavior the same while changing how you express it.
+
+| Existing code | A useful SystemVerilog rewrite |
+|---|---|
+| Ordinary single-driver `reg`/`wire` signals | `logic`, while retaining nets where net behavior is needed |
+| `always @(*)` | `always_comb`, with complete assignments |
+| `always @(posedge clk)` | `always_ff @(posedge clk)`, with nonblocking register updates |
+| A flat port and repeated lane slices | Packed dimensions and explicit signed interpretation for selected lanes |
+| FSM `localparam` names plus raw vectors | `typedef enum logic [...]` and typed state variables |
+| Related flags and data passed separately or as slices | A shared `typedef struct packed` with named fields |
+
+Try three small exercises before moving on:
+
+1. **Enabled register:** Rewrite the first SystemVerilog example to use `always_ff`. Simulate an edge with reset high, an edge with enable high, and an edge with enable low. The result should reset, capture, and hold, respectively.
+2. **Signed lanes:** Run the activation-row example with `{8'h03, 8'hFE, 8'h00, 8'h80}`. Confirm `32'h03000000`, then try an all-negative row and an all-positive row. Explain why removing `$signed` breaks the negative cases.
+3. **A new struct field:** Add `logic [3:0] tag;` as the final field of `sample_t`, then add matching wrapper ports and assignments. The bundle becomes 22 bits wide. The stage's whole-struct register assignment needs no change, and the tag should emerge with its matching data one clock edge later.
+
+The hardware reasoning you learned in the main course still applies: decide what must be stored, define when it updates, and make the combinational work explicit. These constructs help you put that reasoning directly into the code.

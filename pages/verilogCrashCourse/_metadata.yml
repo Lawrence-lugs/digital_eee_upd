@@ -1,0 +1,9 @@
+sidebar: verilog-crash-course
+
+format:
+  html:
+    page-layout: article
+    grid:
+      body-width: 1000px
+      sidebar-width: 250px
+      margin-width: 250px

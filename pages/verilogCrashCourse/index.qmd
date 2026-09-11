@@ -5,31 +5,6 @@ format:
     css: vcc-v2.css
 ---
 
-::: {.vcc-nav}
-[Overview](index.qmd) | [M000](00-fundamentals.qmd) | [M001](001-combinational.qmd) | [M010](01-combinational.qmd) | [M011](02-sequential.qmd) | [M100](100-advanced-sequential.qmd) | [M101](03-verification.qmd) | [M110](110-advanced-verification.qmd) | [M111](04-practices.qmd) | [Extras](05-extras.qmd) | [Credits](credits.qmd)
-:::
-::: {.vcc-grid}
-::: {.vcc-card}
-### Start here
-- [M000: Basic Structure and Syntax](00-fundamentals.qmd)
-- [M001: Writing Combinational Logic](001-combinational.qmd)
-- [M010: Advanced Combinational Logic](01-combinational.qmd)
-:::
-::: {.vcc-card}
-### Continue
-- [M011: Writing Sequential Logic](02-sequential.qmd)
-- [M100: Advanced Sequential Logic](100-advanced-sequential.qmd)
-- [M101: Testbench Basics and Verification](03-verification.qmd)
-:::
-::: {.vcc-card}
-### Finish strong
-- [M110: Advanced Verification Ideas](110-advanced-verification.qmd)
-- [M111: Best Practices and Wrap-Up](04-practices.qmd)
-- [Extras and Credits](05-extras.qmd)
-:::
-:::
-## Original Course Intro
-
 This crash course was born out of sheer frustration with how Verilog is often taught online: tutorials that dive too quickly into low-level details, cryptic syntax, and performance caveats, leaving beginners more confused than confident.
 
 Instead, this course takes a different approach: it **assumes you already have some programming background,** and focuses on what you actually need to know to **get started writing hardware descriptions right away**.
@@ -44,8 +19,4 @@ This crash course is organized as follows:
 
 Eight modules (numbered 000 all the way to 111) that teach you all the fundamentals you need to implement any realizable algorithm into Verilog, the true goal of this crash course. Each module has a corresponding assessment to test your understanding. You can optionally go through the assessments right away (through the dedicated tile) if you are coming here with sufficient Verilog knowledge and you want to test your skills.
 
-If you have completed the assessments, you will gain access to a hidden set of modules focusing on advanced Verilog constructs and coding styles, meant for advanced users who want to create more complicated architectures.
-
-::: {.vcc-nextprev}
-[M000: Basic Structure and Syntax →](00-fundamentals.qmd){.vcc-next}
-:::
+After Module 111, continue with **Extra 00: Structural Verilog Coding**, **Extra 01: Advanced Verilog Syntax**, and **Extra 10: SystemVerilog Constructs**. These optional modules cover coding styles and language constructs for more complicated architectures. All modules are available in the course sidebar.

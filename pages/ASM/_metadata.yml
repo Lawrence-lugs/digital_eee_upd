@@ -1,0 +1,10 @@
+sidebar: hardware-mappable-asm
+
+format:
+  html:
+    page-layout: article
+    grid:
+      # Keep the reading width while balancing navigation and TOC space.
+      body-width: 1000px
+      sidebar-width: 250px
+      margin-width: 250px

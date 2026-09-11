@@ -1,0 +1,227 @@
+{
+  "version": 6,
+  "blocks": [
+    {
+      "id": "b162",
+      "type": "state",
+      "x": 171.67423083274429,
+      "y": -141.05757530989243,
+      "w": 140,
+      "h": 70,
+      "name": "IDLE",
+      "code": "ready = 1"
+    },
+    {
+      "id": "b163",
+      "type": "decision",
+      "x": 177.9025127277883,
+      "y": -46.118999158427926,
+      "w": 130,
+      "h": 84,
+      "name": "D0",
+      "code": "start"
+    },
+    {
+      "id": "b164",
+      "type": "output",
+      "x": 168.4477623431028,
+      "y": 69.79468804094802,
+      "w": 140,
+      "h": 52,
+      "name": "C0",
+      "code": "count = 0"
+    },
+    {
+      "id": "b165",
+      "type": "state",
+      "x": 169.25012906150886,
+      "y": 152.0492750716636,
+      "w": 140,
+      "h": 70,
+      "name": "RUN",
+      "code": ""
+    },
+    {
+      "id": "b169",
+      "type": "decision",
+      "x": 352.07830523889317,
+      "y": -136.05666686804406,
+      "w": 130,
+      "h": 84,
+      "name": "D1",
+      "code": "stop"
+    },
+    {
+      "id": "b171",
+      "type": "decision",
+      "x": 349.75162378918225,
+      "y": 5.788956607946602,
+      "w": 130,
+      "h": 84,
+      "name": "D2",
+      "code": "request"
+    },
+    {
+      "id": "b172",
+      "type": "output",
+      "x": 343.3066086935554,
+      "y": 156.9358082354966,
+      "w": 140,
+      "h": 52,
+      "name": "C1",
+      "code": "accepted = 1\ncount = count + 1"
+    }
+  ],
+  "connections": [
+    {
+      "id": "c166",
+      "from": "b163",
+      "to": "b164",
+      "label": "true",
+      "mx": 241.52840206839846,
+      "my": 59.269970018288404,
+      "loopOff": null,
+      "startAngle": 1.5812126167258658,
+      "endAngle": -1.4464413322481362
+    },
+    {
+      "id": "c167",
+      "from": "b163",
+      "to": "b162",
+      "label": "false",
+      "mx": 135.98850349533504,
+      "my": -29.57471564234541,
+      "loopOff": null,
+      "startAngle": 3.0944577797762927,
+      "endAngle": 2.8198420991931514
+    },
+    {
+      "id": "c168",
+      "from": "b164",
+      "to": "b165",
+      "label": "",
+      "mx": null,
+      "my": null,
+      "loopOff": null,
+      "startAngle": null,
+      "endAngle": -1.623425110887551
+    },
+    {
+      "id": "c180",
+      "from": "b162",
+      "to": "b163",
+      "label": "",
+      "mx": null,
+      "my": null,
+      "loopOff": null,
+      "startAngle": null,
+      "endAngle": -1.5983334892719094
+    },
+    {
+      "id": "c181",
+      "from": "b172",
+      "to": "b165",
+      "label": "",
+      "mx": null,
+      "my": null,
+      "loopOff": null,
+      "startAngle": null,
+      "endAngle": -0.013323950164031212
+    },
+    {
+      "id": "c185",
+      "from": "b171",
+      "to": "b172",
+      "label": "true",
+      "mx": null,
+      "my": null,
+      "loopOff": null,
+      "startAngle": null,
+      "endAngle": -1.576875034964987
+    },
+    {
+      "id": "c186",
+      "from": "b171",
+      "to": "b165",
+      "label": "false",
+      "mx": 354.9967579695788,
+      "my": 125.53697458383382,
+      "loopOff": null,
+      "startAngle": null,
+      "endAngle": -0.3550055433547309
+    },
+    {
+      "id": "c187",
+      "from": "b169",
+      "to": "b162",
+      "label": "true",
+      "mx": 334.67513946141685,
+      "my": -94.87442615853845,
+      "loopOff": null,
+      "startAngle": -3.1410381418336155,
+      "endAngle": 0.1762537998298965
+    },
+    {
+      "id": "c188",
+      "from": "b169",
+      "to": "b171",
+      "label": "false",
+      "mx": null,
+      "my": null,
+      "loopOff": null,
+      "startAngle": null,
+      "endAngle": -1.5272869135454517
+    },
+    {
+      "id": "c189",
+      "from": "b165",
+      "to": "b169",
+      "label": "",
+      "mx": 628.5570071179133,
+      "my": 291.6271258524655,
+      "loopOff": null,
+      "startAngle": 0.5829520638201646,
+      "endAngle": 0.3841625416053672
+    }
+  ],
+  "startBlockId": "b162",
+  "userVars": {
+    "start": 1,
+    "stop": 1,
+    "request": 0
+  },
+  "combDefaults": {
+    "result": 0,
+    "done": 0,
+    "ready": 0
+  },
+  "forcedRegisters": [
+    "count"
+  ],
+  "forcedCombinational": [
+    "ready"
+  ],
+  "signedVars": [],
+  "regInitValues": {
+    "a": 0,
+    "result": 0,
+    "count": 0
+  },
+  "varBits": {
+    "start": 1,
+    "stop": 1,
+    "request": 1
+  },
+  "varBitDefault": 8,
+  "varOrder": [
+    "count",
+    "ready"
+  ],
+  "simDisplayBase": "dec",
+  "idCounter": 190,
+  "view": {
+    "x": 7.575247514334315,
+    "y": -170.30025146668825,
+    "scale": 2.558851303064994
+  }
+}

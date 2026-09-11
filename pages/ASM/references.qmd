@@ -1,0 +1,49 @@
+---
+title: "References"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+---
+
+## 1. M. Morris Mano {#ref-mano}
+
+*Digital Design*, 2nd ed., Prentice-Hall, 1991. See Chapter 8, especially §8-2, “ASM Chart,” and §8-3, “Timing Considerations,” pp. 309–313. These pages define the state, decision, and conditional boxes; distinguish register operations from output signals; define an ASM block as one clock-pulse interval; and describe its register operations and next-state transfer as occurring together on a common clock edge. [Google Books record](https://books.google.com/books/about/Digital_Design.html?id=_fFTAAAAMAAJ); [Open Library scan/preview](https://openlibrary.org/books/OL1877417M/Digital_design).
+
+## 2. Stephen Brown and Zvonko Vranesic {#ref-brown}
+
+*Fundamentals of Digital Logic with VHDL Design*, 3rd ed., McGraw-Hill, 2009. See §8.10, “Algorithmic State Machine (ASM) Charts,” pp. 561–563, and §§10.2.1–10.2.2, pp. 679–683. The latter uses a bit-counting circuit to explain the pre-edge values tested by decision boxes, the post-edge changes to registers, and the split between datapath and control circuits. [PDF](https://dpvipracollege.ac.in/wp-content/uploads/2023/01/Fundamentals-of-Digital-Logic-with-VHDL-Design-3rd-edition.pdf). An official author page for later editions is available from the [University of Toronto](https://www.eecg.toronto.edu/~brown/VHDL_4e/).
+
+## 3. Mark Zwolinski {#ref-zwolinski}
+
+*Digital System Design with SystemVerilog*, 1st ed., Pearson/Addison-Wesley, copyright 2010; first printing October 2009. See §6.3, “Algorithmic State Machines,” especially pp. 114–117, for the distinction between signals active during a clock cycle and arrow-form assignments made at the end of a state. See also §7.2, “Datapath/Controller Partitioning,” beginning on p. 147. [Publisher page and table of contents](https://www.informit.com/store/digital-system-design-with-systemverilog-9780137045792); [University of Southampton record](https://eprints.soton.ac.uk/422108/).
+
+## 4. AMD/Xilinx University Program {#ref-xilinx}
+
+*Sequential System Design Using ASM Charts*, Lab 11, 2015. See pp. 11-1–11-3 for the software-flowchart analogy, Moore- and Mealy-style output boxes, SM blocks, and direct hardware realization. [Official workbook PDF](https://www.amd.com/content/dam/amd/en/documents/university/vivado-teaching/hdl-design/2015x/VHDL/docs-pdf/lab11.pdf).
+
+## 5. Portland State University / Engin 112 teaching materials {#ref-pdx}
+
+Maciej Ciesielski, “Control Logic,” Engin 112 lecture slides, December 6, 2006. Slides 4–6 introduce datapath/control separation and state that operations between states happen synchronously in one clock cycle; slides 8–12 apply the partition to a sequential multiplier. [Lecture PDF](https://web.cecs.pdx.edu/~mperkows/CLASS_573/573_2007/Engin112-F06-12-06.pdf).
+
+## 6. George Mason University, ECE 448 {#ref-gmu}
+
+“State Diagrams, Algorithmic State Machine (ASM) Charts, and VHDL Code,” ECE 448 lecture slides, Spring 2025. Slides 24–33 define the box types and clock-governed ASM-block transitions; slides 76–77 compare Moore and Mealy timing. [Lecture PDF](https://people-ece.vse.gmu.edu/coursewebpages/ECE/ECE448/S25/viewgraphs/ECE448_lecture7_ASM_Charts.pdf); [course page](https://people-ece.vse.gmu.edu/coursewebpages/ECE/ECE448/S25/).
+
+## 7. Pong P. Chu {#ref-chu}
+
+*FPGA Prototyping by VHDL Examples: Xilinx Spartan-3 Version*, Wiley, 2008. See Chapter 6, especially §§6.1.1–6.1.3, pp. 127–131. These sections define register-transfer timing, extend the ASM chart into an ASMD chart, state that operations within an ASMD block execute in parallel, and explain the delayed-store distinction between a register's current value and its computed next value. The decision-box example and its explanation continue on p. 131. [Official Wiley book record and contents](https://onlinelibrary.wiley.com/doi/book/10.1002/9780470231630); [author-hosted table of contents](https://academic.csuohio.edu/chu-pong/wp-content/uploads/sites/64/2023/02/fpga_vhdl_toc.pdf); [university-hosted Chapter 6 PDF](https://faculty.kfupm.edu.sa/COE/aimane/coe405/ASMD.pdf).
+
+## 8. University of Washington, EE/CSE 371 {#ref-uw}
+
+Vikram Iyer, “Algorithmic State Machines,” EE/CSE 371 lecture slides, Spring 2025; adapted from Justin Hsia. Slides 10–14 introduce ASM charts and the datapath/control partition; slides 15–16 explain register-transfer timing across a clock cycle; slides 19–20 define an ASM block and require one exit path for every valid input combination with no internal feedback. [Lecture PDF](https://courses.cs.washington.edu/courses/cse371/25sp/lectures/05/EECSE371-Sp25-05-ASM.pdf).
+
+## 9. Herman Lam and John O'Malley {#ref-lam}
+
+*Fundamentals of Computer Engineering: Logic Design and Microprocessors*, 1st ed., Wiley, 1988. See Chapter 7, §7.4, especially p. 225, for the requirements that a controller notation represent timing unambiguously, describe the algorithm clearly, and support direct translation into hardware. The University of Florida's EEL 3701 materials identify this book as a reference textbook and provide Chapters 1–7. [University-hosted textbook PDF](https://mil.ufl.edu/3701/docs/LamChapters1-7_searchable.pdf); [course reading page and bibliographic record](https://mil.ufl.edu/3701/reading.html).
+
+## 10. Sabancı University, EL 310 {#ref-sabanci}
+
+Erkay Savaş, “VHDL: Design with Algorithmic State Machine (ASM) Charts,” EL 310 lecture slides. Slides 5–7 describe the timing of state-box signals and assignments, decision boxes, and conditional outputs. Slide 7 requires a conditional-output box to follow a decision box and to connect to its state through one or more decision boxes. [University-hosted lecture PDF](https://people.sabanciuniv.edu/erkays/el310/DesignwithASM_06a.pdf).
+
+**Source scope.** This article uses textbooks, university teaching materials, and a vendor educational workbook rather than research papers. Page and slide locators identify the passages supporting the discussion in [Existing Practice](02-existing-practice.qmd). The proposed declaration and box-placement rules are this article's conventions; they are not attributed to all of the cited sources.
