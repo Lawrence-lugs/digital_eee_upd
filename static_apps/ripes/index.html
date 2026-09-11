@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ripes</title>
+  <style>
+    html, body, #qt-container {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    body {
+      background: #202124;
+      color: #f1f3f4;
+      font-family: system-ui, sans-serif;
+    }
+
+    #status {
+      align-items: center;
+      display: flex;
+      inset: 0;
+      justify-content: center;
+      position: fixed;
+    }
+
+    #status[hidden] {
+      display: none;
+    }
+
+    #status-message {
+      max-width: 36rem;
+      padding: 1rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="qt-container"></div>
+  <div id="status" role="status">
+    <div id="status-message">Loading Ripes...</div>
+  </div>
+
+  <script src="Ripes.js"></script>
+  <script src="qtloader.js"></script>
+  <script>
+    const status = document.getElementById("status");
+    const statusMessage = document.getElementById("status-message");
+
+    qtLoad({
+      qt: {
+        entryFunction: Ripes_entry,
+        containerElements: [document.getElementById("qt-container")],
+        onLoaded: () => status.setAttribute("hidden", ""),
+        onExit: (exitStatus) => {
+          statusMessage.textContent = exitStatus.crashed
+            ? `Ripes could not start: ${exitStatus.text}`
+            : "Ripes has closed.";
+          status.removeAttribute("hidden");
+        }
+      }
+    }).catch((error) => {
+      statusMessage.textContent = `Ripes could not start: ${error.message}`;
+      status.removeAttribute("hidden");
+    });
+  </script>
+</body>
+</html>

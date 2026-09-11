@@ -13,6 +13,13 @@ services:
       - "traefik.http.routers.static.rule=PathPrefix(`/`)"
       - "traefik.http.routers.static.entrypoints=web"
       - "traefik.http.services.static.loadbalancer.server.port=80"
+      - "traefik.http.routers.ripes.rule=PathPrefix(`/ripes/`)"
+      - "traefik.http.routers.ripes.entrypoints=web"
+      - "traefik.http.routers.ripes.priority=100"
+      - "traefik.http.routers.ripes.service=static"
+      - "traefik.http.routers.ripes.middlewares=ripes-isolation"
+      - "traefik.http.middlewares.ripes-isolation.headers.customresponseheaders.Cross-Origin-Opener-Policy=same-origin"
+      - "traefik.http.middlewares.ripes-isolation.headers.customresponseheaders.Cross-Origin-Embedder-Policy=require-corp"
     # Traefik labels for domain routing
     # labels:
     #  - "traefik.enable=true"
