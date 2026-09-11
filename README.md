@@ -53,6 +53,12 @@ See [my website's sample notes](https://github.com/Lawrence-lugs/notes/tree/gh-p
 
 See [JKU's analog circuit design course](https://iic-jku.github.io/analog-circuit-design/aicd.html) and the [raw QMD files](https://github.com/iic-jku/analog-circuit-design/blob/main/aicd.qmd) for examples on an actual course that uses Quarto to make notes.
 
+### Ripes Integration
+
+Ripes is on [static WASM build taken from a PR artifact](https://github.com/mortbopet/Ripes/actions/runs/34036063473). To update, just download a new WASM/QT release from any action workflow (preferrably from master, next time).
+
+We've placed it in `static_apps/ripes`. Around this, there's an `index.html` frontpage. This page's only jobs are to (1) call `qtloader.js` (2) print an error message if the `ripes/qt` entrypoint fails.
+
 ### Contact / Support
 
 For questions or help, please open an issue.
