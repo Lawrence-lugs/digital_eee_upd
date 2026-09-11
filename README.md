@@ -53,11 +53,18 @@ See [my website's sample notes](https://github.com/Lawrence-lugs/notes/tree/gh-p
 
 See [JKU's analog circuit design course](https://iic-jku.github.io/analog-circuit-design/aicd.html) and the [raw QMD files](https://github.com/iic-jku/analog-circuit-design/blob/main/aicd.qmd) for examples on an actual course that uses Quarto to make notes.
 
-### Ripes Integration
+## Ripes Integration
 
 Ripes is on [static WASM build taken from a PR artifact](https://github.com/mortbopet/Ripes/actions/runs/34036063473). To update, just download a new WASM/QT release from any action workflow (preferrably from master, next time).
 
 We've placed it in `static_apps/ripes`. Around this, there's an `index.html` frontpage. This page's only jobs are to (1) call `qtloader.js` (2) print an error message if the `ripes/qt` entrypoint fails.
+
+Multithreaded WASM builds require special headers (same-origin, require-corp) to prove "good intention". This is due to the Spectre attack Shared Buffer Attack in 2018. Because of this, `nginx.conf` and the `docker-compose.yml` for Traefik work to add these special headers to `/ripes/`.
+
+>[!tip]
+> We might not have needed to add the headers to BOTH `nginx.conf` and the traefik config in `docker-compose.yml`.
+>
+> It's just that Traefik might drop the headers given by nginx, so it's better to just do both.
 
 ### Contact / Support
 
