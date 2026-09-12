@@ -44,6 +44,29 @@ website:
         text: Systolic Array Simulator
 
   sidebar:
+    - id: digital-design-crash-course
+      title: "Digital Design Crash Course"
+      style: floating
+      collapse-level: 1
+      contents:
+        - href: pages/digitaldesignCrashCourse/index.qmd
+          text: Overview
+        - href: pages/digitaldesignCrashCourse/00-thinking-in-hardware.qmd
+          text: "000: Thinking in Hardware"
+        - href: pages/digitaldesignCrashCourse/01-bits-and-arithmetic.qmd
+          text: "001: Bits, Ranges, and Arithmetic"
+        - href: pages/digitaldesignCrashCourse/02-clock-cycles-and-pipelines.qmd
+          text: "010: Clock Cycles and Pipelines"
+        - href: pages/digitaldesignCrashCourse/03-loops-and-parallelism.qmd
+          text: "011: Loops Are Architecture Choices"
+        - href: pages/digitaldesignCrashCourse/04-memory-and-data-movement.qmd
+          text: "100: Memory and Data Movement"
+        - href: pages/digitaldesignCrashCourse/05-state-machines.qmd
+          text: "101: State Machines and Control"
+        - href: pages/digitaldesignCrashCourse/06-streams-and-handshakes.qmd
+          text: "110: Streams and Handshakes"
+        - href: pages/digitaldesignCrashCourse/07-designing-an-accelerator.qmd
+          text: "111: Designing an Accelerator"
     - id: verilog-crash-course
       title: "Verilog Crash Course"
       style: floating

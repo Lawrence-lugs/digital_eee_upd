@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Output-stationary systolic array cycle simulator</title>
+<title>Systolic array cycle simulator</title>
 <style>
   :root {
     --bg: #f6f7fb;
@@ -40,7 +40,61 @@
     margin: 0 auto;
     padding: 0 16px;
   }
-  header h1 { margin: 0 0 6px; font-size: 1.65rem; }
+  .header-main-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 28px;
+  }
+  .header-copy {
+    min-width: 0;
+  }
+  .header-controls {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    align-self: center;
+    gap: 8px;
+  }
+  .architecture-switch {
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 8px 11px 9px;
+    border: 1px solid rgba(255,255,255,.45);
+    border-radius: 10px;
+    background: rgba(255,255,255,.08);
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+  .architecture-switch legend {
+    padding: 0 5px;
+    font-size: .70rem;
+    font-weight: 700;
+    opacity: .82;
+  }
+  .architecture-switch label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0;
+    color: white;
+    font-size: .82rem;
+    font-weight: 650;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .architecture-switch input[type="radio"] {
+    margin: 0;
+    width: 15px;
+    height: 15px;
+    accent-color: white;
+    cursor: pointer;
+  }
+  header h1 { margin: 0 0 6px; font-size: 1.85rem; }
   .header-subtitle {
     margin: 0;
     opacity: .95;
@@ -68,6 +122,11 @@
   .panel h3 { font-size: .95rem; }
   .muted { color: var(--muted); }
   .tiny { font-size: .75rem; }
+  .timing-description {
+    margin-bottom: 8px;
+    font-size: .84rem;
+    line-height: 1.45;
+  }
 
   .config-panel {
     padding: 0;
@@ -89,6 +148,16 @@
     display: inline-flex;
     align-items: center;
     flex: 0 0 auto;
+  }
+  .config-collapse-hint {
+    display: none;
+    color: var(--muted);
+    font-size: .76rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .config-panel[open] .config-collapse-hint {
+    display: inline;
   }
   .config-summary-legend {
     display: inline-flex;
@@ -122,7 +191,7 @@
 
   .topbar {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) 170px;
+    grid-template-columns: 132px minmax(0, 1fr);
     gap: 14px;
     align-items: start;
     width: 100%;
@@ -145,27 +214,21 @@
     flex: 0 0 auto;
     width: max-content;
   }
-  .view-controls {
-    border-left: 1px solid var(--line);
-    padding-left: 14px;
-    min-height: 100%;
-    width: 170px;
-    justify-self: end;
+  .dimensions-actions {
+    width: 132px;
+    min-width: 132px;
   }
-  .toggle-button {
+  .dimension-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .dimension-controls .control-card {
     width: 100%;
+    min-width: 0;
   }
-  .toggle-button.active {
-    background: var(--accent);
-    color: white;
-    border-color: var(--accent);
-  }
-  .toggle-help {
-    margin-top: 8px;
-    font-size: .72rem;
-    line-height: 1.35;
-    color: var(--muted);
-  }
+
   .controls-group {
     display: flex;
     flex-wrap: wrap;
@@ -216,7 +279,10 @@
     border: 0;
     border-radius: 0;
     padding: 4px 6px;
-    text-align: center;
+    text-align: center !important;
+    text-align-last: center;
+    appearance: textfield;
+    -moz-appearance: textfield;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 1.28rem;
     font-weight: 700;
@@ -227,6 +293,11 @@
   .matrix-editor input:focus {
     background: #fff7ed;
     box-shadow: inset 0 0 0 2px #f59e0b;
+  }
+  .matrix-editor input::-webkit-outer-spin-button,
+  .matrix-editor input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
   button {
     border: 1px solid var(--line);
@@ -271,21 +342,6 @@
   .accu { color: var(--accu); }
   .shift { color: var(--shift); }
   .good { color: var(--good); }
-
-  .cycle-info {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(120px, 1fr));
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-  .kpi {
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 9px;
-    background: #fafafa;
-  }
-  .kpi .label { color: var(--muted); font-size: .72rem; }
-  .kpi .value { font-weight: 800; margin-top: 2px; font-size: .94rem; }
 
   .hero-panel { text-align: center; }
   .hero-message {
@@ -354,7 +410,7 @@
     background: #f0fdfa;
     color: #0f766e;
     box-shadow: 0 2px 6px rgba(15,118,110,.12);
-    transition: left 420ms cubic-bezier(.25,.8,.25,1), opacity 260ms ease, transform 260ms ease;
+    transition: left 420ms cubic-bezier(.25,.8,.25,1), top 420ms cubic-bezier(.25,.8,.25,1), opacity 260ms ease, transform 260ms ease;
     opacity: 0;
     transform: scale(.92);
     z-index: 2;
@@ -375,10 +431,24 @@
   .stage {
     display: grid;
     grid-template-columns: auto auto auto;
-    grid-template-rows: auto auto;
     gap: 12px;
     align-items: start;
   }
+  .stage.output-stationary { grid-template-rows: auto auto; }
+  .stage.output-stationary #stageCorner { grid-column: 1; grid-row: 1; }
+  .stage.output-stationary #topFeed { grid-column: 2; grid-row: 1; }
+  .stage.output-stationary #expectedPanel { grid-column: 3; grid-row: 1; }
+  .stage.output-stationary #leftFeed { grid-column: 1; grid-row: 2; }
+  .stage.output-stationary #array { grid-column: 2; grid-row: 2; }
+  .stage.output-stationary #rightFeed { grid-column: 3; grid-row: 2; }
+
+  .stage.weight-stationary { grid-template-rows: auto auto; }
+  .stage.weight-stationary #leftFeed { grid-column: 1; grid-row: 1; }
+  .stage.weight-stationary #array { grid-column: 2; grid-row: 1; }
+  .stage.weight-stationary #topFeed { grid-column: 3; grid-row: 1; }
+  .stage.weight-stationary #stageCorner { grid-column: 1; grid-row: 2; }
+  .stage.weight-stationary #rightFeed { grid-column: 2; grid-row: 2; }
+  .stage.weight-stationary #expectedPanel { grid-column: 3; grid-row: 2; }
   .stage-corner {
     position: relative;
     background: white;
@@ -400,6 +470,52 @@
     width: 100%;
     min-height: 38px;
   }
+  .corner-secondary-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+  .simplify-pe-btn {
+    width: 100%;
+    min-height: 48px;
+    font-size: .88rem;
+    background: white;
+    color: var(--text);
+    border-color: var(--line);
+  }
+  .simplify-pe-btn.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+
+  .cycle-mini-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+    margin-top: 3px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+  }
+  .cycle-mini-item {
+    min-width: 0;
+    text-align: center;
+  }
+  .cycle-mini-label {
+    color: var(--muted);
+    font-size: .78rem;
+    line-height: 1.15;
+    min-height: 1.15em;
+  }
+  .cycle-mini-value {
+    margin-top: 4px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 1.14rem;
+    font-weight: 800;
+    line-height: 1;
+  }
 
 
   .feed-panel {
@@ -408,6 +524,55 @@
     border: 1px solid var(--line);
     border-radius: 12px;
     overflow: hidden;
+  }
+  .preload-panel {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .ws-preload-strip {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 34px;
+    bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: max-content;
+    min-width: calc(100% - 20px);
+  }
+  .ws-preload-card {
+    flex: 0 0 auto;
+    min-width: 112px;
+    padding: 7px 9px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255,255,255,.96);
+    text-align: left;
+    transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+  }
+  .ws-preload-card .ws-preload-name {
+    font-size: .70rem;
+    color: var(--muted);
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+  .ws-preload-card .ws-preload-values {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .82rem;
+    font-weight: 700;
+    color: var(--filt);
+    white-space: nowrap;
+  }
+  .ws-preload-card.loaded {
+    background: #f5f3ff;
+    border-color: #c4b5fd;
+  }
+  .ws-preload-card.current {
+    background: #ede9fe;
+    border-color: #7c3aed;
+    box-shadow: 0 0 0 3px rgba(124,58,237,.12);
+    transform: translateY(-2px);
   }
   .feed-panel::before {
     content: "";
@@ -553,6 +718,33 @@
     gap: 5px;
     align-items: center;
   }
+  .register-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 12px;
+    align-items: center;
+    width: 100%;
+  }
+  .register-column {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    align-items: center;
+    min-width: 0;
+  }
+  .register-column.accumulator-only {
+    justify-content: center;
+    align-self: stretch;
+  }
+  .shift-register-view {
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .shift-register-view .big-line {
+    gap: 10px;
+  }
   .big-line {
     display: flex;
     align-items: baseline;
@@ -574,25 +766,13 @@
   .big-value.prod { color: var(--prod); }
   .big-value.accu { color: var(--accu); }
 
-  .pe-stage {
-    display: grid;
-    grid-template-columns: 62px 1fr;
-    gap: 2px 6px;
-    font-size: .68rem;
-    line-height: 1.22;
-  }
-  .pe-stage .v {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    text-align: right;
-  }
-
   .array.minimalist {
     gap: 16px 24px;
     padding: 28px 44px 36px 58px;
   }
   .array.minimalist .pe {
-    width: 136px;
-    min-height: 94px;
+    width: 164px;
+    min-height: 112px;
     padding: 6px 7px 7px;
     border-radius: 11px;
   }
@@ -601,14 +781,23 @@
   }
   .array.minimalist .center-math {
     margin: 0;
-    padding: 7px 4px;
+    padding: 7px 5px;
     border-radius: 9px;
+  }
+  .array.minimalist .register-grid {
+    gap: 5px 8px;
+  }
+  .array.minimalist .register-column {
+    gap: 6px;
   }
   .array.minimalist .big-reg {
     gap: 6px;
   }
   .array.minimalist .big-line {
-    gap: 6px;
+    gap: 5px;
+  }
+  .array.minimalist .shift-register-view {
+    min-height: 50px;
   }
   .array.minimalist .wire-h {
     width: 24px;
@@ -617,27 +806,31 @@
   .array.minimalist .wire-v {
     height: 16px;
     bottom: -18px;
-    left: 66px;
+    left: 80px;
   }
   .array.minimalist .token.left {
-    left: -56px;
-    top: 16px;
+    left: -12px;
+    top: 18px;
+    transform: translateX(-50%);
   }
   .array.minimalist .token.top {
-    top: -26px;
-    left: 34px;
+    top: -8px;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   .array.minimalist .token.psum-left {
-    left: -56px;
-    bottom: 13px;
+    left: -12px;
+    bottom: 14px;
+    transform: translateX(-50%);
   }
-  .array.minimalist .token.psum-right {
-    bottom: 12px;
+  .array.minimalist .token.bottom {
+    bottom: -8px;
+    left: 50%;
+    transform: translate(-50%, 50%);
   }
-
   .token {
     position: absolute;
-    font-size: .65rem;
+    font-size: .62rem;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     background: white;
     border: 1px solid var(--line);
@@ -646,29 +839,29 @@
     white-space: nowrap;
     z-index: 2;
   }
-  .token.left { left: -68px; top: 18px; color: var(--feat); }
-  .token.top { top: -26px; left: 58px; color: var(--filt); }
-  .token.psum-left { left: -68px; bottom: 16px; color: var(--shift); }
-  .token.psum-right {
-    right: -76px;
-    bottom: 14px;
-    color: var(--shift);
-    font-size: .84rem;
-    font-weight: 800;
-    padding: 5px 8px;
-    border: 2px solid #5eead4;
-    background: #f0fdfa;
-    box-shadow: 0 3px 10px rgba(15,118,110,.18);
-    border-radius: 8px;
-    z-index: 5;
+  .token.left {
+    left: -20px;
+    top: 24px;
+    transform: translateX(-50%);
+    color: var(--feat);
   }
-  .token.psum-right.drain-pop {
-    font-size: 1.05rem;
-    padding: 7px 10px;
-    right: -92px;
-    border-color: #14b8a6;
-    background: #ccfbf1;
-    box-shadow: 0 0 0 3px rgba(20,184,166,.14), 0 6px 14px rgba(15,118,110,.22);
+  .token.top {
+    top: -11px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--filt);
+  }
+  .token.psum-left {
+    left: -20px;
+    bottom: 20px;
+    transform: translateX(-50%);
+    color: var(--shift);
+  }
+  .token.bottom {
+    bottom: -11px;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    color: var(--feat);
   }
 
   .wire-h, .wire-v {
@@ -679,9 +872,36 @@
   .wire-h { height: 2px; width: 40px; right: -42px; top: 28px; }
   .wire-v { width: 2px; height: 22px; bottom: -24px; left: 100px; }
   .wire-h.psum { top: auto; bottom: 23px; background: #99f6e4; }
-  .pe.drain-active .wire-h.psum {
-    height: 4px;
-    background: #14b8a6;
+  .wire-h.weight {
+    top: 50%;
+    height: 3px;
+    background: #c4b5fd;
+    transform: translateY(-50%);
+  }
+  .wire-h.feat-wire {
+    top: 28px;
+    background: #bfdbfe;
+  }
+  .wire-v.psum { background: #5eead4; }
+  .token.weight-right {
+    right: -20px;
+    top: 50%;
+    transform: translate(50%, -50%);
+    color: var(--filt);
+  }
+  .array.minimalist .token.weight-right {
+    right: -12px;
+  }
+  .token.psum-top {
+    top: -11px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--shift);
+  }
+  .array.minimalist .token.psum-top {
+    top: -8px;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 
   .matrix-wrap { overflow-x: auto; margin-bottom: 12px; }
@@ -730,15 +950,15 @@
   .valid-list { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .76rem; line-height: 1.45; }
 
   @media (max-width: 1200px) {
+    .header-main-row { flex-wrap: wrap; }
+    .header-controls { flex-wrap: wrap; }
     .topbar { grid-template-columns: 1fr; }
+    .dimensions-actions {
+      width: 132px;
+      min-width: 0;
+    }
     .matrix-editor-strip { overflow-x: auto; }
     .matrix-editor-row { min-width: max-content; }
-    .view-controls {
-      border-left: 0;
-      padding-left: 0;
-      justify-self: start;
-    }
-    .cycle-info { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
     .bottom-grid { grid-template-columns: 1fr; }
   }
 </style>
@@ -746,16 +966,35 @@
 <body>
 <header>
   <div class="header-inner">
-    <h1>Output-stationary systolic array cycle simulator</h1>
-    <p class="header-subtitle"><strong>See how a systolic array performs a matrix computation cycle by cycle.</strong></p>
-    <p class="header-credit">Conceptualized by Adelson Chua.</p>
+    <div class="header-main-row">
+      <div class="header-copy">
+        <h1>Systolic array cycle simulator</h1>
+        <p class="header-subtitle"><strong>See how a systolic array performs a matrix computation cycle by cycle.</strong></p>
+        <p class="header-credit">Conceptualized by Adelson Chua.</p>
+      </div>
+
+      <div class="header-controls">
+        <fieldset class="architecture-switch dataflow-switch" aria-label="Dataflow">
+          <legend>Dataflow</legend>
+          <label><input id="outputStationaryRadio" type="radio" name="dataflow" value="output-stationary" checked> Output-stationary</label>
+          <label><input id="weightStationaryRadio" type="radio" name="dataflow" value="weight-stationary"> Weight-stationary</label>
+        </fieldset>
+
+        <fieldset class="architecture-switch" aria-label="PE architecture">
+          <legend>PE architecture</legend>
+          <label><input id="pipelinedRadio" type="radio" name="peArchitecture" value="pipelined" checked> Pipelined</label>
+          <label><input id="nonPipelinedRadio" type="radio" name="peArchitecture" value="non-pipelined"> Non-pipelined</label>
+        </fieldset>
+      </div>
+    </div>
   </div>
 </header>
 
 <main>
   <details id="configDetails" class="panel config-panel" open>
     <summary>
-      <span class="config-summary-title">Configuration</span>
+      <span class="config-summary-title">Matrix Configuration</span>
+      <span class="config-collapse-hint">Click to collapse</span>
       <span class="config-summary-legend" aria-label="Dataflow legend">
         <span class="feat">feature / A</span>
         <span class="filt">filter / B</span>
@@ -766,16 +1005,14 @@
     </summary>
     <div class="config-body">
     <div class="topbar">
-      <div>
-        <h3>Dimensions &amp; actions</h3>
-        <div class="controls-group">
+      <div class="dimensions-actions">
+        <div class="controls-group dimension-controls">
           <div class="control-card"><label for="rows">ROWS</label><input id="rows" type="number" min="1" max="8" value="4"></div>
           <div class="control-card"><label for="k">K</label><input id="k" type="number" min="1" max="16" value="3"></div>
           <div class="control-card"><label for="cols">COLS</label><input id="cols" type="number" min="1" max="8" value="4"></div>
         </div>
         <div class="controls-group" style="margin-top:10px;">
           <button id="knownBtn" type="button">Load worked example</button>
-          <button id="applyBtn" class="primary" type="button">Apply / restart</button>
         </div>
         <div id="error" class="error" aria-live="polite"></div>
       </div>
@@ -794,29 +1031,34 @@
         </div>
       </div>
 
-      <div class="view-controls">
-        <label>PE display</label>
-        <button id="minimalistBtn" class="toggle-button" type="button" aria-pressed="false">Minimalist: Off</button>
-        <div class="toggle-help">Shows only the PE/C indices, <span class="prod">reg_prod</span>, and <span class="accu">reg_accu</span> inside each PE.</div>
-      </div>
     </div>
     </div>
   </details>
 
   <section class="panel hero-panel">
-    <div class="cycle-info">
-      <div class="kpi"><div class="label">Positive edges stepped</div><div id="edgeKpi" class="value">0</div></div>
-      <div class="kpi"><div class="label">Prepared feed cycle t</div><div id="feedKpi" class="value">—</div></div>
-      <div class="kpi"><div class="label">Drain cycle d</div><div id="drainKpi" class="value">—</div></div>
-      <div class="kpi"><div class="label">Feed length (K+R+C)</div><div id="feedLenKpi" class="value">11</div></div>
-    </div>
     <div id="heroMessage" class="hero-message" aria-live="polite"></div>
     <div class="stage-shell">
       <div id="stage" class="stage">
         <div id="stageCorner" class="stage-corner">
           <button id="stepBtn" class="primary corner-step" type="button">Step</button>
-          <button id="undoBtn" class="corner-reset" type="button">Undo</button>
-          <button id="resetBtn" class="corner-reset" type="button">Reset</button>
+
+          <div class="corner-secondary-row">
+            <button id="resetBtn" class="corner-reset" type="button">Reset</button>
+            <button id="undoBtn" class="corner-reset" type="button">Undo</button>
+          </div>
+
+          <button id="minimalistBtn" class="simplify-pe-btn" type="button" aria-pressed="false">Simplify PE drawing</button>
+
+          <div class="cycle-mini-info">
+            <div class="cycle-mini-item">
+              <div class="cycle-mini-label">Cycle number</div>
+              <div id="miniCycle" class="cycle-mini-value">0</div>
+            </div>
+            <div class="cycle-mini-item">
+              <div id="miniPhaseLabel" class="cycle-mini-label">Feed cycle t</div>
+              <div id="miniPhaseValue" class="cycle-mini-value">—</div>
+            </div>
+          </div>
         </div>
         <div id="topFeed" class="feed-panel"></div>
         <div id="expectedPanel" class="expected-panel">
@@ -833,8 +1075,8 @@
 
   <div class="bottom-grid">
     <section class="panel">
-      <h2>Exercise timing table</h2>
-      <div class="tiny muted" style="margin-bottom:8px;">
+      <h2>Timing table for input matrices</h2>
+      <div id="timingDescription" class="timing-description muted">
         During feed cycle <code>t</code>: row <code>r</code> carries <code>A[r][t-r]</code> for <code>r ≤ t &lt; r+K</code>; column <code>c</code> carries <code>B[t-c][c]</code> for <code>c ≤ t &lt; c+K</code>. The highlighted row below is the currently prepared feed cycle.
       </div>
       <div id="timeline" class="timeline timeline-split"></div>
@@ -866,19 +1108,22 @@
   const ui = {
     rows: $("rows"), k: $("k"), cols: $("cols"),
     matA: $("matA"), matB: $("matB"), error: $("error"),
-    knownBtn: $("knownBtn"), applyBtn: $("applyBtn"), minimalistBtn: $("minimalistBtn"),
+    knownBtn: $("knownBtn"), minimalistBtn: $("minimalistBtn"),
+    pipelinedRadio: $("pipelinedRadio"), nonPipelinedRadio: $("nonPipelinedRadio"),
+    outputStationaryRadio: $("outputStationaryRadio"), weightStationaryRadio: $("weightStationaryRadio"),
     stepBtn: $("stepBtn"), undoBtn: $("undoBtn"), resetBtn: $("resetBtn"),
     heroMessage: $("heroMessage"),
-    stageCorner: $("stageCorner"), topFeed: $("topFeed"), leftFeed: $("leftFeed"), rightFeed: $("rightFeed"), expectedPanel: $("expectedPanel"), array: $("array"),
-    edgeKpi: $("edgeKpi"), feedKpi: $("feedKpi"),
-    drainKpi: $("drainKpi"), feedLenKpi: $("feedLenKpi"),
+    stage: $("stage"), stageCorner: $("stageCorner"), topFeed: $("topFeed"), leftFeed: $("leftFeed"), rightFeed: $("rightFeed"), expectedPanel: $("expectedPanel"), array: $("array"),
+    miniCycle: $("miniCycle"), miniPhaseLabel: $("miniPhaseLabel"), miniPhaseValue: $("miniPhaseValue"),
     expectedC: $("expectedC"), compareMsg: $("compareMsg"),
-    timeline: $("timeline")
+    timeline: $("timeline"), timingDescription: $("timingDescription")
   };
 
   let sim = null;
   let history = [];
   let minimalist = false;
+  let pipelineMode = 'pipelined';
+  let dataflowMode = 'output-stationary';
   let dom = { aTracks: [], bTracks: [], aCells: [], bCells: [], aLanes: [], bLanes: [], outLanes: [], outCells: [] };
 
   function wrapSigned(value, width) {
@@ -964,6 +1209,7 @@
 
     buildMatrixEditor(ui.matA, dims.R, dims.K, oldA, 'A');
     buildMatrixEditor(ui.matB, dims.K, dims.C, oldB, 'B');
+    refreshFromConfiguration();
   }
 
   function gemm(A, B, R, K, C) {
@@ -976,44 +1222,89 @@
     );
   }
 
-  function newPE() { return { regFeat:0, regFilt:0, regProd:0, regAccu:0, regShift:0 }; }
+  function newPE() {
+    return {
+      regFeat:0, regFeatTag:null,
+      regFilt:0,
+      regProd:0, regProdTag:null,
+      regPsumDelay:0, regPsumDelayTag:null,
+      regAccu:0, regAccuTag:null,
+      regShift:0
+    };
+  }
+
+  function peRows(s) { return s.dataflow === 'weight-stationary' ? s.K : s.R; }
+  function peCols(s) { return s.C; }
 
   function makeSim(A, B, R, K, C) {
+    const dataflow = dataflowMode;
+    const rows = dataflow === 'weight-stationary' ? K : R;
+    const cols = C;
     return {
-      R, K, C, A, B, expected: gemm(A, B, R, K, C),
-      pe: Array.from({length:R}, () => Array.from({length:C}, newPE)),
+      R, K, C, A, B,
+      architecture: pipelineMode,
+      dataflow,
+      expected: gemm(A, B, R, K, C),
+      pe: Array.from({length:rows}, () => Array.from({length:cols}, newPE)),
       observed: Array.from({length:R}, () => Array(C).fill(null)),
+      observedAt: Array.from({length:R}, () => Array(C).fill(null)),
       edges: 0,
-      phase: "clear",
+      phase: 'clear',
       feedT: 0,
       drainD: 0,
+      weightT: 0,
+      computeT: 0,
       complete: false,
-      lastControls: { pipelineEn:0, pipelineClr:1, accuClr:1, shiftLoad:0, shiftEn:0 },
-      laneFeat: Array(R).fill(null),
+      currentOutputs: [],
+      lastControls: { pipelineEn:0, pipelineClr:1, accuClr:1, shiftLoad:0, shiftEn:0, weightLoad:0, computeEn:0 },
+      laneFeat: Array(dataflow === 'weight-stationary' ? K : R).fill(null),
+      laneFeatTag: Array(dataflow === 'weight-stationary' ? K : R).fill(null),
       laneFilt: Array(C).fill(null),
-      note: "Next edge clears all PE pipeline and accumulator registers."
+      note: dataflow === 'weight-stationary'
+        ? 'Next edge clears the PE registers before B is shifted in from the right.'
+        : 'Next edge clears the PE data and accumulator registers.'
     };
   }
 
   function computeWires(s) {
+    if (s.dataflow === 'weight-stationary') {
+      const feat = Array.from({length:s.K}, () => Array(s.C).fill(0));
+      const psumDown = Array.from({length:s.K}, () => Array(s.C).fill(0));
+
+      for (let k = 0; k < s.K; k++) {
+        for (let c = 0; c < s.C; c++) {
+          feat[k][c] = c === 0
+            ? (s.laneFeat[k] == null ? 0 : s.laneFeat[k])
+            : s.pe[k][c-1].regFeat;
+          psumDown[k][c] = k === 0 ? 0 : s.pe[k-1][c].regAccu;
+        }
+      }
+      return { feat, psumDown };
+    }
+
     const feat = Array.from({length:s.R}, () => Array(s.C + 1).fill(0));
+    const featTag = Array.from({length:s.R}, () => Array(s.C + 1).fill(null));
     const filt = Array.from({length:s.R + 1}, () => Array(s.C).fill(0));
     const psum = Array.from({length:s.R}, () => Array(s.C + 1).fill(0));
-    for (let r = 0; r < s.R; r++) feat[r][0] = s.laneFeat[r] == null ? 0 : s.laneFeat[r];
+
+    for (let r = 0; r < s.R; r++) {
+      feat[r][0] = s.laneFeat[r] == null ? 0 : s.laneFeat[r];
+      featTag[r][0] = null;
+    }
     for (let c = 0; c < s.C; c++) filt[0][c] = s.laneFilt[c] == null ? 0 : s.laneFilt[c];
+
     for (let r = 0; r < s.R; r++) {
       psum[r][0] = 0;
       for (let c = 0; c < s.C; c++) {
-        if (c > 0) psum[r][c] = s.pe[r][c-1].regShift;
         feat[r][c+1] = s.pe[r][c].regFeat;
         filt[r+1][c] = s.pe[r][c].regFilt;
         psum[r][c+1] = s.pe[r][c].regShift;
       }
     }
-    return { feat, filt, psum };
+    return { feat, featTag, filt, psum };
   }
 
-  function setFeedLanes(s, t) {
+  function setOSFeedLanes(s, t) {
     for (let r = 0; r < s.R; r++) {
       const valid = t >= r && t < r + s.K;
       s.laneFeat[r] = valid ? s.A[r][t-r] : null;
@@ -1024,9 +1315,27 @@
     }
   }
 
-  function zeroLanes(s) { s.laneFeat.fill(null); s.laneFilt.fill(null); }
+  function setWSActivationLanes(s, t) {
+    s.laneFilt.fill(null);
+    for (let k = 0; k < s.K; k++) {
+      const r = t - k;
+      const valid = r >= 0 && r < s.R;
+      s.laneFeat[k] = valid ? s.A[r][k] : null;
+      s.laneFeatTag[k] = valid ? r : null;
+    }
+  }
 
-  function clockPEs(s, ctrl) {
+  function zeroLanes(s) {
+    s.laneFeat.fill(null);
+    s.laneFeatTag.fill(null);
+    s.laneFilt.fill(null);
+  }
+
+  function clearPEs(s) {
+    s.pe = Array.from({length:peRows(s)}, () => Array.from({length:peCols(s)}, newPE));
+  }
+
+  function clockOSPEs(s, ctrl) {
     const wires = computeWires(s);
     const next = Array.from({length:s.R}, () => Array.from({length:s.C}, newPE));
     for (let r = 0; r < s.R; r++) {
@@ -1034,15 +1343,21 @@
         const old = s.pe[r][c];
         const n = { ...old };
         if (ctrl.pipelineClr) {
-          n.regFeat = 0; n.regFilt = 0; n.regProd = 0;
+          n.regFeat = 0;
+          n.regFilt = 0;
+          n.regProd = 0;
         } else if (ctrl.pipelineEn) {
           n.regFeat = wrapSigned(wires.feat[r][c], DATA_WIDTH);
           n.regFilt = wrapSigned(wires.filt[r][c], DATA_WIDTH);
-          n.regProd = wrapSigned(old.regFeat * old.regFilt, 2 * DATA_WIDTH);
+          n.regProd = s.architecture === 'pipelined'
+            ? wrapSigned(old.regFeat * old.regFilt, 2 * DATA_WIDTH)
+            : 0;
         }
         if (ctrl.accuClr) n.regAccu = 0;
-        else if (ctrl.pipelineEn) n.regAccu = wrapSigned(old.regAccu + old.regProd, ACCU_WIDTH);
-
+        else if (ctrl.pipelineEn) {
+          if (s.architecture === 'pipelined') n.regAccu = wrapSigned(old.regAccu + old.regProd, ACCU_WIDTH);
+          else n.regAccu = wrapSigned(old.regAccu + wrapSigned(old.regFeat * old.regFilt, 2 * DATA_WIDTH), ACCU_WIDTH);
+        }
         if (ctrl.shiftLoad) n.regShift = old.regAccu;
         else if (ctrl.shiftEn) n.regShift = c === 0 ? 0 : s.pe[r][c-1].regShift;
         next[r][c] = n;
@@ -1051,14 +1366,94 @@
     s.pe = next;
   }
 
-  function captureDrain(s, d) {
+  function clockWSWeightLoad(s, t) {
+    const old = s.pe;
+    const next = s.pe.map(row => row.map(p => ({...p})));
+    const sourceC = t;
+
+    for (let k = 0; k < s.K; k++) {
+      for (let c = 0; c < s.C - 1; c++) {
+        next[k][c].regFilt = old[k][c+1].regFilt;
+      }
+      next[k][s.C - 1].regFilt = wrapSigned(s.B[k][sourceC], DATA_WIDTH);
+    }
+
+    s.pe = next;
+  }
+
+  function clockWSCompute(s) {
+    const wires = computeWires(s);
+    const next = s.pe.map(row => row.map(p => ({...p})));
+
+    for (let k = 0; k < s.K; k++) {
+      for (let c = 0; c < s.C; c++) {
+        const old = s.pe[k][c];
+        const n = next[k][c];
+
+        n.regFilt = old.regFilt; // stationary B[k][c]
+        n.regFeat = wrapSigned(wires.feat[k][c], DATA_WIDTH);
+        n.regShift = 0;
+
+        if (s.architecture === 'pipelined') {
+          n.regProd = wrapSigned(old.regFeat * old.regFilt, 2 * DATA_WIDTH);
+          n.regAccu = wrapSigned(wires.psumDown[k][c] + old.regProd, ACCU_WIDTH);
+        } else {
+          n.regProd = 0;
+          const product = wrapSigned(old.regFeat * old.regFilt, 2 * DATA_WIDTH);
+          n.regAccu = wrapSigned(wires.psumDown[k][c] + product, ACCU_WIDTH);
+        }
+      }
+    }
+
+    s.pe = next;
+  }
+
+  function captureOSDrain(s, d) {
     const col = s.C - 1 - d;
-    for (let r = 0; r < s.R; r++) s.observed[r][col] = s.pe[r][s.C - 1].regShift;
+    for (let r = 0; r < s.R; r++) {
+      s.observed[r][col] = s.pe[r][s.C - 1].regShift;
+      s.observedAt[r][col] = s.edges + 1;
+    }
+  }
+
+  function captureWSOutputs(s, t) {
+    s.currentOutputs = [];
+    const extra = s.architecture === 'pipelined' ? 1 : 0;
+
+    for (let c = 0; c < s.C; c++) {
+      const r = t - (s.K + c + extra);
+      if (r >= 0 && r < s.R) {
+        const value = s.pe[s.K - 1][c].regAccu;
+        s.observed[r][c] = value;
+        s.observedAt[r][c] = s.edges + 1;
+        s.currentOutputs.push({r, c, value});
+      }
+    }
+  }
+
+  function allOutputsObserved(s) {
+    return s.observed.every(row => row.every(v => v !== null));
+  }
+
+  function totalOSFeedCycles(s) {
+    return s.K + s.R + s.C - (s.architecture === 'non-pipelined' ? 1 : 0);
+  }
+
+  function totalWSWeightCycles(s) { return s.C; }
+  function totalWSComputeCycles(s) {
+    return s.K + s.R + s.C - (s.architecture === 'non-pipelined' ? 1 : 0);
+  }
+
+  function totalFeedCycles(s) {
+    return s.dataflow === 'output-stationary' ? totalOSFeedCycles(s) : totalWSComputeCycles(s);
   }
 
   function currentPrepT(s) {
-    const totalFeed = s.K + s.R + s.C;
-    return (s.phase === "feed" && s.feedT < totalFeed) ? s.feedT : null;
+    if (s.dataflow === 'output-stationary') {
+      const totalFeed = totalOSFeedCycles(s);
+      return (s.phase === 'feed' && s.feedT < totalFeed) ? s.feedT : null;
+    }
+    return (s.phase === 'compute' && s.computeT < totalWSComputeCycles(s)) ? s.computeT : null;
   }
 
   function snapshotSim(s) {
@@ -1072,6 +1467,7 @@
   }
 
   function pairInfo(s, r, c) {
+    if (s.dataflow !== 'output-stationary') return null;
     const t = currentPrepT(s);
     if (t == null) return null;
     const k = t - r - c;
@@ -1083,62 +1479,116 @@
     if (!sim || sim.complete) return;
     history.push(snapshotSim(sim));
     const s = sim;
-    let ctrl = { pipelineEn:0, pipelineClr:0, accuClr:0, shiftLoad:0, shiftEn:0 };
-    if (s.phase === "clear") {
-      zeroLanes(s);
-      ctrl.pipelineClr = 1;
-      ctrl.accuClr = 1;
-      clockPEs(s, ctrl);
-      s.phase = "feed";
-      s.feedT = 0;
-      setFeedLanes(s, 0);
-      s.note = "Clear edge completed. Feed cycle t=0 is now prepared on the boundary, and the highlighted schedules show what will enter the array on the next rising edge.";
-    } else if (s.phase === "feed") {
-      const t = s.feedT;
-      setFeedLanes(s, t);
-      ctrl.pipelineEn = 1;
-      clockPEs(s, ctrl);
-      s.feedT++;
-      const totalFeed = s.K + s.R + s.C;
-      if (s.feedT >= totalFeed) {
+    let ctrl = { pipelineEn:0, pipelineClr:0, accuClr:0, shiftLoad:0, shiftEn:0, weightLoad:0, computeEn:0 };
+
+    if (s.dataflow === 'output-stationary') {
+      if (s.phase === 'clear') {
         zeroLanes(s);
-        s.phase = "load";
-        s.note = `Feed completed after ${totalFeed} enabled edges. The next edge asserts shift_load and accu_clr together.`;
-      } else {
-        setFeedLanes(s, s.feedT);
-        s.note = `Feed edge t=${t} completed. The A and B schedules shifted by one slot, and feed cycle t=${s.feedT} is now prepared.`;
+        ctrl.pipelineClr = 1;
+        ctrl.accuClr = 1;
+        clockOSPEs(s, ctrl);
+        s.phase = 'feed';
+        s.feedT = 0;
+        setOSFeedLanes(s, 0);
+        s.note = 'Clear edge completed. Feed cycle t=0 is now prepared on the boundary.';
+      } else if (s.phase === 'feed') {
+        const t = s.feedT;
+        setOSFeedLanes(s, t);
+        ctrl.pipelineEn = 1;
+        clockOSPEs(s, ctrl);
+        s.feedT++;
+        const totalFeed = totalOSFeedCycles(s);
+        if (s.feedT >= totalFeed) {
+          zeroLanes(s);
+          s.phase = 'load';
+          s.note = `Feed completed after ${totalFeed} enabled edges. The next edge asserts shift_load and accu_clr together.`;
+        } else {
+          setOSFeedLanes(s, s.feedT);
+          s.note = `Feed edge t=${t} completed. Feed cycle t=${s.feedT} is now prepared.`;
+        }
+      } else if (s.phase === 'load') {
+        zeroLanes(s);
+        ctrl.shiftLoad = 1;
+        ctrl.accuClr = 1;
+        clockOSPEs(s, ctrl);
+        s.phase = 'drain';
+        s.drainD = 0;
+        captureOSDrain(s, 0);
+        s.note = `shift_load copied each accumulator into reg_shift. The right-side reconstruction now receives column ${s.C - 1}.`;
+      } else if (s.phase === 'drain') {
+        const d = s.drainD;
+        if (d >= s.C - 1) {
+          s.complete = true;
+          s.phase = 'done';
+          s.note = 'All columns have been observed. Simulation complete.';
+        } else {
+          ctrl.shiftEn = 1;
+          clockOSPEs(s, ctrl);
+          s.drainD++;
+          captureOSDrain(s, s.drainD);
+          s.note = s.drainD >= s.C - 1
+            ? 'Drain edge completed. Column 0 is now visible in the reconstruction window. One more Step marks completion.'
+            : `Drain edge d=${s.drainD} completed. Column ${s.C - 1 - s.drainD} is now visible.`;
+        }
       }
-    } else if (s.phase === "load") {
-      zeroLanes(s);
-      ctrl.shiftLoad = 1;
-      ctrl.accuClr = 1;
-      clockPEs(s, ctrl);
-      s.phase = "drain";
-      s.drainD = 0;
-      captureDrain(s, 0);
-      s.note = `shift_load copied each accumulator into reg_shift. o_psum now shows column ${s.C - 1}; each shift_en edge moves the loaded outputs rightward.`;
-    } else if (s.phase === "drain") {
-      const d = s.drainD;
-      if (d >= s.C - 1) {
-        s.complete = true;
-        s.phase = "done";
-        s.note = "All columns have been observed. Simulation complete.";
-      } else {
-        ctrl.shiftEn = 1;
-        clockPEs(s, ctrl);
-        s.drainD++;
-        captureDrain(s, s.drainD);
-        s.note = s.drainD >= s.C - 1
-          ? "Drain edge completed. o_psum now shows column 0. One more Step marks the simulation complete without changing the data."
-          : `Drain edge d=${s.drainD} completed. o_psum now shows column ${s.C - 1 - s.drainD}.`;
+    } else {
+      s.currentOutputs = [];
+      if (s.phase === 'clear') {
+        zeroLanes(s);
+        clearPEs(s);
+        ctrl.pipelineClr = 1;
+        s.phase = 'weight';
+        s.weightT = 0;
+        s.note = 'Clear edge completed. B[:,0] is prepared in parallel on the right boundary.';
+      } else if (s.phase === 'weight') {
+        const t = s.weightT;
+        const sourceC = t;
+        ctrl.weightLoad = 1;
+        clockWSWeightLoad(s, t);
+        s.weightT++;
+
+        if (s.weightT >= totalWSWeightCycles(s)) {
+          zeroLanes(s);
+          s.phase = 'compute';
+          s.computeT = 0;
+          setWSActivationLanes(s, 0);
+          s.note = 'B has finished shifting right-to-left, so PE(k,c) now holds stationary B[k][c]. Aᵀ feed cycle t=0 is prepared on the left boundary.';
+        } else {
+          s.note = `B[:,${sourceC}] shifted one PE to the left. B[:,${s.weightT}] is prepared next on the right boundary.`;
+        }
+      } else if (s.phase === 'compute') {
+        const t = s.computeT;
+        setWSActivationLanes(s, t);
+        ctrl.computeEn = 1;
+        ctrl.pipelineEn = 1;
+        clockWSCompute(s);
+        captureWSOutputs(s, t);
+        s.computeT++;
+
+        const captured = s.currentOutputs.map(o => `C[${o.r}][${o.c}]=${o.value}`);
+        const total = totalWSComputeCycles(s);
+        if (s.computeT >= total) {
+          zeroLanes(s);
+          s.complete = true;
+          s.phase = 'done';
+          s.note = captured.length
+            ? `Final staggered output${captured.length > 1 ? 's' : ''}: ${captured.join(', ')}. Simulation complete.`
+            : 'The final compute edge completed. Simulation complete.';
+        } else {
+          setWSActivationLanes(s, s.computeT);
+          s.note = captured.length
+            ? `Compute edge t=${t} completed. Staggered output${captured.length > 1 ? 's' : ''}: ${captured.join(', ')}. A feed cycle t=${s.computeT} is prepared next.`
+            : `Compute edge t=${t} completed. A feed cycle t=${s.computeT} is prepared next.`;
+        }
       }
     }
+
     s.edges++;
     s.lastControls = ctrl;
     render();
   }
 
-  function matrixTable(M, kind, currentCol = null) {
+  function matrixTable(M, kind, currentCol = null, hotCells = null) {
     let h = '<table class="matrix"><thead><tr><th></th>';
     for (let c = 0; c < M[0].length; c++) h += `<th>${c}</th>`;
     h += '</tr></thead><tbody>';
@@ -1146,7 +1596,10 @@
       h += `<tr><th>${r}</th>`;
       for (let c = 0; c < M[r].length; c++) {
         const v = M[r][c];
-        const cls = c === currentCol ? 'hot' : (kind === 'observed' && v !== null ? 'done' : '');
+        const cellHot = hotCells && hotCells.has(`${r},${c}`);
+        const cls = (cellHot || c === currentCol)
+          ? 'hot'
+          : (kind === 'observed' && v !== null ? 'done' : '');
         h += `<td class="${cls}">${v === null ? '·' : v}</td>`;
       }
       h += '</tr>';
@@ -1164,11 +1617,13 @@
     if (s.phase === 'feed') return 'Feed';
     if (s.phase === 'load') return 'Shift-load';
     if (s.phase === 'drain') return 'Drain';
+    if (s.phase === 'weight') return 'Weight preload';
+    if (s.phase === 'compute') return 'Compute';
     return 'Done';
   }
 
-  function currentPEWidth() { return minimalist ? 136 : PE_W; }
-  function currentPEHeight() { return minimalist ? 94 : PE_H; }
+  function currentPEWidth() { return minimalist ? 164 : PE_W; }
+  function currentPEHeight() { return minimalist ? 112 : PE_H; }
   function currentHGap() { return minimalist ? 24 : H_GAP; }
   function currentVGap() { return minimalist ? 16 : V_GAP; }
   function currentPadLeft() { return minimalist ? 58 : ARRAY_PAD_LEFT; }
@@ -1193,9 +1648,23 @@
     return R * h + (R - 1) * gap;
   }
 
+  function resetStagePanelClasses() {
+    ui.topFeed.className = 'feed-panel';
+    ui.leftFeed.className = 'feed-panel';
+    ui.rightFeed.className = 'feed-panel output-panel';
+  }
+
   function buildStage(s) {
-    dom = { aTracks: [], bTracks: [], aCells: [], bCells: [], aLanes: [], bLanes: [], outLanes: [], outCells: [] };
-    const totalFeed = s.K + s.R + s.C;
+    if (s.dataflow === 'weight-stationary') buildStageWS(s);
+    else buildStageOS(s);
+  }
+
+  function buildStageOS(s) {
+    dom = { aTracks: [], bTracks: [], aCells: [], bCells: [], aLanes: [], bLanes: [], outLanes: [], outCells: [], preloadCards: [] };
+    resetStagePanelClasses();
+    ui.stage.className = 'stage output-stationary';
+
+    const totalFeed = totalOSFeedCycles(s);
     const arrayW = totalArrayWidth(s.C) + currentPadLeft() + currentPadRight() + 2;
     const arrayH = totalArrayHeight(s.R) + currentPadTop() + currentPadBottom() + 2;
     const leftW = SCHEDULE_SLOTS * EDGE_CELL;
@@ -1218,9 +1687,9 @@
     ui.array.classList.toggle('minimalist', minimalist);
     ui.array.style.gridTemplateColumns = `repeat(${s.C}, ${currentPEWidth()}px)`;
 
-    ui.topFeed.innerHTML = `<div class="feed-title">Shifted B launch schedule</div>`;
-    ui.leftFeed.innerHTML = `<div class="feed-title">Shifted A launch schedule</div>`;
-    ui.rightFeed.innerHTML = `<div class="feed-title">Shifted output reconstruction</div>`;
+    ui.topFeed.innerHTML = '<div class="feed-title">Shifted B launch schedule</div>';
+    ui.leftFeed.innerHTML = '<div class="feed-title">Shifted A launch schedule</div>';
+    ui.rightFeed.innerHTML = '<div class="feed-title">Shifted output reconstruction</div>';
 
     const topBoundary = document.createElement('div');
     topBoundary.className = 'feed-boundary';
@@ -1264,9 +1733,7 @@
         cell.className = 'feed-cell filt'; cell.style.left = '0'; cell.style.top = `${(totalFeed - 1 - t) * EDGE_CELL}px`; cell.textContent = s.B[k][c];
         track.appendChild(cell); cells.push({ el: cell, t });
       }
-      dom.bCells.push(cells);
-      dom.bLanes.push(lane);
-      ui.topFeed.appendChild(lane);
+      dom.bCells.push(cells); dom.bLanes.push(lane); ui.topFeed.appendChild(lane);
     }
 
     for (let r = 0; r < s.R; r++) {
@@ -1284,28 +1751,213 @@
         cell.className = 'feed-cell'; cell.style.top = '0'; cell.style.left = `${(totalFeed - 1 - t) * EDGE_CELL}px`; cell.textContent = s.A[r][k];
         track.appendChild(cell); cells.push({ el: cell, t });
       }
+      dom.aCells.push(cells); dom.aLanes.push(lane); ui.leftFeed.appendChild(lane);
+    }
+
+    for (let r = 0; r < s.R; r++) {
+      const lane = document.createElement('div');
+      lane.className = 'output-lane'; lane.style.left = '10px'; lane.style.width = `${s.C * OUTPUT_CELL}px`; lane.style.height = `${OUTPUT_CELL}px`;
+      const cells = [];
+      for (let i = 0; i < s.C; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'output-cell'; cell.style.width = `${OUTPUT_CELL - 4}px`; cell.style.height = `${OUTPUT_CELL - 4}px`; cell.style.left = '0px'; cell.style.top = '2px';
+        lane.appendChild(cell); cells.push(cell);
+      }
+      dom.outLanes.push(lane); dom.outCells.push(cells); ui.rightFeed.appendChild(lane);
+    }
+  }
+
+  function buildStageWS(s) {
+    dom = { aTracks: [], bTracks: [], aCells: [], bCells: [], aLanes: [], bLanes: [], outLanes: [], outCells: [], preloadCards: [] };
+    resetStagePanelClasses();
+    ui.stage.className = 'stage weight-stationary';
+
+    const arrayW = totalArrayWidth(s.C) + currentPadLeft() + currentPadRight() + 2;
+    const arrayH = totalArrayHeight(s.K) + currentPadTop() + currentPadBottom() + 2;
+    const sideW = SCHEDULE_SLOTS * EDGE_CELL;
+    const bottomH = Math.max(SCHEDULE_SLOTS * EDGE_CELL, s.R * OUTPUT_CELL + 20);
+    const totalCompute = totalWSComputeCycles(s);
+    const totalWeight = totalWSWeightCycles(s);
+
+    ui.stageCorner.style.width = sideW + 'px';
+    ui.stageCorner.style.height = bottomH + 'px';
+    ui.expectedPanel.style.width = sideW + 'px';
+    ui.expectedPanel.style.minHeight = bottomH + 'px';
+    ui.expectedPanel.style.height = 'auto';
+
+    // WS: A^T schedule left, B preload right, staggered outputs below.
+    ui.leftFeed.style.width = sideW + 'px';
+    ui.leftFeed.style.height = arrayH + 'px';
+    ui.topFeed.style.width = sideW + 'px';
+    ui.topFeed.style.height = arrayH + 'px';
+    ui.rightFeed.style.width = arrayW + 'px';
+    ui.rightFeed.style.height = bottomH + 'px';
+    ui.rightFeed.style.setProperty('--edgecell', OUTPUT_CELL + 'px');
+
+    ui.array.classList.toggle('minimalist', minimalist);
+    ui.array.style.gridTemplateColumns = `repeat(${s.C}, ${currentPEWidth()}px)`;
+
+    ui.leftFeed.innerHTML = '<div class="feed-title">Shifted A launch schedule</div>';
+    ui.topFeed.innerHTML = '<div class="feed-title">B weight preload schedule</div>';
+    ui.rightFeed.innerHTML = '<div class="feed-title">Staggered outputs</div>';
+
+    // A^T enters from the LEFT.
+    const aBoundary = document.createElement('div');
+    aBoundary.className = 'feed-boundary';
+    aBoundary.style.top = '0';
+    aBoundary.style.bottom = '0';
+    aBoundary.style.right = '0';
+    aBoundary.style.width = '3px';
+    ui.leftFeed.appendChild(aBoundary);
+
+    const aBoundaryLabel = document.createElement('div');
+    aBoundaryLabel.className = 'feed-boundary-label';
+    aBoundaryLabel.style.right = '5px';
+    aBoundaryLabel.style.top = '8px';
+    aBoundaryLabel.textContent = 'Aᵀ into array →';
+    ui.leftFeed.appendChild(aBoundaryLabel);
+
+    // One horizontal A^T stream per reduction row k.
+    // A^T[k][r] = A[r][k], launched at t=r+k.
+    for (let k = 0; k < s.K; k++) {
+      const lane = document.createElement('div');
+      lane.style.position = 'absolute';
+      lane.style.left = '0';
+      lane.style.top = `${currentPadTop() + laneCenterY(k) - EDGE_CELL/2}px`;
+      lane.style.width = `${sideW}px`;
+      lane.style.height = `${EDGE_CELL}px`;
+
+      const label = document.createElement('div');
+      label.className = 'lane-label';
+      label.style.right = '6px';
+      label.style.top = `${EDGE_CELL + 4}px`;
+      label.textContent = `k${k}`;
+      lane.appendChild(label);
+
+      const track = document.createElement('div');
+      track.className = 'feed-track';
+      track.style.right = '0';
+      track.style.top = '0';
+      track.style.width = `${totalCompute * EDGE_CELL}px`;
+      track.style.height = `${EDGE_CELL}px`;
+      lane.appendChild(track);
+      dom.aTracks.push(track);
+
+      const cells = [];
+      for (let r = 0; r < s.R; r++) {
+        const t = r + k;
+        const cell = document.createElement('div');
+        cell.className = 'feed-cell';
+        cell.style.top = '0';
+        cell.style.left = `${(totalCompute - 1 - t) * EDGE_CELL}px`;
+        cell.textContent = s.A[r][k];
+        cell.title = `Aᵀ[${k}][${r}] = A[${r}][${k}]`;
+        track.appendChild(cell);
+        cells.push({ el: cell, t, r });
+      }
+
       dom.aCells.push(cells);
       dom.aLanes.push(lane);
       ui.leftFeed.appendChild(lane);
     }
 
-    for (let r = 0; r < s.R; r++) {
+    // B enters from the RIGHT. Column 0 is injected first, with all K values
+    // presented in parallel. Existing weights shift one PE left per edge.
+    const bBoundary = document.createElement('div');
+    bBoundary.className = 'feed-boundary';
+    bBoundary.style.top = '0';
+    bBoundary.style.bottom = '0';
+    bBoundary.style.left = '0';
+    bBoundary.style.width = '3px';
+    ui.topFeed.appendChild(bBoundary);
+
+    const bBoundaryLabel = document.createElement('div');
+    bBoundaryLabel.className = 'feed-boundary-label';
+    bBoundaryLabel.style.left = '5px';
+    bBoundaryLabel.style.top = '34px';
+    bBoundaryLabel.textContent = '← B into array';
+    ui.topFeed.appendChild(bBoundaryLabel);
+
+    for (let k = 0; k < s.K; k++) {
+      const lane = document.createElement('div');
+      lane.style.position = 'absolute';
+      lane.style.left = '0';
+      lane.style.top = `${currentPadTop() + laneCenterY(k) - EDGE_CELL/2}px`;
+      lane.style.width = `${sideW}px`;
+      lane.style.height = `${EDGE_CELL}px`;
+
+      const label = document.createElement('div');
+      label.className = 'lane-label';
+      label.style.left = '6px';
+      label.style.top = `${EDGE_CELL + 4}px`;
+      label.textContent = `k${k}`;
+      lane.appendChild(label);
+
+      const track = document.createElement('div');
+      track.className = 'feed-track';
+      track.style.left = '0';
+      track.style.top = '0';
+      track.style.width = `${totalWeight * EDGE_CELL}px`;
+      track.style.height = `${EDGE_CELL}px`;
+      lane.appendChild(track);
+      dom.bTracks.push(track);
+
+      const cells = [];
+      for (let c = 0; c < s.C; c++) {
+        const cell = document.createElement('div');
+        cell.className = 'feed-cell filt';
+        cell.style.top = '0';
+        cell.style.left = `${c * EDGE_CELL}px`;
+        cell.textContent = s.B[k][c];
+        cell.title = `B[${k}][${c}]`;
+        track.appendChild(cell);
+        cells.push({ el: cell, t: c, c });
+      }
+
+      dom.bCells.push(cells);
+      dom.bLanes.push(lane);
+      ui.topFeed.appendChild(lane);
+    }
+
+    // Outputs emerge from the BOTTOM of PE row K-1.
+    const outBoundary = document.createElement('div');
+    outBoundary.className = 'feed-boundary';
+    outBoundary.style.left = '0';
+    outBoundary.style.right = '0';
+    outBoundary.style.top = '0';
+    outBoundary.style.height = '3px';
+    ui.rightFeed.appendChild(outBoundary);
+
+    const outBoundaryLabel = document.createElement('div');
+    outBoundaryLabel.className = 'feed-boundary-label';
+    outBoundaryLabel.style.left = 'auto';
+    outBoundaryLabel.style.right = '8px';
+    outBoundaryLabel.style.top = '5px';
+    outBoundaryLabel.style.width = 'max-content';
+    outBoundaryLabel.style.whiteSpace = 'nowrap';
+    outBoundaryLabel.textContent = 'from array ↓';
+    ui.rightFeed.appendChild(outBoundaryLabel);
+
+    for (let c = 0; c < s.C; c++) {
       const lane = document.createElement('div');
       lane.className = 'output-lane';
-      lane.style.left = '10px';
-      lane.style.width = `${s.C * OUTPUT_CELL}px`;
-      lane.style.height = `${OUTPUT_CELL}px`;
+      lane.style.top = '10px';
+      lane.style.width = `${OUTPUT_CELL}px`;
+      lane.style.height = `${s.R * OUTPUT_CELL}px`;
+
       const cells = [];
-      for (let i = 0; i < s.C; i++) {
+      for (let r = 0; r < s.R; r++) {
         const cell = document.createElement('div');
         cell.className = 'output-cell';
         cell.style.width = `${OUTPUT_CELL - 4}px`;
         cell.style.height = `${OUTPUT_CELL - 4}px`;
-        cell.style.left = '0px';
-        cell.style.top = '2px';
+        cell.style.left = '2px';
+        cell.style.top = '0px';
+        cell.title = `C[${r}][${c}]`;
         lane.appendChild(cell);
         cells.push(cell);
       }
+
       dom.outLanes.push(lane);
       dom.outCells.push(cells);
       ui.rightFeed.appendChild(lane);
@@ -1316,6 +1968,33 @@
     const arrayHeight = ui.array.offsetHeight;
     const arrayWidth = ui.array.offsetWidth;
 
+    if (s.dataflow === 'weight-stationary') {
+      ui.leftFeed.style.height = arrayHeight + 'px';
+      ui.topFeed.style.height = arrayHeight + 'px';
+      ui.rightFeed.style.width = arrayWidth + 'px';
+
+      for (let k = 0; k < s.K; k++) {
+        const pe = ui.array.querySelector(`.pe[style*="grid-row:${k+1}"][style*="grid-column:1"]`);
+        if (pe && dom.aLanes[k]) {
+          const centerY = pe.offsetTop + pe.offsetHeight / 2;
+          dom.aLanes[k].style.top = `${centerY - EDGE_CELL/2}px`;
+        }
+        if (pe && dom.bLanes[k]) {
+          const centerY = pe.offsetTop + pe.offsetHeight / 2;
+          dom.bLanes[k].style.top = `${centerY - EDGE_CELL/2}px`;
+        }
+      }
+
+      for (let c = 0; c < s.C; c++) {
+        const pe = ui.array.querySelector(`.pe[style*="grid-row:${s.K}"][style*="grid-column:${c+1}"]`);
+        if (pe && dom.outLanes[c]) {
+          const centerX = pe.offsetLeft + pe.offsetWidth / 2;
+          dom.outLanes[c].style.left = `${centerX - OUTPUT_CELL/2}px`;
+        }
+      }
+      return;
+    }
+
     ui.leftFeed.style.height = arrayHeight + 'px';
     ui.topFeed.style.width = arrayWidth + 'px';
     ui.rightFeed.style.height = arrayHeight + 'px';
@@ -1325,27 +2004,54 @@
       if (pe && dom.aLanes[r]) {
         const centerY = pe.offsetTop + pe.offsetHeight / 2;
         dom.aLanes[r].style.top = `${centerY - EDGE_CELL/2}px`;
-        dom.aLanes[r].style.height = `${EDGE_CELL}px`;
       }
       if (pe && dom.outLanes[r]) {
         const centerY = pe.offsetTop + pe.offsetHeight / 2;
         dom.outLanes[r].style.top = `${centerY - OUTPUT_CELL/2}px`;
-        dom.outLanes[r].style.height = `${OUTPUT_CELL}px`;
       }
     }
-
     for (let c = 0; c < s.C; c++) {
       const pe = ui.array.querySelector(`.pe[style*="grid-row:1"][style*="grid-column:${c+1}"]`);
       if (pe && dom.bLanes[c]) {
         const centerX = pe.offsetLeft + pe.offsetWidth / 2;
         dom.bLanes[c].style.left = `${centerX - EDGE_CELL/2}px`;
-        dom.bLanes[c].style.width = `${EDGE_CELL}px`;
       }
     }
   }
 
   function updateFeedPanels(s) {
-    const totalFeed = s.K + s.R + s.C;
+    if (s.dataflow === 'weight-stationary') {
+      const totalWeight = totalWSWeightCycles(s);
+      const weightPrep = s.phase === 'weight' ? s.weightT : null;
+      const weightProgress = s.phase === 'weight'
+        ? Math.min(s.weightT, totalWeight)
+        : (s.phase === 'compute' || s.phase === 'done' ? totalWeight : 0);
+
+      // Right-side B schedule moves LEFT into the array.
+      dom.bTracks.forEach(track => {
+        track.style.transform = `translateX(${-weightProgress * EDGE_CELL}px)`;
+      });
+      dom.bCells.forEach(rowCells => rowCells.forEach(({el, t}) => {
+        el.classList.toggle('current', weightPrep === t);
+      }));
+
+      const total = totalWSComputeCycles(s);
+      const prep = currentPrepT(s);
+      const progress = s.phase === 'compute'
+        ? Math.min(s.computeT, total - 1)
+        : (s.phase === 'done' ? total - 1 : 0);
+
+      // Left-side A^T schedule moves RIGHT into the array.
+      dom.aTracks.forEach(track => {
+        track.style.transform = `translateX(${progress * EDGE_CELL}px)`;
+      });
+      dom.aCells.forEach(rowCells => rowCells.forEach(({el, t}) => {
+        el.classList.toggle('current', prep === t);
+      }));
+      return;
+    }
+
+    const totalFeed = totalOSFeedCycles(s);
     const prep = currentPrepT(s);
     const progress = s.phase === 'feed' ? Math.min(s.feedT, totalFeed - 1) : (s.phase === 'clear' ? 0 : totalFeed - 1);
     dom.aTracks.forEach(track => { track.style.transform = `translateX(${progress * EDGE_CELL}px)`; });
@@ -1355,24 +2061,58 @@
   }
 
   function updateOutputReconstruction(s) {
+    if (s.dataflow === 'weight-stationary') {
+      const currentSet = new Set((s.currentOutputs || []).map(o => `${o.r},${o.c}`));
+
+      for (let c = 0; c < s.C; c++) {
+        let count = 0;
+        for (let r = 0; r < s.R; r++) {
+          if (s.observed[r][c] !== null) count++;
+        }
+
+        for (let r = 0; r < s.R; r++) {
+          const cell = dom.outCells[c][r];
+          const value = s.observed[r][c];
+
+          if (value !== null) {
+            cell.textContent = value;
+            cell.style.left = '2px';
+            cell.style.top = `${(count - 1 - r) * OUTPUT_CELL}px`;
+            cell.classList.add('visible');
+            cell.classList.toggle('current', currentSet.has(`${r},${c}`));
+          } else {
+            cell.textContent = '';
+            cell.style.left = '2px';
+            cell.style.top = '0px';
+            cell.classList.remove('visible', 'current');
+          }
+        }
+      }
+      return;
+    }
+
     let count = 0;
-    if (s.phase === 'drain' || s.phase === 'done') count = Math.min(s.drainD + 1, s.C);
+    if (s.phase === 'drain' || s.phase === 'done') {
+      count = Math.min(s.drainD + 1, s.C);
+    }
 
     for (let r = 0; r < s.R; r++) {
       for (let i = 0; i < s.C; i++) {
         const cell = dom.outCells[r][i];
+
         if (i < count) {
           const col = s.C - 1 - i;
           const value = s.observed[r][col];
           cell.textContent = value == null ? '·' : value;
           cell.style.left = `${(count - 1 - i) * OUTPUT_CELL}px`;
+          cell.style.top = '2px';
           cell.classList.add('visible');
           cell.classList.toggle('current', i === count - 1);
         } else {
           cell.textContent = '';
           cell.style.left = '0px';
-          cell.classList.remove('visible');
-          cell.classList.remove('current');
+          cell.style.top = '2px';
+          cell.classList.remove('visible', 'current');
         }
       }
     }
@@ -1385,113 +2125,227 @@
   function renderArray(s) {
     const wires = computeWires(s);
     let h = '';
-    for (let r = 0; r < s.R; r++) {
+
+    if (s.dataflow === 'output-stationary') {
+      for (let r = 0; r < s.R; r++) {
+        for (let c = 0; c < s.C; c++) {
+          const p = s.pe[r][c];
+          const active = (p.regFeat !== 0 || p.regFilt !== 0 || p.regProd !== 0 || p.regAccu !== 0 || p.regShift !== 0) ? 'active' : '';
+          const pair = pairInfo(s, r, c);
+          const wave = pair ? 'wave' : '';
+          const note = pair
+            ? `Next matched pair:<br><strong>A[${r}][${pair.k}] = ${pair.a}</strong> and <strong>B[${pair.k}][${c}] = ${pair.b}</strong>`
+            : 'No matched A/B pair on the incoming wires';
+          const leftA = wires.feat[r][c] !== 0 ? `A:${wires.feat[r][c]}` : '';
+          const topB = wires.filt[r][c] !== 0 ? `B:${wires.filt[r][c]}` : '';
+          const leftS = wires.psum[r][c] !== 0 ? `S:${wires.psum[r][c]}` : '';
+          const shifting = s.phase === 'drain' || s.phase === 'done';
+          const shiftIncoming = wires.psum[r][c];
+          const shiftSource = c === 0 ? 'left boundary' : `PE(${r},${c-1})`;
+          const shiftNote = s.phase === 'done'
+            ? `Shift-out complete. <strong>reg_shift = ${p.regShift}</strong>.`
+            : `Next shift: <strong>${shiftIncoming}</strong> enters reg_shift from ${shiftSource}.`;
+
+          const fullShiftBody = `<div class="pe-title"><span>PE(${r},${c})</span><span class="muted">C[${r}][${c}]</span></div><div class="pair-note">${shiftNote}</div><div class="center-math shift-register-view"><div class="big-line"><span class="big-label">reg_shift</span><span class="big-value shift">${p.regShift}</span></div></div>`;
+          const minimalistShiftBody = `<div class="pe-title"><span>PE(${r},${c})</span><span class="muted">C[${r}][${c}]</span></div><div class="center-math shift-register-view"><div class="big-line"><span class="big-label">reg_shift</span><span class="big-value shift">${p.regShift}</span></div></div>`;
+
+          const registerPanel = s.architecture === 'pipelined'
+            ? `<div class="register-grid"><div class="register-column"><div class="big-line"><span class="big-label">reg_feat</span><span class="big-value feat">${p.regFeat}</span></div><div class="big-line"><span class="big-label">reg_filt</span><span class="big-value filt">${p.regFilt}</span></div></div><div class="register-column"><div class="big-line"><span class="big-label">reg_prod</span><span class="big-value prod">${p.regProd}</span></div><div class="big-line"><span class="big-label">reg_accu</span><span class="big-value accu">${p.regAccu}</span></div></div></div>`
+            : `<div class="register-grid non-pipelined-register-grid"><div class="register-column"><div class="big-line"><span class="big-label">reg_feat</span><span class="big-value feat">${p.regFeat}</span></div><div class="big-line"><span class="big-label">reg_filt</span><span class="big-value filt">${p.regFilt}</span></div></div><div class="register-column accumulator-only"><div class="big-line"><span class="big-label">reg_accu</span><span class="big-value accu">${p.regAccu}</span></div></div></div>`;
+          const computeBody = `<div class="pe-title"><span>PE(${r},${c})</span><span class="muted">C[${r}][${c}]</span></div>${minimalist ? '' : `<div class="pair-note ${pair ? '' : 'inactive'}">${note}</div>`}<div class="center-math">${registerPanel}</div>`;
+          const peBody = shifting ? (minimalist ? minimalistShiftBody : fullShiftBody) : computeBody;
+
+          h += `<div class="pe ${active} ${wave}" style="grid-row:${r+1};grid-column:${c+1}">${peBody}${maybeToken(leftA, 'left')}${maybeToken(topB, 'top')}${maybeToken(leftS, 'psum-left')}${c < s.C - 1 ? '<span class="wire-h"></span><span class="wire-h psum"></span>' : ''}${r < s.R - 1 ? '<span class="wire-v"></span>' : ''}</div>`;
+        }
+      }
+      ui.array.innerHTML = h;
+      return;
+    }
+
+    // Weight-stationary physical array: rows are k; columns are output columns c.
+    for (let k = 0; k < s.K; k++) {
       for (let c = 0; c < s.C; c++) {
-        const p = s.pe[r][c];
-        const pair = pairInfo(s, r, c);
-        const active = (p.regFeat !== 0 || p.regFilt !== 0 || p.regProd !== 0 || p.regAccu !== 0 || p.regShift !== 0) ? 'active' : '';
-        const wave = pair ? 'wave' : '';
-        const drainActive = (c === s.C - 1 && (s.phase === 'drain' || s.phase === 'done')) ? 'drain-active' : '';
-        const note = pair
-          ? `Next matched pair:<br><strong>A[${r}][${pair.k}] = ${pair.a}</strong> and <strong>B[${pair.k}][${c}] = ${pair.b}</strong>`
-          : `No matched A/B pair on the incoming wires for the currently prepared feed cycle.`;
+        const p = s.pe[k][c];
 
-        const leftA = wires.feat[r][c] !== 0 ? `A:${wires.feat[r][c]}` : '';
-        const topB = wires.filt[r][c] !== 0 ? `B:${wires.filt[r][c]}` : '';
-        const leftS = wires.psum[r][c] !== 0 ? `S:${wires.psum[r][c]}` : '';
-        const outS = (c === s.C - 1 && wires.psum[r][c+1] !== 0) ? `out:${wires.psum[r][c+1]}` : '';
+        // WS highlighting represents activity, not merely non-zero registers.
+        // During preload, the active region grows from the right edge as B
+        // shifts left. During compute, only PEs with a valid A/B pair for the
+        // currently prepared cycle are highlighted.
+        const preloadActive = s.phase === 'weight'
+          && s.weightT > 0
+          && c >= s.C - s.weightT;
+        // reg_feat holds the A value that reached this PE on the previous
+        // compute edge. Highlight the PE when that stored A value is a valid
+        // pair that will be multiplied by the stationary B weight.
+        // At computeT=0 (immediately after preload), no calculation is active,
+        // so the entire array returns to gray before A begins propagating.
+        const computeR = s.phase === 'compute'
+          ? s.computeT - 1 - k - c
+          : -1;
+        const computeActive = s.phase === 'compute'
+          && computeR >= 0
+          && computeR < s.R;
+        const wave = (preloadActive || computeActive) ? 'wave' : '';
 
-        const peBody = minimalist
-          ? `
-          <div class="pe-title"><span>PE(${r},${c})</span><span class="muted">C[${r}][${c}]</span></div>
-          <div class="center-math">
-            <div class="big-reg">
-              <div class="big-line"><span class="big-label">reg_prod</span><span class="big-value prod">${p.regProd}</span></div>
-              <div class="big-line"><span class="big-label">reg_accu</span><span class="big-value accu">${p.regAccu}</span></div>
-            </div>
-          </div>`
-          : `
-          <div class="pe-title"><span>PE(${r},${c})</span><span class="muted">C[${r}][${c}]</span></div>
-          <div class="pair-note ${pair ? '' : 'inactive'}">${note}</div>
-          <div class="center-math">
-            <div class="big-reg">
-              <div class="big-line"><span class="big-label">reg_prod</span><span class="big-value prod">${p.regProd}</span></div>
-              <div class="big-line"><span class="big-label">reg_accu</span><span class="big-value accu">${p.regAccu}</span></div>
-            </div>
-          </div>
-          <div class="pe-stage">
-            <span class="feat">reg_feat</span><span class="v feat">${p.regFeat}</span>
-            <span class="filt">reg_filt</span><span class="v filt">${p.regFilt}</span>
-            <span class="shift">reg_shift</span><span class="v shift">${p.regShift}</span>
-          </div>`;
+        const aWire = (s.phase === 'compute' || s.phase === 'done') && wires.feat[k][c] !== 0
+          ? `A:${wires.feat[k][c]}`
+          : '';
+        const psumWire = (s.phase === 'compute' || s.phase === 'done') && wires.psumDown[k][c] !== 0
+          ? `S:${wires.psumDown[k][c]}`
+          : '';
 
-        h += `<div class="pe ${active} ${wave} ${drainActive}" style="grid-row:${r+1};grid-column:${c+1}">
-          ${peBody}
-          ${maybeToken(leftA, 'left')}
-          ${maybeToken(topB, 'top')}
-          ${maybeToken(leftS, 'psum-left')}
-          ${c < s.C - 1 ? `<span class="wire-h"></span><span class="wire-h psum"></span>` : ''}
-          ${r < s.R - 1 ? `<span class="wire-v"></span>` : ''}
-          ${outS ? `<span class="token psum-right ${(s.phase === 'drain' || s.phase === 'done') ? 'drain-pop' : ''}">${outS}</span>` : ''}
-        </div>`;
+        let note;
+        if (s.phase === 'weight') {
+          const sourceC = s.weightT;
+          if (s.weightT < s.C) {
+            note = c === s.C - 1
+              ? `Next preload from right: <strong>B[${k}][${sourceC}] = ${s.B[k][sourceC]}</strong>`
+              : `B preload shifts left; <strong>reg_filt = ${p.regFilt}</strong>`;
+          } else {
+            note = `Stationary weight loaded: <strong>B[${k}][${c}] = ${p.regFilt}</strong>`;
+          }
+        } else if (s.phase === 'compute') {
+          const r = computeR;
+
+          note = computeActive
+            ? `Next matched pair:<br><strong>A[${r}][${k}] = ${s.A[r][k]}</strong> and <strong>B[${k}][${c}] = ${s.B[k][c]}</strong>`
+            : 'No matched A/B pair on the incoming wires';
+        } else if (s.phase === 'done') {
+          note = `Computation complete; <strong>B[${k}][${c}] = ${p.regFilt}</strong> remains stationary`;
+        } else {
+          note = `Weight location <strong>B[${k}][${c}]</strong>`;
+        }
+
+        const registerPanel = s.architecture === 'pipelined'
+          ? `<div class="register-grid"><div class="register-column"><div class="big-line"><span class="big-label">reg_feat</span><span class="big-value feat">${p.regFeat}</span></div><div class="big-line"><span class="big-label">reg_filt</span><span class="big-value filt">${p.regFilt}</span></div></div><div class="register-column"><div class="big-line"><span class="big-label">reg_prod</span><span class="big-value prod">${p.regProd}</span></div><div class="big-line"><span class="big-label">reg_accu</span><span class="big-value accu">${p.regAccu}</span></div></div></div>`
+          : `<div class="register-grid non-pipelined-register-grid"><div class="register-column"><div class="big-line"><span class="big-label">reg_feat</span><span class="big-value feat">${p.regFeat}</span></div><div class="big-line"><span class="big-label">reg_filt</span><span class="big-value filt">${p.regFilt}</span></div></div><div class="register-column accumulator-only"><div class="big-line"><span class="big-label">reg_accu</span><span class="big-value accu">${p.regAccu}</span></div></div></div>`;
+
+        const body = `<div class="pe-title"><span>PE(${k},${c})</span><span class="muted">B[${k}][${c}]</span></div>${minimalist ? '' : `<div class="pair-note">${note}</div>`}<div class="center-math">${registerPanel}</div>`;
+
+        // Purple B path is permanently present and points right-to-left.
+        // During preload, show even zero-valued B weights on the inter-PE links.
+        const rightNeighborValid = s.phase === 'weight'
+          && c < s.C - 1
+          && (c + 1) >= (s.C - s.weightT);
+        const weightWireValue = rightNeighborValid
+          ? `B:${s.pe[k][c+1].regFilt}`
+          : '';
+
+        const horizontalWires = c < s.C - 1
+          ? '<span class="wire-h feat-wire"></span><span class="wire-h weight"></span>'
+          : '';
+        const verticalPsumWire = k < s.K - 1
+          ? '<span class="wire-v psum"></span>'
+          : '';
+
+        h += `<div class="pe ${wave}" style="grid-row:${k+1};grid-column:${c+1}">${body}${maybeToken(aWire, 'left')}${maybeToken(psumWire, 'psum-top')}${maybeToken(weightWireValue, 'weight-right')}${horizontalWires}${verticalPsumWire}</div>`;
       }
     }
     ui.array.innerHTML = h;
   }
 
   function renderTimeline(s) {
-    const totalFeed = s.K + s.R + s.C;
-    const prep = currentPrepT(s);
+    if (s.dataflow === 'output-stationary') {
+      const totalFeed = totalOSFeedCycles(s);
+      const prep = currentPrepT(s);
+      ui.timingDescription.innerHTML = `During feed cycle <code>t</code>: row <code>r</code> carries <code>A[r][t-r]</code> for <code>r ≤ t &lt; r+K</code>; column <code>c</code> carries <code>B[t-c][c]</code> for <code>c ≤ t &lt; c+K</code>. The highlighted row is the currently prepared feed cycle.`;
 
-    let a = '<div class="timing-table-group"><div class="timing-table-title feat">A input schedule</div>';
-    a += '<table><thead><tr><th>t</th>';
-    for (let r = 0; r < s.R; r++) a += `<th>row ${r}</th>`;
+      let a = '<div class="timing-table-group"><div class="timing-table-title feat">A input schedule</div><table><thead><tr><th>t</th>';
+      for (let r = 0; r < s.R; r++) a += `<th>row ${r}</th>`;
+      a += '</tr></thead><tbody>';
+      for (let t = 0; t < totalFeed; t++) {
+        a += `<tr class="${prep === t ? 'current' : ''}"><th>${t}</th>`;
+        for (let r = 0; r < s.R; r++) a += `<td>${(t >= r && t < r + s.K) ? s.A[r][t-r] : '–'}</td>`;
+        a += '</tr>';
+      }
+      a += '</tbody></table></div>';
+
+      let b = '<div class="timing-table-group"><div class="timing-table-title filt">B input schedule</div><table><thead><tr><th>t</th>';
+      for (let c = 0; c < s.C; c++) b += `<th>col ${c}</th>`;
+      b += '</tr></thead><tbody>';
+      for (let t = 0; t < totalFeed; t++) {
+        b += `<tr class="${prep === t ? 'current' : ''}"><th>${t}</th>`;
+        for (let c = 0; c < s.C; c++) b += `<td>${(t >= c && t < c + s.K) ? s.B[t-c][c] : '–'}</td>`;
+        b += '</tr>';
+      }
+      b += '</tbody></table></div>';
+      ui.timeline.innerHTML = a + b;
+      return;
+    }
+
+    const computeTotal = totalWSComputeCycles(s);
+    const computePrep = s.phase === 'compute' ? s.computeT : null;
+
+    ui.timingDescription.innerHTML = `The PE array has the same <code>K × COLS</code> shape as B. During preload, B column <code>c</code> enters from the right in parallel across all K rows; column 0 enters first, and existing weights shift one PE to the left each edge. During Aᵀ feed cycle <code>t</code>, physical row <code>k</code> carries <code>Aᵀ[k][t-k] = A[t-k][k]</code> when <code>0 ≤ t-k &lt; ROWS</code>. Aᵀ moves left-to-right while partial sums move downward.`;
+
+    let b = '<div class="timing-table-group"><div class="timing-table-title filt">B right-to-left preload schedule</div><table><thead><tr><th>t</th><th>B column</th><th>parallel values</th></tr></thead><tbody>';
+    for (let c = 0; c < s.C; c++) {
+      b += `<tr class="${s.phase === 'weight' && s.weightT === c ? 'current' : ''}"><th>${c}</th><td>B[:,${c}]</td><td>[${s.B.map(row => row[c]).join(', ')}]</td></tr>`;
+    }
+    b += '</tbody></table></div>';
+
+    let a = '<div class="timing-table-group"><div class="timing-table-title feat">Aᵀ left-to-right launch schedule</div><table><thead><tr><th>t</th>';
+    for (let k = 0; k < s.K; k++) a += `<th>k${k}</th>`;
     a += '</tr></thead><tbody>';
-    for (let t = 0; t < totalFeed; t++) {
-      const current = prep === t ? 'current' : '';
-      a += `<tr class="${current}"><th>${t}</th>`;
-      for (let r = 0; r < s.R; r++) {
-        a += `<td>${(t >= r && t < r + s.K) ? s.A[r][t-r] : '–'}</td>`;
+
+    for (let t = 0; t < computeTotal; t++) {
+      a += `<tr class="${computePrep === t ? 'current' : ''}"><th>${t}</th>`;
+      for (let k = 0; k < s.K; k++) {
+        const r = t - k;
+        a += `<td>${r >= 0 && r < s.R ? s.A[r][k] : '–'}</td>`;
       }
       a += '</tr>';
     }
     a += '</tbody></table></div>';
 
-    let b = '<div class="timing-table-group"><div class="timing-table-title filt">B input schedule</div>';
-    b += '<table><thead><tr><th>t</th>';
-    for (let c = 0; c < s.C; c++) b += `<th>col ${c}</th>`;
-    b += '</tr></thead><tbody>';
-    for (let t = 0; t < totalFeed; t++) {
-      const current = prep === t ? 'current' : '';
-      b += `<tr class="${current}"><th>${t}</th>`;
-      for (let c = 0; c < s.C; c++) {
-        b += `<td>${(t >= c && t < c + s.K) ? s.B[t-c][c] : '–'}</td>`;
-      }
-      b += '</tr>';
-    }
-    b += '</tbody></table></div>';
-
-    ui.timeline.innerHTML = a + b;
+    ui.timeline.innerHTML = b + a;
   }
 
   function render() {
     if (!sim) return;
     const s = sim;
-    ui.edgeKpi.textContent = s.edges;
-    ui.feedKpi.textContent = currentPrepT(s) == null ? '—' : currentPrepT(s);
-    ui.drainKpi.textContent = s.phase === 'drain' ? s.drainD : '—';
-    ui.feedLenKpi.textContent = s.K + s.R + s.C;
+
+    ui.miniCycle.textContent = s.edges;
+    if (s.dataflow === 'output-stationary') {
+      if (s.phase === 'clear' || s.phase === 'feed') {
+        ui.miniPhaseLabel.textContent = 'Feed cycle t';
+        ui.miniPhaseValue.textContent = s.phase === 'feed' ? s.feedT : '—';
+      } else {
+        ui.miniPhaseLabel.textContent = 'Drain cycle d';
+        ui.miniPhaseValue.textContent = (s.phase === 'drain' || s.phase === 'done') ? s.drainD : '—';
+      }
+    } else if (s.phase === 'weight') {
+      ui.miniPhaseLabel.textContent = 'B preload c';
+      ui.miniPhaseValue.textContent = s.weightT;
+    } else {
+      ui.miniPhaseLabel.textContent = 'A feed cycle t';
+      ui.miniPhaseValue.textContent = s.phase === 'done' ? Math.max(0, s.computeT - 1) : (s.phase === 'compute' ? s.computeT : '—');
+    }
 
     const ctrl = s.lastControls;
+    const controlText = s.dataflow === 'output-stationary'
+      ? `pipeline_en=${ctrl.pipelineEn}, pipeline_clr=${ctrl.pipelineClr}, accu_clr=${ctrl.accuClr}, shift_load=${ctrl.shiftLoad}, shift_en=${ctrl.shiftEn}`
+      : `weight_load=${ctrl.weightLoad}, compute_en=${ctrl.computeEn}, PE=${s.architecture}`;
     ui.heroMessage.innerHTML = `
       <span class="phase-badge">${phaseText(s)}</span>
       ${s.note}
-      <span class="controls">pipeline_en=${ctrl.pipelineEn}, pipeline_clr=${ctrl.pipelineClr}, accu_clr=${ctrl.accuClr}, shift_load=${ctrl.shiftLoad}, shift_en=${ctrl.shiftEn}</span>`;
+      <span class="controls">${controlText}</span>`;
 
     renderArray(s);
     syncLaunchGeometry(s);
     updateFeedPanels(s);
-    ui.expectedC.innerHTML = matrixTable(s.expected, 'expected', currentOutputCol(s));
+
+    const wsExpectedHotCells = s.dataflow === 'weight-stationary'
+      ? new Set((s.currentOutputs || []).map(o => `${o.r},${o.c}`))
+      : null;
+
+    ui.expectedC.innerHTML = matrixTable(
+      s.expected,
+      'expected',
+      s.dataflow === 'output-stationary' ? currentOutputCol(s) : null,
+      wsExpectedHotCells
+    );
+
     updateOutputReconstruction(s);
     renderTimeline(s);
 
@@ -1501,7 +2355,7 @@
       for (let r = 0; r < s.R; r++) for (let c = 0; c < s.C; c++) if (s.observed[r][c] !== s.expected[r][c]) ok = false;
       ui.compareMsg.innerHTML = ok ? '<span class="good">Reconstructed output matches the expected matrix.</span>' : '<span style="color:#b91c1c;">Reconstructed output differs from the expected matrix.</span>';
     } else {
-      ui.compareMsg.textContent = `${filled}/${s.R * s.C} output elements shifted into the reconstruction window so far.`;
+      ui.compareMsg.textContent = s.dataflow === 'weight-stationary' ? `${filled}/${s.R * s.C} staggered output elements observed so far.` : `${filled}/${s.R * s.C} output elements shifted into the reconstruction window so far.`;
     }
 
     ui.stepBtn.disabled = s.complete;
@@ -1513,7 +2367,6 @@
     minimalist = !minimalist;
     ui.minimalistBtn.classList.toggle('active', minimalist);
     ui.minimalistBtn.setAttribute('aria-pressed', minimalist ? 'true' : 'false');
-    ui.minimalistBtn.textContent = minimalist ? 'Minimalist: On' : 'Minimalist: Off';
 
     if (sim) {
       buildStage(sim);
@@ -1521,30 +2374,46 @@
     }
   }
 
-  function applyFromInputs() {
+  function refreshFromConfiguration({silent = false} = {}) {
     try {
       const R = Math.max(1, Math.min(MAX_ROWS_COLS, Number(ui.rows.value) | 0));
       const K = Math.max(1, Math.min(MAX_K, Number(ui.k.value) | 0));
       const C = Math.max(1, Math.min(MAX_ROWS_COLS, Number(ui.cols.value) | 0));
-      ui.rows.value = R; ui.k.value = K; ui.cols.value = C;
+
+      if (!R || !K || !C) return;
+
+      ui.rows.value = R;
+      ui.k.value = K;
+      ui.cols.value = C;
+
       const A = collectMatrix(ui.matA, R, K, 'A');
       const B = collectMatrix(ui.matB, K, C, 'B');
+
       sim = makeSim(A, B, R, K, C);
       history = [];
       buildStage(sim);
       ui.error.textContent = '';
       render();
     } catch (e) {
-      ui.error.textContent = e.message;
+      if (!silent) ui.error.textContent = e.message;
     }
   }
 
   function resetSim() {
-    if (!sim) return applyFromInputs();
+    if (!sim) return refreshFromConfiguration();
     sim = makeSim(sim.A.map(r => r.slice()), sim.B.map(r => r.slice()), sim.R, sim.K, sim.C);
     history = [];
     buildStage(sim);
     render();
+  }
+
+  let configRefreshTimer = null;
+
+  function scheduleLiveRefresh() {
+    if (configRefreshTimer) clearTimeout(configRefreshTimer);
+    configRefreshTimer = setTimeout(() => {
+      refreshFromConfiguration({silent: true});
+    }, 120);
   }
 
   function loadKnown() {
@@ -1566,17 +2435,47 @@
 
     buildMatrixEditor(ui.matA, 4, 3, knownA, 'A');
     buildMatrixEditor(ui.matB, 3, 4, knownB, 'B');
-    applyFromInputs();
+    refreshFromConfiguration();
   }
 
-  ui.rows.addEventListener('change', resizeMatrixEditors);
-  ui.k.addEventListener('change', resizeMatrixEditors);
-  ui.cols.addEventListener('change', resizeMatrixEditors);
+  ui.rows.addEventListener('input', resizeMatrixEditors);
+  ui.k.addEventListener('input', resizeMatrixEditors);
+  ui.cols.addEventListener('input', resizeMatrixEditors);
+
+  ui.matA.addEventListener('input', (event) => {
+    if (event.target.matches('input.matrix-value')) scheduleLiveRefresh();
+  });
+  ui.matB.addEventListener('input', (event) => {
+    if (event.target.matches('input.matrix-value')) scheduleLiveRefresh();
+  });
+
+  ui.pipelinedRadio.addEventListener('change', () => {
+    if (!ui.pipelinedRadio.checked) return;
+    pipelineMode = 'pipelined';
+    refreshFromConfiguration();
+  });
+
+  ui.nonPipelinedRadio.addEventListener('change', () => {
+    if (!ui.nonPipelinedRadio.checked) return;
+    pipelineMode = 'non-pipelined';
+    refreshFromConfiguration();
+  });
+
+  ui.outputStationaryRadio.addEventListener('change', () => {
+    if (!ui.outputStationaryRadio.checked) return;
+    dataflowMode = 'output-stationary';
+    refreshFromConfiguration();
+  });
+
+  ui.weightStationaryRadio.addEventListener('change', () => {
+    if (!ui.weightStationaryRadio.checked) return;
+    dataflowMode = 'weight-stationary';
+    refreshFromConfiguration();
+  });
 
   ui.minimalistBtn.addEventListener('click', toggleMinimalist);
   ui.stepBtn.addEventListener('click', step);
   ui.undoBtn.addEventListener('click', undoStep);
-  ui.applyBtn.addEventListener('click', applyFromInputs);
   ui.resetBtn.addEventListener('click', resetSim);
   ui.knownBtn.addEventListener('click', loadKnown);
 
