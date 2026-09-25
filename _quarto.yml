@@ -9,6 +9,7 @@ project:
     - cp static_apps/ASM_simulatEEE.html _site/
     - cp static_apps/RV32I_encoding_simulator.html _site/
     - cp static_apps/systolic_array_simulator.html _site/
+    - cp static_apps/address_generator_simulator.html _site/
     - cp -r static_apps/ripes _site/
   resources:
     - "googleba81d2991a90411e.html"
@@ -22,28 +23,61 @@ website:
     left:
       - href: index.qmd
         text: Home
+      - text: Crash Courses
+        menu:
+          - href: pages/verilogCrashCourse/index.qmd
+            text: Verilog Crash Course
+      - text: Lab Exercises
+        menu:
+          - href: verilog
+            text: Verilog IDE
+          - href: exercises
+            text: Verilog Labs
+          - href: pages/logicLabs/index.qmd
+            text: Logic Labs
+      - text: Simulators
+        menu:
+          - href: kmapgameee
+            text: kmap-gamEEE
+          - href: FSM_simulatEEE.html
+            text: FSM_simulatEEE
+          - href: ASM_simulatEEE.html
+            text: ASM_simulatEEE
+          - href: ripes/
+            text: RIPES
+          - href: RV32I_encoding_simulator.html
+            text: RV32I Encoding Simulator
+          - href: systolic_array_simulator.html
+            text: Systolic Array Simulator
+          - href: address_generator_simulator.html
+            text: Address Generator for Systolic Arrays
       - href: contributing.qmd
         text: Contribute
-      - href: verilog
-        text: Verilog IDE
-      - href: exercises
-        text: Verilog Labs
-      - href: pages/verilogCrashCourse/index.qmd
-        text: Verilog Crash Course
-      - href: pages/logicLabs/index.qmd
-        text: Logic Labs
-      - href: kmapgameee
-        text: kmap-gamEEE
-      - href: FSM_simulatEEE.html
-        text: FSMsimulatEEE
-      - href: RV32I_encoding_simulator.html
-        text: RV32I Encoding Simulator
-      - href: ripes/
-        text: Ripes
-      - href: systolic_array_simulator.html
-        text: Systolic Array Simulator
 
   sidebar:
+    - id: intro-computing
+      title: "How Computers Work"
+      style: floating
+      collapse-level: 1
+      contents:
+        - href: pages/introEEEComputing/index.qmd
+          text: Overview
+        - href: pages/introEEEComputing/01-number-systems.qmd
+          text: "1. Number Systems"
+        - href: pages/introEEEComputing/02-logic-and-boolean-algebra.qmd
+          text: "2. Logic and Boolean Algebra"
+        - href: pages/introEEEComputing/03-binary-arithmetic.qmd
+          text: "3. Binary Arithmetic"
+        - href: pages/introEEEComputing/04-routing-and-logic-blocks.qmd
+          text: "4. Routing and Logic Blocks"
+        - href: pages/introEEEComputing/05-memory-and-registers.qmd
+          text: "5. Memory and Registers"
+        - href: pages/introEEEComputing/06-building-a-processor.qmd
+          text: "6. Building a Processor"
+        - href: pages/introEEEComputing/07-programs-and-algorithms.qmd
+          text: "7. Programs and Algorithms"
+        - href: pages/introEEEComputing/08-computer-systems.qmd
+          text: "8. Computer Systems"
     - id: digital-design-crash-course
       title: "Digital Design Crash Course"
       style: floating
