@@ -10,6 +10,7 @@ project:
     - cp static_apps/RV32I_encoding_simulator.html _site/
     - cp static_apps/systolic_array_simulator.html _site/
     - cp static_apps/address_generator_simulator.html _site/
+    - cp static_apps/cache_simulator.html _site/
     - cp -r static_apps/ripes _site/
   resources:
     - "googleba81d2991a90411e.html"
@@ -51,6 +52,8 @@ website:
             text: Systolic Array Simulator
           - href: address_generator_simulator.html
             text: Address Generator for Systolic Arrays
+          - href: cache_simulator.html
+            text: Cache Memory Simulator
       - href: contributing.qmd
         text: Contribute
 

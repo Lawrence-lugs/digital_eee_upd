@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cache Memory Simulator</title>
+<style>
+  :root{
+    --up-maroon:#7b1113;
+    --up-maroon-dark:#5d0d0f;
+    --ink:#17212b;
+    --muted:#667085;
+    --line:#d6dde5;
+    --panel:#ffffff;
+    --page:#f3f5f7;
+    --good:#466a58;
+    --good-bg:#f0f6f2;
+    --bad:#8a4a50;
+    --bad-bg:#faf1f2;
+    --warn:#79673e;
+    --warn-bg:#faf6ea;
+    --tag:#e7e1ef;
+    --tag-strong:#756585;
+    --index:#e2eee8;
+    --index-strong:#5d7d6d;
+    --offset:#f4ecd7;
+    --offset-strong:#8a744b;
+    --neutral:#edf1f4;
+    --neutral-strong:#59636e;
+    --shadow:0 10px 28px rgba(28,39,49,.07);
+  }
+  *{box-sizing:border-box}
+  html{color-scheme:light}
+  body{margin:0;background:var(--page);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  button,input,select,textarea{font:inherit}
+  button{cursor:pointer}
+  header{background:linear-gradient(135deg,var(--up-maroon),var(--up-maroon-dark));color:#fff;padding:17px 22px 18px}
+  header .wrap,main{max-width:1500px;margin:0 auto}
+  h1{margin:0 0 5px;font-size:clamp(1.6rem,2.8vw,2.3rem);line-height:1.06}
+  header p{margin:0;max-width:none;color:#f5e8e8;line-height:1.38}
+  .banner-subtitle{font-size:1rem}
+  .banner-mainline{white-space:nowrap}
+  .banner-course{display:block;margin-top:2px}
+  .banner-credit{display:block;margin-top:7px;font-size:.76rem;color:#ead7d8}
+  main{padding:22px 18px 50px}
+  .layout{display:grid;grid-template-columns:minmax(315px,390px) minmax(0,1fr);gap:18px;align-items:start}
+  .stack{display:grid;gap:18px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+  .section{padding:20px 22px;border-top:1px solid #e7ebef}
+  .section:first-child{border-top:none}
+  .section h2{margin:0 0 6px;font-size:1.18rem}
+  .section-lead{margin:0 0 15px;color:var(--muted);line-height:1.52;font-size:.9rem}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .field.full{grid-column:1/-1}
+  label{display:block;font-weight:800;margin-bottom:7px;font-size:.84rem}
+  input[type=text],input[type=number],select,textarea{width:100%;min-width:0;border:1px solid #bfc7d1;background:#fff;border-radius:9px;padding:10px 11px;color:#16202a;outline:none}
+  input[type=text],input[type=number],textarea{font:650 .92rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  input:focus,select:focus,textarea:focus{border-color:var(--up-maroon);box-shadow:0 0 0 3px rgba(123,17,19,.12)}
+  textarea{min-height:140px;resize:vertical;line-height:1.45}
+  .hint{margin-top:7px;color:var(--muted);font-size:.8rem;line-height:1.45}
+  .message{margin-top:11px;border-radius:9px;padding:10px 12px;line-height:1.4;display:none;font-size:.84rem}
+  .message.error{display:block;color:var(--bad);background:var(--bad-bg);border:1px solid #e3cdd0}
+  .message.ok{display:block;color:var(--good);background:var(--good-bg);border:1px solid #d0dfd5}
+  .message.warn{display:block;color:var(--warn);background:var(--warn-bg);border:1px solid #e7dbaa}
+  .primary{border:0;border-radius:9px;padding:10px 15px;background:var(--up-maroon);color:#fff;font-weight:850}
+  .primary:hover{background:var(--up-maroon-dark)}
+  .secondary{border:1px solid #c7ced7;border-radius:9px;padding:9px 12px;background:#fff;color:var(--ink);font-weight:750}
+  .secondary:hover{background:#f6f8fa}
+  .danger{border:1px solid #ddc8ca;border-radius:9px;padding:9px 12px;background:#fff7f7;color:#85383d;font-weight:800}
+  button:disabled{cursor:not-allowed;opacity:.42}
+  .button-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
+  .button-row .spacer{flex:1 1 auto}
+  .generator-details{margin-top:13px;border:1px solid #d9dfe5;border-radius:10px;background:#fbfcfd;overflow:hidden}
+  .generator-details summary{cursor:pointer;padding:10px 12px;font-weight:850;font-size:.84rem;color:#3f4a55;user-select:none}
+  .generator-details[open] summary{border-bottom:1px solid #e2e6ea}
+  .generator-body{padding:11px 12px 12px}
+  .random-grid{display:grid;grid-template-columns:86px 1fr;gap:9px;align-items:end}
+  .left-stack{align-self:stretch;align-content:start}
+  .access-panel{position:sticky;top:18px;z-index:4}
+  .access-editor-wrap{position:relative;height:225px;border:1px solid #bfc7d1;border-radius:9px;background:#fff;overflow:hidden}
+  .access-editor-wrap:focus-within{border-color:var(--up-maroon);box-shadow:0 0 0 3px rgba(123,17,19,.12)}
+  .access-backdrop,.access-input{position:absolute;inset:0;width:100%;height:100%;margin:0;padding:10px 11px;border:0;border-radius:0;overflow:auto;white-space:pre;tab-size:2;font:650 1.06rem/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .access-backdrop{z-index:0;pointer-events:none;background:#fff;color:transparent;scrollbar-width:none}
+  .access-backdrop::-webkit-scrollbar{display:none}
+  .access-input{z-index:1;resize:none;background:transparent!important;color:#16202a;caret-color:#16202a;outline:none!important;box-shadow:none!important}
+  .access-backdrop .access-line{display:block;min-height:1.5em;margin:0 -11px;padding:0 11px}
+  .access-backdrop .access-line.done{background:#f7f8f9}
+  .access-backdrop .access-line.next{box-shadow:inset 3px 0 0 #b1b8c0}
+  .access-backdrop .access-line.current{background:#fff0c7;box-shadow:inset 4px 0 0 var(--up-maroon)}
+  .access-backdrop .access-line.invalid{background:#fae8ea;box-shadow:inset 4px 0 0 var(--bad)}
+  .geometry{display:grid;grid-template-columns:repeat(6,minmax(86px,1fr));gap:9px;margin-bottom:14px}
+  .metric{border:1px solid #dfe4e9;border-radius:10px;padding:10px 11px;background:#fbfcfd;min-width:0}
+  .metric strong{display:block;font-size:1.08rem;overflow-wrap:anywhere}
+  .metric span{display:block;margin-top:2px;color:var(--muted);font-size:.7rem}
+  .partition-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 16px;color:#4e5964;font-size:.8rem;margin:8px 0 9px}
+  .legend-item{display:inline-flex;align-items:center;gap:6px}
+  .swatch{width:11px;height:11px;border-radius:3px}
+  .swatch.tag{background:var(--tag-strong)} .swatch.index{background:var(--index-strong)} .swatch.offset{background:var(--offset-strong)}
+  .bit-index-row,.bit-value-row{display:flex;min-width:max-content}
+  .bit-scroll{overflow-x:auto;padding:2px 0 5px}
+  .address-panel .bit-scroll{width:max-content;max-width:100%;margin-inline:auto}
+  .bit-index{width:36px;flex:0 0 36px;text-align:center;color:#737d87;font:750 .73rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding-bottom:3px}
+  .bit-cell{width:36px;flex:0 0 36px;min-height:45px;display:flex;align-items:center;justify-content:center;border-top:1px solid #aab2ba;border-bottom:1px solid #aab2ba;border-right:1px solid rgba(95,106,118,.22);font:950 1.22rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .bit-cell:first-child{border-left:1px solid #9fa9b4;border-radius:7px 0 0 7px}.bit-cell:last-child{border-radius:0 7px 7px 0}
+  .bit-cell.tag{background:var(--tag);color:#5e526b}.bit-cell.index{background:var(--index);color:#496858}.bit-cell.offset{background:var(--offset);color:#775f35}
+  .field-bar{display:flex;margin-top:8px;border:1px solid #929eaa;border-radius:8px;overflow:hidden;min-height:62px}
+  .field-segment{min-width:0;padding:7px 5px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-right:1px solid #929eaa}
+  .field-segment:last-child{border-right:0}.field-segment.tag{background:var(--tag)}.field-segment.index{background:var(--index)}.field-segment.offset{background:var(--offset)}
+  .field-segment .name{font-size:.78rem;font-weight:900}.field-segment .bits{font:.72rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#59636e;margin-top:2px}.field-segment.zero{flex:.7 0 0;background:#f1f3f5;color:#717b85}
+  .current-grid{display:grid;grid-template-columns:minmax(220px,.8fr) minmax(330px,1.2fr);gap:12px;margin-top:14px}
+  .subpanel{border:1px solid #dde3e8;border-radius:12px;padding:14px;min-width:0;background:#fbfcfd}
+  .subpanel h3{margin:0 0 8px;font-size:.98rem}
+  .address-panel .section{padding-top:18px;padding-bottom:16px}
+  .address-panel .section-lead{margin-bottom:10px}
+  .address-panel .geometry{margin-bottom:8px}
+  .address-panel .metric{padding:8px 10px}
+  .address-panel .partition-legend{margin:6px 0 7px}
+  .address-panel .bit-scroll{padding-bottom:2px}
+  .address-panel .current-grid{margin-top:9px;gap:10px}
+  .address-panel .subpanel{padding:9px 12px}
+  .address-panel .subpanel h3{margin-bottom:4px;font-size:.94rem}
+  .address-panel .big-result{font-size:1.16rem;margin-bottom:3px}
+  .address-panel .kv{font-size:.82rem;line-height:1.34;gap:3px 8px}
+  .current-access-panel{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto 1fr;column-gap:16px;align-items:stretch}
+  .current-access-panel h3{grid-column:1/-1}
+  .current-access-panel .current-address{grid-column:1/-1;font:950 1.62rem/1.14 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--up-maroon);letter-spacing:.01em;margin:0 0 5px;white-space:nowrap}
+  .current-access-panel .current-address .decimal{font-size:.68em;font-weight:750;color:#59636e}
+  .current-access-panel .kv{grid-column:1;grid-row:2;grid-template-columns:82px minmax(0,1fr);font-size:.86rem;font-weight:700;align-content:center}
+  .current-access-panel #currentResult{grid-column:2;grid-row:2;align-self:center;justify-self:end;min-width:72px;text-align:right;font-size:1.98rem;line-height:1.02;font-weight:950;margin:0;padding:0;background:transparent;color:#68727d;white-space:nowrap}
+  .current-access-panel #currentResult.hit{color:#315f49;background:transparent}
+  .current-access-panel #currentResult.miss{color:#884248;background:transparent}
+  .big-result{font-size:1.25rem;font-weight:950;margin-bottom:8px}.big-result.hit{color:#35614d}.big-result.miss{color:#8a4348}
+  .kv{display:grid;grid-template-columns:114px minmax(0,1fr);gap:5px 10px;font-size:.8rem;line-height:1.45}.kv .k{color:var(--muted)}.kv .v{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;overflow-wrap:anywhere}
+  .summary-row{display:grid;grid-template-columns:repeat(5,minmax(90px,1fr));gap:9px}.stat{border:1px solid #dfe4e9;border-radius:10px;padding:10px 11px;background:#fbfcfd}.stat strong{display:block;font-size:1.08rem}.stat span{color:var(--muted);font-size:.7rem}
+  .table-wrap{overflow:auto;border:1px solid #dfe4e9;border-radius:11px;background:#fff}
+  .cache-table-wrap{overflow-x:hidden}
+  table{width:100%;border-collapse:collapse;font-size:.78rem}th,td{padding:8px 9px;text-align:left;border-bottom:1px solid #edf0f3;white-space:nowrap;vertical-align:middle}th{position:sticky;top:0;z-index:2;background:#f5f7f9;color:#4f5a65;font-size:.69rem;text-transform:uppercase;letter-spacing:.035em}tr:last-child td{border-bottom:0}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .empty{color:#9099a3;font-style:italic}
+  .cache-table{table-layout:fixed;width:100%;min-width:0;font-size:.94rem}
+  .cache-table th,.cache-table td{overflow:hidden;text-overflow:ellipsis;padding:8px 6px}
+  .cache-table th{white-space:normal;line-height:1.15;overflow-wrap:anywhere;font-size:.82rem}
+  .cache-table th:nth-child(8),.cache-table th:nth-child(9){white-space:nowrap;overflow-wrap:normal}
+  .cache-table td:nth-child(7){overflow:visible;white-space:normal}
+  .cache-table td:nth-child(10){white-space:normal;line-height:1.2;font-size:.9rem}
+  .cache-table td:nth-child(5),.cache-table td:nth-child(6){font-size:.87rem}
+  .cache-table td:nth-child(1),.cache-table td:nth-child(2),.cache-table td:nth-child(3),.cache-table td:nth-child(4),.cache-table td:nth-child(8),.cache-table td:nth-child(9){font-size:.93rem;font-weight:650}
+  .cache-row.current-line td{background:#fff8e8}
+  .cache-row.current-line td:first-child{box-shadow:inset 3px 0 0 rgba(123,17,19,.55)}.cache-row.victim-line td:first-child{box-shadow:inset 3px 0 0 #d6a535}
+  .cache-row.current-line.victim-line td:first-child{box-shadow:inset 3px 0 0 rgba(123,17,19,.55),inset 6px 0 0 #d6a535}
+  .data-bytes{display:grid;gap:4px;min-width:0;max-width:none;justify-content:start}.data-byte-row{display:grid;gap:3px;min-width:0;height:27px;align-items:stretch}.byte{min-width:0;height:27px;padding:0 5px;border-radius:5px;background:#eef2f4;text-align:center;display:flex;align-items:center;justify-content:center;font:780 .9rem/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.byte.active{background:#f5dfaa;outline:1px solid #d8b45f}
+  .status-text{font-size:.9rem;color:#65707b}
+  .pill{display:inline-flex;align-items:center;justify-content:center;min-width:46px;padding:3px 7px;border-radius:999px;font-size:.67rem;font-weight:900}.pill.hit{background:var(--good-bg);color:var(--good)}.pill.miss{background:var(--bad-bg);color:var(--bad)}.pill.read{background:#ebf1f5;color:#526d80}.pill.write{background:#efe8f4;color:#6f5b7d}
+  .memory-toolbar{display:grid;grid-template-columns:minmax(150px,1fr) auto auto auto auto;gap:8px;align-items:end;margin-bottom:11px}.memory-toolbar label{margin-bottom:5px}
+  .soft-blue{border:1px solid #bfd0df;border-radius:9px;padding:9px 12px;background:#eaf3f9;color:#365b73;font-weight:800}.soft-blue:hover{background:#dfeef7}
+  .memory-table th.byte-head{text-align:center;min-width:48px}.memory-table tbody td:first-child{font-size:.87rem}.memory-table td.mem-byte{text-align:center;padding:5px}.memory-table input{width:44px;text-align:center;padding:6px 3px;border:1px solid #d2d8df;border-radius:6px;font:750 .72rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;text-transform:uppercase}.memory-table tr.source-block td{background:#fff8e8}.memory-table tr.source-block td:first-child{box-shadow:inset 4px 0 0 #c6952c}.memory-table input.active-byte{background:#fff0c7;border-color:#c99f44}
+  .memory-note{margin-top:9px;color:#66717c;font-size:.8rem;line-height:1.45}
+  @keyframes cacheFlashHit{0%{background:#315f49;color:#fff}100%{background:#fff8e8;color:inherit}}
+  @keyframes cacheFlashMiss{0%{background:#884248;color:#fff}100%{background:#fff8e8;color:inherit}}
+  .cache-row.flash-hit td{animation:cacheFlashHit .62s ease-out 1 both}
+  .cache-row.flash-miss td{animation:cacheFlashMiss .62s ease-out 1 both}
+  @keyframes memoryFlash{0%{background:#f2d78f}100%{background:#fff8e8}}
+  .memory-table tr.flash-memory td{animation:memoryFlash .72s ease-out 1 both}
+  footer{color:#697480;font-size:.82rem;line-height:1.5;margin-top:16px;padding:0 4px}
+  @media(max-width:1100px){.layout{grid-template-columns:1fr}.geometry{grid-template-columns:repeat(3,1fr)}.left-stack{align-self:auto}.access-panel{position:static}}
+  @media(max-width:720px){.banner-mainline{white-space:normal}header{padding:15px 18px 16px}main{padding:16px 10px 40px}.section{padding:17px}.form-grid,.current-grid{grid-template-columns:1fr}.summary-row{grid-template-columns:repeat(2,1fr)}.memory-toolbar{grid-template-columns:1fr 1fr}.random-grid{grid-template-columns:1fr}.geometry{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Cache Memory Simulator</h1>
+    <p class="banner-subtitle"><span class="banner-mainline">Visualize how a memory address is partitioned into tag, set index, and block offset fields, and follow how main-memory blocks are copied into the cache.</span><span class="banner-course">Designed for EEE 153 (Computer Organization and Embedded Systems I) class.</span><span class="banner-credit">Conceptualized by Adelson Chua</span></p>
+  </div>
+</header>
+
+<main>
+  <div class="layout">
+    <aside class="stack left-stack">
+      <section class="panel config-panel">
+        <div class="section">
+          <h2>1. Cache configuration</h2>
+          <p class="section-lead">A valid geometry change rebuilds an empty cache while preserving main-memory contents.</p>
+          <div class="form-grid">
+            <div class="field">
+              <label for="addressBits">Address width (bits)</label>
+              <input id="addressBits" type="number" min="1" max="64" step="1" value="16" />
+            </div>
+            <div class="field">
+              <label for="cacheSize">Cache size (bytes)</label>
+              <input id="cacheSize" type="number" min="1" step="1" value="64" />
+            </div>
+            <div class="field">
+              <label for="blockSize">Block size (bytes)</label>
+              <input id="blockSize" type="number" min="1" step="1" value="8" />
+            </div>
+            <div class="field">
+              <label for="ways">Associativity (ways)</label>
+              <input id="ways" type="number" min="1" step="1" value="2" />
+            </div>
+            <div class="field full">
+              <label for="replacement">Replacement policy</label>
+              <select id="replacement">
+                <option value="LRU" selected>LRU — least recently used</option>
+                <option value="FIFO">FIFO — first in, first out</option>
+                <option value="RANDOM">Random</option>
+              </select>
+              <div class="hint" id="assocHint"></div>
+            </div>
+          </div>
+          <div id="configMessage" class="message" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="panel access-panel">
+        <div class="section">
+          <h2>2. Access series</h2>
+          <p class="section-lead">The series is parsed live. Editing it restarts the simulation with an empty cache.</p>
+          <div class="access-editor-wrap" id="accessEditorWrap">
+            <pre id="accessBackdrop" class="access-backdrop" aria-hidden="true"></pre>
+            <textarea id="accessInput" class="access-input" spellcheck="false" aria-label="Memory access series">LW 0x00
+LH 0x04
+LB 0x08
+LW 0x00
+LW 0x40
+LH 0x08
+SW 0x04 0x12345678
+LB 0x44
+LW 0x04</textarea>
+          </div>
+          <div class="hint">Use <span class="mono">LB/LH/LW address</span> for loads and <span class="mono">SB/SH/SW address value</span> for stores. All addresses must be 4-byte (word) aligned. Multi-byte values use little-endian byte order. Writes use write-back + write-allocate.</div>
+          <div id="accessMessage" class="message" aria-live="polite"></div>
+
+          <details class="generator-details">
+            <summary>Generate access series</summary>
+            <div class="generator-body">
+              <div class="random-grid">
+                <div>
+                  <label for="randomCount">Count</label>
+                  <input id="randomCount" type="number" min="1" max="500" value="20" />
+                </div>
+                <div>
+                  <label for="randomPattern">Generated pattern</label>
+                  <select id="randomPattern">
+                    <option value="locality" selected>Temporal / spatial locality</option>
+                    <option value="uniform">Uniform random</option>
+                    <option value="sequential">Sequential</option>
+                    <option value="conflict">Same-set conflicts</option>
+                  </select>
+                </div>
+              </div>
+              <button class="secondary" id="generateBtn" style="width:100%;margin-top:9px">Generate access series</button>
+            </div>
+          </details>
+
+          <div class="button-row">
+            <button id="undoBtn" class="secondary">Undo</button>
+            <button id="stepBtn" class="primary">Step</button>
+            <span class="spacer"></span>
+            <button id="emptyBtn" class="danger">Empty cache</button>
+          </div>
+          <div class="hint" id="queueStatus">0 accesses processed.</div>
+        </div>
+      </section>
+    </aside>
+
+    <section class="stack">
+      <section class="panel address-panel">
+        <div class="section">
+          <h2>Address partition</h2>
+          <p class="section-lead">Associativity changes the number of sets, which changes the number of index bits. The displayed bits follow the most recently stepped address; before stepping, they show the next address.</p>
+          <div id="geometry" class="geometry"></div>
+          <div class="partition-legend"><span class="legend-item"><span class="swatch tag"></span>Tag</span><span class="legend-item"><span class="swatch index"></span>Set index</span><span class="legend-item"><span class="swatch offset"></span>Block offset</span></div>
+          <div id="bitWorkbench"></div>
+          <div class="current-grid">
+            <div class="subpanel current-access-panel">
+              <h3>Current access</h3>
+              <div id="currentResult" class="big-result">Not started</div>
+              <div id="currentAccess" class="kv"></div>
+            </div>
+            <div class="subpanel">
+              <h3>Decoded fields and placement</h3>
+              <div id="decodeInfo" class="kv"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section">
+          <h2>Simulation summary</h2>
+          <p class="section-lead">Statistics count only the accesses processed in the current run.</p>
+          <div id="summary" class="summary-row"></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section">
+          <h2>Cache contents and metadata</h2>
+          <p class="section-lead">A cache row briefly flashes whenever a Step accesses or fills that line. The gold marker identifies the next deterministic replacement victim when a set is full.</p>
+          <div class="table-wrap cache-table-wrap">
+            <table class="cache-table">
+              <colgroup>
+                <col style="width:5%"><col style="width:5%"><col style="width:4%"><col style="width:4%"><col style="width:8%"><col style="width:11%"><col style="width:28%"><col style="width:9.5%"><col style="width:9.5%"><col style="width:16%">
+              </colgroup>
+              <thead><tr><th>Set</th><th>Way</th><th>V</th><th>D</th><th>Tag</th><th>Block base</th><th>Data bytes</th><th>Loaded at</th><th>Last used</th><th>Status</th></tr></thead>
+              <tbody id="cacheBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section">
+          <h2>Main memory</h2>
+          <p class="section-lead">Each row is one aligned memory block. On a cache miss, the source block is brought into view and highlighted so the cache copy is easy to follow.</p>
+          <div class="memory-toolbar">
+            <div>
+              <label for="memoryJump">Jump to address</label>
+              <input id="memoryJump" type="text" value="0x0000" spellcheck="false" />
+            </div>
+            <button id="memoryJumpBtn" class="secondary">Jump</button>
+            <button id="memoryPrevBtn" class="secondary">← Previous</button>
+            <button id="memoryNextBtn" class="secondary">Next →</button>
+            <button id="randomizeMemoryBtn" class="soft-blue">Randomize main memory</button>
+          </div>
+          <div id="memoryMessage" class="message" aria-live="polite"></div>
+          <div class="table-wrap">
+            <table class="memory-table">
+              <thead id="memoryHead"></thead>
+              <tbody id="memoryBody"></tbody>
+            </table>
+          </div>
+          <div class="memory-note">Byte cells are editable. Enter decimal, <span class="mono">0x..</span>, or hexadecimal such as <span class="mono">FF</span>. Multi-byte accesses use little-endian byte order. Editing or randomizing main memory restarts the cache simulation so the cache and memory begin in a consistent state.</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section">
+          <h2>Access history</h2>
+          <p class="section-lead">The newest processed access is shown first.</p>
+          <div class="table-wrap" style="max-height:390px">
+            <table>
+              <thead><tr><th>#</th><th>Op</th><th>Address</th><th>Tag</th><th>Set</th><th>Offset</th><th>Result</th><th>Way</th><th>Value</th><th>Eviction / write-back</th></tr></thead>
+              <tbody id="historyBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </section>
+  </div>
+  <footer>Cache model: byte-addressable memory, word-aligned LB/LH/LW and SB/SH/SW accesses, little-endian multi-byte values, aligned power-of-two blocks, write-back + write-allocate for stores, and whole-block fill on a miss.</footer>
+</main>
+
+<script>
+(()=>{
+  "use strict";
+  const $=id=>document.getElementById(id);
+  const els={
+    addressBits:$("addressBits"),cacheSize:$("cacheSize"),blockSize:$("blockSize"),ways:$("ways"),replacement:$("replacement"),assocHint:$("assocHint"),configMessage:$("configMessage"),
+    accessInput:$("accessInput"),accessBackdrop:$("accessBackdrop"),accessMessage:$("accessMessage"),randomCount:$("randomCount"),randomPattern:$("randomPattern"),generateBtn:$("generateBtn"),undoBtn:$("undoBtn"),stepBtn:$("stepBtn"),emptyBtn:$("emptyBtn"),queueStatus:$("queueStatus"),
+    geometry:$("geometry"),bitWorkbench:$("bitWorkbench"),currentResult:$("currentResult"),currentAccess:$("currentAccess"),decodeInfo:$("decodeInfo"),summary:$("summary"),cacheBody:$("cacheBody"),historyBody:$("historyBody"),
+    memoryJump:$("memoryJump"),memoryJumpBtn:$("memoryJumpBtn"),memoryPrevBtn:$("memoryPrevBtn"),memoryNextBtn:$("memoryNextBtn"),randomizeMemoryBtn:$("randomizeMemoryBtn"),memoryMessage:$("memoryMessage"),memoryHead:$("memoryHead"),memoryBody:$("memoryBody")
+  };
+
+  const DEFAULT_MEMORY_SEED=0x15315315;
+  const MEMORY_ROWS=8;
+  const state={
+    config:null,sets:[],accesses:[],accessValid:true,accessErrorLine:null,pointer:0,clock:0,hits:0,misses:0,reads:0,writes:0,writeBacks:0,history:[],current:null,undoStack:[],
+    memorySeed:DEFAULT_MEMORY_SEED,memoryOverrides:new Map(),memoryViewBase:0n,flashLineKey:null,flashMemoryBase:null,flashToken:0,notice:""
+  };
+  let configTimer=null,accessTimer=null;
+
+  function isPow2(n){return Number.isSafeInteger(n)&&n>0&&(n&(n-1))===0}
+  function setMessage(el,type,text){el.className=text?`message ${type}`:"message";el.textContent=text||""}
+  function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
+  function hex(v,bits=null){v=BigInt(v);const digits=bits?Math.ceil(bits/4):Math.max(1,v.toString(16).length);return "0x"+v.toString(16).toUpperCase().padStart(digits,"0")}
+  function byteHex(v){return Number(v).toString(16).toUpperCase().padStart(2,"0")}
+  const ACCESS_SPECS={
+    LB:{size:1,write:false,label:"Load byte"},LH:{size:2,write:false,label:"Load halfword"},LW:{size:4,write:false,label:"Load word"},
+    SB:{size:1,write:true,label:"Store byte"},SH:{size:2,write:true,label:"Store halfword"},SW:{size:4,write:true,label:"Store word"}
+  };
+  function valueHex(v,size){return "0x"+BigInt(v).toString(16).toUpperCase().padStart(size*2,"0")}
+  function formatAccessValue(v,size){return `${BigInt(v)} / ${valueHex(v,size)}`}
+  function operationText(a){const spec=ACCESS_SPECS[a.mn];return spec?`${a.mn} · ${spec.label}`:a.mn}
+  function accessError(message,lineIndex){const e=new Error(message);e.sourceLine=lineIndex;throw e}
+  function readLittleEndian(data,offset,size){let v=0n;for(let i=0;i<size;i++)v|=BigInt(data[offset+i])<<BigInt(8*i);return v}
+  function writeLittleEndian(data,offset,size,value){for(let i=0;i<size;i++)data[offset+i]=Number((BigInt(value)>>BigInt(8*i))&255n)}
+  function clampBig(v,lo,hi){return v<lo?lo:(v>hi?hi:v)}
+
+  function readConfig(){
+    const addressBits=Number(els.addressBits.value),cacheSize=Number(els.cacheSize.value),blockSize=Number(els.blockSize.value),ways=Number(els.ways.value);
+    const errs=[];
+    if(!Number.isInteger(addressBits)||addressBits<1||addressBits>64) errs.push("Address width must be an integer from 1 to 64 bits.");
+    if(!isPow2(cacheSize)) errs.push("Cache size must be a positive power of two.");
+    if(!isPow2(blockSize)) errs.push("Block size must be a positive power of two.");
+    if(!isPow2(ways)) errs.push("Associativity (number of ways) must be a positive power of two.");
+    if(Number.isFinite(cacheSize)&&Number.isFinite(blockSize)&&blockSize>cacheSize) errs.push("Block size cannot exceed cache size.");
+    const lineCount=(isPow2(cacheSize)&&isPow2(blockSize))?cacheSize/blockSize:0;
+    if(lineCount&&ways>lineCount) errs.push(`Associativity exceeds the fully associative setup: this cache has only ${lineCount} total line${lineCount===1?"":"s"}, so the maximum is ${lineCount}-way.`);
+    if(lineCount&&ways>0&&lineCount%ways!==0) errs.push("Associativity must divide the total number of cache lines.");
+    if(lineCount>4096) errs.push("This teaching simulator limits the cache to 4096 lines to keep the visualization responsive.");
+    if(blockSize>1024) errs.push("This teaching simulator limits the block size to 1024 bytes so block contents remain inspectable.");
+    const setCount=lineCount&&ways&&lineCount%ways===0?lineCount/ways:0;
+    const offsetBits=isPow2(blockSize)?Math.log2(blockSize):0,indexBits=setCount&&isPow2(setCount)?Math.log2(setCount):0;
+    const tagBits=Number.isInteger(addressBits)?addressBits-indexBits-offsetBits:-1;
+    if(tagBits<0) errs.push("The address width is too small for the selected block size and number of sets.");
+    if(Number.isInteger(addressBits)&&addressBits>=1&&addressBits<=64&&isPow2(cacheSize)){
+      const memoryBytes=1n<<BigInt(addressBits);
+      if(BigInt(cacheSize)>memoryBytes) errs.push("Cache size cannot exceed the complete addressable memory space.");
+    }
+    const maxWays=lineCount||0;
+    els.assocHint.textContent=maxWays?`This geometry has ${lineCount} total cache line${lineCount===1?"":"s"}.`:"Enter valid power-of-two cache and block sizes to determine the cache geometry.";
+    if(errs.length) return {ok:false,errors:errs};
+    return {ok:true,config:{addressBits,cacheSize,blockSize,ways,lineCount,setCount,offsetBits,indexBits,tagBits,maxAddress:(1n<<BigInt(addressBits))-1n,replacement:els.replacement.value}};
+  }
+
+  function geometryKey(c){return c?[c.addressBits,c.cacheSize,c.blockSize,c.ways].join("|"):""}
+  function cloneSets(sets){return sets.map(set=>set.map(l=>({...l,data:[...l.data]})))}
+  function snapshot(){return {sets:cloneSets(state.sets),pointer:state.pointer,clock:state.clock,hits:state.hits,misses:state.misses,reads:state.reads,writes:state.writes,writeBacks:state.writeBacks,history:state.history.map(r=>({...r})),current:state.current?{...state.current}:null,memoryOverrides:new Map(state.memoryOverrides),memoryViewBase:state.memoryViewBase}}
+  function restoreSnapshot(s){state.sets=cloneSets(s.sets);state.pointer=s.pointer;state.clock=s.clock;state.hits=s.hits;state.misses=s.misses;state.reads=s.reads;state.writes=s.writes;state.writeBacks=s.writeBacks;state.history=s.history.map(r=>({...r}));state.current=s.current?{...s.current}:null;state.memoryOverrides=new Map(s.memoryOverrides);state.memoryViewBase=s.memoryViewBase;state.flashLineKey=null;state.flashMemoryBase=null;renderAll();scrollCurrentAccess()}
+
+  function buildEmptySets(c){return Array.from({length:c.setCount},(_,si)=>Array.from({length:c.ways},(_,wi)=>({setIndex:si,wayIndex:wi,valid:false,dirty:false,tag:0n,blockBase:0n,data:Array(c.blockSize).fill(0),loadedAt:0,lastUsed:0})))}
+  function restartSimulation(reason="",preserveView=true){
+    if(!state.config){state.sets=[];state.pointer=0;state.history=[];state.current=null;state.undoStack=[];renderAll();return}
+    state.sets=buildEmptySets(state.config);state.pointer=0;state.clock=0;state.hits=0;state.misses=0;state.reads=0;state.writes=0;state.writeBacks=0;state.history=[];state.current=null;state.undoStack=[];state.flashLineKey=null;state.flashMemoryBase=null;
+    if(!preserveView) state.memoryViewBase=0n;
+    state.notice=reason;renderAll();
+  }
+
+  function applyConfigFromInputs(){
+    const result=readConfig();
+    if(!result.ok){setMessage(els.configMessage,"error",result.errors.join(" "));state.config=null;state.sets=[];renderAll();return}
+    const c=result.config;
+    setMessage(els.configMessage,"ok",`${c.lineCount} cache line${c.lineCount===1?"":"s"} → ${c.setCount} set${c.setCount===1?"":"s"} × ${c.ways} way${c.ways===1?"":"s"}.`);
+    const oldKey=geometryKey(state.config),newKey=geometryKey(c);
+    if(!state.config||oldKey!==newKey){state.config=c;state.memoryViewBase=alignMemoryView(state.memoryViewBase,c);restartSimulation("Cache geometry changed; cache rebuilt empty.");parseAccessesLive(false)}
+    else{state.config={...state.config,replacement:els.replacement.value};renderAll()}
+  }
+
+  function parseLiteral(token,label="value"){
+    let s=String(token??"").trim().toLowerCase().replaceAll("_","");if(!s) throw new Error(`Missing ${label}.`);
+    if(/^0x[0-9a-f]+$/.test(s)||/^0b[01]+$/.test(s)||/^\d+$/.test(s)) return BigInt(s);
+    throw new Error(`Invalid ${label} “${token}”. Use decimal, 0x… hexadecimal, or 0b… binary.`);
+  }
+  function parseAccessText(text,c){
+    const raw=String(text).replace(/\r/g,"");if(!raw.trim()) return [];
+    const chunks=[];
+    raw.split("\n").forEach((line,lineIndex)=>{
+      line.split(/[,;]/).map(part=>part.trim()).filter(Boolean).forEach(chunk=>chunks.push({chunk,lineIndex}));
+    });
+    if(chunks.length>500) throw new Error("A maximum of 500 accesses is supported per run.");
+    return chunks.map(({chunk,lineIndex},i)=>{
+      const m=chunk.match(/^(LB|LH|LW|SB|SH|SW)\s+(0x[0-9a-f]+|0b[01]+|\d+)(?:\s+(0x[0-9a-f]+|0b[01]+|\d+))?$/i);
+      if(!m) accessError(`Invalid syntax on line ${lineIndex+1}: “${chunk}”. Use LB/LH/LW address or SB/SH/SW address value.`,lineIndex);
+      const mn=m[1].toUpperCase(),spec=ACCESS_SPECS[mn],address=parseLiteral(m[2],"address"),size=spec.size;
+      if(address<0n||address>c.maxAddress) accessError(`Address ${hex(address)} on line ${lineIndex+1} exceeds the ${c.addressBits}-bit address space.`,lineIndex);
+      if(address%4n!==0n) accessError(`${mn} address ${hex(address,c.addressBits)} on line ${lineIndex+1} is not word-aligned. Addresses must be divisible by 4.`,lineIndex);
+      if(address+BigInt(size-1)>c.maxAddress) accessError(`${mn} on line ${lineIndex+1} extends beyond the addressable memory space.`,lineIndex);
+      const d=decodeAddress(address,c);
+      if(d.offset+size>c.blockSize) accessError(`${mn} on line ${lineIndex+1} crosses a cache-block boundary with the current ${c.blockSize}-byte block size.`,lineIndex);
+      let value=null;
+      if(spec.write){
+        if(m[3]==null) accessError(`${mn} on line ${lineIndex+1} needs a value to store.`,lineIndex);
+        value=parseLiteral(m[3],"store value");
+        const max=(1n<<BigInt(size*8))-1n;
+        if(value<0n||value>max) accessError(`${mn} value on line ${lineIndex+1} must fit in ${size*8} bits (0 through ${valueHex(max,size)}).`,lineIndex);
+      }else if(m[3]!=null){
+        accessError(`${mn} on line ${lineIndex+1} is a load and must not include a store value.`,lineIndex);
+      }
+      return {mn,op:spec.write?"W":"R",isWrite:spec.write,size,address,value,source:chunk,sourceLine:lineIndex};
+    });
+  }
+  function parseAccessesLive(restart=true){
+    if(!state.config){state.accesses=[];state.accessValid=false;state.accessErrorLine=null;setMessage(els.accessMessage,"warn","Fix the cache configuration before accesses can be validated.");renderAccessEditor();updateControls();return}
+    try{
+      state.accesses=parseAccessText(els.accessInput.value,state.config);state.accessValid=true;state.accessErrorLine=null;
+      setMessage(els.accessMessage,state.accesses.length?"ok":"warn",state.accesses.length?`${state.accesses.length} access${state.accesses.length===1?"":"es"} ready · syntax and word alignment valid.`:"Enter at least one access to step the simulator.");
+      if(restart) restartSimulation("Access series changed; cache restarted empty.");else renderAll();
+    }catch(e){
+      state.accesses=[];state.accessValid=false;state.accessErrorLine=Number.isInteger(e.sourceLine)?e.sourceLine:null;
+      setMessage(els.accessMessage,"error",e.message);if(restart) restartSimulation("Access series is invalid.");else renderAll();
+    }
+  }
+
+  function memoryHashByte(address){
+    const key=address.toString();if(state.memoryOverrides.has(key)) return state.memoryOverrides.get(key);
+    let x=BigInt.asUintN(64,address^BigInt(state.memorySeed>>>0));x=BigInt.asUintN(64,(x^0x9E3779B97F4A7C15n)*0xBF58476D1CE4E5B9n);x^=x>>30n;x=BigInt.asUintN(64,x*0x94D049BB133111EBn);x^=x>>31n;return Number(x&255n);
+  }
+  function setMemoryByte(address,value){state.memoryOverrides.set(address.toString(),value)}
+  function loadBlock(base,size){return Array.from({length:size},(_,i)=>memoryHashByte(base+BigInt(i)))}
+  function writeBackLine(line){for(let i=0;i<line.data.length;i++) setMemoryByte(line.blockBase+BigInt(i),line.data[i]);state.writeBacks++}
+
+  function decodeAddress(address,c){const blockNumber=address/BigInt(c.blockSize),offset=Number(address%BigInt(c.blockSize)),setIndex=Number(blockNumber%BigInt(c.setCount)),tag=blockNumber/BigInt(c.setCount),blockBase=address-BigInt(offset);return {blockNumber,offset,setIndex,tag,blockBase}}
+  function chooseVictim(lines,c){const empty=lines.find(l=>!l.valid);if(empty) return empty;if(c.replacement==="RANDOM") return lines[Math.floor(Math.random()*lines.length)];if(c.replacement==="FIFO") return lines.reduce((a,b)=>a.loadedAt<=b.loadedAt?a:b);return lines.reduce((a,b)=>a.lastUsed<=b.lastUsed?a:b)}
+  function nextVictim(lines,c){if(lines.some(l=>!l.valid)||c.ways===1||c.replacement==="RANDOM") return null;if(c.replacement==="FIFO") return lines.reduce((a,b)=>a.loadedAt<=b.loadedAt?a:b);return lines.reduce((a,b)=>a.lastUsed<=b.lastUsed?a:b)}
+
+  function flash(setIndex,wayIndex,memoryBase){
+    const token=++state.flashToken;state.flashLineKey=`${setIndex}:${wayIndex}`;state.flashMemoryBase=memoryBase;setTimeout(()=>{if(state.flashToken===token){state.flashLineKey=null;state.flashMemoryBase=null}},850)
+  }
+  function processStep(){
+    if(!state.config||!state.accessValid||state.pointer>=state.accesses.length) return;
+    state.undoStack.push(snapshot());if(state.undoStack.length>100) state.undoStack.shift();
+    const access=state.accesses[state.pointer],c=state.config,d=decodeAddress(access.address,c),lines=state.sets[d.setIndex];
+    state.clock++;if(access.isWrite) state.writes++;else state.reads++;
+    let line=lines.find(l=>l.valid&&l.tag===d.tag),hit=!!line,eviction="",writeBack=false;
+    if(hit) state.hits++;else{
+      state.misses++;line=chooseVictim(lines,c);
+      if(line.valid){eviction=`tag ${hex(line.tag)} @ ${hex(line.blockBase,c.addressBits)}`;if(line.dirty){writeBackLine(line);writeBack=true}}
+      line.valid=true;line.dirty=false;line.tag=d.tag;line.blockBase=d.blockBase;line.data=loadBlock(d.blockBase,c.blockSize);line.loadedAt=state.clock;
+    }
+    state.memoryViewBase=pageBaseForAddress(d.blockBase,c);
+    let observed;
+    if(access.isWrite){writeLittleEndian(line.data,d.offset,access.size,access.value);line.dirty=true;observed=BigInt(access.value)}
+    else observed=readLittleEndian(line.data,d.offset,access.size);
+    line.lastUsed=state.clock;
+    const rec={step:state.pointer+1,mn:access.mn,op:access.op,isWrite:access.isWrite,size:access.size,address:access.address,tag:d.tag,setIndex:d.setIndex,offset:d.offset,blockBase:d.blockBase,hit,wayIndex:line.wayIndex,value:observed,eviction,writeBack,sourceLine:access.sourceLine};
+    state.current=rec;state.history.push(rec);state.pointer++;flash(d.setIndex,line.wayIndex,d.blockBase);renderAll();scrollCurrentAccess();
+  }
+  function undoStep(){if(!state.undoStack.length) return;restoreSnapshot(state.undoStack.pop())}
+
+  function randomBigInt(bits){
+    let out=0n,remaining=bits;while(remaining>0){const take=Math.min(remaining,30),max=2**take,part=Math.floor(Math.random()*max);out=(out<<BigInt(take))|BigInt(part);remaining-=take}return out;
+  }
+  function generateSeries(){
+    if(!state.config) return;const c=state.config,count=Math.max(1,Math.min(500,Number(els.randomCount.value)||20)),pattern=els.randomPattern.value,max=c.maxAddress+1n,bs=BigInt(c.blockSize),out=[];
+    const mn=c.blockSize>=4?"LW":(c.blockSize>=2?"LH":"LB"),size=ACCESS_SPECS[mn].size;
+    const align4=a=>(a/4n)*4n;
+    const maxStart=c.maxAddress-BigInt(size-1);
+    const randAddr=()=>align4(randomBigInt(c.addressBits)&maxStart);
+    if(pattern==="uniform"){for(let i=0;i<count;i++) out.push(randAddr())}
+    else if(pattern==="sequential"){let base=randAddr();for(let i=0;i<count;i++) out.push(align4((base+BigInt(i)*4n)%max))}
+    else if(pattern==="conflict"){
+      let base=randAddr();const d0=decodeAddress(base,c),cacheSpan=BigInt(c.setCount*c.blockSize);let mult=1n;while((cacheSpan*mult)%4n!==0n)mult++;const stride=cacheSpan*mult,working=Math.max(2,c.ways+2);
+      for(let i=0;i<count;i++){let a=base+BigInt(i%working)*stride;while(a>maxStart)a-=max;out.push(align4(a))}
+    }else{
+      const working=Math.min(8,Math.max(2,Math.floor(Number((c.maxAddress+1n)>1024n?1024n:(c.maxAddress+1n))/Math.max(4,c.blockSize))));let base=randAddr();
+      for(let i=0;i<count;i++){if(Math.random()<.82){const delta=BigInt(Math.floor(Math.random()*working))*4n;out.push(align4((base+delta)%max))}else out.push(randAddr())}
+    }
+    els.accessInput.value=out.map(a=>`${mn} ${hex(a,c.addressBits)}`).join("\n");parseAccessesLive(true)
+  }
+
+  function activeAddress(){if(state.current) return state.current.address;if(state.accesses.length&&state.pointer<state.accesses.length) return state.accesses[state.pointer].address;if(state.accesses.length) return state.accesses[0].address;return 0n}
+  function renderGeometry(){
+    const c=state.config;if(!c){els.geometry.innerHTML='<div class="empty">Enter a valid configuration.</div>';els.bitWorkbench.innerHTML="";return}
+    const metrics=[[c.lineCount,"Cache lines"],[c.setCount,"Sets"],[c.ways,"Ways / set"],[c.tagBits,"Tag bits"],[c.indexBits,"Index bits"],[c.offsetBits,"Offset bits"]];els.geometry.innerHTML=metrics.map(([v,n])=>`<div class="metric"><strong>${v}</strong><span>${n}</span></div>`).join("");
+    const a=activeAddress(),bits=a.toString(2).padStart(c.addressBits,"0").slice(-c.addressBits),tagEnd=c.tagBits,indexEnd=c.tagBits+c.indexBits;
+    const idx=bits.split("").map((_,i)=>`<div class="bit-index">${c.addressBits-1-i}</div>`).join("");
+    const vals=bits.split("").map((b,i)=>`<div class="bit-cell ${i<tagEnd?"tag":i<indexEnd?"index":"offset"}">${b}</div>`).join("");
+    els.bitWorkbench.innerHTML=`<div class="bit-scroll"><div class="bit-index-row">${idx}</div><div class="bit-value-row">${vals}</div></div>`;
+  }
+  function renderCurrent(){
+    const c=state.config,r=state.current;if(!c){els.currentResult.textContent="Invalid configuration";els.currentResult.className="big-result";els.currentAccess.innerHTML="";els.decodeInfo.innerHTML="";return}
+    const target=r|| (state.accesses.length&&state.pointer<state.accesses.length?(()=>{const a=state.accesses[state.pointer],d=decodeAddress(a.address,c);return {...a,...d,preview:true}})():null);
+    if(!target){els.currentResult.textContent="Not started";els.currentResult.className="big-result";els.currentAccess.innerHTML='<div class="current-address">—</div><div class="k">Operation</div><div class="v">—</div><div class="k">Value</div><div class="v">—</div>';els.decodeInfo.innerHTML='<div class="k">Tag</div><div class="v">—</div><div class="k">Set index</div><div class="v">—</div><div class="k">Block offset</div><div class="v">—</div><div class="k">Block range</div><div class="v">—</div><div class="k">Placement</div><div class="v">—</div>';return}
+    const d=target.preview?target:decodeAddress(target.address,c),base=d.blockBase??target.blockBase,end=base+BigInt(c.blockSize-1);
+    if(target.preview){els.currentResult.textContent="Init";els.currentResult.className="big-result"}else{els.currentResult.textContent=target.hit?"HIT":"MISS";els.currentResult.className=`big-result ${target.hit?"hit":"miss"}`}
+    const shownValue=target.preview?(target.isWrite?formatAccessValue(target.value,target.size):"—"):formatAccessValue(target.value,target.size);
+    els.currentAccess.innerHTML=`<div class="current-address">${hex(target.address,c.addressBits)} <span class="decimal">(${target.address})</span></div><div class="k">Operation</div><div class="v">${esc(operationText(target))}</div><div class="k">Value</div><div class="v">${shownValue}</div>`;
+    let placement=target.preview?`Maps to set ${d.setIndex}; tag comparison has not occurred yet.`:`${target.hit?"Found in":"Loaded into"} set ${target.setIndex}, way ${target.wayIndex}${target.eviction?`; evicted ${target.eviction}${target.writeBack?" after write-back":""}`:""}`;
+    els.decodeInfo.innerHTML=`<div class="k">Tag</div><div class="v">${hex(d.tag)} (${d.tag})</div><div class="k">Set index</div><div class="v">${d.setIndex}</div><div class="k">Block offset</div><div class="v">${d.offset}</div><div class="k">Access bytes</div><div class="v">${d.offset}…${d.offset+target.size-1} (${target.size} byte${target.size===1?"":"s"})</div><div class="k">Block range</div><div class="v">${hex(base,c.addressBits)} – ${hex(end,c.addressBits)}</div><div class="k">Placement</div><div class="v">${esc(placement)}</div>`;
+  }
+
+  function renderSummary(){const total=state.hits+state.misses,rate=total?(100*state.hits/total).toFixed(1)+"%":"—",stats=[[total,"Accesses"],[state.hits,"Hits"],[state.misses,"Misses"],[rate,"Hit rate"],[state.writeBacks,"Write-backs"]];els.summary.innerHTML=stats.map(([v,n])=>`<div class="stat"><strong>${v}</strong><span>${n}</span></div>`).join("")}
+  function renderDataBytes(line,c){
+    const rows=[];
+    for(let start=0;start<line.data.length;start+=8){
+      const chunk=line.data.slice(start,start+8);
+      rows.push(`<div class="data-byte-row" style="grid-template-columns:repeat(${chunk.length},minmax(0,1fr))">${chunk.map((v,j)=>{const i=start+j;return `<span class="byte ${state.current&&state.current.setIndex===line.setIndex&&state.current.wayIndex===line.wayIndex&&i>=state.current.offset&&i<state.current.offset+state.current.size?"active":""}" title="${hex(line.blockBase+BigInt(i),c.addressBits)} = ${v}">${byteHex(v)}</span>`}).join("")}</div>`);
+    }
+    return `<div class="data-bytes">${rows.join("")}</div>`
+  }
+  function renderCache(){
+    const c=state.config;if(!c||!state.sets.length){els.cacheBody.innerHTML='<tr><td colspan="10" class="empty">Enter a valid cache configuration.</td></tr>';return}
+    const rows=[];for(let si=0;si<state.sets.length;si++){const lines=state.sets[si],victim=nextVictim(lines,c);for(const line of lines){const key=`${si}:${line.wayIndex}`,classes=["cache-row"];if(state.current&&state.current.setIndex===si&&state.current.wayIndex===line.wayIndex) classes.push("current-line");if(victim===line) classes.push("victim-line");if(state.flashLineKey===key) classes.push(state.current?.hit?"flash-hit":"flash-miss");let status="—";if(state.current&&state.current.setIndex===si&&state.current.wayIndex===line.wayIndex) status=state.current.hit?"Current hit":"Just filled";else if(victim===line) status=`Next ${c.replacement} victim`;rows.push(`<tr class="${classes.join(" ")}"><td>${si}</td><td>${line.wayIndex}</td><td>${line.valid?1:0}</td><td>${line.valid?(line.dirty?1:0):"—"}</td><td class="mono">${line.valid?hex(line.tag):"—"}</td><td class="mono">${line.valid?hex(line.blockBase,c.addressBits):"—"}</td><td>${line.valid?renderDataBytes(line,c):'<span class="empty">empty</span>'}</td><td>${line.valid?line.loadedAt:"—"}</td><td>${line.valid?line.lastUsed:"—"}</td><td class="status-text">${status}</td></tr>`)}}
+    els.cacheBody.innerHTML=rows.join("")
+  }
+
+  function renderAccessEditor(){
+    const lines=String(els.accessInput.value).replace(/\r/g,"").split("\n");
+    const currentLine=state.current?.sourceLine ?? (state.pointer>0?state.accesses[state.pointer-1]?.sourceLine:null);
+    const nextLine=state.pointer<state.accesses.length?state.accesses[state.pointer]?.sourceLine:null;
+    const doneLines=new Set(state.accesses.slice(0,state.pointer).map(a=>a.sourceLine));
+    els.accessBackdrop.innerHTML=lines.map((line,i)=>{
+      let cls="";
+      if(i===state.accessErrorLine) cls="invalid";
+      else if(i===currentLine) cls="current";
+      else if(doneLines.has(i)) cls="done";
+      else if(i===nextLine) cls="next";
+      return `<span class="access-line ${cls}">${esc(line)||" "}</span>`;
+    }).join("");
+    syncAccessEditorScroll();
+  }
+  function syncAccessEditorScroll(){els.accessBackdrop.scrollTop=els.accessInput.scrollTop;els.accessBackdrop.scrollLeft=els.accessInput.scrollLeft}
+  function scrollCurrentAccess(){
+    requestAnimationFrame(()=>{
+      const lineIndex=state.current?.sourceLine;
+      if(lineIndex==null) return;
+      const cs=getComputedStyle(els.accessInput),lineHeight=parseFloat(cs.lineHeight)||21,paddingTop=parseFloat(cs.paddingTop)||0;
+      const lineCenter=paddingTop+(lineIndex+.5)*lineHeight;
+      const target=Math.max(0,lineCenter-els.accessInput.clientHeight/2);
+      els.accessInput.scrollTop=target;syncAccessEditorScroll();
+    });
+  }
+  function renderHistory(){
+    if(!state.history.length){els.historyBody.innerHTML='<tr><td colspan="10" class="empty">No accesses processed yet.</td></tr>';return}
+    const c=state.config;els.historyBody.innerHTML=state.history.slice().reverse().map(r=>`<tr><td>${r.step}</td><td><span class="pill ${r.isWrite?"write":"read"}">${r.mn}</span></td><td class="mono">${hex(r.address,c.addressBits)}</td><td class="mono">${hex(r.tag)}</td><td>${r.setIndex}</td><td>${r.offset}</td><td><span class="pill ${r.hit?"hit":"miss"}">${r.hit?"HIT":"MISS"}</span></td><td>${r.wayIndex}</td><td>${formatAccessValue(r.value,r.size)}</td><td>${r.eviction?`${esc(r.eviction)}${r.writeBack?" + write-back":""}`:"—"}</td></tr>`).join("")
+  }
+
+  function pageBytes(c){return BigInt(c.blockSize*MEMORY_ROWS)}
+  function alignMemoryView(base,c){const p=pageBytes(c),maxPlus=c.maxAddress+1n;if(maxPlus<=p) return 0n;const aligned=(base/p)*p;return clampBig(aligned,0n,((maxPlus-1n)/p)*p)}
+  function pageBaseForAddress(address,c){return alignMemoryView(address,c)}
+  function renderMemory(){
+    const c=state.config;if(!c){els.memoryHead.innerHTML="";els.memoryBody.innerHTML='<tr><td class="empty">Enter a valid configuration.</td></tr>';return}
+    state.memoryViewBase=alignMemoryView(state.memoryViewBase,c);els.memoryJump.value=hex(state.memoryViewBase,c.addressBits);
+    els.memoryHead.innerHTML=`<tr><th>Block base</th>${Array.from({length:c.blockSize},(_,i)=>`<th class="byte-head">+${i}</th>`).join("")}</tr>`;
+    const rows=[];for(let r=0;r<MEMORY_ROWS;r++){const base=state.memoryViewBase+BigInt(r*c.blockSize);if(base>c.maxAddress) break;const source=state.current&&state.current.blockBase===base,flash=state.flashMemoryBase===base;const bytes=[];for(let i=0;i<c.blockSize;i++){const addr=base+BigInt(i);if(addr>c.maxAddress){bytes.push('<td class="mem-byte">—</td>');continue}const val=memoryHashByte(addr),active=state.current&&addr>=state.current.address&&addr<state.current.address+BigInt(state.current.size);bytes.push(`<td class="mem-byte"><input class="${active?"active-byte":""}" data-memory-address="${addr}" value="${byteHex(val)}" title="${hex(addr,c.addressBits)} = ${val}" /></td>`)}rows.push(`<tr class="${source?"source-block":""} ${flash?"flash-memory":""}"><td class="mono">${hex(base,c.addressBits)}</td>${bytes.join("")}</tr>`)}els.memoryBody.innerHTML=rows.join("");
+    els.memoryBody.querySelectorAll('input[data-memory-address]').forEach(inp=>inp.addEventListener('change',onMemoryEdit));
+    const p=pageBytes(c);els.memoryPrevBtn.disabled=state.memoryViewBase===0n;els.memoryNextBtn.disabled=state.memoryViewBase+p>c.maxAddress;
+  }
+  function parseByteInput(s){const t=String(s).trim();if(/^0x[0-9a-f]{1,2}$/i.test(t)) return parseInt(t.slice(2),16);if(/^[0-9a-f]{1,2}$/i.test(t)&&/[a-f]/i.test(t)) return parseInt(t,16);if(/^\d{1,3}$/.test(t)){const n=Number(t);if(n<=255) return n}if(/^[0-9a-f]{2}$/i.test(t)) return parseInt(t,16);throw new Error("Enter a byte from 0 to 255, 0x00 to 0xFF, or two hexadecimal digits.")}
+  function onMemoryEdit(e){try{const addr=BigInt(e.target.dataset.memoryAddress),v=parseByteInput(e.target.value);setMemoryByte(addr,v);setMessage(els.memoryMessage,"ok",`${hex(addr,state.config.addressBits)} set to 0x${byteHex(v)} (${v}).`);restartSimulation("Main memory edited; cache restarted empty.");}catch(err){setMessage(els.memoryMessage,"error",err.message);renderMemory()}}
+  function jumpMemory(){if(!state.config) return;try{const a=parseLiteral(els.memoryJump.value,"memory address");if(a<0n||a>state.config.maxAddress) throw new Error(`Address must fit in ${state.config.addressBits} bits.`);state.memoryViewBase=pageBaseForAddress(a,state.config);setMessage(els.memoryMessage,"","");renderMemory()}catch(e){setMessage(els.memoryMessage,"error",e.message)}}
+  function moveMemoryPage(dir){if(!state.config) return;const p=pageBytes(state.config);state.memoryViewBase=alignMemoryView(state.memoryViewBase+BigInt(dir)*p,state.config);renderMemory()}
+  function randomizeMemory(){state.memorySeed=Math.floor(Math.random()*0xffffffff)>>>0;state.memoryOverrides.clear();setMessage(els.memoryMessage,"ok","Main memory randomized with a new deterministic seed.");restartSimulation("Main memory randomized; cache restarted empty.",false)}
+
+  function syncTopPanelHeights(){
+    const configPanel=document.querySelector('.config-panel'),addressPanel=document.querySelector('.address-panel');
+    if(!configPanel||!addressPanel) return;
+    if(window.innerWidth<=1100){addressPanel.style.minHeight="";return}
+    addressPanel.style.minHeight=configPanel.offsetHeight+"px";
+  }
+  function updateControls(){const canStep=!!state.config&&state.accessValid&&state.pointer<state.accesses.length;els.stepBtn.disabled=!canStep;els.undoBtn.disabled=!state.undoStack.length;els.emptyBtn.disabled=!state.config;els.queueStatus.textContent=state.notice||`${state.pointer} of ${state.accesses.length} processed • ${Math.max(0,state.accesses.length-state.pointer)} remaining`;state.notice=""}
+  function renderAll(){renderGeometry();renderCurrent();renderSummary();renderCache();renderAccessEditor();renderHistory();renderMemory();updateControls();requestAnimationFrame(syncTopPanelHeights)}
+
+  [els.addressBits,els.cacheSize,els.blockSize,els.ways].forEach(el=>el.addEventListener('input',()=>{clearTimeout(configTimer);configTimer=setTimeout(applyConfigFromInputs,120)}));
+  els.replacement.addEventListener('change',()=>{if(state.config){state.config.replacement=els.replacement.value;renderCache();updateControls()}});
+  els.accessInput.addEventListener('input',()=>{renderAccessEditor();parseAccessesLive(true)});
+  els.accessInput.addEventListener('scroll',syncAccessEditorScroll);
+  els.generateBtn.addEventListener('click',generateSeries);els.stepBtn.addEventListener('click',processStep);els.undoBtn.addEventListener('click',undoStep);els.emptyBtn.addEventListener('click',()=>restartSimulation("Cache emptied; simulation restarted."));
+  els.memoryJumpBtn.addEventListener('click',jumpMemory);els.memoryJump.addEventListener('keydown',e=>{if(e.key==='Enter') jumpMemory()});els.memoryPrevBtn.addEventListener('click',()=>moveMemoryPage(-1));els.memoryNextBtn.addEventListener('click',()=>moveMemoryPage(1));els.randomizeMemoryBtn.addEventListener('click',randomizeMemory);
+  window.addEventListener('resize',()=>requestAnimationFrame(syncTopPanelHeights));
+
+  applyConfigFromInputs();parseAccessesLive(false);
+})();
+</script>
+</body>
+</html>

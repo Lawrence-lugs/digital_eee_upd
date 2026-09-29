@@ -247,6 +247,26 @@ include-in-header:
         </p>
       </a>
 
+      <!-- Cache Memory Simulator -->
+      <a href="cache_simulator.html"
+         class="block bg-white rounded-xl border border-gray-200 p-6
+                hover:shadow-md hover:border-red-300 transition-all group">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
+             style="background: #fee2e2;">
+          <svg class="w-5 h-5" style="color: #7B0D1E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M5 4h14v16H5zM5 8h14M5 12h14M5 16h14M9 4v16"/>
+          </svg>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">
+          Cache Memory Simulator
+        </h3>
+        <p class="text-sm text-gray-500 leading-relaxed">
+          Configure a cache and simulate memory accesses to explore address
+          partitioning, cache contents, and access history.
+        </p>
+      </a>
+
     </div>
   </div>
 </section>
