@@ -80,14 +80,42 @@
   .tutorial-body{font-size:.9rem;line-height:1.5;color:#37424d}
   .tutorial-body p{margin:0 0 9px}.tutorial-body p:last-child{margin-bottom:0}
   .tutorial-math{display:grid;gap:6px;margin:10px 0;padding:10px 12px;border-radius:10px;background:#f4f7f9;border:1px solid #dde4ea;font:750 .84rem/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#293641}
+  .tutorial-binary{margin:10px 0;padding:10px 12px;border:1px solid #dbe2e8;border-radius:10px;background:#fbfcfd}
+  .tutorial-binary-label{font-size:.75rem;font-weight:900;color:#68737e;margin:0 0 3px}
+  .tutorial-binary-value{font:850 .88rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#202b35;overflow-wrap:anywhere;word-break:break-all}
+  .tutorial-binary-partition{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-top:7px;font:900 .88rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .tutorial-binary-partition .tag{background:#ece5f4;color:#5f4777;padding:2px 5px;border-radius:5px}
+  .tutorial-binary-partition .index{background:#e4eef7;color:#315f84;padding:2px 5px;border-radius:5px}
+  .tutorial-binary-partition .offset{background:#f8ead8;color:#855d2f;padding:2px 5px;border-radius:5px}
+  .tutorial-binary-key{margin-top:5px;color:#697480;font-size:.74rem;line-height:1.35}
+  .tutorial-conversions{display:flex;flex-wrap:wrap;gap:7px;margin:9px 0}
+  .tutorial-conversion{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:8px;border:1px solid #d7dde3;background:#fff;font-size:.82rem;font-weight:800}
+  .tutorial-conversion .binary{font:900 .84rem/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding:2px 5px;border-radius:5px}
+  .tutorial-conversion.tag .binary{background:var(--tag);color:#5e526b}
+  .tutorial-conversion.index .binary{background:var(--index);color:#496858}
+  .tutorial-conversion .arrow{color:#7b858f;font-weight:900}
+  .tutorial-conversion .meaning{font:850 .82rem/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#27323d}
+  .tutorial-group-host{position:relative!important}
+  .tutorial-group-outline{position:absolute;pointer-events:none;box-sizing:border-box;border:3px solid #f0b72f;border-radius:6px;box-shadow:0 0 0 3px rgba(255,236,169,.5);z-index:20}
+  .tutorial-segment-outline{position:absolute;pointer-events:none;box-sizing:border-box;border-radius:7px;z-index:24}
+  .tutorial-segment-outline.data{border:3px solid #2f7db8;box-shadow:0 0 0 3px rgba(47,125,184,.17)}
+  .tutorial-segment-outline.metadata{border:3px solid #8a5aa8;box-shadow:0 0 0 3px rgba(138,90,168,.17)}
+  .tutorial-segment-key{display:inline-flex;align-items:center;gap:6px;font-weight:900;padding:2px 7px;border-radius:999px;white-space:nowrap}
+  .tutorial-segment-key.data{background:#e8f3fb;color:#2f6f9d;border:1px solid #b8d7eb}
+  .tutorial-segment-key.metadata{background:#f1eafa;color:#76508e;border:1px solid #d7c2e5}
   .tutorial-note{margin-top:9px;padding:8px 10px;border-left:3px solid #315f9b;background:#f2f6fb;border-radius:0 8px 8px 0}
   .tutorial-nav{display:flex;justify-content:flex-end;gap:8px;margin-top:15px;padding-top:12px;border-top:1px solid #e5e9ed}
   .tutorial-nav button{min-width:82px}
   .tutorial-focus{position:relative!important;z-index:1101!important;filter:none!important;opacity:1!important;box-shadow:0 0 0 4px rgba(255,214,84,.95),0 8px 26px rgba(0,0,0,.22)!important}
   .tutorial-focus-table{position:relative!important;z-index:1101!important;filter:none!important;opacity:1!important;box-shadow:0 0 0 4px rgba(255,214,84,.95),0 8px 26px rgba(0,0,0,.22)!important;background:#fff}
   .tutorial-emphasis{outline:3px solid #f0b72f!important;outline-offset:2px!important;box-shadow:0 0 0 4px rgba(255,236,169,.75)!important;position:relative;z-index:1102!important}
-  .cache-row.tutorial-row-focus td{background:#fff5c9!important}
-  .memory-table tr.tutorial-row-focus td{background:#fff5c9!important}
+  .current-access-panel .current-address.tutorial-emphasis{background:#fbfcfd!important;border-radius:5px;padding:2px 4px;margin-left:-4px;margin-right:-4px}
+  .cache-row.tutorial-row-focus td{background:#fff5c9!important;border-top:3px solid #f0b72f!important;border-bottom:3px solid #f0b72f!important}
+  .cache-row.tutorial-row-focus td:first-child{border-left:3px solid #f0b72f!important}
+  .cache-row.tutorial-row-focus td:last-child{border-right:3px solid #f0b72f!important}
+  .memory-table tr.tutorial-row-focus td{background:#fff5c9!important;border-top:3px solid #f0b72f!important;border-bottom:3px solid #f0b72f!important}
+  .memory-table tr.tutorial-row-focus td:first-child{border-left:3px solid #f0b72f!important}
+  .memory-table tr.tutorial-row-focus td:last-child{border-right:3px solid #f0b72f!important}
   .tutorial-focus-cell{background:#fff5c9!important;outline:3px solid #f0b72f!important;outline-offset:-2px}
   body.tutorial-active{overflow-x:hidden}
   h1{margin:0 0 5px;font-size:clamp(1.6rem,2.8vw,2.3rem);line-height:1.06}
@@ -125,9 +153,28 @@
   button:disabled{cursor:not-allowed;opacity:.42}
   .button-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
   .button-row .spacer{flex:1 1 auto}
-  .generator-details{margin-top:13px;border:1px solid #d9dfe5;border-radius:10px;background:#fbfcfd;overflow:hidden}
-  .generator-details summary{cursor:pointer;padding:10px 12px;font-weight:850;font-size:.84rem;color:#3f4a55;user-select:none}
-  .generator-details[open] summary{border-bottom:1px solid #e2e6ea}
+  .address-helper-details,.generator-details{margin-top:13px;border:1px solid #d9dfe5;border-radius:10px;background:#fbfcfd;overflow:hidden}
+  .address-helper-details summary,.generator-details summary{cursor:pointer;padding:10px 12px;font-weight:850;font-size:.84rem;color:#3f4a55;user-select:none}
+  .address-helper-details[open] summary,.generator-details[open] summary{border-bottom:1px solid #e2e6ea}
+  .address-helper-body{padding:11px 12px 12px}
+  .address-helper-note{color:#68737e;font-size:.76rem;line-height:1.4;margin-bottom:9px}
+  .address-helper-fields{display:flex;width:100%;height:24px;border:1px solid #aeb7c0;border-radius:7px;overflow:hidden;margin-bottom:5px}
+  .address-helper-field{min-width:0;display:flex;align-items:center;justify-content:center;border-right:1px solid rgba(90,100,110,.28);font-size:.65rem;font-weight:900;white-space:nowrap;overflow:hidden}
+  .address-helper-field:last-child{border-right:0}
+  .address-helper-field.tag{background:var(--tag);color:#5e526b}
+  .address-helper-field.index{background:var(--index);color:#496858}
+  .address-helper-field.offset{background:var(--offset);color:#775f35}
+  .address-helper-bits{display:grid;width:100%;gap:1px;align-items:center;margin:5px 0 9px}
+  .address-helper-bit{min-width:0;height:22px;display:flex;align-items:center;justify-content:center;border-radius:3px;cursor:pointer}
+  .address-helper-bit.tag{background:var(--tag)}
+  .address-helper-bit.index{background:var(--index)}
+  .address-helper-bit.offset{background:var(--offset)}
+  .address-helper-bit input{appearance:none;-webkit-appearance:none;margin:0;width:min(12px,100%);max-width:12px;min-width:3px;aspect-ratio:1;border:1px solid #69737d;border-radius:2px;background:#fff;cursor:pointer;position:relative}
+  .address-helper-bit input:checked{background:#27323d;border-color:#27323d}
+  .address-helper-bit input:checked::after{content:"";position:absolute;left:27%;top:8%;width:28%;height:55%;border:solid #fff;border-width:0 1.5px 1.5px 0;transform:rotate(45deg)}
+  .address-helper-result{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px;border:1px solid #d8dee5;border-radius:8px;background:#fff}
+  .address-helper-result span{color:#68737e;font-size:.76rem;font-weight:800}
+  .address-helper-result strong{font-size:1rem;color:var(--up-maroon)}
   .generator-body{padding:11px 12px 12px}
   .random-grid{display:grid;grid-template-columns:86px 1fr;gap:9px;align-items:end}
   .left-stack{align-self:stretch;align-content:start}
@@ -328,6 +375,19 @@ LW 0x04</textarea>
           <div class="hint access-guide"><ul><li>Loads: <span class="mono">LB/LH/LW address</span></li><li>Stores: <span class="mono">SB/SH/SW address value</span></li><li>Alignment: word ÷4, halfword ÷2, byte unrestricted</li><li>Multi-byte values: little-endian</li><li>Stores: behavior follows the selected write policy</li></ul></div>
           <div id="accessMessage" class="message" aria-live="polite"></div>
 
+          <details class="address-helper-details">
+            <summary>Address helper</summary>
+            <div class="address-helper-body">
+              <div class="address-helper-note">Toggle address bits to quickly construct a hexadecimal address for the current cache configuration.</div>
+              <div id="addressHelperFields" class="address-helper-fields"></div>
+              <div id="addressHelperBits" class="address-helper-bits" aria-label="Address helper bit checkboxes"></div>
+              <div class="address-helper-result">
+                <span>Hex address</span>
+                <strong id="addressHelperHex" class="mono">0x0000</strong>
+              </div>
+            </div>
+          </details>
+
           <details class="generator-details">
             <summary>Generate access series</summary>
             <div class="generator-body">
@@ -465,7 +525,7 @@ LW 0x04</textarea>
   const $=id=>document.getElementById(id);
   const els={
     addressBits:$("addressBits"),cacheSize:$("cacheSize"),blockSize:$("blockSize"),ways:$("ways"),replacement:$("replacement"),writePolicy:$("writePolicy"),configMessage:$("configMessage"),
-    accessInput:$("accessInput"),accessBackdrop:$("accessBackdrop"),accessMessage:$("accessMessage"),randomCount:$("randomCount"),randomPattern:$("randomPattern"),randomTemplate:$("randomTemplate"),generateBtn:$("generateBtn"),undoBtn:$("undoBtn"),stepBtn:$("stepBtn"),emptyBtn:$("emptyBtn"),queueStatus:$("queueStatus"),
+    accessInput:$("accessInput"),accessBackdrop:$("accessBackdrop"),accessMessage:$("accessMessage"),addressHelperFields:$("addressHelperFields"),addressHelperBits:$("addressHelperBits"),addressHelperHex:$("addressHelperHex"),randomCount:$("randomCount"),randomPattern:$("randomPattern"),randomTemplate:$("randomTemplate"),generateBtn:$("generateBtn"),undoBtn:$("undoBtn"),stepBtn:$("stepBtn"),emptyBtn:$("emptyBtn"),queueStatus:$("queueStatus"),
     geometry:$("geometry"),bitWorkbench:$("bitWorkbench"),currentResult:$("currentResult"),currentAccess:$("currentAccess"),decodeInfo:$("decodeInfo"),summary:$("summary"),cacheTable:$("cacheTable"),cacheCols:$("cacheCols"),cacheHead:$("cacheHead"),cacheBody:$("cacheBody"),historyBody:$("historyBody"),
     memoryJump:$("memoryJump"),memoryJumpBtn:$("memoryJumpBtn"),memoryPrevBtn:$("memoryPrevBtn"),memoryNextBtn:$("memoryNextBtn"),randomizeMemoryBtn:$("randomizeMemoryBtn"),memoryMessage:$("memoryMessage"),memoryHead:$("memoryHead"),memoryBody:$("memoryBody"),tutorialToggle:$("tutorialToggle"),tutorialToggleState:$("tutorialToggleState"),tutorialBackdrop:$("tutorialBackdrop"),tutorialPopover:$("tutorialPopover"),tutorialProgress:$("tutorialProgress"),tutorialTitle:$("tutorialTitle"),tutorialBody:$("tutorialBody"),tutorialBack:$("tutorialBack"),tutorialNext:$("tutorialNext"),tutorialClose:$("tutorialClose"),startupTutorialBackdrop:$("startupTutorialBackdrop"),startupTutorialModal:$("startupTutorialModal"),startupTutorialClose:$("startupTutorialClose")
   };
@@ -474,7 +534,7 @@ LW 0x04</textarea>
   const MEMORY_ROWS=8;
   const state={
     config:null,sets:[],accesses:[],accessValid:true,accessErrorLine:null,pointer:0,clock:0,hits:0,misses:0,reads:0,writes:0,writeBacks:0,history:[],current:null,undoStack:[],
-    memorySeed:DEFAULT_MEMORY_SEED,memoryOverrides:new Map(),memoryViewBase:0n,flashLineKey:null,flashMemoryBase:null,flashToken:0,notice:""
+    memorySeed:DEFAULT_MEMORY_SEED,memoryOverrides:new Map(),memoryViewBase:0n,flashLineKey:null,flashMemoryBase:null,flashToken:0,notice:"",addressHelperValue:0n
   };
   let configTimer=null,accessTimer=null;
   const tutorial={enabled:false,active:false,steps:[],index:0,record:null,focused:[]};
@@ -504,6 +564,11 @@ LW 0x04</textarea>
   function setMessage(el,type,text){el.className=text?`message ${type}`:"message";el.textContent=text||""}
   function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
   function hex(v,bits=null){v=BigInt(v);const digits=bits?Math.ceil(bits/4):Math.max(1,v.toString(16).length);return "0x"+v.toString(16).toUpperCase().padStart(digits,"0")}
+  function binaryFixed(v,bits){
+    bits=Math.max(0,Number(bits)||0);
+    if(bits===0) return "";
+    return BigInt(v).toString(2).padStart(bits,"0").slice(-bits);
+  }
   function byteHex(v){return Number(v).toString(16).toUpperCase().padStart(2,"0")}
   const ACCESS_SPECS={
     LB:{size:1,write:false,label:"Load byte"},LH:{size:2,write:false,label:"Load halfword"},LW:{size:4,write:false,label:"Load word"},
@@ -542,6 +607,14 @@ LW 0x04</textarea>
     return {ok:true,config:{addressBits,cacheSize,blockSize,ways,lineCount,setCount,offsetBits,indexBits,tagBits,maxAddress:(1n<<BigInt(addressBits))-1n,replacement:els.replacement.value,writePolicy:els.writePolicy.value}};
   }
 
+  function updateReplacementAvailability(){
+    const directMapped=Number(els.ways.value)===1;
+    els.replacement.disabled=directMapped;
+    els.replacement.title=directMapped
+      ?"Replacement policy does not apply to a direct-mapped cache because each set has only one possible line."
+      :"Replacement policy determines which way is evicted when a set is full.";
+  }
+
   function geometryKey(c){return c?[c.addressBits,c.cacheSize,c.blockSize,c.ways].join("|"):""}
   function cloneSets(sets){return sets.map(set=>set.map(l=>({...l,data:[...l.data]})))}
   function snapshot(){return {sets:cloneSets(state.sets),pointer:state.pointer,clock:state.clock,hits:state.hits,misses:state.misses,reads:state.reads,writes:state.writes,writeBacks:state.writeBacks,history:state.history.map(r=>({...r})),current:state.current?{...state.current}:null,memoryOverrides:new Map(state.memoryOverrides),memoryViewBase:state.memoryViewBase}}
@@ -556,6 +629,7 @@ LW 0x04</textarea>
   }
 
   function applyConfigFromInputs(){
+    updateReplacementAvailability();
     const result=readConfig();
     if(!result.ok){setMessage(els.configMessage,"error",result.errors.join(" "));state.config=null;state.sets=[];renderAll();return}
     const c=result.config;
@@ -790,6 +864,51 @@ LW 0x04</textarea>
   function generateSeries(){applyGeneratedSeries(true)}
 
   function activeAddress(){if(state.current) return state.current.address;if(state.accesses.length&&state.pointer<state.accesses.length) return state.accesses[state.pointer].address;if(state.accesses.length) return state.accesses[0].address;return 0n}
+
+  function renderAddressHelper(){
+    const c=state.config;
+    if(!c){
+      els.addressHelperFields.innerHTML='<span class="empty">Valid cache configuration required.</span>';
+      els.addressHelperBits.innerHTML="";
+      els.addressHelperHex.textContent="—";
+      return;
+    }
+    const mask=(1n<<BigInt(c.addressBits))-1n;
+    state.addressHelperValue&=mask;
+    const fields=[
+      {name:"Tag",bits:c.tagBits,cls:"tag"},
+      {name:"Index",bits:c.indexBits,cls:"index"},
+      {name:"Offset",bits:c.offsetBits,cls:"offset"}
+    ].filter(f=>f.bits>0);
+    els.addressHelperFields.innerHTML=fields.map(f=>
+      `<div class="address-helper-field ${f.cls}" style="flex:${f.bits} 1 0" title="${f.name}: ${f.bits} bit${f.bits===1?"":"s"}">${f.name}</div>`
+    ).join("");
+
+    const bits=binaryFixed(state.addressHelperValue,c.addressBits);
+    els.addressHelperBits.style.gridTemplateColumns=`repeat(${c.addressBits},minmax(0,1fr))`;
+    els.addressHelperBits.innerHTML=bits.split("").map((b,i)=>{
+      const bitPos=c.addressBits-1-i;
+      const cls=i<c.tagBits?"tag":i<c.tagBits+c.indexBits?"index":"offset";
+      const field=cls==="tag"?"Tag":cls==="index"?"Set index":"Block offset";
+      return `<label class="address-helper-bit ${cls}" title="Bit ${bitPos} · ${field}">
+        <input type="checkbox" data-helper-bit="${bitPos}" ${b==="1"?"checked":""} aria-label="Address bit ${bitPos}" />
+      </label>`;
+    }).join("");
+    els.addressHelperHex.textContent=hex(state.addressHelperValue,c.addressBits);
+  }
+
+  function onAddressHelperChange(e){
+    const box=e.target.closest('input[data-helper-bit]');
+    if(!box||!state.config) return;
+    const bit=BigInt(Number(box.dataset.helperBit));
+    const bitMask=1n<<bit;
+    if(box.checked) state.addressHelperValue|=bitMask;
+    else state.addressHelperValue&=~bitMask;
+    const mask=(1n<<BigInt(state.config.addressBits))-1n;
+    state.addressHelperValue&=mask;
+    els.addressHelperHex.textContent=hex(state.addressHelperValue,state.config.addressBits);
+  }
+
   function renderGeometry(){
     const c=state.config;if(!c){els.geometry.innerHTML='<div class="empty">Enter a valid configuration.</div>';els.bitWorkbench.innerHTML="";return}
     const metrics=[[c.lineCount,"Cache lines"],[c.setCount,"Sets"],[c.ways,"Ways / set"],[c.tagBits,"Tag bits"],[c.indexBits,"Index bits"],[c.offsetBits,"Offset bits"]];const metricTips={"Cache lines":`Cache lines = cache size ÷ block size = ${c.cacheSize} ÷ ${c.blockSize} = ${c.lineCount}.`,"Sets":`Sets = cache lines ÷ ways = ${c.lineCount} ÷ ${c.ways} = ${c.setCount}.`,"Ways / set":`Ways per set = associativity = ${c.ways}.`,"Tag bits":`Tag bits = address width − index bits − offset bits = ${c.addressBits} − ${c.indexBits} − ${c.offsetBits} = ${c.tagBits}.`,"Index bits":`Index bits = log2(number of sets) = log2(${c.setCount}) = ${c.indexBits}.`,"Offset bits":`Offset bits = log2(block size in bytes) = log2(${c.blockSize}) = ${c.offsetBits}.`};els.geometry.innerHTML=metrics.map(([v,n],i)=>`<div class="metric metric-${i}" data-metric-index="${i}" title="${metricTips[n]||""}"><span>${n}</span><strong>${v}</strong></div>`).join("");
@@ -952,6 +1071,7 @@ LW 0x04</textarea>
       "Choose where the block will go",
       "Look in the indexed set",
       "Select the matching cache line",
+      "Write-through updates both copies",
       "Check the metadata",
       "Apply the write-back policy",
       "Write directly to main memory",
@@ -974,6 +1094,37 @@ LW 0x04</textarea>
     const c=state.config,d=decodeAddress(r.address,c),row=tutorialCacheRowSelector(r);
     const targetMem=tutorialMemoryRowSelector(r.blockBase);
     const direct=c.ways===1;
+    const currentLine=(r.wayIndex!=null&&state.sets[r.setIndex])?state.sets[r.setIndex][r.wayIndex]:null;
+    const addressBinary=binaryFixed(r.address,c.addressBits);
+    const tagBinary=addressBinary.slice(0,c.tagBits);
+    const indexBinary=c.indexBits?addressBinary.slice(c.tagBits,c.tagBits+c.indexBits):"";
+    const offsetBinary=c.offsetBits?addressBinary.slice(c.tagBits+c.indexBits):"";
+    const binaryPartitionHtml=`<div class="tutorial-binary">
+      <div class="tutorial-binary-label">Full ${c.addressBits}-bit address</div>
+      <div class="tutorial-binary-value">${addressBinary}</div>
+      <div class="tutorial-binary-label" style="margin-top:8px">Partitioned address</div>
+      <div class="tutorial-binary-partition">
+        <span class="tag">${tagBinary||"—"}</span><span>|</span>
+        <span class="index">${indexBinary||"—"}</span><span>|</span>
+        <span class="offset">${offsetBinary||"—"}</span>
+      </div>
+      <div class="tutorial-binary-key">Tag (${c.tagBits} bit${c.tagBits===1?"":"s"}) | Set index (${c.indexBits} bit${c.indexBits===1?"":"s"}) | Block offset (${c.offsetBits} bit${c.offsetBits===1?"":"s"})</div>
+    </div>`;
+    const tagConversionHtml=`<span class="tutorial-conversion tag"><span>Tag</span><span class="binary">${tagBinary||"—"}</span><span class="arrow">→</span><span class="meaning">${hex(d.tag)}</span></span>`;
+    const indexConversionHtml=c.indexBits
+      ? `<span class="tutorial-conversion index"><span>Index</span><span class="binary">${indexBinary}</span><span class="arrow">→</span><span class="meaning">set ${d.setIndex}</span></span>`
+      : `<span class="tutorial-conversion index"><span>Index</span><span class="binary">—</span><span class="arrow">→</span><span class="meaning">set 0</span></span>`;
+    const tagIndexConversionsHtml=`<div class="tutorial-conversions">${tagConversionHtml}${indexConversionHtml}</div>`;
+    const replacementNote=r.eviction
+      ? `<div class="tutorial-note"><strong>Block replacement:</strong> Index ${indexBinary||"—"} selects set ${r.setIndex}. That set was full, so way ${r.wayIndex} is reused. The previous block (${esc(r.eviction)}) is replaced.${r.writeBack?" Because it was dirty, it is written back to main memory first.":""}</div>`
+      : "";
+    const writeBackCacheBytes=(r.isWrite&&c.writePolicy==="WB_WA"&&currentLine)
+      ? currentLine.data.slice(r.offset,r.offset+r.size).map(byteHex)
+      : [];
+    const writeBackMemoryBytes=(r.isWrite&&c.writePolicy==="WB_WA")
+      ? Array.from({length:r.size},(_,i)=>byteHex(memoryHashByte(r.address+BigInt(i))))
+      : [];
+    const writeBackContentsDiffer=writeBackCacheBytes.some((v,i)=>v!==writeBackMemoryBytes[i]);
     const steps=[];
 
     if(r.step===1){
@@ -989,11 +1140,45 @@ LW 0x04</textarea>
       [".config-panel","#geometry"],["#cacheSize","#blockSize","#ways","#geometry .metric-0","#geometry .metric-1","#geometry .metric-2"],{popupTopViewport:.60}
     ));
 
+    const dirtyBitsPerLine=c.writePolicy==="WB_WA"?1:0;
+    const lruBitsPerLine=c.ways>1?Math.log2(c.ways):0;
+    const metadataBitsPerLine=1+dirtyBitsPerLine+lruBitsPerLine+c.tagBits;
+    const totalMetadataBits=metadataBitsPerLine*c.lineCount;
+    const totalMetadataBytes=totalMetadataBits/8;
+    const metadataParts=[
+      `V = 1 bit`,
+      ...(dirtyBitsPerLine?[`D = 1 bit`]:[]),
+      ...(lruBitsPerLine?[`LRU = log₂(${c.ways}) = ${lruBitsPerLine} bit${lruBitsPerLine===1?"":"s"}`]:[]),
+      `Tag = ${c.tagBits} bit${c.tagBits===1?"":"s"}`
+    ];
+
     steps.push(tutorialStep(
       "Translate that into cache rows",
-      `<p>The cache table visualizes that organization: ${c.setCount} set${c.setCount===1?"":"s"} × ${c.ways} way${c.ways===1?"":"s"} gives ${c.lineCount} total line${c.lineCount===1?"":"s"}.</p>
-       <p>${direct?"Because this cache is direct-mapped, each set has exactly one possible cache line.":"All ways with the same Set value belong to the same set; an incoming block may occupy any eligible way in that set."}</p>`,
-      [".cache-table-wrap"],[]
+      `<p>The cache table visualizes the organization as <strong>${c.setCount} set${c.setCount===1?"":"s"} × ${c.ways} way${c.ways===1?"":"s"}</strong>, giving <strong>${c.lineCount} cache line${c.lineCount===1?"":"s"}</strong>.</p>
+       <div class="tutorial-math">
+         <div>Data bytes / line = block size = ${c.blockSize} B</div>
+         <div>Total lines = ${c.setCount} × ${c.ways} = ${c.lineCount}</div>
+         <div>Cache data capacity = ${c.lineCount} × ${c.blockSize} B = ${c.cacheSize} B</div>
+       </div>
+       <p><span class="tutorial-segment-key data">Data bytes</span> is the portion counted by the advertised <strong>${c.cacheSize}-byte cache capacity</strong>. That capacity refers only to the actual cached data.</p>
+       <p><span class="tutorial-segment-key metadata">Metadata</span> is stored separately and is <strong>not included</strong> in that ${c.cacheSize}-byte data-capacity figure.</p>
+       <div class="tutorial-math">
+         ${metadataParts.map(x=>`<div>${x}</div>`).join("")}
+         <div>Metadata / line = ${metadataBitsPerLine} bits</div>
+         <div>Total metadata = ${metadataBitsPerLine} × ${c.lineCount} = ${totalMetadataBits} bits${Number.isInteger(totalMetadataBytes)?` = ${totalMetadataBytes} B`:` ≈ ${totalMetadataBytes.toFixed(2)} B`}</div>
+       </div>
+       <p>${direct?"Because this cache is direct-mapped, each set has exactly one possible cache line.":"All ways with the same Set value belong to the same set; an incoming block may occupy any eligible way in that set."}</p>
+       <p class="tutorial-note"><strong>Metadata highlighted here:</strong> V${dirtyBitsPerLine?", D":""}${lruBitsPerLine?", LRU":""}, and Tag only. Set, Block base, Data bytes, and Status are not counted as metadata in this tutorial.</p>`,
+      [".cache-table-wrap"],[],
+      {columnGroups:[
+        {host:".cache-table-wrap",selector:".cache-col-data, .cache-data-cell",kind:"data"},
+        {host:".cache-table-wrap",selector:[
+          ".cache-col-valid",".cache-valid-cell",
+          ...(dirtyBitsPerLine?[".cache-col-dirty",".cache-dirty-cell"]:[]),
+          ...(lruBitsPerLine?[".cache-col-lru",".cache-lru-cell"]:[]),
+          ".cache-col-tag",".cache-tag-cell"
+        ].join(","),kind:"metadata"}
+      ]}
     ));
 
     steps.push(tutorialStep(
@@ -1004,6 +1189,7 @@ LW 0x04</textarea>
          <div>Index bits = log₂(${c.setCount} set${c.setCount===1?"":"s"}) = ${c.indexBits}</div>
          <div>Tag bits = ${c.addressBits} − ${c.indexBits} − ${c.offsetBits} = ${c.tagBits}</div>
        </div>
+       ${binaryPartitionHtml}
        <p>The colored bit partition underneath shows exactly where those fields are located.</p>`,
       ["#geometry","#bitWorkbench"],["#geometry .metric-3","#geometry .metric-4","#geometry .metric-5"]
     ));
@@ -1014,20 +1200,25 @@ LW 0x04</textarea>
       "Partition the current address",
       `<p>The address being decoded for this access is <strong>${hex(r.address,c.addressBits)}</strong>. Those address bits—not the data value—are split into tag, set index, and block offset.</p>
        ${r.step>1?`<p class="tutorial-note">The cache-organization setup was explained on the first access, so subsequent accesses begin directly with the current address.</p>`:""}
+       ${binaryPartitionHtml}
+       ${tagIndexConversionsHtml}
        <div class="tutorial-math">
-         <div>Tag = ${hex(d.tag)} (${d.tag})</div>
-         <div>Set index = ${d.setIndex}</div>
-         <div>Block offset = ${d.offset}</div>
+         <div>Tag: ${tagBinary||"—"} → ${hex(d.tag)}</div>
+         <div>Set index: ${indexBinary||"—"} → ${d.setIndex}</div>
+         <div>Block offset: ${offsetBinary||"—"} → ${d.offset}</div>
        </div>`,
-      [".current-access-panel","#bitWorkbench"],[".current-access-panel .current-address"]
+      ["#bitWorkbench"],[".current-access-panel .current-address"]
     ));
 
     if(r.writeBypass){
       steps.push(tutorialStep(
         "Look in the indexed set",
-        `<p>The index selects set <strong>${d.setIndex}</strong>. The cache does not contain a valid line in that set with tag <strong>${hex(d.tag)}</strong>, so this store is a miss.</p>
+        `<p>The <strong>Index</strong> field selects the set, then the <strong>Tag</strong> field is compared against the valid cache lines in that set.</p>
+         ${tagIndexConversionsHtml}
+         <p>Index <strong>${indexBinary||"—"}</strong> means set <strong>${d.setIndex}</strong>. No valid line in that set has Tag <strong>${tagBinary||"—"}</strong> = <strong>${hex(d.tag)}</strong>, so this store is a miss.</p>
          <p>Because the selected policy is <strong>write-through + no-write-allocate</strong>, a store miss does not choose a cache line and does not evict anything.</p>`,
-        [".cache-table-wrap","#bitWorkbench"],[".bit-cell.index",".bit-cell.tag"]
+        [".cache-table-wrap","#bitWorkbench"],[],
+        {groupEmphasis:["#bitWorkbench .bit-cell.index","#bitWorkbench .bit-cell.tag"]}
       ));
       steps.push(tutorialStep(
         "Write directly to main memory",
@@ -1037,8 +1228,11 @@ LW 0x04</textarea>
       ));
       steps.push(tutorialStep(
         "The tag still explains the miss",
-        `<p>The tag <strong>${hex(d.tag)}</strong> identifies which memory block is being requested after the index has selected the set. No valid matching tag was found, so the result is a miss.</p>`,
-        ["#bitWorkbench",".cache-table-wrap"],[".bit-cell.tag"]
+        `<p>The Tag field identifies which memory block is being requested after the Index has selected the set.</p>
+         <div class="tutorial-conversions">${tagConversionHtml}${indexConversionHtml}</div>
+         <p>Tag <strong>${tagBinary||"—"}</strong> converts to <strong>${hex(d.tag)}</strong>. No valid cache line in set <strong>${d.setIndex}</strong> stored that tag, so the result is a miss.</p>`,
+        ["#bitWorkbench",".cache-table-wrap"],[],
+        {groupEmphasis:["#bitWorkbench .bit-cell.tag"]}
       ));
       steps.push(tutorialStep(
         "Valid bits matter",
@@ -1047,7 +1241,9 @@ LW 0x04</textarea>
       ));
       steps.push(tutorialStep(
         "Why this access is a MISS",
-        `<p>This is a <strong>MISS</strong>: set ${d.setIndex} did not contain a valid matching tag before the store. Under no-write-allocate, the miss is serviced by memory without changing cache placement.</p>`,
+        `<p>This is a <strong>MISS</strong>: Index <strong>${indexBinary||"—"}</strong> selected set <strong>${d.setIndex}</strong>, but that set did not contain a valid line with Tag <strong>${tagBinary||"—"}</strong> = <strong>${hex(d.tag)}</strong>.</p>
+         ${tagIndexConversionsHtml}
+         <p>Under no-write-allocate, the miss is serviced by memory without changing cache placement.</p>`,
         [".current-access-panel",".cache-table-wrap"],["#currentResult"]
       ));
       steps.push(tutorialStep(
@@ -1061,8 +1257,9 @@ LW 0x04</textarea>
     if(r.writeBack && r.evictedBlockBase!=null){
       steps.push(tutorialStep(
         "Write back the dirty victim first",
-        `<p>The selected set was full, and the replacement victim had its dirty bit set. Because this is a write-back cache, that old cache block must be copied back to main memory <strong>before</strong> the line can be reused.</p>
-         <div class="tutorial-note">Victim block base: ${hex(r.evictedBlockBase,c.addressBits)}. Its full ${c.blockSize}-byte block is written back.</div>`,
+        `<p>A <strong>block replacement</strong> is occurring: the selected set is full, and the chosen victim line currently contains another memory block.</p>
+         <p>The victim also has its dirty bit set. Because this is a write-back cache, that old cache block must be copied back to main memory <strong>before</strong> the line can be reused.</p>
+         <div class="tutorial-note">Victim block base: ${hex(r.evictedBlockBase,c.addressBits)}. Its full ${c.blockSize}-byte block is written back before replacement.</div>`,
         [".memory-table"],[tutorialMemoryRowSelector(r.evictedBlockBase)].filter(Boolean),{memoryBase:r.evictedBlockBase}
       ));
     }
@@ -1070,26 +1267,75 @@ LW 0x04</textarea>
     if(r.hit){
       steps.push(tutorialStep(
         "Select the matching cache line",
-        `<p>The index selects set <strong>${d.setIndex}</strong>. Within that set, a valid line already has tag <strong>${hex(d.tag)}</strong>, so the requested block is already cached${direct?".":` in way ${r.wayIndex}.`}</p>
-         <p>No block fill from main memory is needed on a hit.</p>`,
-        [".cache-table-wrap","#bitWorkbench"],[row,".bit-cell.index"].filter(Boolean)
+        `<p>The Index field selects the set, and the Tag field identifies the memory block expected in that set.</p>
+         ${tagIndexConversionsHtml}
+         <p>Index <strong>${indexBinary||"—"}</strong> selects set <strong>${d.setIndex}</strong>. Within that set, a valid line already stores Tag <strong>${tagBinary||"—"}</strong> = <strong>${hex(d.tag)}</strong>, so the requested block is already cached${direct?".":` in way ${r.wayIndex}.`}</p>
+         <p>The yellow boundary marks the exact cache line selected for this access. No block fill from main memory is needed on a hit.</p>`,
+        [".cache-table-wrap","#bitWorkbench"],[row].filter(Boolean),
+        {groupEmphasis:["#bitWorkbench .bit-cell.index"]}
       ));
     }else{
       steps.push(tutorialStep(
         "Choose where the block will go",
-        `<p>The index selects set <strong>${d.setIndex}</strong>. Because the requested tag was not already present, the access is a miss.</p>
-         <p>${direct?`Direct mapping fixes the destination to the one line in set ${d.setIndex}.`:`The replacement policy selects way ${r.wayIndex} in set ${d.setIndex}.`} The amount transferred is one complete cache block: <strong>${c.blockSize} bytes</strong>.</p>`,
-        [".cache-table-wrap","#bitWorkbench"],[row,".bit-cell.index"].filter(Boolean)
+        `<p>The Index field selects the set, while the Tag identifies the requested memory block.</p>
+         ${tagIndexConversionsHtml}
+         <p>Index <strong>${indexBinary||"—"}</strong> selects set <strong>${d.setIndex}</strong>. Tag <strong>${tagBinary||"—"}</strong> = <strong>${hex(d.tag)}</strong> was not already present, so the access is a miss.</p>
+         <p>${direct?`Direct mapping fixes the destination to the one line in set ${d.setIndex}.`:`The replacement policy selects way ${r.wayIndex} in set ${d.setIndex}.`} The amount transferred is one complete cache block: <strong>${c.blockSize} bytes</strong>.</p>
+         ${replacementNote}`,
+        [".cache-table-wrap","#bitWorkbench"],[row].filter(Boolean),
+        {groupEmphasis:["#bitWorkbench .bit-cell.index"]}
       ));
     }
 
     if(!r.hit){
+      const offsetXs=c.offsetBits?"X".repeat(c.offsetBits):"(no offset bits)";
+      const offsetLow=c.offsetBits?"0".repeat(c.offsetBits):"";
+      const offsetHigh=c.offsetBits?"1".repeat(c.offsetBits):"";
+      const blockEnd=r.blockBase+BigInt(c.blockSize-1);
       steps.push(tutorialStep(
         "Copy the block from main memory",
-        `<p>The cache fill comes from the aligned memory block beginning at <strong>${hex(r.blockBase,c.addressBits)}</strong>. A miss transfers the entire ${c.blockSize}-byte block, not only the ${r.size} byte${r.size===1?"":"s"} requested by the instruction.</p>
-         ${r.isWrite?`<p>This is a write-allocate store: the block is fetched first, then the store updates the addressed byte${r.size===1?"":"s"} in the cached copy.</p>`:`<p>The cache line now contains the same block bytes shown in main memory.</p>`}`,
+        `<p>The index and tag identify the memory <strong>block</strong>; the offset chooses a byte inside that block. On a cache miss, every possible offset for the same Tag + Index is copied into the selected cache line.</p>
+         <div class="tutorial-binary">
+           <div class="tutorial-binary-label">Block address pattern</div>
+           <div class="tutorial-binary-partition">
+             <span class="tag">${tagBinary||"—"}</span><span>|</span>
+             <span class="index">${indexBinary||"—"}</span><span>|</span>
+             <span class="offset">${offsetXs}</span>
+           </div>
+           <div class="tutorial-binary-key">Tag | Index | ${c.offsetBits?`${c.offsetBits} variable offset bit${c.offsetBits===1?"":"s"}`:"no offset field"}</div>
+         </div>
+         ${tagIndexConversionsHtml}
+         <div class="tutorial-math">
+           ${c.offsetBits
+             ? `<div>Offsets copied: ${offsetLow} through ${offsetHigh}</div>`
+             : `<div>Only one offset exists because the block size is 1 byte.</div>`}
+           <div>Bytes copied = 2^${c.offsetBits} = ${c.blockSize} byte${c.blockSize===1?"":"s"}</div>
+           <div>Memory range = ${hex(r.blockBase,c.addressBits)} through ${hex(blockEnd,c.addressBits)}</div>
+         </div>
+         <p>The highlighted main-memory row is exactly the ${c.blockSize}-byte section copied to the highlighted cache line. The original instruction may use only ${r.size} byte${r.size===1?"":"s"}, but the cache fill always transfers the whole block.</p>
+         ${r.isWrite?`<p>This is a write-allocate store: after the block is copied in, the store modifies the addressed byte${r.size===1?"":"s"} in the cached copy.</p>`:`<p>The cache line now contains the same full block of bytes shown in main memory.</p>`}`,
         [".memory-table", ".cache-table-wrap"],[targetMem,row].filter(Boolean),{memoryBase:r.blockBase,popupViewportY:.50}
       ));
+
+      if(r.isWrite && c.writePolicy==="WB_WA"){
+        steps.push(tutorialStep(
+          "Apply the write-back policy",
+          `<p>The block has now been allocated in the cache and the store updates the addressed ${r.size} byte${r.size===1?"":"s"} in that cached copy.</p>
+           <p>The cache line is marked <strong>dirty</strong>. With write-back, main memory is <strong>not</strong> updated by this store yet.</p>
+           <div class="tutorial-math">
+             <div>Cache bytes = ${writeBackCacheBytes.join(" ")||"—"}</div>
+             <div>Main-memory bytes = ${writeBackMemoryBytes.join(" ")||"—"}</div>
+           </div>
+           <p>${writeBackContentsDiffer?"The highlighted bytes differ because only the cached copy contains the newly stored value.":"The store still did not write main memory. The byte values happen to match in this case, but the line is dirty because the cache performed the write."}</p>
+           <p>If this dirty line is later evicted, the modified block must be written back to main memory first.</p>`,
+          [".cache-table-wrap",".memory-table"],
+          [row,row?`${row} .cache-dirty-cell`:null,targetMem].filter(Boolean),
+          {memoryBase:r.blockBase,groupEmphasis:[
+            ...(row?[`${row} .byte.active`]:[]),
+            ...(targetMem?[`${targetMem} input.active-byte`]:[])
+          ]}
+        ));
+      }
     }else if(r.isWrite && c.writePolicy==="WT_NWA"){
       steps.push(tutorialStep(
         "Write-through updates both copies",
@@ -1099,24 +1345,43 @@ LW 0x04</textarea>
       ));
     }else if(r.isWrite){
       steps.push(tutorialStep(
-        "Update the cached copy",
-        `<p>This store hit changes the addressed ${r.size} byte${r.size===1?"":"s"} in the cache line. Under write-back, main memory is not updated yet.</p>
-         <p>The line is marked dirty so a later eviction knows that this block must be written back first.</p>`,
-        [".cache-table-wrap"],[row, row?`${row} .cache-dirty-cell`:null].filter(Boolean)
+        "Update the cache copy",
+        `<p>This store is a cache hit, so the addressed ${r.size} byte${r.size===1?"":"s"} are updated directly in the existing cache line.</p>
+         <p>Because the policy is <strong>write-back</strong>, main memory is <strong>not</strong> updated now. The line is marked <strong>dirty</strong> to record that the cached block is newer than the memory copy.</p>
+         <div class="tutorial-math">
+           <div>Cache bytes = ${writeBackCacheBytes.join(" ")||"—"}</div>
+           <div>Main-memory bytes = ${writeBackMemoryBytes.join(" ")||"—"}</div>
+         </div>
+         <p>${writeBackContentsDiffer?"The highlighted bytes differ because only the cache received this store.":"The memory bytes happen to equal the stored value, but the write still occurred only in the cache and the line remains dirty."}</p>
+         <p>If this dirty line is later evicted, the modified block must be written back to main memory before replacement.</p>`,
+        [".cache-table-wrap",".memory-table"],
+        [row,row?`${row} .cache-dirty-cell`:null,targetMem].filter(Boolean),
+        {memoryBase:r.blockBase,groupEmphasis:[
+          ...(row?[`${row} .byte.active`]:[]),
+          ...(targetMem?[`${targetMem} input.active-byte`]:[])
+        ]}
       ));
     }else{
       steps.push(tutorialStep(
         "Read the data from the cached block",
-        `<p>Because this is a hit, the requested ${r.size} byte${r.size===1?"":"s"} are taken directly from the cache line. Main memory does not need to supply a block.</p>`,
-        [".cache-table-wrap"],[row].filter(Boolean)
+        `<p>Because this is a hit, the requested ${r.size} byte${r.size===1?"":"s"} are taken directly from the cache line. The yellow byte boundary marks exactly which cached byte${r.size===1?"":"s"} are read. Main memory does not need to supply a block.</p>`,
+        [".cache-table-wrap"],[row].filter(Boolean),
+        {groupEmphasis:row?[`${row} .byte.active`]:[]}
       ));
     }
 
     steps.push(tutorialStep(
       "The tag identifies the memory block",
-      `<p>The tag field is the block identifier within the selected set. Here the tag is <strong>${hex(d.tag)}</strong>.</p>
-       <p>${r.hit?"A matching stored tag is one of the conditions that made this access a hit.":"On the miss, this tag is stored with the newly loaded cache line so future accesses to the same block can be recognized."}</p>`,
-      ["#bitWorkbench",".cache-table-wrap"],[".bit-cell.tag",row?`${row} .cache-tag-cell`:null].filter(Boolean)
+      `<p>The Tag field is the block identifier within the selected set. The yellow boundary groups the entire Tag field as one value rather than treating each bit separately.</p>
+       <div class="tutorial-conversions">${tagConversionHtml}${indexConversionHtml}</div>
+       <div class="tutorial-math">
+         <div>Tag binary (${c.tagBits} bit${c.tagBits===1?"":"s"}) = ${tagBinary||"—"}</div>
+         <div>${tagBinary||"—"} → ${hex(d.tag)}</div>
+         <div>Index ${indexBinary||"—"} → set ${d.setIndex}</div>
+       </div>
+       <p>The hexadecimal Tag value is the same value stored in the cache metadata. ${r.hit?"A matching stored tag is one of the conditions that made this access a hit.":"On the miss, this tag is stored with the newly loaded cache line so future accesses to the same block can be recognized."}</p>`,
+      ["#bitWorkbench",".cache-table-wrap"],[row?`${row} .cache-tag-cell`:null].filter(Boolean),
+      {groupEmphasis:["#bitWorkbench .bit-cell.tag"]}
     ));
 
     const metadataText = c.writePolicy==="WB_WA" && r.isWrite
@@ -1132,25 +1397,10 @@ LW 0x04</textarea>
     steps.push(tutorialStep(
       `Why this access is a ${r.hit?"HIT":"MISS"}`,
       r.hit
-        ? `<p>This is a <strong>HIT</strong> because the indexed set already contained a <strong>valid</strong> line whose stored tag matched <strong>${hex(d.tag)}</strong>.</p>`
-        : `<p>This is a <strong>MISS</strong> because no valid matching tag existed in set ${d.setIndex} before the access. The line shown now is the result of servicing that miss.</p>`,
+        ? `<p>This is a <strong>HIT</strong> because Index <strong>${indexBinary||"—"}</strong> selected set <strong>${d.setIndex}</strong>, and that set already contained a <strong>valid</strong> line whose Tag matched <strong>${tagBinary||"—"}</strong> = <strong>${hex(d.tag)}</strong>.</p>${tagIndexConversionsHtml}`
+        : `<p>This is a <strong>MISS</strong> because Index <strong>${indexBinary||"—"}</strong> selected set <strong>${d.setIndex}</strong>, but no valid line there had Tag <strong>${tagBinary||"—"}</strong> = <strong>${hex(d.tag)}</strong> before the access.</p>${tagIndexConversionsHtml}<p>The line shown now is the result of servicing that miss.</p>`,
       [".current-access-panel",".cache-table-wrap"],["#currentResult",row].filter(Boolean)
     ));
-
-    if(r.isWrite && c.writePolicy==="WB_WA"){
-      steps.push(tutorialStep(
-        "Apply the write-back policy",
-        `<p>The store is now complete in the cache. The modified line remains dirty; main memory is updated only if that line is later evicted.</p>
-         <p>This postpones memory traffic but requires the dirty bit and a write-back before replacing a modified victim.</p>`,
-        [".cache-table-wrap"],[row,row?`${row} .cache-dirty-cell`:null].filter(Boolean)
-      ));
-    }else if(r.isWrite && c.writePolicy==="WT_NWA"){
-      steps.push(tutorialStep(
-        "Apply the write-through policy",
-        `<p>The store is complete in both the cache and main memory. Because every write hit is propagated immediately, there is no dirty state to track.</p>`,
-        [".cache-table-wrap",".memory-table"],[row,targetMem].filter(Boolean),{memoryBase:r.blockBase}
-      ));
-    }
 
     steps.push(tutorialStep(
       "Memory access complete",
@@ -1161,10 +1411,70 @@ LW 0x04</textarea>
   }
 
   function clearTutorialFocus(){
+    document.querySelectorAll(".tutorial-group-outline,.tutorial-segment-outline").forEach(el=>el.remove());
+    document.querySelectorAll(".tutorial-group-host").forEach(el=>el.classList.remove("tutorial-group-host"));
     document.querySelectorAll(".tutorial-focus,.tutorial-focus-table,.tutorial-emphasis,.tutorial-row-focus,.tutorial-focus-cell").forEach(el=>{
       el.classList.remove("tutorial-focus","tutorial-focus-table","tutorial-emphasis","tutorial-row-focus","tutorial-focus-cell");
     });
   }
+  function addTutorialGroupOutline(selector){
+    const els=[...document.querySelectorAll(selector)];
+    if(!els.length) return [];
+    const groups=new Map();
+    for(const el of els){
+      const parent=el.parentElement;
+      if(!parent) continue;
+      if(!groups.has(parent)) groups.set(parent,[]);
+      groups.get(parent).push(el);
+    }
+    const targets=[];
+    for(const [parent,items] of groups){
+      parent.classList.add("tutorial-group-host");
+      const pr=parent.getBoundingClientRect();
+      const rects=items.map(el=>el.getBoundingClientRect());
+      const left=Math.min(...rects.map(r=>r.left))-pr.left;
+      const top=Math.min(...rects.map(r=>r.top))-pr.top;
+      const right=Math.max(...rects.map(r=>r.right))-pr.left;
+      const bottom=Math.max(...rects.map(r=>r.bottom))-pr.top;
+      const box=document.createElement("div");
+      box.className="tutorial-group-outline";
+      // Keep the outline inside its host at the leading edges so the
+      // first tag/index bit never clips the yellow left/top border.
+      const boxLeft=Math.max(0,left);
+      const boxTop=Math.max(0,top);
+      const boxRight=Math.min(parent.clientWidth||right,right+3);
+      const boxBottom=Math.min(parent.clientHeight||bottom,bottom+3);
+      box.style.left=`${boxLeft}px`;
+      box.style.top=`${boxTop}px`;
+      box.style.width=`${Math.max(3,boxRight-boxLeft)}px`;
+      box.style.height=`${Math.max(3,boxBottom-boxTop)}px`;
+      parent.appendChild(box);
+      targets.push(...items);
+    }
+    return targets;
+  }
+  function addTutorialColumnGroup(group){
+    const host=document.querySelector(group.host);
+    const items=[...document.querySelectorAll(group.selector)];
+    if(!host||!items.length) return [];
+    host.classList.add("tutorial-group-host");
+    const hr=host.getBoundingClientRect();
+    const rects=items.map(el=>el.getBoundingClientRect()).filter(r=>r.width>0&&r.height>0);
+    if(!rects.length) return [];
+    const left=Math.max(0,Math.min(...rects.map(r=>r.left))-hr.left);
+    const top=Math.max(0,Math.min(...rects.map(r=>r.top))-hr.top);
+    const right=Math.min(host.clientWidth,Math.max(...rects.map(r=>r.right))-hr.left);
+    const bottom=Math.min(host.clientHeight,Math.max(...rects.map(r=>r.bottom))-hr.top);
+    const box=document.createElement("div");
+    box.className=`tutorial-segment-outline ${group.kind||""}`;
+    box.style.left=`${left}px`;
+    box.style.top=`${top}px`;
+    box.style.width=`${Math.max(3,right-left)}px`;
+    box.style.height=`${Math.max(3,bottom-top)}px`;
+    host.appendChild(box);
+    return items;
+  }
+
   function applyTutorialFocus(step){
     clearTutorialFocus();
     const targets=[];
@@ -1182,6 +1492,12 @@ LW 0x04</textarea>
         else el.classList.add("tutorial-emphasis");
         if(!targets.includes(el)) targets.push(el);
       });
+    });
+    (step.groupEmphasis||[]).filter(Boolean).forEach(sel=>{
+      addTutorialGroupOutline(sel).forEach(el=>{if(!targets.includes(el))targets.push(el)});
+    });
+    (step.columnGroups||[]).forEach(group=>{
+      addTutorialColumnGroup(group).forEach(el=>{if(!targets.includes(el))targets.push(el)});
     });
     return targets;
   }
@@ -1283,9 +1599,9 @@ LW 0x04</textarea>
     addressPanel.style.minHeight=target+"px";
   }
   function updateControls(){const canStep=!!state.config&&state.accessValid&&state.pointer<state.accesses.length;els.stepBtn.disabled=!canStep;els.undoBtn.disabled=!state.undoStack.length;els.emptyBtn.disabled=!state.config;els.queueStatus.textContent=state.notice||`${state.pointer} of ${state.accesses.length} processed • ${Math.max(0,state.accesses.length-state.pointer)} remaining`;state.notice=""}
-  function renderAll(){renderGeometry();renderCurrent();renderSummary();renderCache();renderAccessEditor();renderHistory();renderMemory();updateControls();requestAnimationFrame(syncTopPanelHeights)}
+  function renderAll(){renderGeometry();renderAddressHelper();renderCurrent();renderSummary();renderCache();renderAccessEditor();renderHistory();renderMemory();updateControls();requestAnimationFrame(syncTopPanelHeights)}
 
-  [els.addressBits,els.cacheSize,els.blockSize,els.ways].forEach(el=>el.addEventListener('input',()=>{if(tutorial.active)closeTutorial();clearTimeout(configTimer);configTimer=setTimeout(applyConfigFromInputs,120)}));
+  [els.addressBits,els.cacheSize,els.blockSize,els.ways].forEach(el=>el.addEventListener('input',()=>{if(tutorial.active)closeTutorial();if(el===els.ways)updateReplacementAvailability();clearTimeout(configTimer);configTimer=setTimeout(applyConfigFromInputs,120)}));
   [els.cacheSize,els.blockSize,els.ways].forEach(el=>{
     let lastValid=isPow2(Number(el.value))?Number(el.value):null;
     el.addEventListener("keydown",e=>{
@@ -1314,6 +1630,7 @@ LW 0x04</textarea>
   els.writePolicy.addEventListener('change',()=>{if(tutorial.active)closeTutorial();if(state.config){state.config.writePolicy=els.writePolicy.value;restartSimulation("Write policy changed; cache restarted empty.");}});
   els.accessInput.addEventListener('input',()=>{if(tutorial.active)closeTutorial();renderAccessEditor();parseAccessesLive(true)});
   els.accessInput.addEventListener('scroll',syncAccessEditorScroll);
+  els.addressHelperBits.addEventListener('change',onAddressHelperChange);
   els.randomTemplate.addEventListener('change',()=>applyGeneratedSeries(true));
   els.generateBtn.addEventListener('click',generateSeries);
   els.stepBtn.addEventListener('click',()=>processStep(tutorial.enabled));
@@ -1329,7 +1646,7 @@ LW 0x04</textarea>
   els.memoryJumpBtn.addEventListener('click',jumpMemory);els.memoryJump.addEventListener('keydown',e=>{if(e.key==='Enter') jumpMemory()});els.memoryPrevBtn.addEventListener('click',()=>moveMemoryPage(-1));els.memoryNextBtn.addEventListener('click',()=>moveMemoryPage(1));els.randomizeMemoryBtn.addEventListener('click',randomizeMemory);
   window.addEventListener('resize',()=>requestAnimationFrame(syncTopPanelHeights));
 
-  document.body.classList.add("startup-intro-active");setTutorialEnabled(false);applyConfigFromInputs();parseAccessesLive(false);
+  document.body.classList.add("startup-intro-active");setTutorialEnabled(false);updateReplacementAvailability();applyConfigFromInputs();parseAccessesLive(false);
 })();
 </script>
 </body>
