@@ -239,6 +239,7 @@
   .placement-value{display:grid;gap:3px}.placement-line{line-height:1.3;white-space:normal}
   .summary-row{display:grid;grid-template-columns:repeat(5,minmax(90px,1fr));gap:9px}.left-sticky-group .summary-row{grid-template-columns:repeat(3,minmax(0,1fr))}.stat{border:1px solid #dfe4e9;border-radius:10px;padding:10px 11px;background:#fbfcfd}.stat strong{display:block;font-size:1.08rem}.stat span{color:var(--muted);font-size:.7rem}
   .table-wrap{overflow:auto;border:1px solid #dfe4e9;border-radius:11px;background:#fff}
+  .cache-valid-cell.valid-zero{color:#d9362b!important;font-weight:950}.cache-valid-cell.valid-one{color:#00A94F!important;font-weight:950}
   .cache-table-wrap{overflow-x:hidden}
   table{width:100%;border-collapse:collapse;font-size:.78rem}th,td{padding:8px 9px;text-align:left;border-bottom:1px solid #edf0f3;white-space:nowrap;vertical-align:middle}th{position:sticky;top:0;z-index:2;background:#f5f7f9;color:#4f5a65;font-size:.69rem;text-transform:uppercase;letter-spacing:.035em}tr:last-child td{border-bottom:0}
   .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
@@ -250,6 +251,11 @@
   .cache-table .col-status{white-space:normal;line-height:1.25;font-size:.9rem}
   .cache-table .col-tag,.cache-table .col-base{font-size:.87rem}
   .cache-table .col-small{font-size:.93rem;font-weight:650}
+  .cache-table th,.cache-table td{text-align:center}
+  .cache-table .cache-data-cell,.cache-table .cache-col-data,
+  .cache-table .cache-status-cell,.cache-table .cache-col-status{text-align:left}
+  .cache-table .cache-set-cell,.cache-table .cache-way-cell{font-weight:400}
+  .cache-table .cache-tag-cell{font-weight:850}
   .cache-table th[title]{cursor:help}
   .cache-row.current-line td{background:#fff8e8}
   .cache-row.current-line td:first-child{box-shadow:inset 3px 0 0 rgba(123,17,19,.55)}.cache-row.victim-line td:first-child{box-shadow:inset 3px 0 0 #d6a535}
@@ -257,6 +263,12 @@
   .data-bytes{display:grid;gap:4px;min-width:0;max-width:none;justify-content:start}.data-byte-row{display:grid;gap:3px;min-width:0;height:27px;align-items:stretch}.byte{min-width:0;height:27px;padding:0 5px;border-radius:5px;background:#eef2f4;text-align:center;display:flex;align-items:center;justify-content:center;font:780 .9rem/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.byte.active{font-weight:900;color:#fff}.byte.active.hit-byte{background:#00B050;outline:1px solid #00B050}.byte.active.miss-byte{background:#FF341D;outline:1px solid #FF341D}
   .status-text{font-size:.9rem;color:#65707b}
   .pill{display:inline-flex;align-items:center;justify-content:center;min-width:46px;padding:3px 7px;border-radius:999px;font-size:.67rem;font-weight:900}.pill.hit{background:#E8F8EF;color:#00B050}.pill.miss{background:#FFF0ED;color:#FF341D}.pill.read{background:#ebf1f5;color:#526d80}.pill.write{background:#efe8f4;color:#6f5b7d}
+  .cache-panel-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;margin-bottom:15px}
+  .cache-panel-copy{min-width:0}.cache-panel-copy h2{margin-bottom:6px}.cache-panel-copy .section-lead{margin-bottom:0}
+  .cache-init-controls{display:flex;align-items:end;justify-content:flex-end;gap:9px;flex-wrap:wrap}
+  .cache-init-field{min-width:170px}.cache-init-field label{margin-bottom:5px;font-size:.78rem}
+  .cache-init-field select{padding:8px 10px;font-size:.82rem}
+  .cache-init-controls button{white-space:nowrap}
   .memory-panel-head{display:grid;grid-template-columns:minmax(360px,620px) auto;gap:26px;align-items:center;justify-content:start;margin-bottom:15px}
   .memory-panel-copy{min-width:0}.memory-panel-copy h2{margin-bottom:6px}.memory-panel-copy .section-lead{margin-bottom:0}
   .memory-config-switches{display:flex;align-items:center;justify-content:flex-start;gap:24px;flex-wrap:wrap}
@@ -278,7 +290,7 @@
   .memory-table tr.flash-memory td{animation:memoryFlash .72s ease-out 1 both}
   footer{color:#697480;font-size:.82rem;line-height:1.5;margin-top:16px;padding:0 4px}
   @media(max-width:1100px){.layout{grid-template-columns:1fr}.left-stack{align-self:auto}.left-sticky-group{position:static}.geometry{justify-content:center}.memory-panel-head{grid-template-columns:minmax(320px,540px) auto;gap:20px}}
-  @media(max-width:720px){.memory-panel-head{grid-template-columns:1fr}.memory-config-switches{justify-content:flex-start}.memory-switch-control{justify-items:start}.banner-wrap{grid-template-columns:1fr}.tutorial-toggle{justify-self:start}.tutorial-popover{left:16px!important;right:16px!important;top:auto!important;bottom:16px!important;width:auto}.banner-mainline{white-space:normal}header{padding:15px 18px 16px}main{padding:16px 10px 40px}.section{padding:17px}.form-grid,.current-grid{grid-template-columns:1fr}.summary-row{grid-template-columns:repeat(2,1fr)}.memory-toolbar{grid-template-columns:1fr 1fr}.random-grid{grid-template-columns:1fr}.geometry{justify-content:center}}
+  @media(max-width:720px){.cache-panel-head{grid-template-columns:1fr}.cache-init-controls{justify-content:flex-start}.memory-panel-head{grid-template-columns:1fr}.memory-config-switches{justify-content:flex-start}.memory-switch-control{justify-items:start}.banner-wrap{grid-template-columns:1fr}.tutorial-toggle{justify-self:start}.tutorial-popover{left:16px!important;right:16px!important;top:auto!important;bottom:16px!important;width:auto}.banner-mainline{white-space:normal}header{padding:15px 18px 16px}main{padding:16px 10px 40px}.section{padding:17px}.form-grid,.current-grid{grid-template-columns:1fr}.summary-row{grid-template-columns:repeat(2,1fr)}.memory-toolbar{grid-template-columns:1fr 1fr}.random-grid{grid-template-columns:1fr}.geometry{justify-content:center}}
 </style>
 </head>
 <body>
@@ -433,10 +445,10 @@ LW 0x04</textarea>
           </details>
 
           <div class="button-row">
+            <button id="resetBtn" class="danger" title="Return the access series to the beginning and reinitialize the cache.">Reset</button>
+            <span class="spacer"></span>
             <button id="undoBtn" class="secondary" title="Restore the state before the previous Step.">Undo</button>
             <button id="stepBtn" class="primary" title="Process the currently highlighted memory access.">Step</button>
-            <span class="spacer"></span>
-            <button id="emptyBtn" class="danger" title="Invalidate all cache lines and restart this access series from the beginning.">Empty cache</button>
           </div>
           <div class="hint" id="queueStatus">0 accesses processed.</div>
         </div>
@@ -477,8 +489,23 @@ LW 0x04</textarea>
 
       <section class="panel">
         <div class="section">
-          <h2>Cache contents and metadata</h2>
-          <p class="section-lead">Reflects the current contents and metadata of the cache.</p>
+          <div class="cache-panel-head">
+            <div class="cache-panel-copy">
+              <h2>Cache contents and metadata</h2>
+              <p class="section-lead">Reflects the current contents and metadata of the cache.</p>
+            </div>
+            <div class="cache-init-controls">
+              <div class="cache-init-field">
+                <label for="cacheInitMode">Cache initialization</label>
+                <select id="cacheInitMode" title="Choose how invalid cache-line contents are represented when the cache is initialized.">
+                  <option value="EMPTY" selected>Empty values</option>
+                  <option value="ZERO">Zero values</option>
+                  <option value="RANDOM">Random values</option>
+                </select>
+              </div>
+              <button id="initializeCacheBtn" class="soft-blue" type="button" title="Reinitialize the cache using the selected initialization setting.">Initialize cache</button>
+            </div>
+          </div>
           <div class="table-wrap cache-table-wrap">
             <table id="cacheTable" class="cache-table">
               <colgroup id="cacheCols"></colgroup>
@@ -557,8 +584,8 @@ LW 0x04</textarea>
   const $=id=>document.getElementById(id);
   const els={
     addressBits:$("addressBits"),cacheSize:$("cacheSize"),blockSize:$("blockSize"),ways:$("ways"),replacement:$("replacement"),writePolicy:$("writePolicy"),configMessage:$("configMessage"),
-    accessInput:$("accessInput"),accessBackdrop:$("accessBackdrop"),accessMessage:$("accessMessage"),addressHelperFields:$("addressHelperFields"),addressHelperBits:$("addressHelperBits"),addressHelperHex:$("addressHelperHex"),randomCount:$("randomCount"),randomPattern:$("randomPattern"),randomTemplate:$("randomTemplate"),generateBtn:$("generateBtn"),undoBtn:$("undoBtn"),stepBtn:$("stepBtn"),emptyBtn:$("emptyBtn"),queueStatus:$("queueStatus"),
-    geometry:$("geometry"),bitWorkbench:$("bitWorkbench"),currentResult:$("currentResult"),currentAccess:$("currentAccess"),decodeInfo:$("decodeInfo"),summary:$("summary"),cacheTable:$("cacheTable"),cacheCols:$("cacheCols"),cacheHead:$("cacheHead"),cacheBody:$("cacheBody"),historyBody:$("historyBody"),
+    accessInput:$("accessInput"),accessBackdrop:$("accessBackdrop"),accessMessage:$("accessMessage"),addressHelperFields:$("addressHelperFields"),addressHelperBits:$("addressHelperBits"),addressHelperHex:$("addressHelperHex"),randomCount:$("randomCount"),randomPattern:$("randomPattern"),randomTemplate:$("randomTemplate"),generateBtn:$("generateBtn"),undoBtn:$("undoBtn"),stepBtn:$("stepBtn"),resetBtn:$("resetBtn"),queueStatus:$("queueStatus"),
+    geometry:$("geometry"),bitWorkbench:$("bitWorkbench"),currentResult:$("currentResult"),currentAccess:$("currentAccess"),decodeInfo:$("decodeInfo"),summary:$("summary"),cacheTable:$("cacheTable"),cacheCols:$("cacheCols"),cacheHead:$("cacheHead"),cacheBody:$("cacheBody"),cacheInitMode:$("cacheInitMode"),initializeCacheBtn:$("initializeCacheBtn"),historyBody:$("historyBody"),
     memoryJump:$("memoryJump"),memoryJumpBtn:$("memoryJumpBtn"),memoryPrevBtn:$("memoryPrevBtn"),memoryNextBtn:$("memoryNextBtn"),randomizeMemoryBtn:$("randomizeMemoryBtn"),memoryMessage:$("memoryMessage"),memoryHead:$("memoryHead"),memoryBody:$("memoryBody"),byteOrderToggle:$("byteOrderToggle"),byteOrderState:$("byteOrderState"),endiannessToggle:$("endiannessToggle"),endiannessState:$("endiannessState"),accessEndianHint:$("accessEndianHint"),memoryEndianHint:$("memoryEndianHint"),tutorialToggle:$("tutorialToggle"),tutorialToggleState:$("tutorialToggleState"),tutorialBackdrop:$("tutorialBackdrop"),tutorialPopover:$("tutorialPopover"),tutorialProgress:$("tutorialProgress"),tutorialTitle:$("tutorialTitle"),tutorialBody:$("tutorialBody"),tutorialBack:$("tutorialBack"),tutorialNext:$("tutorialNext"),tutorialClose:$("tutorialClose"),startupTutorialBackdrop:$("startupTutorialBackdrop"),startupTutorialModal:$("startupTutorialModal"),startupTutorialClose:$("startupTutorialClose")
   };
 
@@ -566,10 +593,10 @@ LW 0x04</textarea>
   const MEMORY_ROWS=8;
   const state={
     config:null,sets:[],accesses:[],accessValid:true,accessErrorLine:null,pointer:0,clock:0,hits:0,misses:0,reads:0,writes:0,writeBacks:0,history:[],current:null,undoStack:[],
-    memorySeed:DEFAULT_MEMORY_SEED,memoryOverrides:new Map(),memoryViewBase:0n,flashLineKey:null,flashMemoryBase:null,flashToken:0,notice:"",addressHelperValue:0n,byteOrder:"ASC",endianness:"LITTLE"
+    memorySeed:DEFAULT_MEMORY_SEED,memoryOverrides:new Map(),memoryViewBase:0n,flashLineKey:null,flashMemoryBase:null,flashToken:0,notice:"",addressHelperValue:0n,byteOrder:"ASC",endianness:"LITTLE",cacheInitMode:"EMPTY",cacheInitSeed:0x153CACE
   };
   let configTimer=null,accessTimer=null;
-  const tutorial={enabled:false,active:false,steps:[],index:0,record:null,focused:[]};
+  const tutorial={enabled:false,active:false,steps:[],index:0,record:null,focused:[],beforeState:null,afterState:null,stages:null,currentStage:"FINAL",showResult:true};
 
   function isPow2(n){return Number.isSafeInteger(n)&&n>0&&(n&(n-1))===0}
   function nextPow2(n){
@@ -664,7 +691,44 @@ LW 0x04</textarea>
   function snapshot(){return {sets:cloneSets(state.sets),pointer:state.pointer,clock:state.clock,hits:state.hits,misses:state.misses,reads:state.reads,writes:state.writes,writeBacks:state.writeBacks,history:state.history.map(r=>({...r})),current:state.current?{...state.current}:null,memoryOverrides:new Map(state.memoryOverrides),memoryViewBase:state.memoryViewBase}}
   function restoreSnapshot(s){state.sets=cloneSets(s.sets);state.pointer=s.pointer;state.clock=s.clock;state.hits=s.hits;state.misses=s.misses;state.reads=s.reads;state.writes=s.writes;state.writeBacks=s.writeBacks;state.history=s.history.map(r=>({...r}));state.current=s.current?{...s.current}:null;state.memoryOverrides=new Map(s.memoryOverrides);state.memoryViewBase=s.memoryViewBase;state.flashLineKey=null;state.flashMemoryBase=null;renderAll();scrollCurrentAccess()}
 
-  function buildEmptySets(c){return Array.from({length:c.setCount},(_,si)=>Array.from({length:c.ways},(_,wi)=>({setIndex:si,wayIndex:wi,valid:false,dirty:false,tag:0n,blockBase:0n,data:Array(c.blockSize).fill(0),loadedAt:0,lru:0})))}
+  function initGarbageByte(si,wi,i){
+    let x=(state.cacheInitSeed ^ Math.imul(si+1,0x45d9f3b) ^ Math.imul(wi+3,0x27d4eb2d) ^ Math.imul(i+7,0x165667b1))>>>0;
+    x^=x>>>16;x=Math.imul(x,0x7feb352d)>>>0;x^=x>>>15;x=Math.imul(x,0x846ca68b)>>>0;x^=x>>>16;
+    return x&255;
+  }
+  function initGarbageInt(si,wi,salt,maxExclusive){
+    if(maxExclusive<=1) return 0;
+    let x=(state.cacheInitSeed ^ Math.imul(si+salt,0x9e3779b1) ^ Math.imul(wi+salt*3,0x85ebca6b))>>>0;
+    x=(x^(x>>>16))>>>0;
+    x=Math.imul(x,0x7feb352d)>>>0;
+    x=(x^(x>>>15))>>>0;
+    return x%maxExclusive;
+  }
+  function buildEmptySets(c){
+    const mode=state.cacheInitMode||"EMPTY";
+    const tagMod=1n<<BigInt(Math.max(0,c.tagBits));
+    return Array.from({length:c.setCount},(_,si)=>Array.from({length:c.ways},(_,wi)=>{
+      let tag=0n,dirty=false,lru=0,data=Array(c.blockSize).fill(0),hasInvalidValues=mode!=="EMPTY";
+      if(mode==="RANDOM"){
+        let rawTag=0n;
+        for(let b=0;b<c.tagBits;b+=8) rawTag=(rawTag<<8n)|BigInt(initGarbageByte(si,wi,100+b));
+        tag=tagMod>0n?rawTag%tagMod:0n;
+        dirty=!!initGarbageInt(si,wi,17,2);
+        lru=initGarbageInt(si,wi,29,Math.max(1,Math.floor(Math.log2(c.ways))+1));
+        data=Array.from({length:c.blockSize},(_,i)=>initGarbageByte(si,wi,i));
+      }
+      const blockNumber=tag*BigInt(c.setCount)+BigInt(si);
+      const blockBase=blockNumber*BigInt(c.blockSize);
+      return {setIndex:si,wayIndex:wi,valid:false,dirty,tag,blockBase,data,loadedAt:0,lru,hasInvalidValues};
+    }));
+  }
+  function initializeCacheFromControl(reason="Cache initialized."){
+    if(tutorial.active) closeTutorial();
+    state.cacheInitMode=els.cacheInitMode.value;
+    if(state.cacheInitMode==="RANDOM") state.cacheInitSeed=(Math.random()*0xffffffff)>>>0;
+    restartSimulation(reason);
+  }
+
   function restartSimulation(reason="",preserveView=true){
     if(!state.config){state.sets=[];state.pointer=0;state.history=[];state.current=null;state.undoStack=[];renderAll();return}
     state.sets=buildEmptySets(state.config);state.pointer=0;state.clock=0;state.hits=0;state.misses=0;state.reads=0;state.writes=0;state.writeBacks=0;state.history=[];state.current=null;state.undoStack=[];state.flashLineKey=null;state.flashMemoryBase=null;
@@ -674,6 +738,7 @@ LW 0x04</textarea>
 
   function applyConfigFromInputs(){
     updateReplacementAvailability();
+    state.cacheInitMode=els.cacheInitMode.value;
     const result=readConfig();
     if(!result.ok){setMessage(els.configMessage,"error",result.errors.join(" "));state.config=null;state.sets=[];renderAll();return}
     const c=result.config;
@@ -729,8 +794,43 @@ LW 0x04</textarea>
   }
 
   function memoryHashByte(address){
-    const key=address.toString();if(state.memoryOverrides.has(key)) return state.memoryOverrides.get(key);
+    return memoryByteFromOverrides(address,state.memoryOverrides);
+  }
+  function memoryByteFromOverrides(address,overrides){
+    const key=address.toString();if(overrides.has(key)) return overrides.get(key);
     let x=BigInt.asUintN(64,address^BigInt(state.memorySeed>>>0));x=BigInt.asUintN(64,(x^0x9E3779B97F4A7C15n)*0xBF58476D1CE4E5B9n);x^=x>>30n;x=BigInt.asUintN(64,x*0x94D049BB133111EBn);x^=x>>31n;return Number(x&255n);
+  }
+  function visualStateFromSnapshot(s){
+    return {sets:cloneSets(s.sets),memoryOverrides:new Map(s.memoryOverrides)};
+  }
+  function buildTutorialTransactionStages(r,before,after){
+    const c=state.config;
+    const pre=visualStateFromSnapshot(before);
+    const final=visualStateFromSnapshot(after);
+    const writeback=visualStateFromSnapshot(before);
+    if(r.writeBack) writeback.memoryOverrides=new Map(after.memoryOverrides);
+
+    const fill={sets:cloneSets(pre.sets),memoryOverrides:new Map(writeback.memoryOverrides)};
+    if(!r.hit&&!r.writeBypass&&r.wayIndex!=null){
+      fill.sets=cloneSets(after.sets);
+      if(r.isWrite&&c.writePolicy==="WB_WA"){
+        const line=fill.sets[r.setIndex][r.wayIndex];
+        line.dirty=false;
+        line.data=Array.from({length:c.blockSize},(_,i)=>memoryByteFromOverrides(r.blockBase+BigInt(i),fill.memoryOverrides));
+      }
+    }
+
+    return {PRE:pre,WRITEBACK:writeback,FILL:fill,FINAL:final};
+  }
+  function applyTutorialVisualStage(stageName,render=true){
+    if(!tutorial.stages) return;
+    const stage=tutorial.stages[stageName]||tutorial.stages.FINAL;
+    state.sets=cloneSets(stage.sets);
+    state.memoryOverrides=new Map(stage.memoryOverrides);
+    tutorial.currentStage=stageName;
+    state.flashLineKey=null;
+    state.flashMemoryBase=null;
+    if(render) renderAll();
   }
   function setMemoryByte(address,value){state.memoryOverrides.set(address.toString(),value)}
   function loadBlock(base,size){return Array.from({length:size},(_,i)=>memoryHashByte(base+BigInt(i)))}
@@ -762,6 +862,7 @@ LW 0x04</textarea>
   }
   function processStep(withTutorial=false){
     if(!state.config||!state.accessValid||state.pointer>=state.accesses.length) return;
+    const tutorialBefore=(withTutorial&&tutorial.enabled)?snapshot():null;
     state.undoStack.push(snapshot());if(state.undoStack.length>100) state.undoStack.shift();
 
     const access=state.accesses[state.pointer],c=state.config,d=decodeAddress(access.address,c),lines=state.sets[d.setIndex];
@@ -781,7 +882,7 @@ LW 0x04</textarea>
         eviction=`tag ${hex(line.tag)} @ ${hex(line.blockBase,c.addressBits)}`;
         if(line.dirty){writeBackLine(line);writeBack=true}
       }
-      line.valid=true;line.dirty=false;line.tag=d.tag;line.blockBase=d.blockBase;
+      line.valid=true;line.hasInvalidValues=false;line.dirty=false;line.tag=d.tag;line.blockBase=d.blockBase;
       line.data=loadBlock(d.blockBase,c.blockSize);line.loadedAt=state.clock;line.lru=0;allocated=true;
     }
 
@@ -818,8 +919,12 @@ LW 0x04</textarea>
       writeBypass:access.isWrite&&!hit&&c.writePolicy==="WT_NWA"
     };
     state.current=rec;state.history.push(rec);state.pointer++;
-    flash(d.setIndex,wayIndex,d.blockBase);renderAll();scrollCurrentAccess();
-    if(withTutorial&&tutorial.enabled) setTimeout(()=>startTutorial(rec),0);
+    if(withTutorial&&tutorial.enabled){
+      const tutorialAfter=snapshot();
+      startTutorial(rec,tutorialBefore,tutorialAfter);
+    }else{
+      flash(d.setIndex,wayIndex,d.blockBase);renderAll();scrollCurrentAccess();
+    }
   }
   function undoStep(){if(!state.undoStack.length) return;restoreSnapshot(state.undoStack.pop())}
 
@@ -971,10 +1076,20 @@ LW 0x04</textarea>
     const target=r|| (state.accesses.length&&state.pointer<state.accesses.length?(()=>{const a=state.accesses[state.pointer],d=decodeAddress(a.address,c);return {...a,...d,preview:true}})():null);
     if(!target){els.currentResult.textContent="Not started";els.currentResult.className="big-result";els.currentAccess.innerHTML='<div class="current-address">—</div><div class="k">Operation</div><div class="v">—</div><div class="k">Value</div><div class="v">—</div>';els.decodeInfo.innerHTML='<div class="k">Tag</div><div class="v">—</div><div class="k">Set index</div><div class="v">—</div><div class="k">Block offset</div><div class="v">—</div><div class="k">Block range</div><div class="v">—</div><div class="k">Placement</div><div class="v">—</div>';return}
     const d=target.preview?target:decodeAddress(target.address,c),base=d.blockBase??target.blockBase,end=base+BigInt(c.blockSize-1);
-    if(target.preview){els.currentResult.textContent="Init";els.currentResult.className="big-result"}else{els.currentResult.textContent=target.hit?"HIT":"MISS";els.currentResult.className=`big-result ${target.hit?"hit":"miss"}`}
+    if(target.preview){els.currentResult.textContent="Init";els.currentResult.className="big-result"}
+    else if(tutorial.active&&!tutorial.showResult){els.currentResult.textContent="—";els.currentResult.className="big-result"}
+    else{els.currentResult.textContent=target.hit?"HIT":"MISS";els.currentResult.className=`big-result ${target.hit?"hit":"miss"}`}
     const shownValue=target.preview?(target.isWrite?`<div class="access-value-stack"><span class="hex">${valueHex(target.value,target.size)} (hex)</span><span class="dec">${BigInt(target.value)} (decimal)</span></div>`:"—"):`<div class="access-value-stack"><span class="hex">${valueHex(target.value,target.size)} (hex)</span><span class="dec">${BigInt(target.value)} (decimal)</span></div>`;
     els.currentAccess.innerHTML=`<div class="current-address">${hex(target.address,c.addressBits)} <span class="decimal">(${target.address})</span></div><div class="k">Operation</div><div class="v">${esc(operationText(target))}</div><div class="k">Value</div><div class="v">${shownValue}</div>`;
-    let placement=target.preview?`Maps to set ${d.setIndex}; tag comparison has not occurred yet.`:(target.writeBypass?`Write miss: no allocation; main memory updated directly.`:`${target.hit?"Found in":"Loaded into"} set ${target.setIndex}, way ${target.wayIndex}${target.eviction?`; evicted ${target.eviction}${target.writeBack?" after write-back":""}`:""}`);
+    let placement;
+    if(target.preview) placement=`Maps to set ${d.setIndex}; tag comparison has not occurred yet.`;
+    else if(tutorial.active&&tutorial.currentStage!=="FINAL"){
+      if(target.writeBypass) placement=tutorial.currentStage==="PRE"?`Maps to set ${target.setIndex}; no cache allocation has occurred yet.`:`Write miss bypasses the cache; main memory update pending.`;
+      else if(target.hit) placement=`Matching line is in set ${target.setIndex}, way ${target.wayIndex}; access action not yet completed.`;
+      else if(tutorial.currentStage==="PRE") placement=`Selected destination: set ${target.setIndex}, way ${target.wayIndex}; cache line not filled yet.`;
+      else if(tutorial.currentStage==="WRITEBACK") placement=`Victim write-back complete; set ${target.setIndex}, way ${target.wayIndex} has not been overwritten yet.`;
+      else placement=`Block filled into set ${target.setIndex}, way ${target.wayIndex}${target.isWrite?`; store update not yet applied`:""}.`;
+    }else placement=target.writeBypass?`Write miss: no allocation; main memory updated directly.`:`${target.hit?"Found in":"Loaded into"} set ${target.setIndex}, way ${target.wayIndex}${target.eviction?`; evicted ${target.eviction}${target.writeBack?" after write-back":""}`:""}`;
     const placementParts=String(placement).split(";").map(s=>s.trim()).filter(Boolean);const placementHtml=placementParts.map((p,i)=>`<div class="placement-line">${esc(p)}${i<placementParts.length-1?";":""}</div>`).join("");els.decodeInfo.innerHTML=`<div class="k">Tag</div><div class="v">${hex(d.tag)} (${d.tag})</div><div class="k">Set index</div><div class="v">${d.setIndex}</div><div class="k">Block offset</div><div class="v">${d.offset}</div><div class="k">Access bytes</div><div class="v">${d.offset}…${d.offset+target.size-1} (${target.size} byte${target.size===1?"":"s"})</div><div class="k">Block range</div><div class="v">${hex(base,c.addressBits)} – ${hex(end,c.addressBits)}</div><div class="k">Placement</div><div class="v placement-value">${placementHtml}</div>`;
   }
 
@@ -985,7 +1100,7 @@ LW 0x04</textarea>
     if(c.byteOrder==="DESC") offsets.reverse();
     for(let start=0;start<offsets.length;start+=8){
       const chunk=offsets.slice(start,start+8);
-      rows.push(`<div class="data-byte-row" style="grid-template-columns:repeat(${chunk.length},minmax(0,1fr))">${chunk.map(i=>{const v=line.data[i];const isActive=state.current&&state.current.setIndex===line.setIndex&&state.current.wayIndex===line.wayIndex&&i>=state.current.offset&&i<state.current.offset+state.current.size;const activeClass=isActive?`active ${state.current.hit?"hit-byte":"miss-byte"}`:"";return `<span class="byte ${activeClass}" data-cache-offset="${i}" title="Offset ${i} · ${hex(line.blockBase+BigInt(i),c.addressBits)} = ${v}">${byteHex(v)}</span>`}).join("")}</div>`);
+      rows.push(`<div class="data-byte-row" style="grid-template-columns:repeat(${chunk.length},minmax(0,1fr))">${chunk.map(i=>{const v=line.data[i];const transactionHasTouchedBytes=!tutorial.active||tutorial.currentStage==="FILL"||tutorial.currentStage==="FINAL";const isActive=transactionHasTouchedBytes&&state.current&&state.current.setIndex===line.setIndex&&state.current.wayIndex===line.wayIndex&&i>=state.current.offset&&i<state.current.offset+state.current.size;const activeClass=isActive?`active ${state.current.hit?"hit-byte":"miss-byte"}`:"";return `<span class="byte ${activeClass}" data-cache-offset="${i}" title="Offset ${i} · ${hex(line.blockBase+BigInt(i),c.addressBits)} = ${v}">${byteHex(v)}</span>`}).join("")}</div>`);
     }
     return `<div class="data-bytes">${rows.join("")}</div>`
   }
@@ -995,7 +1110,7 @@ LW 0x04</textarea>
       {key:"set",label:"Set",width:5,cls:"col-small",tip:"Set selected by the address index bits. All cache lines mapping to the same set compete for placement."}
     ];
     if(!direct) cols.push({key:"way",label:"Way",width:5,cls:"col-small",tip:"Way number within the selected set. This column is hidden for a direct-mapped cache."});
-    cols.push({key:"valid",label:"V",width:4,cls:"col-small",tip:"Valid bit. 1 means this cache line contains a meaningful memory block; 0 means the line is empty."});
+    cols.push({key:"valid",label:"V",width:4,cls:"col-small",tip:"Valid bit. 1 means this cache line contains a meaningful memory block. 0 means the other stored bits/data must be ignored, even if they contain zero or garbage values."});
     if(!writeThrough) cols.push({key:"dirty",label:"D",width:4,cls:"col-small",tip:"Dirty bit. Under write-back, 1 means this cached block differs from main memory and must be written back before eviction."});
     if(!direct) cols.push({key:"lru",label:"LRU",width:6,cls:"col-small",tip:"Least-recently-used rank within this set. LRU = 0 is the most recently accessed valid line; the largest value is replaced under LRU."});
     cols.push(
@@ -1031,23 +1146,24 @@ LW 0x04</textarea>
       const lines=state.sets[si],victim=nextVictim(lines,c);
       for(const line of lines){
         const key=`${si}:${line.wayIndex}`,classes=["cache-row"];
-        if(state.current&&state.current.setIndex===si&&state.current.wayIndex===line.wayIndex) classes.push("current-line");
+        if(!tutorial.active&&state.current&&state.current.setIndex===si&&state.current.wayIndex===line.wayIndex) classes.push("current-line");
         if(victim===line) classes.push("victim-line");
         if(state.flashLineKey===key) classes.push("flash-update");
         let stateLabel="";
-        if(state.current&&state.current.setIndex===si&&state.current.wayIndex===line.wayIndex) stateLabel=state.current.hit?"Current hit":"Just filled";
+        if(!tutorial.active&&state.current&&state.current.setIndex===si&&state.current.wayIndex===line.wayIndex) stateLabel=state.current.hit?"Current hit":"Just filled";
         else if(victim===line) stateLabel=`Next ${c.replacement} victim`;
-        const status=line.valid?`Loaded at: ${line.loadedAt}${stateLabel?`; ${stateLabel}`:""}`:"—";
+        const rawInvalid=!line.valid&&line.hasInvalidValues;
+        const status=line.valid?`Loaded at: ${line.loadedAt}${stateLabel?`; ${stateLabel}`:""}`:(rawInvalid?"Invalid values":"—");
 
         const cell={
           set:`<td class="col-small cache-set-cell">${si}</td>`,
           way:`<td class="col-small cache-way-cell">${line.wayIndex}</td>`,
-          valid:`<td class="col-small cache-valid-cell">${line.valid?1:0}</td>`,
-          dirty:`<td class="col-small cache-dirty-cell">${line.valid?(line.dirty?1:0):"—"}</td>`,
-          lru:`<td class="col-small cache-lru-cell">${line.valid?line.lru:"—"}</td>`,
-          tag:`<td class="mono col-tag cache-tag-cell">${line.valid?hex(line.tag):"—"}</td>`,
-          base:`<td class="mono col-base cache-base-cell">${line.valid?hex(line.blockBase,c.addressBits):"—"}</td>`,
-          data:`<td class="col-data cache-data-cell">${line.valid?renderDataBytes(line,c):'<span class="empty">empty</span>'}</td>`,
+          valid:`<td class="col-small cache-valid-cell ${line.valid?"valid-one":"valid-zero"}">${line.valid?1:0}</td>`,
+          dirty:`<td class="col-small cache-dirty-cell">${line.valid||rawInvalid?(line.dirty?1:0):"—"}</td>`,
+          lru:`<td class="col-small cache-lru-cell">${line.valid||rawInvalid?line.lru:"—"}</td>`,
+          tag:`<td class="mono col-tag cache-tag-cell">${line.valid||rawInvalid?hex(line.tag):"—"}</td>`,
+          base:`<td class="mono col-base cache-base-cell">${line.valid||rawInvalid?hex(line.blockBase,c.addressBits):"—"}</td>`,
+          data:`<td class="col-data cache-data-cell">${line.valid||rawInvalid?renderDataBytes(line,c):'<span class="empty">empty</span>'}</td>`,
           status:`<td class="status-text col-status cache-status-cell">${status}</td>`
         };
         rows.push(`<tr class="${classes.join(" ")}" data-cache-set="${si}" data-cache-way="${line.wayIndex}">${cols.map(col=>cell[col.key]).join("")}</tr>`);
@@ -1095,7 +1211,7 @@ LW 0x04</textarea>
     state.memoryViewBase=alignMemoryView(state.memoryViewBase,c);els.memoryJump.value=hex(state.memoryViewBase,c.addressBits);
     const offsets=Array.from({length:c.blockSize},(_,i)=>i);if(c.byteOrder==="DESC") offsets.reverse();
     els.memoryHead.innerHTML=`<tr><th>Block base</th>${offsets.map(i=>`<th class="byte-head">+${i}</th>`).join("")}</tr>`;
-    const rows=[];for(let r=0;r<MEMORY_ROWS;r++){const base=state.memoryViewBase+BigInt(r*c.blockSize);if(base>c.maxAddress) break;const source=state.current&&state.current.blockBase===base,flash=state.flashMemoryBase===base;const bytes=[];for(const i of offsets){const addr=base+BigInt(i);if(addr>c.maxAddress){bytes.push('<td class="mem-byte">—</td>');continue}const val=memoryHashByte(addr),active=state.current&&addr>=state.current.address&&addr<state.current.address+BigInt(state.current.size);bytes.push(`<td class="mem-byte" data-memory-offset="${i}"><input class="${active?"active-byte":""}" data-memory-address="${addr}" value="${byteHex(val)}" title="Offset ${i} · ${hex(addr,c.addressBits)} = ${val}" /></td>`)}rows.push(`<tr data-memory-base="${base}" class="${source?"source-block":""} ${flash?"flash-memory":""}"><td class="mono">${hex(base,c.addressBits)}</td>${bytes.join("")}</tr>`)}els.memoryBody.innerHTML=rows.join("");
+    const rows=[];for(let r=0;r<MEMORY_ROWS;r++){const base=state.memoryViewBase+BigInt(r*c.blockSize);if(base>c.maxAddress) break;const source=state.current&&state.current.blockBase===base,flash=state.flashMemoryBase===base;const bytes=[];for(const i of offsets){const addr=base+BigInt(i);if(addr>c.maxAddress){bytes.push('<td class="mem-byte">—</td>');continue}const val=memoryHashByte(addr),transactionHasTouchedBytes=!tutorial.active||tutorial.currentStage==="FILL"||tutorial.currentStage==="FINAL",active=transactionHasTouchedBytes&&state.current&&addr>=state.current.address&&addr<state.current.address+BigInt(state.current.size);bytes.push(`<td class="mem-byte" data-memory-offset="${i}"><input class="${active?"active-byte":""}" data-memory-address="${addr}" value="${byteHex(val)}" title="Offset ${i} · ${hex(addr,c.addressBits)} = ${val}" /></td>`)}rows.push(`<tr data-memory-base="${base}" class="${source?"source-block":""} ${flash?"flash-memory":""}"><td class="mono">${hex(base,c.addressBits)}</td>${bytes.join("")}</tr>`)}els.memoryBody.innerHTML=rows.join("");
     els.memoryBody.querySelectorAll('input[data-memory-address]').forEach(inp=>inp.addEventListener('change',onMemoryEdit));
     const p=pageBytes(c);els.memoryPrevBtn.disabled=state.memoryViewBase===0n;els.memoryNextBtn.disabled=state.memoryViewBase+p>c.maxAddress;
   }
@@ -1142,6 +1258,27 @@ LW 0x04</textarea>
 
     return {title,body,focus,emphasis,...auto,...opts};
   }
+  function finalizeTutorialSteps(steps,r){
+    let stage="PRE";
+    let reveal=false;
+    for(const step of steps){
+      if(step.title==="Write back the dirty victim first") stage="WRITEBACK";
+      else if(step.title==="Copy the block from main memory") stage="FILL";
+      else if(step.title==="Apply the write-back policy" ||
+              step.title==="Write directly to main memory" ||
+              step.title==="Write-through updates both copies" ||
+              step.title==="Update the cache copy" ||
+              step.title==="Read the data from the cached block") stage="FINAL";
+
+      if(step.title==="Why this access is a HIT" || step.title==="Why this access is a MISS") reveal=true;
+      if(step.title==="Memory access complete"){stage="FINAL";reveal=true;}
+
+      step.stage=stage;
+      step.showResult=reveal;
+    }
+    return steps;
+  }
+
   function buildTutorialSteps(r){
     const c=state.config,d=decodeAddress(r.address,c),row=tutorialCacheRowSelector(r);
     const targetMem=tutorialMemoryRowSelector(r.blockBase);
@@ -1149,6 +1286,8 @@ LW 0x04</textarea>
     const endiannessName=c.endianness==="BIG"?"big-endian":"little-endian";
     const byteOrderName=c.byteOrder==="DESC"?"descending":"ascending";
     const currentLine=(r.wayIndex!=null&&state.sets[r.setIndex])?state.sets[r.setIndex][r.wayIndex]:null;
+    const beforeLine=(r.wayIndex!=null&&tutorial.beforeState?.sets?.[r.setIndex])?tutorial.beforeState.sets[r.setIndex][r.wayIndex]:null;
+    const afterLine=(r.wayIndex!=null&&tutorial.afterState?.sets?.[r.setIndex])?tutorial.afterState.sets[r.setIndex][r.wayIndex]:null;
     const addressBinary=binaryFixed(r.address,c.addressBits);
     const tagBinary=addressBinary.slice(0,c.tagBits);
     const indexBinary=c.indexBits?addressBinary.slice(c.tagBits,c.tagBits+c.indexBits):"";
@@ -1323,17 +1462,7 @@ LW 0x04</textarea>
         `<p>The store is complete. Main memory now contains the new value, while the cache organization and cache contents are unchanged by this write miss.</p>`,
         [".current-access-panel"],["#currentResult"]
       ));
-      return steps;
-    }
-
-    if(r.writeBack && r.evictedBlockBase!=null){
-      steps.push(tutorialStep(
-        "Write back the dirty victim first",
-        `<p>A <strong>block replacement</strong> is occurring: the selected set is full, and the chosen victim line currently contains another memory block.</p>
-         <p>The victim also has its dirty bit set. Because this is a write-back cache, that old cache block must be copied back to main memory <strong>before</strong> the line can be reused.</p>
-         <div class="tutorial-note">Victim block base: ${hex(r.evictedBlockBase,c.addressBits)}. Its full ${c.blockSize}-byte block is written back before replacement.</div>`,
-        [".memory-table"],[tutorialMemoryRowSelector(r.evictedBlockBase)].filter(Boolean),{memoryBase:r.evictedBlockBase}
-      ));
+      return finalizeTutorialSteps(steps,r);
     }
 
     if(r.hit){
@@ -1352,10 +1481,24 @@ LW 0x04</textarea>
         `<p>The Index field selects the set, while the Tag identifies the requested memory block.</p>
          ${tagIndexConversionsHtml}
          <p>Index <strong>${indexBinary||"—"}</strong> selects set <strong>${d.setIndex}</strong>. Tag <strong>${tagBinary||"—"}</strong> = <strong>${hex(d.tag)}</strong> was not already present, so the access is a miss.</p>
-         <p>${direct?`Direct mapping fixes the destination to the one line in set ${d.setIndex}.`:`The replacement policy selects way ${r.wayIndex} in set ${d.setIndex}.`} The amount transferred is one complete cache block: <strong>${c.blockSize} bytes</strong>.</p>
+         <p>${direct?`Direct mapping fixes the destination to the one line in set ${d.setIndex}.`:`The replacement policy selects way ${r.wayIndex} in set ${d.setIndex}.`} The yellow-highlighted line still shows its <strong>pre-fill contents</strong> at this step. The amount to be transferred next is one complete cache block: <strong>${c.blockSize} bytes</strong>.</p>
          ${replacementNote}`,
         [".cache-table-wrap","#bitWorkbench"],[row].filter(Boolean),
         {groupEmphasis:["#bitWorkbench .bit-cell.index"]}
+      ));
+    }
+
+    // If a dirty victim must be replaced, first identify the destination/victim
+    // in "Choose where the block will go", then visibly write that victim back.
+    if(!r.hit && r.writeBack && r.evictedBlockBase!=null){
+      steps.push(tutorialStep(
+        "Write back the dirty victim first",
+        `<p>The selected destination line is currently occupied by a <strong>dirty</strong> block.</p>
+         <p>Before that cache line can be overwritten, its existing ${c.blockSize}-byte contents must be copied back to main memory. The cache line itself is still unchanged at this point; only main memory receives the victim block.</p>
+         <div class="tutorial-note">Victim block base: ${hex(r.evictedBlockBase,c.addressBits)}. The highlighted cache line is the exact dirty line being written back to that memory block.</div>`,
+        [".cache-table-wrap",".memory-table"],
+        [row,row?`${row} .cache-dirty-cell`:null,tutorialMemoryRowSelector(r.evictedBlockBase)].filter(Boolean),
+        {memoryBase:r.evictedBlockBase}
       ));
     }
 
@@ -1384,7 +1527,7 @@ LW 0x04</textarea>
            <div>Bytes copied = 2^${c.offsetBits} = ${c.blockSize} byte${c.blockSize===1?"":"s"}</div>
            <div>Memory range = ${hex(r.blockBase,c.addressBits)} through ${hex(blockEnd,c.addressBits)}</div>
          </div>
-         <p>The highlighted main-memory row is exactly the ${c.blockSize}-byte section copied to the highlighted cache line. It is currently displayed in <strong>${byteOrderName} offset order</strong>. The instruction itself starts at offset <span class="tutorial-conversion offset"><span class="binary">${offsetBinary||"—"}</span><span class="arrow">→</span><span class="meaning">${d.offset}</span></span>, but a cache fill ignores that narrower access width and transfers the <strong>entire block</strong>.</p>
+         <p>The highlighted main-memory row is exactly the ${c.blockSize}-byte section now copied to the highlighted cache line. It is currently displayed in <strong>${byteOrderName} offset order</strong>. The instruction itself starts at offset <span class="tutorial-conversion offset"><span class="binary">${offsetBinary||"—"}</span><span class="arrow">→</span><span class="meaning">${d.offset}</span></span>, but a cache fill ignores that narrower access width and transfers the <strong>entire block</strong>.</p>
          ${r.isWrite?`<p>This is a write-allocate store: after the block is copied in, the store modifies the addressed byte${r.size===1?"":"s"} in the cached copy.</p>`:`<p>The cache line now contains the same full block of bytes shown in main memory.</p>`}`,
         [".memory-table", ".cache-table-wrap"],[targetMem,row].filter(Boolean),{memoryBase:r.blockBase,popupViewportY:.50}
       ));
@@ -1468,15 +1611,47 @@ LW 0x04</textarea>
       {groupEmphasis:["#bitWorkbench .bit-cell.tag"]}
     ));
 
-    const metadataText = c.writePolicy==="WB_WA" && r.isWrite
-      ? `<p>The valid bit is 1 because the line contains a meaningful block. The dirty bit is also 1 because the cached block has been modified and main memory may now be stale.</p>`
-      : `<p>The valid bit is 1 because the line contains a meaningful block. A cache lookup must never count an invalid line as a hit, even if its stored tag bits happen to match.</p>`;
-    steps.push(tutorialStep(
-      "Check the metadata",
-      metadataText,
-      [".cache-table-wrap"],
-      [row?`${row} .cache-valid-cell`:null,(c.writePolicy==="WB_WA"&&r.isWrite&&row)?`${row} .cache-dirty-cell`:null].filter(Boolean)
-    ));
+    const beforeValid=beforeLine?!!beforeLine.valid:null;
+    const afterValid=afterLine?!!afterLine.valid:null;
+    const beforeDirty=beforeLine?!!beforeLine.dirty:null;
+    const afterDirty=afterLine?!!afterLine.dirty:null;
+    const validChanged=beforeLine&&afterLine&&beforeValid!==afterValid;
+    const dirtyChanged=beforeLine&&afterLine&&beforeDirty!==afterDirty;
+    const tagChanged=beforeLine&&afterLine&&beforeLine.tag!==afterLine.tag;
+    const dirtyVictimReplaced=!r.hit&&!!r.evictedDirty&&tagChanged;
+    const showMetadataStep=!!(validChanged||dirtyChanged||dirtyVictimReplaced);
+
+    if(showMetadataStep){
+      const transitions=[];
+      if(validChanged){
+        transitions.push(`<div>V: ${beforeValid?1:0} → ${afterValid?1:0}${!beforeValid&&afterValid?" — the newly filled line is now valid.":""}</div>`);
+      }
+      if(dirtyChanged){
+        transitions.push(`<div>D: ${beforeDirty?1:0} → ${afterDirty?1:0}${beforeDirty&&!afterDirty?" — the old dirty block was written back, and the replacement is clean.":(!beforeDirty&&afterDirty?" — this store modified the cached copy, so it is now dirty.":"")}</div>`);
+      }else if(dirtyVictimReplaced&&beforeDirty&&afterDirty){
+        transitions.push(`<div>D: 1 → 1 — the bit stays set, but it now belongs to a <strong>different tag/block</strong>. The old dirty block was written back before replacement, and the new store made the replacement dirty.</div>`);
+      }
+      if(tagChanged&&dirtyVictimReplaced){
+        transitions.push(`<div>Tag: ${hex(beforeLine.tag)} → ${hex(afterLine.tag)}</div>`);
+      }
+
+      const metadataText=`<p>The selected cache line's metadata changes during this access.</p>
+        <div class="tutorial-math">${transitions.join("")}</div>
+        ${!beforeValid&&afterValid?`<p>Before the fill, <strong>V = 0</strong>, so any old Tag/Data/D values in that line were invalid and had to be ignored. After the fill, <strong>V = 1</strong>, so the new tag and data are meaningful.</p>`:""}
+        ${dirtyVictimReplaced&&beforeDirty&&!afterDirty?`<p>This was a dirty-victim replacement caused by a read. Writing the victim back removes the dirty condition; the newly fetched block enters clean with <strong>D = 0</strong>.</p>`:""}
+        ${dirtyVictimReplaced&&beforeDirty&&afterDirty?`<p>This was a dirty-victim replacement caused by a write. The old dirty block is written back first; after the new block is installed, the store makes that new block dirty as well.</p>`:""}`;
+
+      steps.push(tutorialStep(
+        "Check the metadata",
+        metadataText,
+        [".cache-table-wrap"],
+        [
+          validChanged&&row?`${row} .cache-valid-cell`:null,
+          (dirtyChanged||dirtyVictimReplaced)&&row?`${row} .cache-dirty-cell`:null,
+          dirtyVictimReplaced&&row?`${row} .cache-tag-cell`:null
+        ].filter(Boolean)
+      ));
+    }
 
     steps.push(tutorialStep(
       `Why this access is a ${r.hit?"HIT":"MISS"}`,
@@ -1491,7 +1666,7 @@ LW 0x04</textarea>
       `<p>The ${operationText(r)} at <strong>${hex(r.address,c.addressBits)}</strong> is complete. The simulator can now proceed to the next access in the series.</p>`,
       [".current-access-panel"],["#currentResult"]
     ));
-    return steps;
+    return finalizeTutorialSteps(steps,r);
   }
 
   function clearTutorialFocus(){
@@ -1627,10 +1802,12 @@ LW 0x04</textarea>
     if(!tutorial.active||!tutorial.steps.length) return;
     tutorial.index=Math.max(0,Math.min(index,tutorial.steps.length-1));
     const step=tutorial.steps[tutorial.index];
-    if(step.memoryBase!=null&&state.config){
-      state.memoryViewBase=pageBaseForAddress(BigInt(step.memoryBase),state.config);
-      renderMemory();
-    }
+    tutorial.showResult=!!step.showResult;
+    applyTutorialVisualStage(step.stage||"PRE",false);
+    if(step.memoryBase!=null&&state.config) state.memoryViewBase=pageBaseForAddress(BigInt(step.memoryBase),state.config);
+    else if(tutorial.record&&state.config) state.memoryViewBase=pageBaseForAddress(tutorial.record.blockBase,state.config);
+    renderAll();
+
     els.tutorialProgress.textContent=`Step ${tutorial.index+1} of ${tutorial.steps.length}`;
     els.tutorialTitle.textContent=step.title;
     els.tutorialBody.innerHTML=step.body;
@@ -1643,22 +1820,32 @@ LW 0x04</textarea>
       positionTutorialPopover(primary);
     }else positionTutorialPopover(null);
   }
-  function startTutorial(r){
+  function startTutorial(r,beforeState,afterState){
     if(!tutorial.enabled||!r) return;
-    tutorial.record=r;tutorial.steps=buildTutorialSteps(r);tutorial.index=0;tutorial.active=true;
+    tutorial.record=r;
+    tutorial.beforeState=beforeState;
+    tutorial.afterState=afterState;
+    tutorial.stages=buildTutorialTransactionStages(r,beforeState,afterState);
+    tutorial.steps=buildTutorialSteps(r);
+    tutorial.index=0;
+    tutorial.active=true;
+    tutorial.showResult=false;
+    tutorial.currentStage="PRE";
     document.body.classList.add("tutorial-active");
     els.tutorialBackdrop.hidden=false;els.tutorialPopover.hidden=false;
     showTutorialStep(0);
   }
   function closeTutorial(){
-    tutorial.active=false;tutorial.steps=[];tutorial.index=0;tutorial.record=null;
+    if(tutorial.active&&tutorial.stages){
+      tutorial.showResult=true;
+      applyTutorialVisualStage("FINAL",false);
+    }
+    tutorial.active=false;tutorial.steps=[];tutorial.index=0;tutorial.record=null;tutorial.beforeState=null;tutorial.afterState=null;tutorial.stages=null;tutorial.currentStage="FINAL";tutorial.showResult=true;
     clearTutorialFocus();
     els.tutorialBackdrop.hidden=true;els.tutorialPopover.hidden=true;
     document.body.classList.remove("tutorial-active");
-    if(state.current&&state.config){
-      state.memoryViewBase=pageBaseForAddress(state.current.blockBase,state.config);
-      renderMemory();
-    }
+    if(state.current&&state.config) state.memoryViewBase=pageBaseForAddress(state.current.blockBase,state.config);
+    renderAll();
   }
   function closeStartupTutorial(){
     if(els.startupTutorialBackdrop) els.startupTutorialBackdrop.hidden=true;
@@ -1710,7 +1897,7 @@ LW 0x04</textarea>
     configPanel.style.minHeight=target+"px";
     addressPanel.style.minHeight=target+"px";
   }
-  function updateControls(){const canStep=!!state.config&&state.accessValid&&state.pointer<state.accesses.length;els.stepBtn.disabled=!canStep;els.undoBtn.disabled=!state.undoStack.length;els.emptyBtn.disabled=!state.config;els.queueStatus.textContent=state.notice||`${state.pointer} of ${state.accesses.length} processed • ${Math.max(0,state.accesses.length-state.pointer)} remaining`;state.notice=""}
+  function updateControls(){const canStep=!!state.config&&state.accessValid&&state.pointer<state.accesses.length;els.stepBtn.disabled=!canStep;els.undoBtn.disabled=!state.undoStack.length;els.resetBtn.disabled=!state.config;els.queueStatus.textContent=state.notice||`${state.pointer} of ${state.accesses.length} processed • ${Math.max(0,state.accesses.length-state.pointer)} remaining`;state.notice=""}
   function renderAll(){renderGeometry();renderAddressHelper();renderCurrent();renderSummary();renderCache();renderAccessEditor();renderHistory();renderMemory();renderMemoryConfigControls();updateControls();requestAnimationFrame(syncTopPanelHeights)}
 
   [els.addressBits,els.cacheSize,els.blockSize,els.ways].forEach(el=>el.addEventListener('input',()=>{if(tutorial.active)closeTutorial();if(el===els.ways)updateReplacementAvailability();clearTimeout(configTimer);configTimer=setTimeout(applyConfigFromInputs,120)}));
@@ -1739,7 +1926,8 @@ LW 0x04</textarea>
     });
   });
   els.replacement.addEventListener('change',()=>{if(state.config){state.config.replacement=els.replacement.value;renderCache();updateControls()}});
-  els.writePolicy.addEventListener('change',()=>{if(tutorial.active)closeTutorial();if(state.config){state.config.writePolicy=els.writePolicy.value;restartSimulation("Write policy changed; cache restarted empty.");}});
+  els.writePolicy.addEventListener('change',()=>{if(tutorial.active)closeTutorial();if(state.config){state.config.writePolicy=els.writePolicy.value;restartSimulation("Write policy changed; cache restarted using the selected initialization setting.");}});
+  els.cacheInitMode.addEventListener("change",()=>initializeCacheFromControl("Cache initialization changed; cache reinitialized and access series restarted."));
   els.accessInput.addEventListener('input',()=>{if(tutorial.active)closeTutorial();renderAccessEditor();parseAccessesLive(true)});
   els.accessInput.addEventListener('scroll',syncAccessEditorScroll);
   els.addressHelperBits.addEventListener('change',onAddressHelperChange);
@@ -1747,7 +1935,8 @@ LW 0x04</textarea>
   els.generateBtn.addEventListener('click',generateSeries);
   els.stepBtn.addEventListener('click',()=>processStep(tutorial.enabled));
   els.undoBtn.addEventListener('click',()=>{if(tutorial.active)closeTutorial();undoStep()});
-  els.emptyBtn.addEventListener('click',()=>{if(tutorial.active)closeTutorial();restartSimulation("Cache emptied; simulation restarted.")});
+  els.resetBtn.addEventListener('click',()=>{if(tutorial.active)closeTutorial();state.cacheInitMode=els.cacheInitMode.value;if(state.cacheInitMode==="RANDOM")state.cacheInitSeed=(Math.random()*0xffffffff)>>>0;restartSimulation("Access series reset to the beginning.")});
+  els.initializeCacheBtn.addEventListener('click',()=>initializeCacheFromControl("Cache initialized; access series restarted."));
   els.startupTutorialClose.addEventListener("click",closeStartupTutorial);
   els.startupTutorialBackdrop.addEventListener("click",closeStartupTutorial);
   els.tutorialToggle.addEventListener("click",()=>setTutorialEnabled(!tutorial.enabled));
@@ -1760,7 +1949,7 @@ LW 0x04</textarea>
   els.memoryJumpBtn.addEventListener('click',jumpMemory);els.memoryJump.addEventListener('keydown',e=>{if(e.key==='Enter') jumpMemory()});els.memoryPrevBtn.addEventListener('click',()=>moveMemoryPage(-1));els.memoryNextBtn.addEventListener('click',()=>moveMemoryPage(1));els.randomizeMemoryBtn.addEventListener('click',randomizeMemory);
   window.addEventListener('resize',()=>requestAnimationFrame(syncTopPanelHeights));
 
-  document.body.classList.add("startup-intro-active");setTutorialEnabled(false);updateReplacementAvailability();applyConfigFromInputs();parseAccessesLive(false);
+  document.body.classList.add("startup-intro-active");setTutorialEnabled(false);state.cacheInitMode=els.cacheInitMode.value;updateReplacementAvailability();applyConfigFromInputs();parseAccessesLive(false);
 })();
 </script>
 </body>
