@@ -34,8 +34,62 @@
   body{margin:0;background:var(--page);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
   button,input,select,textarea{font:inherit}
   button{cursor:pointer}
-  header{background:linear-gradient(135deg,var(--up-maroon),var(--up-maroon-dark));color:#fff;padding:17px 22px 18px}
+  header{position:relative;background:linear-gradient(135deg,var(--up-maroon),var(--up-maroon-dark));color:#fff;padding:17px 22px 18px}
   header .wrap,main{max-width:1500px;margin:0 auto}
+  .banner-wrap{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:22px;align-items:start}
+  .banner-copy{min-width:0}
+  .tutorial-toggle{position:relative;z-index:1202;align-self:center;display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.46);border-radius:999px;padding:8px 12px;background:rgba(255,255,255,.09);color:#fff;font-weight:850;white-space:nowrap;cursor:pointer}
+  .tutorial-toggle:hover{background:rgba(255,255,255,.16)}
+  .tutorial-toggle-state{display:inline-flex;align-items:center;justify-content:center;min-width:36px;border-radius:999px;padding:3px 8px;background:rgba(255,255,255,.16);font-size:.76rem}
+  .tutorial-toggle[aria-pressed="true"]{background:#fff;color:var(--up-maroon);border-color:#fff}
+  .tutorial-toggle[aria-pressed="true"] .tutorial-toggle-state{background:#e7f4eb;color:#16703a}
+  .tutorial-backdrop{position:fixed;inset:0;background:rgba(61,66,72,.72);z-index:1000;backdrop-filter:grayscale(.75);-webkit-backdrop-filter:grayscale(.75)}
+  .tutorial-popover{position:fixed;z-index:1201;left:max(18px,calc((100vw - 1500px)/2 + 18px));top:110px;width:min(390px,calc(100vw - 36px));max-height:calc(100vh - 132px);overflow:auto;background:#fff;border:1px solid #cfd6de;border-radius:16px;box-shadow:0 18px 55px rgba(0,0,0,.28);padding:18px 20px}
+  .tutorial-progress{font-size:.74rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:var(--up-maroon);margin-bottom:5px}
+  .tutorial-popover h3{margin:0 34px 9px 0;font-size:1.2rem;color:#202a34}
+  .tutorial-close{position:absolute;top:10px;right:12px;width:32px;height:32px;border:0;border-radius:8px;background:transparent;color:#5a6570;font-size:1.65rem;line-height:1;font-weight:700;cursor:pointer;padding:0}
+  .tutorial-close:hover{background:#f0f2f4;color:#202a34}
+  .startup-tutorial-backdrop{position:fixed;inset:0;background:rgba(37,42,48,.50);z-index:1300}
+  .startup-tutorial-modal{position:fixed;z-index:1301;left:50%;top:50%;transform:translate(-50%,-50%);width:min(500px,calc(100vw - 36px));background:#fff;border:1px solid #cfd6de;border-radius:16px;box-shadow:0 20px 65px rgba(0,0,0,.30);padding:20px 22px}
+  .startup-tutorial-modal h3{margin:0 38px 10px 0;font-size:1.25rem;color:#202a34}
+  .startup-tutorial-modal p{margin:0 0 10px;color:#3b4651;line-height:1.5;font-size:.93rem}
+  .startup-tutorial-modal p:last-child{margin-bottom:0}
+  .startup-feature-list{display:grid;gap:8px;margin:10px 0 14px}
+  .startup-feature-list>div{display:grid;grid-template-columns:145px 1fr;gap:10px;padding:9px 10px;border:1px solid #dde3e8;border-radius:10px;background:#f7f9fb}
+  .startup-feature-list strong{color:#27323d}.startup-feature-list span{color:#596571;font-size:.86rem;line-height:1.4}
+  .startup-question{margin:14px 0 8px;padding-top:12px;border-top:1px solid #e4e8ec;font-size:1.05rem;font-weight:900;color:var(--up-maroon)}
+  body.startup-intro-active #tutorialToggle{z-index:1402!important;box-shadow:0 0 0 4px rgba(255,214,84,.95),0 8px 24px rgba(0,0,0,.24)!important;background:#fff!important;color:var(--up-maroon)!important;border-color:#fff!important}
+  body.startup-intro-active #tutorialToggle .tutorial-toggle-state{background:#fff0b8!important;color:#6b5100!important}
+  body.startup-intro-active .left-sticky-group{position:static!important;z-index:auto!important}
+  body.startup-intro-active .config-panel,
+  body.startup-intro-active .access-panel{position:relative!important;z-index:1302!important;filter:none!important;opacity:1!important;box-shadow:0 0 0 4px rgba(255,214,84,.88),0 8px 26px rgba(0,0,0,.22)!important}
+  body.startup-intro-active .config-panel *,
+  body.startup-intro-active .access-panel *{filter:none!important;opacity:1!important}
+
+
+  .startup-tutorial-note{padding-top:4px;color:#5e6974!important}
+  .startup-tutorial-close{position:absolute;top:10px;right:12px;width:32px;height:32px;border:0;border-radius:8px;background:transparent;color:#5a6570;font-size:1.65rem;line-height:1;font-weight:700;cursor:pointer;padding:0}
+  .startup-tutorial-close:hover{background:#f0f2f4;color:#202a34}
+
+  .tutorial-focus *,.tutorial-focus-table *{filter:none!important;opacity:1!important;mix-blend-mode:normal!important}
+  #bitWorkbench.tutorial-focus{background:#fff!important}
+  #bitWorkbench.tutorial-focus .bit-index{color:#4d5863!important;text-shadow:none!important}
+  #bitWorkbench.tutorial-focus .bit-cell{filter:none!important;opacity:1!important}
+  .tutorial-focus .bit-index,.tutorial-focus-table .bit-index{color:#4d5863!important;position:relative;z-index:1103!important}
+
+  .tutorial-body{font-size:.9rem;line-height:1.5;color:#37424d}
+  .tutorial-body p{margin:0 0 9px}.tutorial-body p:last-child{margin-bottom:0}
+  .tutorial-math{display:grid;gap:6px;margin:10px 0;padding:10px 12px;border-radius:10px;background:#f4f7f9;border:1px solid #dde4ea;font:750 .84rem/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#293641}
+  .tutorial-note{margin-top:9px;padding:8px 10px;border-left:3px solid #315f9b;background:#f2f6fb;border-radius:0 8px 8px 0}
+  .tutorial-nav{display:flex;justify-content:flex-end;gap:8px;margin-top:15px;padding-top:12px;border-top:1px solid #e5e9ed}
+  .tutorial-nav button{min-width:82px}
+  .tutorial-focus{position:relative!important;z-index:1101!important;filter:none!important;opacity:1!important;box-shadow:0 0 0 4px rgba(255,214,84,.95),0 8px 26px rgba(0,0,0,.22)!important}
+  .tutorial-focus-table{position:relative!important;z-index:1101!important;filter:none!important;opacity:1!important;box-shadow:0 0 0 4px rgba(255,214,84,.95),0 8px 26px rgba(0,0,0,.22)!important;background:#fff}
+  .tutorial-emphasis{outline:3px solid #f0b72f!important;outline-offset:2px!important;box-shadow:0 0 0 4px rgba(255,236,169,.75)!important;position:relative;z-index:1102!important}
+  .cache-row.tutorial-row-focus td{background:#fff5c9!important}
+  .memory-table tr.tutorial-row-focus td{background:#fff5c9!important}
+  .tutorial-focus-cell{background:#fff5c9!important;outline:3px solid #f0b72f!important;outline-offset:-2px}
+  body.tutorial-active{overflow-x:hidden}
   h1{margin:0 0 5px;font-size:clamp(1.6rem,2.8vw,2.3rem);line-height:1.06}
   header p{margin:0;max-width:none;color:#f5e8e8;line-height:1.38}
   .banner-subtitle{font-size:1rem}
@@ -58,7 +112,8 @@
   input:focus,select:focus,textarea:focus{border-color:var(--up-maroon);box-shadow:0 0 0 3px rgba(123,17,19,.12)}
   textarea{min-height:140px;resize:vertical;line-height:1.45}
   .hint{margin-top:7px;color:var(--muted);font-size:.8rem;line-height:1.45}
-  .message{margin-top:11px;border-radius:9px;padding:10px 12px;line-height:1.4;display:none;font-size:.84rem}
+  .access-guide ul{margin:6px 0 0 17px;padding:0}.access-guide li{margin:2px 0;line-height:1.35}
+  .message{margin-top:11px;border-radius:9px;padding:10px 12px;line-height:1.4;display:none;font-size:.84rem;white-space:pre-line}
   .message.error{display:block;color:var(--bad);background:var(--bad-bg);border:1px solid #e3cdd0}
   .message.ok{display:block;color:var(--good);background:var(--good-bg);border:1px solid #d0dfd5}
   .message.warn{display:block;color:var(--warn);background:var(--warn-bg);border:1px solid #e7dbaa}
@@ -76,7 +131,7 @@
   .generator-body{padding:11px 12px 12px}
   .random-grid{display:grid;grid-template-columns:86px 1fr;gap:9px;align-items:end}
   .left-stack{align-self:stretch;align-content:start}
-  .access-panel{position:sticky;top:18px;z-index:4}
+  .access-panel{position:static}.left-sticky-group{position:sticky;top:18px;z-index:4;display:grid;gap:18px}
   .access-editor-wrap{position:relative;height:225px;border:1px solid #bfc7d1;border-radius:9px;background:#fff;overflow:hidden}
   .access-editor-wrap:focus-within{border-color:var(--up-maroon);box-shadow:0 0 0 3px rgba(123,17,19,.12)}
   .access-backdrop,.access-input{position:absolute;inset:0;width:100%;height:100%;margin:0;padding:10px 11px;border:0;border-radius:0;overflow:auto;white-space:pre;tab-size:2;font:650 1.06rem/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
@@ -88,10 +143,11 @@
   .access-backdrop .access-line.next{box-shadow:inset 3px 0 0 #b1b8c0}
   .access-backdrop .access-line.current{background:#fff0c7;box-shadow:inset 4px 0 0 var(--up-maroon)}
   .access-backdrop .access-line.invalid{background:#fae8ea;box-shadow:inset 4px 0 0 var(--bad)}
-  .geometry{display:grid;grid-template-columns:repeat(6,minmax(86px,1fr));gap:9px;margin-bottom:14px}
-  .metric{border:1px solid #dfe4e9;border-radius:10px;padding:10px 11px;background:#fbfcfd;min-width:0}
-  .metric strong{display:block;font-size:1.08rem;overflow-wrap:anywhere}
-  .metric span{display:block;margin-top:2px;color:var(--muted);font-size:.7rem}
+  .geometry{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:7px 18px;margin:3px 0 7px;padding:8px 12px;border:1px solid #d0dfd5;border-radius:10px;background:var(--good-bg);color:#47515b;font-size:1rem}
+  .metric{display:inline-flex;align-items:baseline;gap:5px;min-width:0;padding:0;background:transparent;border:0;cursor:help}
+  .metric strong{order:2;font-size:1.16rem;overflow-wrap:anywhere;color:#315f9b;font-weight:950}
+  .metric span{order:1;margin:0;color:#4f5964;font-size:1rem;font-weight:800}
+  .metric span::after{content:":"}
   .partition-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 16px;color:#4e5964;font-size:.8rem;margin:8px 0 9px}
   .legend-item{display:inline-flex;align-items:center;gap:6px}
   .swatch{width:11px;height:11px;border-radius:3px}
@@ -100,7 +156,7 @@
   .bit-scroll{overflow-x:auto;padding:2px 0 5px}
   .address-panel .bit-scroll{width:max-content;max-width:100%;margin-inline:auto}
   .bit-index{width:36px;flex:0 0 36px;text-align:center;color:#737d87;font:750 .73rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding-bottom:3px}
-  .bit-cell{width:36px;flex:0 0 36px;min-height:45px;display:flex;align-items:center;justify-content:center;border-top:1px solid #aab2ba;border-bottom:1px solid #aab2ba;border-right:1px solid rgba(95,106,118,.22);font:950 1.22rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .bit-cell{width:36px;flex:0 0 36px;min-height:45px;display:flex;align-items:center;justify-content:center;cursor:help;border-top:1px solid #aab2ba;border-bottom:1px solid #aab2ba;border-right:1px solid rgba(95,106,118,.22);font:950 1.22rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
   .bit-cell:first-child{border-left:1px solid #9fa9b4;border-radius:7px 0 0 7px}.bit-cell:last-child{border-radius:0 7px 7px 0}
   .bit-cell.tag{background:var(--tag);color:#5e526b}.bit-cell.index{background:var(--index);color:#496858}.bit-cell.offset{background:var(--offset);color:#775f35}
   .field-bar{display:flex;margin-top:8px;border:1px solid #929eaa;border-radius:8px;overflow:hidden;min-height:62px}
@@ -112,26 +168,28 @@
   .subpanel h3{margin:0 0 8px;font-size:.98rem}
   .address-panel .section{padding-top:18px;padding-bottom:16px}
   .address-panel .section-lead{margin-bottom:10px}
-  .address-panel .geometry{margin-bottom:8px}
-  .address-panel .metric{padding:8px 10px}
-  .address-panel .partition-legend{margin:6px 0 7px}
+  .address-panel .geometry{margin-bottom:7px}
+  .address-panel .metric{padding:3px 8px}
+  .address-panel .partition-legend{margin:4px 0 5px}
   .address-panel .bit-scroll{padding-bottom:2px}
-  .address-panel .current-grid{margin-top:9px;gap:10px}
-  .address-panel .subpanel{padding:9px 12px}
+  .address-panel .current-grid{margin-top:9px;gap:10px;align-items:stretch}
+  .address-panel .subpanel{padding:9px 12px 14px;height:190px;box-sizing:border-box;overflow:visible}
   .address-panel .subpanel h3{margin-bottom:4px;font-size:.94rem}
   .address-panel .big-result{font-size:1.16rem;margin-bottom:3px}
   .address-panel .kv{font-size:.82rem;line-height:1.34;gap:3px 8px}
   .current-access-panel{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto 1fr;column-gap:16px;align-items:stretch}
   .current-access-panel h3{grid-column:1/-1}
-  .current-access-panel .current-address{grid-column:1/-1;font:950 1.62rem/1.14 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--up-maroon);letter-spacing:.01em;margin:0 0 5px;white-space:nowrap}
+  .current-access-panel .current-address{grid-column:1/-1;font:950 1.98rem/1.14 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--up-maroon);letter-spacing:.01em;margin:0 0 5px;white-space:nowrap}
   .current-access-panel .current-address .decimal{font-size:.68em;font-weight:750;color:#59636e}
   .current-access-panel .kv{grid-column:1;grid-row:2;grid-template-columns:82px minmax(0,1fr);font-size:.86rem;font-weight:700;align-content:center}
+  .access-value-stack{display:grid;gap:1px;line-height:1.2}.access-value-stack .hex{font-weight:850}.access-value-stack .dec{color:#5f6974}
   .current-access-panel #currentResult{grid-column:2;grid-row:2;align-self:center;justify-self:end;min-width:72px;text-align:right;font-size:1.98rem;line-height:1.02;font-weight:950;margin:0;padding:0;background:transparent;color:#68727d;white-space:nowrap}
-  .current-access-panel #currentResult.hit{color:#315f49;background:transparent}
-  .current-access-panel #currentResult.miss{color:#884248;background:transparent}
-  .big-result{font-size:1.25rem;font-weight:950;margin-bottom:8px}.big-result.hit{color:#35614d}.big-result.miss{color:#8a4348}
+  .current-access-panel #currentResult.hit{color:#00B050;background:transparent}
+  .current-access-panel #currentResult.miss{color:#FF341D;background:transparent}
+  .big-result{font-size:1.25rem;font-weight:950;margin-bottom:8px}.big-result.hit{color:#00B050}.big-result.miss{color:#FF341D}
   .kv{display:grid;grid-template-columns:114px minmax(0,1fr);gap:5px 10px;font-size:.8rem;line-height:1.45}.kv .k{color:var(--muted)}.kv .v{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;overflow-wrap:anywhere}
-  .summary-row{display:grid;grid-template-columns:repeat(5,minmax(90px,1fr));gap:9px}.stat{border:1px solid #dfe4e9;border-radius:10px;padding:10px 11px;background:#fbfcfd}.stat strong{display:block;font-size:1.08rem}.stat span{color:var(--muted);font-size:.7rem}
+  .placement-value{display:grid;gap:3px}.placement-line{line-height:1.3;white-space:normal}
+  .summary-row{display:grid;grid-template-columns:repeat(5,minmax(90px,1fr));gap:9px}.left-sticky-group .summary-row{grid-template-columns:repeat(3,minmax(0,1fr))}.stat{border:1px solid #dfe4e9;border-radius:10px;padding:10px 11px;background:#fbfcfd}.stat strong{display:block;font-size:1.08rem}.stat span{color:var(--muted);font-size:.7rem}
   .table-wrap{overflow:auto;border:1px solid #dfe4e9;border-radius:11px;background:#fff}
   .cache-table-wrap{overflow-x:hidden}
   table{width:100%;border-collapse:collapse;font-size:.78rem}th,td{padding:8px 9px;text-align:left;border-bottom:1px solid #edf0f3;white-space:nowrap;vertical-align:middle}th{position:sticky;top:0;z-index:2;background:#f5f7f9;color:#4f5a65;font-size:.69rem;text-transform:uppercase;letter-spacing:.035em}tr:last-child td{border-bottom:0}
@@ -140,39 +198,71 @@
   .cache-table{table-layout:fixed;width:100%;min-width:0;font-size:.94rem}
   .cache-table th,.cache-table td{overflow:hidden;text-overflow:ellipsis;padding:8px 6px}
   .cache-table th{white-space:normal;line-height:1.15;overflow-wrap:anywhere;font-size:.82rem}
-  .cache-table th:nth-child(8),.cache-table th:nth-child(9){white-space:nowrap;overflow-wrap:normal}
-  .cache-table td:nth-child(7){overflow:visible;white-space:normal}
-  .cache-table td:nth-child(10){white-space:normal;line-height:1.2;font-size:.9rem}
-  .cache-table td:nth-child(5),.cache-table td:nth-child(6){font-size:.87rem}
-  .cache-table td:nth-child(1),.cache-table td:nth-child(2),.cache-table td:nth-child(3),.cache-table td:nth-child(4),.cache-table td:nth-child(8),.cache-table td:nth-child(9){font-size:.93rem;font-weight:650}
+  .cache-table .col-data{overflow:visible;white-space:normal}
+  .cache-table .col-status{white-space:normal;line-height:1.25;font-size:.9rem}
+  .cache-table .col-tag,.cache-table .col-base{font-size:.87rem}
+  .cache-table .col-small{font-size:.93rem;font-weight:650}
+  .cache-table th[title]{cursor:help}
   .cache-row.current-line td{background:#fff8e8}
   .cache-row.current-line td:first-child{box-shadow:inset 3px 0 0 rgba(123,17,19,.55)}.cache-row.victim-line td:first-child{box-shadow:inset 3px 0 0 #d6a535}
   .cache-row.current-line.victim-line td:first-child{box-shadow:inset 3px 0 0 rgba(123,17,19,.55),inset 6px 0 0 #d6a535}
-  .data-bytes{display:grid;gap:4px;min-width:0;max-width:none;justify-content:start}.data-byte-row{display:grid;gap:3px;min-width:0;height:27px;align-items:stretch}.byte{min-width:0;height:27px;padding:0 5px;border-radius:5px;background:#eef2f4;text-align:center;display:flex;align-items:center;justify-content:center;font:780 .9rem/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.byte.active{background:#f5dfaa;outline:1px solid #d8b45f}
+  .data-bytes{display:grid;gap:4px;min-width:0;max-width:none;justify-content:start}.data-byte-row{display:grid;gap:3px;min-width:0;height:27px;align-items:stretch}.byte{min-width:0;height:27px;padding:0 5px;border-radius:5px;background:#eef2f4;text-align:center;display:flex;align-items:center;justify-content:center;font:780 .9rem/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.byte.active{font-weight:900;color:#fff}.byte.active.hit-byte{background:#00B050;outline:1px solid #00B050}.byte.active.miss-byte{background:#FF341D;outline:1px solid #FF341D}
   .status-text{font-size:.9rem;color:#65707b}
-  .pill{display:inline-flex;align-items:center;justify-content:center;min-width:46px;padding:3px 7px;border-radius:999px;font-size:.67rem;font-weight:900}.pill.hit{background:var(--good-bg);color:var(--good)}.pill.miss{background:var(--bad-bg);color:var(--bad)}.pill.read{background:#ebf1f5;color:#526d80}.pill.write{background:#efe8f4;color:#6f5b7d}
+  .pill{display:inline-flex;align-items:center;justify-content:center;min-width:46px;padding:3px 7px;border-radius:999px;font-size:.67rem;font-weight:900}.pill.hit{background:#E8F8EF;color:#00B050}.pill.miss{background:#FFF0ED;color:#FF341D}.pill.read{background:#ebf1f5;color:#526d80}.pill.write{background:#efe8f4;color:#6f5b7d}
   .memory-toolbar{display:grid;grid-template-columns:minmax(150px,1fr) auto auto auto auto;gap:8px;align-items:end;margin-bottom:11px}.memory-toolbar label{margin-bottom:5px}
   .soft-blue{border:1px solid #bfd0df;border-radius:9px;padding:9px 12px;background:#eaf3f9;color:#365b73;font-weight:800}.soft-blue:hover{background:#dfeef7}
   .memory-table th.byte-head{text-align:center;min-width:48px}.memory-table tbody td:first-child{font-size:.87rem}.memory-table td.mem-byte{text-align:center;padding:5px}.memory-table input{width:44px;text-align:center;padding:6px 3px;border:1px solid #d2d8df;border-radius:6px;font:750 .72rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;text-transform:uppercase}.memory-table tr.source-block td{background:#fff8e8}.memory-table tr.source-block td:first-child{box-shadow:inset 4px 0 0 #c6952c}.memory-table input.active-byte{background:#fff0c7;border-color:#c99f44}
   .memory-note{margin-top:9px;color:#66717c;font-size:.8rem;line-height:1.45}
-  @keyframes cacheFlashHit{0%{background:#315f49;color:#fff}100%{background:#fff8e8;color:inherit}}
-  @keyframes cacheFlashMiss{0%{background:#884248;color:#fff}100%{background:#fff8e8;color:inherit}}
-  .cache-row.flash-hit td{animation:cacheFlashHit .62s ease-out 1 both}
-  .cache-row.flash-miss td{animation:cacheFlashMiss .62s ease-out 1 both}
+  @keyframes cacheFlash{0%{background:#f2d78f}100%{background:#fff8e8}}
+  .cache-row.flash-update td{animation:cacheFlash .62s ease-out 1 both}
   @keyframes memoryFlash{0%{background:#f2d78f}100%{background:#fff8e8}}
   .memory-table tr.flash-memory td{animation:memoryFlash .72s ease-out 1 both}
   footer{color:#697480;font-size:.82rem;line-height:1.5;margin-top:16px;padding:0 4px}
-  @media(max-width:1100px){.layout{grid-template-columns:1fr}.geometry{grid-template-columns:repeat(3,1fr)}.left-stack{align-self:auto}.access-panel{position:static}}
-  @media(max-width:720px){.banner-mainline{white-space:normal}header{padding:15px 18px 16px}main{padding:16px 10px 40px}.section{padding:17px}.form-grid,.current-grid{grid-template-columns:1fr}.summary-row{grid-template-columns:repeat(2,1fr)}.memory-toolbar{grid-template-columns:1fr 1fr}.random-grid{grid-template-columns:1fr}.geometry{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:1100px){.layout{grid-template-columns:1fr}.left-stack{align-self:auto}.left-sticky-group{position:static}.geometry{justify-content:center}}
+  @media(max-width:720px){.banner-wrap{grid-template-columns:1fr}.tutorial-toggle{justify-self:start}.tutorial-popover{left:16px!important;right:16px!important;top:auto!important;bottom:16px!important;width:auto}.banner-mainline{white-space:normal}header{padding:15px 18px 16px}main{padding:16px 10px 40px}.section{padding:17px}.form-grid,.current-grid{grid-template-columns:1fr}.summary-row{grid-template-columns:repeat(2,1fr)}.memory-toolbar{grid-template-columns:1fr 1fr}.random-grid{grid-template-columns:1fr}.geometry{justify-content:center}}
 </style>
 </head>
 <body>
 <header>
-  <div class="wrap">
-    <h1>Cache Memory Simulator</h1>
-    <p class="banner-subtitle"><span class="banner-mainline">Visualize how a memory address is partitioned into tag, set index, and block offset fields, and follow how main-memory blocks are copied into the cache.</span><span class="banner-course">Designed for EEE 153 (Computer Organization and Embedded Systems I) class.</span><span class="banner-credit">Conceptualized by Adelson Chua</span></p>
+  <div class="wrap banner-wrap">
+    <div class="banner-copy">
+      <h1>Cache Memory Simulator</h1>
+      <p class="banner-subtitle"><span class="banner-mainline">Visualize how a memory address is partitioned into tag, set index, and block offset fields, and follow how main-memory blocks are copied into the cache.</span><span class="banner-course">Designed for EEE 153 (Computer Organization and Embedded Systems I) class.</span><span class="banner-credit">Conceptualized by Adelson Chua</span></p>
+    </div>
+    <button id="tutorialToggle" class="tutorial-toggle" type="button" aria-pressed="false" title="When enabled, each Step opens a guided explanation of the cache access.">
+      <span class="tutorial-toggle-label">Tutorial mode</span>
+      <span id="tutorialToggleState" class="tutorial-toggle-state">Off</span>
+    </button>
   </div>
 </header>
+
+<div id="tutorialBackdrop" class="tutorial-backdrop" hidden></div>
+<div id="tutorialPopover" class="tutorial-popover" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle" hidden>
+  <button id="tutorialClose" class="tutorial-close" type="button" aria-label="Close tutorial" title="Exit this tutorial session">×</button>
+  <div class="tutorial-progress" id="tutorialProgress">Step 1 of 10</div>
+  <h3 id="tutorialTitle">Tutorial</h3>
+  <div id="tutorialBody" class="tutorial-body"></div>
+  <div class="tutorial-nav">
+    <button id="tutorialBack" class="secondary" type="button">Back</button>
+    <button id="tutorialNext" class="primary" type="button">Next</button>
+  </div>
+</div>
+
+<div id="startupTutorialBackdrop" class="startup-tutorial-backdrop"></div>
+<div id="startupTutorialModal" class="startup-tutorial-modal" role="dialog" aria-modal="true" aria-labelledby="startupTutorialTitle">
+  <button id="startupTutorialClose" class="startup-tutorial-close" type="button" aria-label="Close">×</button>
+  <h3 id="startupTutorialTitle">Explore how a cache works</h3>
+  <p>This simulator lets you define a <strong>Cache configuration</strong>, enter a sequence of memory accesses, then step through how each address maps into the cache and interacts with main memory.</p>
+  <p>The two main things you control are:</p>
+  <div class="startup-feature-list">
+    <div><strong>Cache configuration</strong><span>Choose the address width, cache size, block size, associativity, replacement policy, and write policy.</span></div>
+    <div><strong>Access series</strong><span>Enter the loads and stores that the simulator will process one at a time.</span></div>
+  </div>
+  <div class="startup-question">First time learning how cache works?</div>
+  <p><strong>Turn Tutorial mode On.</strong> After each <strong>Step</strong>, the simulator will guide you through the cache organization, address partitioning, placement, data movement, metadata, and the reason for each hit or miss.</p>
+  <p><strong>Leave Tutorial mode Off</strong> if you just want to use the simulator normally.</p>
+  <p class="startup-tutorial-note">Use the highlighted Tutorial mode button in the title banner anytime.</p>
+</div>
 
 <main>
   <div class="layout">
@@ -180,7 +270,7 @@
       <section class="panel config-panel">
         <div class="section">
           <h2>1. Cache configuration</h2>
-          <p class="section-lead">A valid geometry change rebuilds an empty cache while preserving main-memory contents.</p>
+          <p class="section-lead">Edit your cache organization here.</p>
           <div class="form-grid">
             <div class="field">
               <label for="addressBits">Address width (bits)</label>
@@ -188,15 +278,15 @@
             </div>
             <div class="field">
               <label for="cacheSize">Cache size (bytes)</label>
-              <input id="cacheSize" type="number" min="1" step="1" value="64" />
+              <input id="cacheSize" type="number" min="1" step="any" value="64" data-pow2-step="1" />
             </div>
             <div class="field">
               <label for="blockSize">Block size (bytes)</label>
-              <input id="blockSize" type="number" min="1" step="1" value="8" />
+              <input id="blockSize" type="number" min="1" step="any" value="8" data-pow2-step="1" />
             </div>
             <div class="field">
               <label for="ways">Associativity (ways)</label>
-              <input id="ways" type="number" min="1" step="1" value="2" />
+              <input id="ways" type="number" min="1" step="any" value="2" data-pow2-step="1" />
             </div>
             <div class="field full">
               <label for="replacement">Replacement policy</label>
@@ -205,17 +295,24 @@
                 <option value="FIFO">FIFO — first in, first out</option>
                 <option value="RANDOM">Random</option>
               </select>
-              <div class="hint" id="assocHint"></div>
+            </div>
+            <div class="field full">
+              <label for="writePolicy">Write policy</label>
+              <select id="writePolicy" title="Write-back + write-allocate keeps stores in cache until a dirty eviction. Write-through + no-write-allocate updates main memory immediately and does not allocate on a store miss.">
+                <option value="WB_WA" selected>Write-back + Write-allocate</option>
+                <option value="WT_NWA">Write-through + No-write-allocate</option>
+              </select>
             </div>
           </div>
           <div id="configMessage" class="message" aria-live="polite"></div>
         </div>
       </section>
 
+      <div class="left-sticky-group">
       <section class="panel access-panel">
         <div class="section">
           <h2>2. Access series</h2>
-          <p class="section-lead">The series is parsed live. Editing it restarts the simulation with an empty cache.</p>
+          <p class="section-lead">Write your memory accesses here.</p>
           <div class="access-editor-wrap" id="accessEditorWrap">
             <pre id="accessBackdrop" class="access-backdrop" aria-hidden="true"></pre>
             <textarea id="accessInput" class="access-input" spellcheck="false" aria-label="Memory access series">LW 0x00
@@ -228,7 +325,7 @@ SW 0x04 0x12345678
 LB 0x44
 LW 0x04</textarea>
           </div>
-          <div class="hint">Use <span class="mono">LB/LH/LW address</span> for loads and <span class="mono">SB/SH/SW address value</span> for stores. All addresses must be 4-byte (word) aligned. Multi-byte values use little-endian byte order. Writes use write-back + write-allocate.</div>
+          <div class="hint access-guide"><ul><li>Loads: <span class="mono">LB/LH/LW address</span></li><li>Stores: <span class="mono">SB/SH/SW address value</span></li><li>Alignment: word ÷4, halfword ÷2, byte unrestricted</li><li>Multi-byte values: little-endian</li><li>Stores: behavior follows the selected write policy</li></ul></div>
           <div id="accessMessage" class="message" aria-live="polite"></div>
 
           <details class="generator-details">
@@ -248,29 +345,48 @@ LW 0x04</textarea>
                     <option value="conflict">Same-set conflicts</option>
                   </select>
                 </div>
+                <div style="grid-column:1/-1">
+                  <label for="randomTemplate">Memory access template</label>
+                  <select id="randomTemplate" title="Changing the template immediately regenerates the access list using the current Count and Generated pattern.">
+                    <option value="word-loads" selected>Word loads only</option>
+                    <option value="mixed-loads">Mixed-width loads (LW / LH / LB)</option>
+                    <option value="mixed-rw">Mixed loads and stores</option>
+                    <option value="write-hit">Write-hit demonstration</option>
+                    <option value="write-miss">Write-miss / allocation demonstration</option>
+                  </select>
+                </div>
               </div>
               <button class="secondary" id="generateBtn" style="width:100%;margin-top:9px">Generate access series</button>
             </div>
           </details>
 
           <div class="button-row">
-            <button id="undoBtn" class="secondary">Undo</button>
-            <button id="stepBtn" class="primary">Step</button>
+            <button id="undoBtn" class="secondary" title="Restore the state before the previous Step.">Undo</button>
+            <button id="stepBtn" class="primary" title="Process the currently highlighted memory access.">Step</button>
             <span class="spacer"></span>
-            <button id="emptyBtn" class="danger">Empty cache</button>
+            <button id="emptyBtn" class="danger" title="Invalidate all cache lines and restart this access series from the beginning.">Empty cache</button>
           </div>
           <div class="hint" id="queueStatus">0 accesses processed.</div>
         </div>
       </section>
+
+      <section class="panel">
+        <div class="section">
+          <h2>Simulation summary</h2>
+          
+          <div id="summary" class="summary-row"></div>
+        </div>
+      </section>
+      </div>
     </aside>
 
     <section class="stack">
       <section class="panel address-panel">
         <div class="section">
           <h2>Address partition</h2>
-          <p class="section-lead">Associativity changes the number of sets, which changes the number of index bits. The displayed bits follow the most recently stepped address; before stepping, they show the next address.</p>
+          
           <div id="geometry" class="geometry"></div>
-          <div class="partition-legend"><span class="legend-item"><span class="swatch tag"></span>Tag</span><span class="legend-item"><span class="swatch index"></span>Set index</span><span class="legend-item"><span class="swatch offset"></span>Block offset</span></div>
+          <div class="partition-legend"><span class="legend-item" title="Tag field: address width − index bits − offset bits. It is compared with the stored tag in the selected set."><span class="swatch tag"></span>Tag</span><span class="legend-item" title="Set index: log2(number of sets) bits, where sets = cache lines ÷ ways. These bits select the cache set."><span class="swatch index"></span>Set index</span><span class="legend-item" title="Block offset: log2(block size in bytes) bits. These lowest address bits select a byte within the cache block."><span class="swatch offset"></span>Block offset</span></div>
           <div id="bitWorkbench"></div>
           <div class="current-grid">
             <div class="subpanel current-access-panel">
@@ -286,24 +402,15 @@ LW 0x04</textarea>
         </div>
       </section>
 
-      <section class="panel">
-        <div class="section">
-          <h2>Simulation summary</h2>
-          <p class="section-lead">Statistics count only the accesses processed in the current run.</p>
-          <div id="summary" class="summary-row"></div>
-        </div>
-      </section>
 
       <section class="panel">
         <div class="section">
           <h2>Cache contents and metadata</h2>
-          <p class="section-lead">A cache row briefly flashes whenever a Step accesses or fills that line. The gold marker identifies the next deterministic replacement victim when a set is full.</p>
+          <p class="section-lead">Reflects the current contents and metadata of the cache.</p>
           <div class="table-wrap cache-table-wrap">
-            <table class="cache-table">
-              <colgroup>
-                <col style="width:5%"><col style="width:5%"><col style="width:4%"><col style="width:4%"><col style="width:8%"><col style="width:11%"><col style="width:28%"><col style="width:9.5%"><col style="width:9.5%"><col style="width:16%">
-              </colgroup>
-              <thead><tr><th>Set</th><th>Way</th><th>V</th><th>D</th><th>Tag</th><th>Block base</th><th>Data bytes</th><th>Loaded at</th><th>Last used</th><th>Status</th></tr></thead>
+            <table id="cacheTable" class="cache-table">
+              <colgroup id="cacheCols"></colgroup>
+              <thead id="cacheHead"></thead>
               <tbody id="cacheBody"></tbody>
             </table>
           </div>
@@ -313,7 +420,7 @@ LW 0x04</textarea>
       <section class="panel">
         <div class="section">
           <h2>Main memory</h2>
-          <p class="section-lead">Each row is one aligned memory block. On a cache miss, the source block is brought into view and highlighted so the cache copy is easy to follow.</p>
+          <p class="section-lead">Each row is one aligned memory block. The active block is brought into view so cache fills and direct write-through updates are easy to follow.</p>
           <div class="memory-toolbar">
             <div>
               <label for="memoryJump">Jump to address</label>
@@ -331,7 +438,7 @@ LW 0x04</textarea>
               <tbody id="memoryBody"></tbody>
             </table>
           </div>
-          <div class="memory-note">Byte cells are editable. Enter decimal, <span class="mono">0x..</span>, or hexadecimal such as <span class="mono">FF</span>. Multi-byte accesses use little-endian byte order. Editing or randomizing main memory restarts the cache simulation so the cache and memory begin in a consistent state.</div>
+          <div class="memory-note">Byte cells are editable in hexadecimal. Enter values from <span class="mono">00</span> to <span class="mono">FF</span>. Multi-byte accesses use little-endian byte order.</div>
         </div>
       </section>
 
@@ -349,7 +456,7 @@ LW 0x04</textarea>
       </section>
     </section>
   </div>
-  <footer>Cache model: byte-addressable memory, word-aligned LB/LH/LW and SB/SH/SW accesses, little-endian multi-byte values, aligned power-of-two blocks, write-back + write-allocate for stores, and whole-block fill on a miss.</footer>
+  <footer>Cache model: byte-addressable memory with natural alignment (word ÷4, halfword ÷2, byte unrestricted), little-endian multi-byte values, aligned power-of-two blocks, selectable write policy, and whole-block fill on read misses.</footer>
 </main>
 
 <script>
@@ -357,10 +464,10 @@ LW 0x04</textarea>
   "use strict";
   const $=id=>document.getElementById(id);
   const els={
-    addressBits:$("addressBits"),cacheSize:$("cacheSize"),blockSize:$("blockSize"),ways:$("ways"),replacement:$("replacement"),assocHint:$("assocHint"),configMessage:$("configMessage"),
-    accessInput:$("accessInput"),accessBackdrop:$("accessBackdrop"),accessMessage:$("accessMessage"),randomCount:$("randomCount"),randomPattern:$("randomPattern"),generateBtn:$("generateBtn"),undoBtn:$("undoBtn"),stepBtn:$("stepBtn"),emptyBtn:$("emptyBtn"),queueStatus:$("queueStatus"),
-    geometry:$("geometry"),bitWorkbench:$("bitWorkbench"),currentResult:$("currentResult"),currentAccess:$("currentAccess"),decodeInfo:$("decodeInfo"),summary:$("summary"),cacheBody:$("cacheBody"),historyBody:$("historyBody"),
-    memoryJump:$("memoryJump"),memoryJumpBtn:$("memoryJumpBtn"),memoryPrevBtn:$("memoryPrevBtn"),memoryNextBtn:$("memoryNextBtn"),randomizeMemoryBtn:$("randomizeMemoryBtn"),memoryMessage:$("memoryMessage"),memoryHead:$("memoryHead"),memoryBody:$("memoryBody")
+    addressBits:$("addressBits"),cacheSize:$("cacheSize"),blockSize:$("blockSize"),ways:$("ways"),replacement:$("replacement"),writePolicy:$("writePolicy"),configMessage:$("configMessage"),
+    accessInput:$("accessInput"),accessBackdrop:$("accessBackdrop"),accessMessage:$("accessMessage"),randomCount:$("randomCount"),randomPattern:$("randomPattern"),randomTemplate:$("randomTemplate"),generateBtn:$("generateBtn"),undoBtn:$("undoBtn"),stepBtn:$("stepBtn"),emptyBtn:$("emptyBtn"),queueStatus:$("queueStatus"),
+    geometry:$("geometry"),bitWorkbench:$("bitWorkbench"),currentResult:$("currentResult"),currentAccess:$("currentAccess"),decodeInfo:$("decodeInfo"),summary:$("summary"),cacheTable:$("cacheTable"),cacheCols:$("cacheCols"),cacheHead:$("cacheHead"),cacheBody:$("cacheBody"),historyBody:$("historyBody"),
+    memoryJump:$("memoryJump"),memoryJumpBtn:$("memoryJumpBtn"),memoryPrevBtn:$("memoryPrevBtn"),memoryNextBtn:$("memoryNextBtn"),randomizeMemoryBtn:$("randomizeMemoryBtn"),memoryMessage:$("memoryMessage"),memoryHead:$("memoryHead"),memoryBody:$("memoryBody"),tutorialToggle:$("tutorialToggle"),tutorialToggleState:$("tutorialToggleState"),tutorialBackdrop:$("tutorialBackdrop"),tutorialPopover:$("tutorialPopover"),tutorialProgress:$("tutorialProgress"),tutorialTitle:$("tutorialTitle"),tutorialBody:$("tutorialBody"),tutorialBack:$("tutorialBack"),tutorialNext:$("tutorialNext"),tutorialClose:$("tutorialClose"),startupTutorialBackdrop:$("startupTutorialBackdrop"),startupTutorialModal:$("startupTutorialModal"),startupTutorialClose:$("startupTutorialClose")
   };
 
   const DEFAULT_MEMORY_SEED=0x15315315;
@@ -370,8 +477,30 @@ LW 0x04</textarea>
     memorySeed:DEFAULT_MEMORY_SEED,memoryOverrides:new Map(),memoryViewBase:0n,flashLineKey:null,flashMemoryBase:null,flashToken:0,notice:""
   };
   let configTimer=null,accessTimer=null;
+  const tutorial={enabled:false,active:false,steps:[],index:0,record:null,focused:[]};
 
   function isPow2(n){return Number.isSafeInteger(n)&&n>0&&(n&(n-1))===0}
+  function nextPow2(n){
+    n=Number(n);
+    if(!Number.isFinite(n)||n<1) return 1;
+    let p=1;
+    while(p<=n && p<2**30) p*=2;
+    return p;
+  }
+  function prevPow2(n){
+    n=Number(n);
+    if(!Number.isFinite(n)||n<=1) return 1;
+    let p=1;
+    while(p*2<n && p<2**30) p*=2;
+    return p;
+  }
+  function stepPowerOfTwo(el,direction){
+    const current=Number(el.value);
+    const next=direction>0 ? nextPow2(current) : prevPow2(current);
+    el.value=String(next);
+    el.dispatchEvent(new Event("input",{bubbles:true}));
+    el.dispatchEvent(new Event("change",{bubbles:true}));
+  }
   function setMessage(el,type,text){el.className=text?`message ${type}`:"message";el.textContent=text||""}
   function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
   function hex(v,bits=null){v=BigInt(v);const digits=bits?Math.ceil(bits/4):Math.max(1,v.toString(16).length);return "0x"+v.toString(16).toUpperCase().padStart(digits,"0")}
@@ -409,10 +538,8 @@ LW 0x04</textarea>
       const memoryBytes=1n<<BigInt(addressBits);
       if(BigInt(cacheSize)>memoryBytes) errs.push("Cache size cannot exceed the complete addressable memory space.");
     }
-    const maxWays=lineCount||0;
-    els.assocHint.textContent=maxWays?`This geometry has ${lineCount} total cache line${lineCount===1?"":"s"}.`:"Enter valid power-of-two cache and block sizes to determine the cache geometry.";
     if(errs.length) return {ok:false,errors:errs};
-    return {ok:true,config:{addressBits,cacheSize,blockSize,ways,lineCount,setCount,offsetBits,indexBits,tagBits,maxAddress:(1n<<BigInt(addressBits))-1n,replacement:els.replacement.value}};
+    return {ok:true,config:{addressBits,cacheSize,blockSize,ways,lineCount,setCount,offsetBits,indexBits,tagBits,maxAddress:(1n<<BigInt(addressBits))-1n,replacement:els.replacement.value,writePolicy:els.writePolicy.value}};
   }
 
   function geometryKey(c){return c?[c.addressBits,c.cacheSize,c.blockSize,c.ways].join("|"):""}
@@ -420,7 +547,7 @@ LW 0x04</textarea>
   function snapshot(){return {sets:cloneSets(state.sets),pointer:state.pointer,clock:state.clock,hits:state.hits,misses:state.misses,reads:state.reads,writes:state.writes,writeBacks:state.writeBacks,history:state.history.map(r=>({...r})),current:state.current?{...state.current}:null,memoryOverrides:new Map(state.memoryOverrides),memoryViewBase:state.memoryViewBase}}
   function restoreSnapshot(s){state.sets=cloneSets(s.sets);state.pointer=s.pointer;state.clock=s.clock;state.hits=s.hits;state.misses=s.misses;state.reads=s.reads;state.writes=s.writes;state.writeBacks=s.writeBacks;state.history=s.history.map(r=>({...r}));state.current=s.current?{...s.current}:null;state.memoryOverrides=new Map(s.memoryOverrides);state.memoryViewBase=s.memoryViewBase;state.flashLineKey=null;state.flashMemoryBase=null;renderAll();scrollCurrentAccess()}
 
-  function buildEmptySets(c){return Array.from({length:c.setCount},(_,si)=>Array.from({length:c.ways},(_,wi)=>({setIndex:si,wayIndex:wi,valid:false,dirty:false,tag:0n,blockBase:0n,data:Array(c.blockSize).fill(0),loadedAt:0,lastUsed:0})))}
+  function buildEmptySets(c){return Array.from({length:c.setCount},(_,si)=>Array.from({length:c.ways},(_,wi)=>({setIndex:si,wayIndex:wi,valid:false,dirty:false,tag:0n,blockBase:0n,data:Array(c.blockSize).fill(0),loadedAt:0,lru:0})))}
   function restartSimulation(reason="",preserveView=true){
     if(!state.config){state.sets=[];state.pointer=0;state.history=[];state.current=null;state.undoStack=[];renderAll();return}
     state.sets=buildEmptySets(state.config);state.pointer=0;state.clock=0;state.hits=0;state.misses=0;state.reads=0;state.writes=0;state.writeBacks=0;state.history=[];state.current=null;state.undoStack=[];state.flashLineKey=null;state.flashMemoryBase=null;
@@ -432,10 +559,10 @@ LW 0x04</textarea>
     const result=readConfig();
     if(!result.ok){setMessage(els.configMessage,"error",result.errors.join(" "));state.config=null;state.sets=[];renderAll();return}
     const c=result.config;
-    setMessage(els.configMessage,"ok",`${c.lineCount} cache line${c.lineCount===1?"":"s"} → ${c.setCount} set${c.setCount===1?"":"s"} × ${c.ways} way${c.ways===1?"":"s"}.`);
+    setMessage(els.configMessage,"","");
     const oldKey=geometryKey(state.config),newKey=geometryKey(c);
     if(!state.config||oldKey!==newKey){state.config=c;state.memoryViewBase=alignMemoryView(state.memoryViewBase,c);restartSimulation("Cache geometry changed; cache rebuilt empty.");parseAccessesLive(false)}
-    else{state.config={...state.config,replacement:els.replacement.value};renderAll()}
+    else{state.config={...state.config,replacement:els.replacement.value,writePolicy:els.writePolicy.value};renderAll()}
   }
 
   function parseLiteral(token,label="value"){
@@ -455,7 +582,7 @@ LW 0x04</textarea>
       if(!m) accessError(`Invalid syntax on line ${lineIndex+1}: “${chunk}”. Use LB/LH/LW address or SB/SH/SW address value.`,lineIndex);
       const mn=m[1].toUpperCase(),spec=ACCESS_SPECS[mn],address=parseLiteral(m[2],"address"),size=spec.size;
       if(address<0n||address>c.maxAddress) accessError(`Address ${hex(address)} on line ${lineIndex+1} exceeds the ${c.addressBits}-bit address space.`,lineIndex);
-      if(address%4n!==0n) accessError(`${mn} address ${hex(address,c.addressBits)} on line ${lineIndex+1} is not word-aligned. Addresses must be divisible by 4.`,lineIndex);
+      const alignment=BigInt(size);if(alignment>1n&&address%alignment!==0n){const alignmentName=size===4?"word":size===2?"halfword":"byte";accessError(`${mn} address ${hex(address,c.addressBits)} on line ${lineIndex+1} is not ${alignmentName}-aligned. It must be divisible by ${size}.`,lineIndex);}
       if(address+BigInt(size-1)>c.maxAddress) accessError(`${mn} on line ${lineIndex+1} extends beyond the addressable memory space.`,lineIndex);
       const d=decodeAddress(address,c);
       if(d.offset+size>c.blockSize) accessError(`${mn} on line ${lineIndex+1} crosses a cache-block boundary with the current ${c.blockSize}-byte block size.`,lineIndex);
@@ -475,7 +602,7 @@ LW 0x04</textarea>
     if(!state.config){state.accesses=[];state.accessValid=false;state.accessErrorLine=null;setMessage(els.accessMessage,"warn","Fix the cache configuration before accesses can be validated.");renderAccessEditor();updateControls();return}
     try{
       state.accesses=parseAccessText(els.accessInput.value,state.config);state.accessValid=true;state.accessErrorLine=null;
-      setMessage(els.accessMessage,state.accesses.length?"ok":"warn",state.accesses.length?`${state.accesses.length} access${state.accesses.length===1?"":"es"} ready · syntax and word alignment valid.`:"Enter at least one access to step the simulator.");
+      setMessage(els.accessMessage,state.accesses.length?"ok":"warn",state.accesses.length?`${state.accesses.length} access${state.accesses.length===1?"":"es"} ready\nsyntax and access-size alignment valid.`:"Enter at least one access to step the simulator.");
       if(restart) restartSimulation("Access series changed; cache restarted empty.");else renderAll();
     }catch(e){
       state.accesses=[];state.accessValid=false;state.accessErrorLine=Number.isInteger(e.sourceLine)?e.sourceLine:null;
@@ -490,63 +617,185 @@ LW 0x04</textarea>
   function setMemoryByte(address,value){state.memoryOverrides.set(address.toString(),value)}
   function loadBlock(base,size){return Array.from({length:size},(_,i)=>memoryHashByte(base+BigInt(i)))}
   function writeBackLine(line){for(let i=0;i<line.data.length;i++) setMemoryByte(line.blockBase+BigInt(i),line.data[i]);state.writeBacks++}
+  function writeValueToMemory(address,size,value){for(let i=0;i<size;i++) setMemoryByte(address+BigInt(i),Number((BigInt(value)>>BigInt(8*i))&255n))}
 
   function decodeAddress(address,c){const blockNumber=address/BigInt(c.blockSize),offset=Number(address%BigInt(c.blockSize)),setIndex=Number(blockNumber%BigInt(c.setCount)),tag=blockNumber/BigInt(c.setCount),blockBase=address-BigInt(offset);return {blockNumber,offset,setIndex,tag,blockBase}}
-  function chooseVictim(lines,c){const empty=lines.find(l=>!l.valid);if(empty) return empty;if(c.replacement==="RANDOM") return lines[Math.floor(Math.random()*lines.length)];if(c.replacement==="FIFO") return lines.reduce((a,b)=>a.loadedAt<=b.loadedAt?a:b);return lines.reduce((a,b)=>a.lastUsed<=b.lastUsed?a:b)}
-  function nextVictim(lines,c){if(lines.some(l=>!l.valid)||c.ways===1||c.replacement==="RANDOM") return null;if(c.replacement==="FIFO") return lines.reduce((a,b)=>a.loadedAt<=b.loadedAt?a:b);return lines.reduce((a,b)=>a.lastUsed<=b.lastUsed?a:b)}
+  function chooseVictim(lines,c){const empty=lines.find(l=>!l.valid);if(empty) return empty;if(c.replacement==="RANDOM") return lines[Math.floor(Math.random()*lines.length)];if(c.replacement==="FIFO") return lines.reduce((a,b)=>a.loadedAt<=b.loadedAt?a:b);return lines.reduce((a,b)=>a.lru>=b.lru?a:b)}
+  function nextVictim(lines,c){if(lines.some(l=>!l.valid)||c.ways===1||c.replacement==="RANDOM") return null;if(c.replacement==="FIFO") return lines.reduce((a,b)=>a.loadedAt<=b.loadedAt?a:b);return lines.reduce((a,b)=>a.lru>=b.lru?a:b)}
+  function touchLRU(lines,accessed,isNew=false){
+    const oldRank=isNew?Infinity:(Number.isFinite(accessed.lru)?accessed.lru:0);
+    for(const l of lines){
+      if(!l.valid||l===accessed) continue;
+      const rank=Number.isFinite(l.lru)?l.lru:0;
+      // A new MRU line pushes every existing valid line one position older.
+      // On a hit, only lines that were more recent than the accessed line age.
+      if(isNew||rank<oldRank) l.lru=rank+1;
+    }
+    accessed.lru=0;
+  }
 
   function flash(setIndex,wayIndex,memoryBase){
-    const token=++state.flashToken;state.flashLineKey=`${setIndex}:${wayIndex}`;state.flashMemoryBase=memoryBase;setTimeout(()=>{if(state.flashToken===token){state.flashLineKey=null;state.flashMemoryBase=null}},850)
+    const token=++state.flashToken;state.flashLineKey=wayIndex==null?null:`${setIndex}:${wayIndex}`;state.flashMemoryBase=memoryBase;setTimeout(()=>{if(state.flashToken===token){state.flashLineKey=null;state.flashMemoryBase=null}},850)
   }
-  function processStep(){
+  function processStep(withTutorial=false){
     if(!state.config||!state.accessValid||state.pointer>=state.accesses.length) return;
     state.undoStack.push(snapshot());if(state.undoStack.length>100) state.undoStack.shift();
+
     const access=state.accesses[state.pointer],c=state.config,d=decodeAddress(access.address,c),lines=state.sets[d.setIndex];
     state.clock++;if(access.isWrite) state.writes++;else state.reads++;
-    let line=lines.find(l=>l.valid&&l.tag===d.tag),hit=!!line,eviction="",writeBack=false;
-    if(hit) state.hits++;else{
-      state.misses++;line=chooseVictim(lines,c);
-      if(line.valid){eviction=`tag ${hex(line.tag)} @ ${hex(line.blockBase,c.addressBits)}`;if(line.dirty){writeBackLine(line);writeBack=true}}
-      line.valid=true;line.dirty=false;line.tag=d.tag;line.blockBase=d.blockBase;line.data=loadBlock(d.blockBase,c.blockSize);line.loadedAt=state.clock;
+
+    let line=lines.find(l=>l.valid&&l.tag===d.tag),hit=!!line,eviction="",writeBack=false,allocated=false,evictedBlockBase=null,evictedTag=null,evictedDirty=false;
+    if(hit) state.hits++;else state.misses++;
+
+    // Read misses always allocate. Under write-back + write-allocate, store misses allocate too.
+    // Under write-through + no-write-allocate, a store miss bypasses the cache.
+    const shouldAllocate=!hit && (!access.isWrite || c.writePolicy==="WB_WA");
+
+    if(shouldAllocate){
+      line=chooseVictim(lines,c);
+      if(line.valid){
+        evictedBlockBase=line.blockBase;evictedTag=line.tag;evictedDirty=!!line.dirty;
+        eviction=`tag ${hex(line.tag)} @ ${hex(line.blockBase,c.addressBits)}`;
+        if(line.dirty){writeBackLine(line);writeBack=true}
+      }
+      line.valid=true;line.dirty=false;line.tag=d.tag;line.blockBase=d.blockBase;
+      line.data=loadBlock(d.blockBase,c.blockSize);line.loadedAt=state.clock;line.lru=0;allocated=true;
     }
+
     state.memoryViewBase=pageBaseForAddress(d.blockBase,c);
     let observed;
-    if(access.isWrite){writeLittleEndian(line.data,d.offset,access.size,access.value);line.dirty=true;observed=BigInt(access.value)}
-    else observed=readLittleEndian(line.data,d.offset,access.size);
-    line.lastUsed=state.clock;
-    const rec={step:state.pointer+1,mn:access.mn,op:access.op,isWrite:access.isWrite,size:access.size,address:access.address,tag:d.tag,setIndex:d.setIndex,offset:d.offset,blockBase:d.blockBase,hit,wayIndex:line.wayIndex,value:observed,eviction,writeBack,sourceLine:access.sourceLine};
-    state.current=rec;state.history.push(rec);state.pointer++;flash(d.setIndex,line.wayIndex,d.blockBase);renderAll();scrollCurrentAccess();
+
+    if(access.isWrite){
+      observed=BigInt(access.value);
+      if(c.writePolicy==="WB_WA"){
+        // Hit or allocated miss: update cache only and mark dirty.
+        writeLittleEndian(line.data,d.offset,access.size,access.value);
+        line.dirty=true;
+        touchLRU(lines,line,allocated);
+      }else{
+        // Write-through: main memory is always updated immediately.
+        writeValueToMemory(access.address,access.size,access.value);
+        if(hit){
+          writeLittleEndian(line.data,d.offset,access.size,access.value);
+          line.dirty=false;
+          touchLRU(lines,line,false);
+        }
+        // On a write miss, no cache line is allocated or aged.
+      }
+    }else{
+      observed=readLittleEndian(line.data,d.offset,access.size);
+      touchLRU(lines,line,allocated);
+    }
+
+    const wayIndex=line&&line.valid&&(hit||allocated)?line.wayIndex:null;
+    const rec={
+      step:state.pointer+1,mn:access.mn,op:access.op,isWrite:access.isWrite,size:access.size,address:access.address,
+      tag:d.tag,setIndex:d.setIndex,offset:d.offset,blockBase:d.blockBase,hit,wayIndex,value:observed,
+      eviction,writeBack,evictedBlockBase,evictedTag,evictedDirty,sourceLine:access.sourceLine,
+      writeBypass:access.isWrite&&!hit&&c.writePolicy==="WT_NWA"
+    };
+    state.current=rec;state.history.push(rec);state.pointer++;
+    flash(d.setIndex,wayIndex,d.blockBase);renderAll();scrollCurrentAccess();
+    if(withTutorial&&tutorial.enabled) setTimeout(()=>startTutorial(rec),0);
   }
   function undoStep(){if(!state.undoStack.length) return;restoreSnapshot(state.undoStack.pop())}
 
   function randomBigInt(bits){
     let out=0n,remaining=bits;while(remaining>0){const take=Math.min(remaining,30),max=2**take,part=Math.floor(Math.random()*max);out=(out<<BigInt(take))|BigInt(part);remaining-=take}return out;
   }
-  function generateSeries(){
-    if(!state.config) return;const c=state.config,count=Math.max(1,Math.min(500,Number(els.randomCount.value)||20)),pattern=els.randomPattern.value,max=c.maxAddress+1n,bs=BigInt(c.blockSize),out=[];
-    const mn=c.blockSize>=4?"LW":(c.blockSize>=2?"LH":"LB"),size=ACCESS_SPECS[mn].size;
-    const align4=a=>(a/4n)*4n;
-    const maxStart=c.maxAddress-BigInt(size-1);
-    const randAddr=()=>align4(randomBigInt(c.addressBits)&maxStart);
-    if(pattern==="uniform"){for(let i=0;i<count;i++) out.push(randAddr())}
-    else if(pattern==="sequential"){let base=randAddr();for(let i=0;i<count;i++) out.push(align4((base+BigInt(i)*4n)%max))}
-    else if(pattern==="conflict"){
-      let base=randAddr();const d0=decodeAddress(base,c),cacheSpan=BigInt(c.setCount*c.blockSize);let mult=1n;while((cacheSpan*mult)%4n!==0n)mult++;const stride=cacheSpan*mult,working=Math.max(2,c.ways+2);
-      for(let i=0;i<count;i++){let a=base+BigInt(i%working)*stride;while(a>maxStart)a-=max;out.push(align4(a))}
-    }else{
-      const working=Math.min(8,Math.max(2,Math.floor(Number((c.maxAddress+1n)>1024n?1024n:(c.maxAddress+1n))/Math.max(4,c.blockSize))));let base=randAddr();
-      for(let i=0;i<count;i++){if(Math.random()<.82){const delta=BigInt(Math.floor(Math.random()*working))*4n;out.push(align4((base+delta)%max))}else out.push(randAddr())}
+  function buildGeneratedSeries(useRequestedCount=true){
+    if(!state.config) return [];
+    const c=state.config;
+    const template=els.randomTemplate.value,pattern=els.randomPattern.value;
+    const count=useRequestedCount?Math.max(1,Math.min(500,Number(els.randomCount.value)||20)):
+      (template==="write-hit"||template==="write-miss"?8:12);
+
+    function chooseMnemonic(i){
+      if(template==="word-loads") return c.blockSize>=4?"LW":(c.blockSize>=2?"LH":"LB");
+      if(template==="mixed-loads"){
+        const choices=[["LW",4],["LH",2],["LB",1]].filter(([,s])=>s<=c.blockSize);
+        return choices[i%choices.length][0];
+      }
+      if(template==="mixed-rw"){
+        const choices=[["LW",4],["SW",4],["LH",2],["SH",2],["LB",1],["SB",1]].filter(([,s])=>s<=c.blockSize);
+        return choices[i%choices.length][0];
+      }
+      if(template==="write-hit") return c.blockSize>=4?(i%2===0?"LW":"SW"):(c.blockSize>=2?(i%2===0?"LH":"SH"):(i%2===0?"LB":"SB"));
+      if(template==="write-miss") return c.blockSize>=4?(i%2===0?"SW":"LW"):(c.blockSize>=2?(i%2===0?"SH":"LH"):(i%2===0?"SB":"LB"));
+      return "LB";
     }
-    els.accessInput.value=out.map(a=>`${mn} ${hex(a,c.addressBits)}`).join("\n");parseAccessesLive(true)
+
+    function alignedAddress(raw,size){
+      const align=BigInt(size),maxStart=c.maxAddress-BigInt(size-1);
+      if(maxStart<0n) return 0n;
+      let a=(raw/align)*align;
+      if(a>maxStart) a=(maxStart/align)*align;
+      const off=Number(a%BigInt(c.blockSize));
+      if(off+size>c.blockSize) a-=BigInt(off);
+      return a<0n?0n:a;
+    }
+
+    function randomRaw(){return randomBigInt(c.addressBits)}
+    function addressFor(i,size,base,conflictStride){
+      const align=BigInt(size);
+      if(pattern==="uniform") return alignedAddress(randomRaw(),size);
+      if(pattern==="sequential") return alignedAddress(base+BigInt(i)*align,size);
+      if(pattern==="conflict"){
+        const working=Math.max(2,c.ways+2);
+        return alignedAddress(base+BigInt(i%working)*conflictStride,size);
+      }
+      if(Math.random()<.82){
+        const nearby=BigInt((i%8)*Math.max(1,size));
+        return alignedAddress(base+nearby,size);
+      }
+      return alignedAddress(randomRaw(),size);
+    }
+
+    let base=alignedAddress(randomRaw(),Math.min(4,c.blockSize));
+    const cacheSpan=BigInt(c.setCount*c.blockSize);
+    let conflictStride=cacheSpan||BigInt(c.blockSize);
+    if(conflictStride===0n) conflictStride=1n;
+
+    const out=[];
+    let stickyAddress=null;
+    for(let i=0;i<count;i++){
+      const mn=chooseMnemonic(i),spec=ACCESS_SPECS[mn],size=spec.size;
+      let address;
+      if(template==="write-hit"){
+        if(i%2===0 || stickyAddress==null) stickyAddress=addressFor(Math.floor(i/2),size,base,conflictStride);
+        address=alignedAddress(stickyAddress,size);
+      }else if(template==="write-miss"){
+        if(i%2===0 || stickyAddress==null) stickyAddress=addressFor(Math.floor(i/2),size,base+BigInt(i*c.blockSize),conflictStride);
+        address=alignedAddress(stickyAddress,size);
+      }else{
+        address=addressFor(i,size,base,conflictStride);
+      }
+
+      if(spec.write){
+        const maxValue=(1n<<BigInt(size*8))-1n;
+        const value=randomBigInt(size*8)&maxValue;
+        out.push(`${mn} ${hex(address,c.addressBits)} ${valueHex(value,size)}`);
+      }else out.push(`${mn} ${hex(address,c.addressBits)}`);
+    }
+    return out;
   }
+
+  function applyGeneratedSeries(useRequestedCount=true){
+    const out=buildGeneratedSeries(useRequestedCount);
+    if(!out.length) return;
+    els.accessInput.value=out.join("\n");
+    parseAccessesLive(true);
+  }
+
+  function generateSeries(){applyGeneratedSeries(true)}
 
   function activeAddress(){if(state.current) return state.current.address;if(state.accesses.length&&state.pointer<state.accesses.length) return state.accesses[state.pointer].address;if(state.accesses.length) return state.accesses[0].address;return 0n}
   function renderGeometry(){
     const c=state.config;if(!c){els.geometry.innerHTML='<div class="empty">Enter a valid configuration.</div>';els.bitWorkbench.innerHTML="";return}
-    const metrics=[[c.lineCount,"Cache lines"],[c.setCount,"Sets"],[c.ways,"Ways / set"],[c.tagBits,"Tag bits"],[c.indexBits,"Index bits"],[c.offsetBits,"Offset bits"]];els.geometry.innerHTML=metrics.map(([v,n])=>`<div class="metric"><strong>${v}</strong><span>${n}</span></div>`).join("");
+    const metrics=[[c.lineCount,"Cache lines"],[c.setCount,"Sets"],[c.ways,"Ways / set"],[c.tagBits,"Tag bits"],[c.indexBits,"Index bits"],[c.offsetBits,"Offset bits"]];const metricTips={"Cache lines":`Cache lines = cache size ÷ block size = ${c.cacheSize} ÷ ${c.blockSize} = ${c.lineCount}.`,"Sets":`Sets = cache lines ÷ ways = ${c.lineCount} ÷ ${c.ways} = ${c.setCount}.`,"Ways / set":`Ways per set = associativity = ${c.ways}.`,"Tag bits":`Tag bits = address width − index bits − offset bits = ${c.addressBits} − ${c.indexBits} − ${c.offsetBits} = ${c.tagBits}.`,"Index bits":`Index bits = log2(number of sets) = log2(${c.setCount}) = ${c.indexBits}.`,"Offset bits":`Offset bits = log2(block size in bytes) = log2(${c.blockSize}) = ${c.offsetBits}.`};els.geometry.innerHTML=metrics.map(([v,n],i)=>`<div class="metric metric-${i}" data-metric-index="${i}" title="${metricTips[n]||""}"><span>${n}</span><strong>${v}</strong></div>`).join("");
     const a=activeAddress(),bits=a.toString(2).padStart(c.addressBits,"0").slice(-c.addressBits),tagEnd=c.tagBits,indexEnd=c.tagBits+c.indexBits;
     const idx=bits.split("").map((_,i)=>`<div class="bit-index">${c.addressBits-1-i}</div>`).join("");
-    const vals=bits.split("").map((b,i)=>`<div class="bit-cell ${i<tagEnd?"tag":i<indexEnd?"index":"offset"}">${b}</div>`).join("");
+    const vals=bits.split("").map((b,i)=>{const field=i<tagEnd?"Tag":i<indexEnd?"Set index":"Block offset";const cls=i<tagEnd?"tag":i<indexEnd?"index":"offset";const bitPos=c.addressBits-1-i;return `<div class="bit-cell ${cls}" title="Address bit ${bitPos}: ${field} field; current value = ${b}">${b}</div>`;}).join("");
     els.bitWorkbench.innerHTML=`<div class="bit-scroll"><div class="bit-index-row">${idx}</div><div class="bit-value-row">${vals}</div></div>`;
   }
   function renderCurrent(){
@@ -555,10 +804,10 @@ LW 0x04</textarea>
     if(!target){els.currentResult.textContent="Not started";els.currentResult.className="big-result";els.currentAccess.innerHTML='<div class="current-address">—</div><div class="k">Operation</div><div class="v">—</div><div class="k">Value</div><div class="v">—</div>';els.decodeInfo.innerHTML='<div class="k">Tag</div><div class="v">—</div><div class="k">Set index</div><div class="v">—</div><div class="k">Block offset</div><div class="v">—</div><div class="k">Block range</div><div class="v">—</div><div class="k">Placement</div><div class="v">—</div>';return}
     const d=target.preview?target:decodeAddress(target.address,c),base=d.blockBase??target.blockBase,end=base+BigInt(c.blockSize-1);
     if(target.preview){els.currentResult.textContent="Init";els.currentResult.className="big-result"}else{els.currentResult.textContent=target.hit?"HIT":"MISS";els.currentResult.className=`big-result ${target.hit?"hit":"miss"}`}
-    const shownValue=target.preview?(target.isWrite?formatAccessValue(target.value,target.size):"—"):formatAccessValue(target.value,target.size);
+    const shownValue=target.preview?(target.isWrite?`<div class="access-value-stack"><span class="hex">${valueHex(target.value,target.size)} (hex)</span><span class="dec">${BigInt(target.value)} (decimal)</span></div>`:"—"):`<div class="access-value-stack"><span class="hex">${valueHex(target.value,target.size)} (hex)</span><span class="dec">${BigInt(target.value)} (decimal)</span></div>`;
     els.currentAccess.innerHTML=`<div class="current-address">${hex(target.address,c.addressBits)} <span class="decimal">(${target.address})</span></div><div class="k">Operation</div><div class="v">${esc(operationText(target))}</div><div class="k">Value</div><div class="v">${shownValue}</div>`;
-    let placement=target.preview?`Maps to set ${d.setIndex}; tag comparison has not occurred yet.`:`${target.hit?"Found in":"Loaded into"} set ${target.setIndex}, way ${target.wayIndex}${target.eviction?`; evicted ${target.eviction}${target.writeBack?" after write-back":""}`:""}`;
-    els.decodeInfo.innerHTML=`<div class="k">Tag</div><div class="v">${hex(d.tag)} (${d.tag})</div><div class="k">Set index</div><div class="v">${d.setIndex}</div><div class="k">Block offset</div><div class="v">${d.offset}</div><div class="k">Access bytes</div><div class="v">${d.offset}…${d.offset+target.size-1} (${target.size} byte${target.size===1?"":"s"})</div><div class="k">Block range</div><div class="v">${hex(base,c.addressBits)} – ${hex(end,c.addressBits)}</div><div class="k">Placement</div><div class="v">${esc(placement)}</div>`;
+    let placement=target.preview?`Maps to set ${d.setIndex}; tag comparison has not occurred yet.`:(target.writeBypass?`Write miss: no allocation; main memory updated directly.`:`${target.hit?"Found in":"Loaded into"} set ${target.setIndex}, way ${target.wayIndex}${target.eviction?`; evicted ${target.eviction}${target.writeBack?" after write-back":""}`:""}`);
+    const placementParts=String(placement).split(";").map(s=>s.trim()).filter(Boolean);const placementHtml=placementParts.map((p,i)=>`<div class="placement-line">${esc(p)}${i<placementParts.length-1?";":""}</div>`).join("");els.decodeInfo.innerHTML=`<div class="k">Tag</div><div class="v">${hex(d.tag)} (${d.tag})</div><div class="k">Set index</div><div class="v">${d.setIndex}</div><div class="k">Block offset</div><div class="v">${d.offset}</div><div class="k">Access bytes</div><div class="v">${d.offset}…${d.offset+target.size-1} (${target.size} byte${target.size===1?"":"s"})</div><div class="k">Block range</div><div class="v">${hex(base,c.addressBits)} – ${hex(end,c.addressBits)}</div><div class="k">Placement</div><div class="v placement-value">${placementHtml}</div>`;
   }
 
   function renderSummary(){const total=state.hits+state.misses,rate=total?(100*state.hits/total).toFixed(1)+"%":"—",stats=[[total,"Accesses"],[state.hits,"Hits"],[state.misses,"Misses"],[rate,"Hit rate"],[state.writeBacks,"Write-backs"]];els.summary.innerHTML=stats.map(([v,n])=>`<div class="stat"><strong>${v}</strong><span>${n}</span></div>`).join("")}
@@ -566,14 +815,75 @@ LW 0x04</textarea>
     const rows=[];
     for(let start=0;start<line.data.length;start+=8){
       const chunk=line.data.slice(start,start+8);
-      rows.push(`<div class="data-byte-row" style="grid-template-columns:repeat(${chunk.length},minmax(0,1fr))">${chunk.map((v,j)=>{const i=start+j;return `<span class="byte ${state.current&&state.current.setIndex===line.setIndex&&state.current.wayIndex===line.wayIndex&&i>=state.current.offset&&i<state.current.offset+state.current.size?"active":""}" title="${hex(line.blockBase+BigInt(i),c.addressBits)} = ${v}">${byteHex(v)}</span>`}).join("")}</div>`);
+      rows.push(`<div class="data-byte-row" style="grid-template-columns:repeat(${chunk.length},minmax(0,1fr))">${chunk.map((v,j)=>{const i=start+j;const isActive=state.current&&state.current.setIndex===line.setIndex&&state.current.wayIndex===line.wayIndex&&i>=state.current.offset&&i<state.current.offset+state.current.size;const activeClass=isActive?`active ${state.current.hit?"hit-byte":"miss-byte"}`:"";return `<span class="byte ${activeClass}" title="${hex(line.blockBase+BigInt(i),c.addressBits)} = ${v}">${byteHex(v)}</span>`}).join("")}</div>`);
     }
     return `<div class="data-bytes">${rows.join("")}</div>`
   }
+  function cacheColumns(c){
+    const direct=c.ways===1,writeThrough=c.writePolicy==="WT_NWA";
+    const cols=[
+      {key:"set",label:"Set",width:5,cls:"col-small",tip:"Set selected by the address index bits. All cache lines mapping to the same set compete for placement."}
+    ];
+    if(!direct) cols.push({key:"way",label:"Way",width:5,cls:"col-small",tip:"Way number within the selected set. This column is hidden for a direct-mapped cache."});
+    cols.push({key:"valid",label:"V",width:4,cls:"col-small",tip:"Valid bit. 1 means this cache line contains a meaningful memory block; 0 means the line is empty."});
+    if(!writeThrough) cols.push({key:"dirty",label:"D",width:4,cls:"col-small",tip:"Dirty bit. Under write-back, 1 means this cached block differs from main memory and must be written back before eviction."});
+    if(!direct) cols.push({key:"lru",label:"LRU",width:6,cls:"col-small",tip:"Least-recently-used rank within this set. LRU = 0 is the most recently accessed valid line; the largest value is replaced under LRU."});
+    cols.push(
+      {key:"tag",label:"Tag",width:9,cls:"col-tag",tip:"Tag bits stored with the cache line. A hit requires a valid line in the indexed set with a matching tag."},
+      {key:"base",label:"Block base",width:12,cls:"col-base",tip:"Aligned starting address of the main-memory block currently copied into this cache line."},
+      {key:"data",label:"Data bytes",width:34,cls:"col-data",tip:"Bytes currently stored in this cache block. Bytes touched by the latest access are colored by hit/miss result."},
+      {key:"status",label:"Status",width:21,cls:"col-status",tip:"Shows when the line was loaded and its current hit/fill or replacement-victim status."}
+    );
+    const fixed=cols.filter(x=>x.key!=="data"&&x.key!=="status").reduce((s,x)=>s+x.width,0);
+    const remaining=Math.max(45,100-fixed);
+    const dataWidth=Math.round(remaining*.62*10)/10,statusWidth=Math.round((remaining-dataWidth)*10)/10;
+    for(const col of cols){if(col.key==="data") col.width=dataWidth;if(col.key==="status") col.width=statusWidth}
+    return cols;
+  }
+
+  function renderCacheStructure(c){
+    const cols=cacheColumns(c);
+    els.cacheCols.innerHTML=cols.map(col=>`<col style="width:${col.width}%">`).join("");
+    els.cacheHead.innerHTML=`<tr>${cols.map(col=>`<th class="${col.cls||""} cache-col-${col.key}" title="${esc(col.tip)}">${col.label}</th>`).join("")}</tr>`;
+    return cols;
+  }
+
   function renderCache(){
-    const c=state.config;if(!c||!state.sets.length){els.cacheBody.innerHTML='<tr><td colspan="10" class="empty">Enter a valid cache configuration.</td></tr>';return}
-    const rows=[];for(let si=0;si<state.sets.length;si++){const lines=state.sets[si],victim=nextVictim(lines,c);for(const line of lines){const key=`${si}:${line.wayIndex}`,classes=["cache-row"];if(state.current&&state.current.setIndex===si&&state.current.wayIndex===line.wayIndex) classes.push("current-line");if(victim===line) classes.push("victim-line");if(state.flashLineKey===key) classes.push(state.current?.hit?"flash-hit":"flash-miss");let status="—";if(state.current&&state.current.setIndex===si&&state.current.wayIndex===line.wayIndex) status=state.current.hit?"Current hit":"Just filled";else if(victim===line) status=`Next ${c.replacement} victim`;rows.push(`<tr class="${classes.join(" ")}"><td>${si}</td><td>${line.wayIndex}</td><td>${line.valid?1:0}</td><td>${line.valid?(line.dirty?1:0):"—"}</td><td class="mono">${line.valid?hex(line.tag):"—"}</td><td class="mono">${line.valid?hex(line.blockBase,c.addressBits):"—"}</td><td>${line.valid?renderDataBytes(line,c):'<span class="empty">empty</span>'}</td><td>${line.valid?line.loadedAt:"—"}</td><td>${line.valid?line.lastUsed:"—"}</td><td class="status-text">${status}</td></tr>`)}}
-    els.cacheBody.innerHTML=rows.join("")
+    const c=state.config;
+    if(!c||!state.sets.length){
+      els.cacheCols.innerHTML="";
+      els.cacheHead.innerHTML="";
+      els.cacheBody.innerHTML='<tr><td class="empty">Enter a valid cache configuration.</td></tr>';
+      return;
+    }
+    const cols=renderCacheStructure(c),rows=[];
+    for(let si=0;si<state.sets.length;si++){
+      const lines=state.sets[si],victim=nextVictim(lines,c);
+      for(const line of lines){
+        const key=`${si}:${line.wayIndex}`,classes=["cache-row"];
+        if(state.current&&state.current.setIndex===si&&state.current.wayIndex===line.wayIndex) classes.push("current-line");
+        if(victim===line) classes.push("victim-line");
+        if(state.flashLineKey===key) classes.push("flash-update");
+        let stateLabel="";
+        if(state.current&&state.current.setIndex===si&&state.current.wayIndex===line.wayIndex) stateLabel=state.current.hit?"Current hit":"Just filled";
+        else if(victim===line) stateLabel=`Next ${c.replacement} victim`;
+        const status=line.valid?`Loaded at: ${line.loadedAt}${stateLabel?`; ${stateLabel}`:""}`:"—";
+
+        const cell={
+          set:`<td class="col-small cache-set-cell">${si}</td>`,
+          way:`<td class="col-small cache-way-cell">${line.wayIndex}</td>`,
+          valid:`<td class="col-small cache-valid-cell">${line.valid?1:0}</td>`,
+          dirty:`<td class="col-small cache-dirty-cell">${line.valid?(line.dirty?1:0):"—"}</td>`,
+          lru:`<td class="col-small cache-lru-cell">${line.valid?line.lru:"—"}</td>`,
+          tag:`<td class="mono col-tag cache-tag-cell">${line.valid?hex(line.tag):"—"}</td>`,
+          base:`<td class="mono col-base cache-base-cell">${line.valid?hex(line.blockBase,c.addressBits):"—"}</td>`,
+          data:`<td class="col-data cache-data-cell">${line.valid?renderDataBytes(line,c):'<span class="empty">empty</span>'}</td>`,
+          status:`<td class="status-text col-status cache-status-cell">${status}</td>`
+        };
+        rows.push(`<tr class="${classes.join(" ")}" data-cache-set="${si}" data-cache-way="${line.wayIndex}">${cols.map(col=>cell[col.key]).join("")}</tr>`);
+      }
+    }
+    els.cacheBody.innerHTML=rows.join("");
   }
 
   function renderAccessEditor(){
@@ -604,7 +914,7 @@ LW 0x04</textarea>
   }
   function renderHistory(){
     if(!state.history.length){els.historyBody.innerHTML='<tr><td colspan="10" class="empty">No accesses processed yet.</td></tr>';return}
-    const c=state.config;els.historyBody.innerHTML=state.history.slice().reverse().map(r=>`<tr><td>${r.step}</td><td><span class="pill ${r.isWrite?"write":"read"}">${r.mn}</span></td><td class="mono">${hex(r.address,c.addressBits)}</td><td class="mono">${hex(r.tag)}</td><td>${r.setIndex}</td><td>${r.offset}</td><td><span class="pill ${r.hit?"hit":"miss"}">${r.hit?"HIT":"MISS"}</span></td><td>${r.wayIndex}</td><td>${formatAccessValue(r.value,r.size)}</td><td>${r.eviction?`${esc(r.eviction)}${r.writeBack?" + write-back":""}`:"—"}</td></tr>`).join("")
+    const c=state.config;els.historyBody.innerHTML=state.history.slice().reverse().map(r=>`<tr><td>${r.step}</td><td><span class="pill ${r.isWrite?"write":"read"}">${r.mn}</span></td><td class="mono">${hex(r.address,c.addressBits)}</td><td class="mono">${hex(r.tag)}</td><td>${r.setIndex}</td><td>${r.offset}</td><td><span class="pill ${r.hit?"hit":"miss"}">${r.hit?"HIT":"MISS"}</span></td><td>${r.wayIndex??"—"}</td><td>${formatAccessValue(r.value,r.size)}</td><td>${r.writeBypass?"Direct memory write":(r.eviction?`${esc(r.eviction)}${r.writeBack?" + write-back":""}`:"—")}</td></tr>`).join("")
   }
 
   function pageBytes(c){return BigInt(c.blockSize*MEMORY_ROWS)}
@@ -614,34 +924,412 @@ LW 0x04</textarea>
     const c=state.config;if(!c){els.memoryHead.innerHTML="";els.memoryBody.innerHTML='<tr><td class="empty">Enter a valid configuration.</td></tr>';return}
     state.memoryViewBase=alignMemoryView(state.memoryViewBase,c);els.memoryJump.value=hex(state.memoryViewBase,c.addressBits);
     els.memoryHead.innerHTML=`<tr><th>Block base</th>${Array.from({length:c.blockSize},(_,i)=>`<th class="byte-head">+${i}</th>`).join("")}</tr>`;
-    const rows=[];for(let r=0;r<MEMORY_ROWS;r++){const base=state.memoryViewBase+BigInt(r*c.blockSize);if(base>c.maxAddress) break;const source=state.current&&state.current.blockBase===base,flash=state.flashMemoryBase===base;const bytes=[];for(let i=0;i<c.blockSize;i++){const addr=base+BigInt(i);if(addr>c.maxAddress){bytes.push('<td class="mem-byte">—</td>');continue}const val=memoryHashByte(addr),active=state.current&&addr>=state.current.address&&addr<state.current.address+BigInt(state.current.size);bytes.push(`<td class="mem-byte"><input class="${active?"active-byte":""}" data-memory-address="${addr}" value="${byteHex(val)}" title="${hex(addr,c.addressBits)} = ${val}" /></td>`)}rows.push(`<tr class="${source?"source-block":""} ${flash?"flash-memory":""}"><td class="mono">${hex(base,c.addressBits)}</td>${bytes.join("")}</tr>`)}els.memoryBody.innerHTML=rows.join("");
+    const rows=[];for(let r=0;r<MEMORY_ROWS;r++){const base=state.memoryViewBase+BigInt(r*c.blockSize);if(base>c.maxAddress) break;const source=state.current&&state.current.blockBase===base,flash=state.flashMemoryBase===base;const bytes=[];for(let i=0;i<c.blockSize;i++){const addr=base+BigInt(i);if(addr>c.maxAddress){bytes.push('<td class="mem-byte">—</td>');continue}const val=memoryHashByte(addr),active=state.current&&addr>=state.current.address&&addr<state.current.address+BigInt(state.current.size);bytes.push(`<td class="mem-byte"><input class="${active?"active-byte":""}" data-memory-address="${addr}" value="${byteHex(val)}" title="${hex(addr,c.addressBits)} = ${val}" /></td>`)}rows.push(`<tr data-memory-base="${base}" class="${source?"source-block":""} ${flash?"flash-memory":""}"><td class="mono">${hex(base,c.addressBits)}</td>${bytes.join("")}</tr>`)}els.memoryBody.innerHTML=rows.join("");
     els.memoryBody.querySelectorAll('input[data-memory-address]').forEach(inp=>inp.addEventListener('change',onMemoryEdit));
     const p=pageBytes(c);els.memoryPrevBtn.disabled=state.memoryViewBase===0n;els.memoryNextBtn.disabled=state.memoryViewBase+p>c.maxAddress;
   }
-  function parseByteInput(s){const t=String(s).trim();if(/^0x[0-9a-f]{1,2}$/i.test(t)) return parseInt(t.slice(2),16);if(/^[0-9a-f]{1,2}$/i.test(t)&&/[a-f]/i.test(t)) return parseInt(t,16);if(/^\d{1,3}$/.test(t)){const n=Number(t);if(n<=255) return n}if(/^[0-9a-f]{2}$/i.test(t)) return parseInt(t,16);throw new Error("Enter a byte from 0 to 255, 0x00 to 0xFF, or two hexadecimal digits.")}
-  function onMemoryEdit(e){try{const addr=BigInt(e.target.dataset.memoryAddress),v=parseByteInput(e.target.value);setMemoryByte(addr,v);setMessage(els.memoryMessage,"ok",`${hex(addr,state.config.addressBits)} set to 0x${byteHex(v)} (${v}).`);restartSimulation("Main memory edited; cache restarted empty.");}catch(err){setMessage(els.memoryMessage,"error",err.message);renderMemory()}}
+  function parseByteInput(s){const t=String(s).trim();if(/^[0-9a-f]{1,2}$/i.test(t)) return parseInt(t,16);if(/^0x[0-9a-f]{1,2}$/i.test(t)) return parseInt(t.slice(2),16);throw new Error("Enter a hexadecimal byte from 00 to FF.")}
+  function onMemoryEdit(e){try{const addr=BigInt(e.target.dataset.memoryAddress),v=parseByteInput(e.target.value);setMemoryByte(addr,v);setMessage(els.memoryMessage,"ok",`${hex(addr,state.config.addressBits)} set to 0x${byteHex(v)}.`);restartSimulation("Main memory edited; cache restarted empty.");}catch(err){setMessage(els.memoryMessage,"error",err.message);renderMemory()}}
   function jumpMemory(){if(!state.config) return;try{const a=parseLiteral(els.memoryJump.value,"memory address");if(a<0n||a>state.config.maxAddress) throw new Error(`Address must fit in ${state.config.addressBits} bits.`);state.memoryViewBase=pageBaseForAddress(a,state.config);setMessage(els.memoryMessage,"","");renderMemory()}catch(e){setMessage(els.memoryMessage,"error",e.message)}}
   function moveMemoryPage(dir){if(!state.config) return;const p=pageBytes(state.config);state.memoryViewBase=alignMemoryView(state.memoryViewBase+BigInt(dir)*p,state.config);renderMemory()}
   function randomizeMemory(){state.memorySeed=Math.floor(Math.random()*0xffffffff)>>>0;state.memoryOverrides.clear();setMessage(els.memoryMessage,"ok","Main memory randomized with a new deterministic seed.");restartSimulation("Main memory randomized; cache restarted empty.",false)}
 
+
+  function tutorialCacheRowSelector(r){
+    return r&&r.wayIndex!=null?`#cacheBody tr[data-cache-set="${r.setIndex}"][data-cache-way="${r.wayIndex}"]`:null;
+  }
+  function tutorialMemoryRowSelector(base){
+    return base==null?null:`#memoryBody tr[data-memory-base="${BigInt(base)}"]`;
+  }
+  function tutorialPolicyName(c){
+    return c.writePolicy==="WB_WA"?"write-back + write-allocate":"write-through + no-write-allocate";
+  }
+  function tutorialStep(title,body,focus=[],emphasis=[],opts={}){
+    const auto={};
+    if(title==="Derive the cache organization") auto.popupTopViewport=.60;
+    const middleTitles=new Set([
+      "Translate that into cache rows",
+      "Choose where the block will go",
+      "Look in the indexed set",
+      "Select the matching cache line",
+      "Check the metadata",
+      "Apply the write-back policy",
+      "Write directly to main memory",
+      "Write back the dirty victim first",
+      "Copy the block from main memory"
+    ]);
+    if(middleTitles.has(title)) auto.popupViewportY=.50;
+
+    // Keep the hit/miss explanation at the same vertical position as
+    // the final "Memory access complete" popup.
+    if(title==="Why this access is a HIT" ||
+       title==="Why this access is a MISS" ||
+       title==="Memory access complete"){
+      auto.popupViewportY=.34;
+    }
+
+    return {title,body,focus,emphasis,...auto,...opts};
+  }
+  function buildTutorialSteps(r){
+    const c=state.config,d=decodeAddress(r.address,c),row=tutorialCacheRowSelector(r);
+    const targetMem=tutorialMemoryRowSelector(r.blockBase);
+    const direct=c.ways===1;
+    const steps=[];
+
+    if(r.step===1){
+    steps.push(tutorialStep(
+      "Derive the cache organization",
+      `<p>The values you entered in <strong>Cache configuration</strong> are the inputs to these calculations. Cache size, block size, and associativity directly determine the first three computed parameters shown in the green box.</p>
+       <div class="tutorial-math">
+         <div>Cache lines = ${c.cacheSize} B ÷ ${c.blockSize} B = ${c.lineCount}</div>
+         <div>Sets = ${c.lineCount} lines ÷ ${c.ways} way${c.ways===1?"":"s"} = ${c.setCount}</div>
+         <div>Ways / set = ${c.ways}</div>
+       </div>
+       <p>${direct?"With one way per set, this is a direct-mapped cache.":"Each set has multiple candidate ways, so replacement policy matters when a set is full."}</p>`,
+      [".config-panel","#geometry"],["#cacheSize","#blockSize","#ways","#geometry .metric-0","#geometry .metric-1","#geometry .metric-2"],{popupTopViewport:.60}
+    ));
+
+    steps.push(tutorialStep(
+      "Translate that into cache rows",
+      `<p>The cache table visualizes that organization: ${c.setCount} set${c.setCount===1?"":"s"} × ${c.ways} way${c.ways===1?"":"s"} gives ${c.lineCount} total line${c.lineCount===1?"":"s"}.</p>
+       <p>${direct?"Because this cache is direct-mapped, each set has exactly one possible cache line.":"All ways with the same Set value belong to the same set; an incoming block may occupy any eligible way in that set."}</p>`,
+      [".cache-table-wrap"],[]
+    ));
+
+    steps.push(tutorialStep(
+      "Partition the address",
+      `<p>The block size and number of sets determine the lower address fields. Whatever bits remain become the tag.</p>
+       <div class="tutorial-math">
+         <div>Offset bits = log₂(${c.blockSize} B) = ${c.offsetBits}</div>
+         <div>Index bits = log₂(${c.setCount} set${c.setCount===1?"":"s"}) = ${c.indexBits}</div>
+         <div>Tag bits = ${c.addressBits} − ${c.indexBits} − ${c.offsetBits} = ${c.tagBits}</div>
+       </div>
+       <p>The colored bit partition underneath shows exactly where those fields are located.</p>`,
+      ["#geometry","#bitWorkbench"],["#geometry .metric-3","#geometry .metric-4","#geometry .metric-5"]
+    ));
+
+    }
+
+    steps.push(tutorialStep(
+      "Partition the current address",
+      `<p>The address being decoded for this access is <strong>${hex(r.address,c.addressBits)}</strong>. Those address bits—not the data value—are split into tag, set index, and block offset.</p>
+       ${r.step>1?`<p class="tutorial-note">The cache-organization setup was explained on the first access, so subsequent accesses begin directly with the current address.</p>`:""}
+       <div class="tutorial-math">
+         <div>Tag = ${hex(d.tag)} (${d.tag})</div>
+         <div>Set index = ${d.setIndex}</div>
+         <div>Block offset = ${d.offset}</div>
+       </div>`,
+      [".current-access-panel","#bitWorkbench"],[".current-access-panel .current-address"]
+    ));
+
+    if(r.writeBypass){
+      steps.push(tutorialStep(
+        "Look in the indexed set",
+        `<p>The index selects set <strong>${d.setIndex}</strong>. The cache does not contain a valid line in that set with tag <strong>${hex(d.tag)}</strong>, so this store is a miss.</p>
+         <p>Because the selected policy is <strong>write-through + no-write-allocate</strong>, a store miss does not choose a cache line and does not evict anything.</p>`,
+        [".cache-table-wrap","#bitWorkbench"],[".bit-cell.index",".bit-cell.tag"]
+      ));
+      steps.push(tutorialStep(
+        "Write directly to main memory",
+        `<p>The ${r.size}-byte store is written directly to main memory at ${hex(r.address,c.addressBits)}. No block is copied into the cache.</p>
+         <p>The cache therefore remains unchanged by this miss.</p>`,
+        [".memory-table"],[targetMem].filter(Boolean),{memoryBase:r.blockBase}
+      ));
+      steps.push(tutorialStep(
+        "The tag still explains the miss",
+        `<p>The tag <strong>${hex(d.tag)}</strong> identifies which memory block is being requested after the index has selected the set. No valid matching tag was found, so the result is a miss.</p>`,
+        ["#bitWorkbench",".cache-table-wrap"],[".bit-cell.tag"]
+      ));
+      steps.push(tutorialStep(
+        "Valid bits matter",
+        `<p>A cache hit requires both a matching tag and a valid line. The valid bit prevents an empty or uninitialized cache entry from being mistaken for useful data.</p>`,
+        [".cache-table-wrap"],[".cache-col-valid",".cache-valid-cell"]
+      ));
+      steps.push(tutorialStep(
+        "Why this access is a MISS",
+        `<p>This is a <strong>MISS</strong>: set ${d.setIndex} did not contain a valid matching tag before the store. Under no-write-allocate, the miss is serviced by memory without changing cache placement.</p>`,
+        [".current-access-panel",".cache-table-wrap"],["#currentResult"]
+      ));
+      steps.push(tutorialStep(
+        "Memory access complete",
+        `<p>The store is complete. Main memory now contains the new value, while the cache organization and cache contents are unchanged by this write miss.</p>`,
+        [".current-access-panel"],["#currentResult"]
+      ));
+      return steps;
+    }
+
+    if(r.writeBack && r.evictedBlockBase!=null){
+      steps.push(tutorialStep(
+        "Write back the dirty victim first",
+        `<p>The selected set was full, and the replacement victim had its dirty bit set. Because this is a write-back cache, that old cache block must be copied back to main memory <strong>before</strong> the line can be reused.</p>
+         <div class="tutorial-note">Victim block base: ${hex(r.evictedBlockBase,c.addressBits)}. Its full ${c.blockSize}-byte block is written back.</div>`,
+        [".memory-table"],[tutorialMemoryRowSelector(r.evictedBlockBase)].filter(Boolean),{memoryBase:r.evictedBlockBase}
+      ));
+    }
+
+    if(r.hit){
+      steps.push(tutorialStep(
+        "Select the matching cache line",
+        `<p>The index selects set <strong>${d.setIndex}</strong>. Within that set, a valid line already has tag <strong>${hex(d.tag)}</strong>, so the requested block is already cached${direct?".":` in way ${r.wayIndex}.`}</p>
+         <p>No block fill from main memory is needed on a hit.</p>`,
+        [".cache-table-wrap","#bitWorkbench"],[row,".bit-cell.index"].filter(Boolean)
+      ));
+    }else{
+      steps.push(tutorialStep(
+        "Choose where the block will go",
+        `<p>The index selects set <strong>${d.setIndex}</strong>. Because the requested tag was not already present, the access is a miss.</p>
+         <p>${direct?`Direct mapping fixes the destination to the one line in set ${d.setIndex}.`:`The replacement policy selects way ${r.wayIndex} in set ${d.setIndex}.`} The amount transferred is one complete cache block: <strong>${c.blockSize} bytes</strong>.</p>`,
+        [".cache-table-wrap","#bitWorkbench"],[row,".bit-cell.index"].filter(Boolean)
+      ));
+    }
+
+    if(!r.hit){
+      steps.push(tutorialStep(
+        "Copy the block from main memory",
+        `<p>The cache fill comes from the aligned memory block beginning at <strong>${hex(r.blockBase,c.addressBits)}</strong>. A miss transfers the entire ${c.blockSize}-byte block, not only the ${r.size} byte${r.size===1?"":"s"} requested by the instruction.</p>
+         ${r.isWrite?`<p>This is a write-allocate store: the block is fetched first, then the store updates the addressed byte${r.size===1?"":"s"} in the cached copy.</p>`:`<p>The cache line now contains the same block bytes shown in main memory.</p>`}`,
+        [".memory-table", ".cache-table-wrap"],[targetMem,row].filter(Boolean),{memoryBase:r.blockBase,popupViewportY:.50}
+      ));
+    }else if(r.isWrite && c.writePolicy==="WT_NWA"){
+      steps.push(tutorialStep(
+        "Write-through updates both copies",
+        `<p>Because this store hit uses write-through, the accessed ${r.size} byte${r.size===1?"":"s"} are updated in both the cache line and main memory immediately.</p>
+         <p>The dirty bit is unnecessary under this policy because memory is never left stale after a store.</p>`,
+        [".memory-table",".cache-table-wrap"],[targetMem,row].filter(Boolean),{memoryBase:r.blockBase}
+      ));
+    }else if(r.isWrite){
+      steps.push(tutorialStep(
+        "Update the cached copy",
+        `<p>This store hit changes the addressed ${r.size} byte${r.size===1?"":"s"} in the cache line. Under write-back, main memory is not updated yet.</p>
+         <p>The line is marked dirty so a later eviction knows that this block must be written back first.</p>`,
+        [".cache-table-wrap"],[row, row?`${row} .cache-dirty-cell`:null].filter(Boolean)
+      ));
+    }else{
+      steps.push(tutorialStep(
+        "Read the data from the cached block",
+        `<p>Because this is a hit, the requested ${r.size} byte${r.size===1?"":"s"} are taken directly from the cache line. Main memory does not need to supply a block.</p>`,
+        [".cache-table-wrap"],[row].filter(Boolean)
+      ));
+    }
+
+    steps.push(tutorialStep(
+      "The tag identifies the memory block",
+      `<p>The tag field is the block identifier within the selected set. Here the tag is <strong>${hex(d.tag)}</strong>.</p>
+       <p>${r.hit?"A matching stored tag is one of the conditions that made this access a hit.":"On the miss, this tag is stored with the newly loaded cache line so future accesses to the same block can be recognized."}</p>`,
+      ["#bitWorkbench",".cache-table-wrap"],[".bit-cell.tag",row?`${row} .cache-tag-cell`:null].filter(Boolean)
+    ));
+
+    const metadataText = c.writePolicy==="WB_WA" && r.isWrite
+      ? `<p>The valid bit is 1 because the line contains a meaningful block. The dirty bit is also 1 because the cached block has been modified and main memory may now be stale.</p>`
+      : `<p>The valid bit is 1 because the line contains a meaningful block. A cache lookup must never count an invalid line as a hit, even if its stored tag bits happen to match.</p>`;
+    steps.push(tutorialStep(
+      "Check the metadata",
+      metadataText,
+      [".cache-table-wrap"],
+      [row?`${row} .cache-valid-cell`:null,(c.writePolicy==="WB_WA"&&r.isWrite&&row)?`${row} .cache-dirty-cell`:null].filter(Boolean)
+    ));
+
+    steps.push(tutorialStep(
+      `Why this access is a ${r.hit?"HIT":"MISS"}`,
+      r.hit
+        ? `<p>This is a <strong>HIT</strong> because the indexed set already contained a <strong>valid</strong> line whose stored tag matched <strong>${hex(d.tag)}</strong>.</p>`
+        : `<p>This is a <strong>MISS</strong> because no valid matching tag existed in set ${d.setIndex} before the access. The line shown now is the result of servicing that miss.</p>`,
+      [".current-access-panel",".cache-table-wrap"],["#currentResult",row].filter(Boolean)
+    ));
+
+    if(r.isWrite && c.writePolicy==="WB_WA"){
+      steps.push(tutorialStep(
+        "Apply the write-back policy",
+        `<p>The store is now complete in the cache. The modified line remains dirty; main memory is updated only if that line is later evicted.</p>
+         <p>This postpones memory traffic but requires the dirty bit and a write-back before replacing a modified victim.</p>`,
+        [".cache-table-wrap"],[row,row?`${row} .cache-dirty-cell`:null].filter(Boolean)
+      ));
+    }else if(r.isWrite && c.writePolicy==="WT_NWA"){
+      steps.push(tutorialStep(
+        "Apply the write-through policy",
+        `<p>The store is complete in both the cache and main memory. Because every write hit is propagated immediately, there is no dirty state to track.</p>`,
+        [".cache-table-wrap",".memory-table"],[row,targetMem].filter(Boolean),{memoryBase:r.blockBase}
+      ));
+    }
+
+    steps.push(tutorialStep(
+      "Memory access complete",
+      `<p>The ${operationText(r)} at <strong>${hex(r.address,c.addressBits)}</strong> is complete. The simulator can now proceed to the next access in the series.</p>`,
+      [".current-access-panel"],["#currentResult"]
+    ));
+    return steps;
+  }
+
+  function clearTutorialFocus(){
+    document.querySelectorAll(".tutorial-focus,.tutorial-focus-table,.tutorial-emphasis,.tutorial-row-focus,.tutorial-focus-cell").forEach(el=>{
+      el.classList.remove("tutorial-focus","tutorial-focus-table","tutorial-emphasis","tutorial-row-focus","tutorial-focus-cell");
+    });
+  }
+  function applyTutorialFocus(step){
+    clearTutorialFocus();
+    const targets=[];
+    (step.focus||[]).forEach(sel=>{
+      document.querySelectorAll(sel).forEach(el=>{
+        const tableish=el.matches("table,.table-wrap,.cache-table-wrap");
+        el.classList.add(tableish?"tutorial-focus-table":"tutorial-focus");
+        targets.push(el);
+      });
+    });
+    (step.emphasis||[]).filter(Boolean).forEach(sel=>{
+      document.querySelectorAll(sel).forEach(el=>{
+        if(el.tagName==="TR") el.classList.add("tutorial-row-focus");
+        else if(el.tagName==="TD"||el.tagName==="TH") el.classList.add("tutorial-focus-cell");
+        else el.classList.add("tutorial-emphasis");
+        if(!targets.includes(el)) targets.push(el);
+      });
+    });
+    return targets;
+  }
+  function positionTutorialPopover(target){
+    const pop=els.tutorialPopover;
+    pop.style.right="";
+    pop.style.bottom="";
+    if(window.innerWidth<=720){
+      pop.style.left="16px";
+      pop.style.right="16px";
+      pop.style.top="";
+      pop.style.bottom="16px";
+      return;
+    }
+    pop.style.left=`max(18px, calc((100vw - 1500px)/2 + 18px))`;
+
+    const r=target?.getBoundingClientRect?.();
+    const popH=pop.offsetHeight||320;
+    const margin=18;
+    const minTop=90;
+    const maxTop=Math.max(minTop,window.innerHeight-popH-margin);
+
+    // A tutorial step may request a specific top position; otherwise align
+    // approximately to the vertical center of the highlighted target.
+    const step=tutorial.steps[tutorial.index]||{};
+    const requestedTop=step.popupTop;
+    const requestedTopViewport=step.popupTopViewport;
+    const requestedY=step.popupViewportY;
+    let top;
+    if(Number.isFinite(requestedTopViewport)){
+      top=window.innerHeight*requestedTopViewport;
+    }else if(Number.isFinite(requestedY)){
+      top=window.innerHeight*requestedY-popH/2;
+    }else if(Number.isFinite(requestedTop)){
+      top=requestedTop;
+    }else{
+      top=r ? (r.top+r.height/2-popH/2) : 110;
+    }
+    top=Math.max(minTop,Math.min(maxTop,top));
+    pop.style.top=`${Math.round(top)}px`;
+  }
+  function showTutorialStep(index){
+    if(!tutorial.active||!tutorial.steps.length) return;
+    tutorial.index=Math.max(0,Math.min(index,tutorial.steps.length-1));
+    const step=tutorial.steps[tutorial.index];
+    if(step.memoryBase!=null&&state.config){
+      state.memoryViewBase=pageBaseForAddress(BigInt(step.memoryBase),state.config);
+      renderMemory();
+    }
+    els.tutorialProgress.textContent=`Step ${tutorial.index+1} of ${tutorial.steps.length}`;
+    els.tutorialTitle.textContent=step.title;
+    els.tutorialBody.innerHTML=step.body;
+    els.tutorialBack.disabled=tutorial.index===0;
+    els.tutorialNext.textContent=tutorial.index===tutorial.steps.length-1?"Finish":"Next";
+    const targets=applyTutorialFocus(step);
+    const primary=targets[0]||document.querySelector(".address-panel");
+    if(primary){
+      primary.scrollIntoView({behavior:"smooth",block:"center",inline:"nearest"});
+      positionTutorialPopover(primary);
+    }else positionTutorialPopover(null);
+  }
+  function startTutorial(r){
+    if(!tutorial.enabled||!r) return;
+    tutorial.record=r;tutorial.steps=buildTutorialSteps(r);tutorial.index=0;tutorial.active=true;
+    document.body.classList.add("tutorial-active");
+    els.tutorialBackdrop.hidden=false;els.tutorialPopover.hidden=false;
+    showTutorialStep(0);
+  }
+  function closeTutorial(){
+    tutorial.active=false;tutorial.steps=[];tutorial.index=0;tutorial.record=null;
+    clearTutorialFocus();
+    els.tutorialBackdrop.hidden=true;els.tutorialPopover.hidden=true;
+    document.body.classList.remove("tutorial-active");
+    if(state.current&&state.config){
+      state.memoryViewBase=pageBaseForAddress(state.current.blockBase,state.config);
+      renderMemory();
+    }
+  }
+  function closeStartupTutorial(){
+    if(els.startupTutorialBackdrop) els.startupTutorialBackdrop.hidden=true;
+    if(els.startupTutorialModal) els.startupTutorialModal.hidden=true;
+    document.body.classList.remove("startup-intro-active");
+  }
+
+  function setTutorialEnabled(enabled){
+    tutorial.enabled=!!enabled;
+    els.tutorialToggle.setAttribute("aria-pressed",tutorial.enabled?"true":"false");
+    els.tutorialToggleState.textContent=tutorial.enabled?"On":"Off";
+    if(!tutorial.enabled&&tutorial.active) closeTutorial();
+  }
+
   function syncTopPanelHeights(){
     const configPanel=document.querySelector('.config-panel'),addressPanel=document.querySelector('.address-panel');
     if(!configPanel||!addressPanel) return;
-    if(window.innerWidth<=1100){addressPanel.style.minHeight="";return}
-    addressPanel.style.minHeight=configPanel.offsetHeight+"px";
+    configPanel.style.minHeight="";addressPanel.style.minHeight="";
+    if(window.innerWidth<=1100) return;
+    const target=Math.max(configPanel.offsetHeight,addressPanel.offsetHeight);
+    configPanel.style.minHeight=target+"px";
+    addressPanel.style.minHeight=target+"px";
   }
   function updateControls(){const canStep=!!state.config&&state.accessValid&&state.pointer<state.accesses.length;els.stepBtn.disabled=!canStep;els.undoBtn.disabled=!state.undoStack.length;els.emptyBtn.disabled=!state.config;els.queueStatus.textContent=state.notice||`${state.pointer} of ${state.accesses.length} processed • ${Math.max(0,state.accesses.length-state.pointer)} remaining`;state.notice=""}
   function renderAll(){renderGeometry();renderCurrent();renderSummary();renderCache();renderAccessEditor();renderHistory();renderMemory();updateControls();requestAnimationFrame(syncTopPanelHeights)}
 
-  [els.addressBits,els.cacheSize,els.blockSize,els.ways].forEach(el=>el.addEventListener('input',()=>{clearTimeout(configTimer);configTimer=setTimeout(applyConfigFromInputs,120)}));
+  [els.addressBits,els.cacheSize,els.blockSize,els.ways].forEach(el=>el.addEventListener('input',()=>{if(tutorial.active)closeTutorial();clearTimeout(configTimer);configTimer=setTimeout(applyConfigFromInputs,120)}));
+  [els.cacheSize,els.blockSize,els.ways].forEach(el=>{
+    let lastValid=isPow2(Number(el.value))?Number(el.value):null;
+    el.addEventListener("keydown",e=>{
+      if(e.key==="ArrowUp"||e.key==="ArrowDown"){
+        e.preventDefault();
+        stepPowerOfTwo(el,e.key==="ArrowUp"?1:-1);
+        lastValid=Number(el.value);
+      }
+    });
+    el.addEventListener("input",e=>{
+      const n=Number(el.value);
+      // Native number-input spinner clicks usually produce an input event without
+      // an inputType. If they move one step away from a known power of two,
+      // snap in the same direction to the next valid power of two.
+      if(!e.inputType && lastValid && Number.isFinite(n) && !isPow2(n)){
+        if(n>lastValid) el.value=String(nextPow2(lastValid));
+        else if(n<lastValid) el.value=String(prevPow2(lastValid));
+      }
+      if(isPow2(Number(el.value))) lastValid=Number(el.value);
+    });
+    el.addEventListener("blur",()=>{
+      if(isPow2(Number(el.value))) lastValid=Number(el.value);
+    });
+  });
   els.replacement.addEventListener('change',()=>{if(state.config){state.config.replacement=els.replacement.value;renderCache();updateControls()}});
-  els.accessInput.addEventListener('input',()=>{renderAccessEditor();parseAccessesLive(true)});
+  els.writePolicy.addEventListener('change',()=>{if(tutorial.active)closeTutorial();if(state.config){state.config.writePolicy=els.writePolicy.value;restartSimulation("Write policy changed; cache restarted empty.");}});
+  els.accessInput.addEventListener('input',()=>{if(tutorial.active)closeTutorial();renderAccessEditor();parseAccessesLive(true)});
   els.accessInput.addEventListener('scroll',syncAccessEditorScroll);
-  els.generateBtn.addEventListener('click',generateSeries);els.stepBtn.addEventListener('click',processStep);els.undoBtn.addEventListener('click',undoStep);els.emptyBtn.addEventListener('click',()=>restartSimulation("Cache emptied; simulation restarted."));
+  els.randomTemplate.addEventListener('change',()=>applyGeneratedSeries(true));
+  els.generateBtn.addEventListener('click',generateSeries);
+  els.stepBtn.addEventListener('click',()=>processStep(tutorial.enabled));
+  els.undoBtn.addEventListener('click',()=>{if(tutorial.active)closeTutorial();undoStep()});
+  els.emptyBtn.addEventListener('click',()=>{if(tutorial.active)closeTutorial();restartSimulation("Cache emptied; simulation restarted.")});
+  els.startupTutorialClose.addEventListener("click",closeStartupTutorial);
+  els.startupTutorialBackdrop.addEventListener("click",closeStartupTutorial);
+  els.tutorialToggle.addEventListener("click",()=>setTutorialEnabled(!tutorial.enabled));
+  els.tutorialClose.addEventListener("click",closeTutorial);
+  els.tutorialBack.addEventListener("click",()=>showTutorialStep(tutorial.index-1));
+  els.tutorialNext.addEventListener("click",()=>{if(tutorial.index>=tutorial.steps.length-1) closeTutorial();else showTutorialStep(tutorial.index+1)});
+  window.addEventListener("keydown",e=>{if(!tutorial.active)return;if(e.key==="ArrowLeft")showTutorialStep(tutorial.index-1);if(e.key==="ArrowRight")els.tutorialNext.click();if(e.key==="Escape")closeTutorial()});
   els.memoryJumpBtn.addEventListener('click',jumpMemory);els.memoryJump.addEventListener('keydown',e=>{if(e.key==='Enter') jumpMemory()});els.memoryPrevBtn.addEventListener('click',()=>moveMemoryPage(-1));els.memoryNextBtn.addEventListener('click',()=>moveMemoryPage(1));els.randomizeMemoryBtn.addEventListener('click',randomizeMemory);
   window.addEventListener('resize',()=>requestAnimationFrame(syncTopPanelHeights));
 
-  applyConfigFromInputs();parseAccessesLive(false);
+  document.body.classList.add("startup-intro-active");setTutorialEnabled(false);applyConfigFromInputs();parseAccessesLive(false);
 })();
 </script>
 </body>
