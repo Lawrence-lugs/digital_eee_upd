@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Cache Memory Simulator</title>
 <style>
+  /* Global palette and shared visual constants. */
   :root{
     --up-maroon:#7b1113;
     --up-maroon-dark:#5d0d0f;
@@ -43,7 +44,19 @@
   .tutorial-toggle-state{display:inline-flex;align-items:center;justify-content:center;min-width:36px;border-radius:999px;padding:3px 8px;background:rgba(255,255,255,.16);font-size:.76rem}
   .tutorial-toggle[aria-pressed="true"]{background:#fff;color:var(--up-maroon);border-color:#fff}
   .tutorial-toggle[aria-pressed="true"] .tutorial-toggle-state{background:#e7f4eb;color:#16703a}
+  /* Guided Tutorial mode overlay. Unlike the endianness popup, this mode
+     deliberately dims unrelated UI and focuses the elements for each stage. */
   .tutorial-backdrop{position:fixed;inset:0;background:rgba(61,66,72,.72);z-index:1000;backdrop-filter:grayscale(.75);-webkit-backdrop-filter:grayscale(.75)}
+  /* Lightweight, non-modal explanation shown after changing endianness.
+     No backdrop is used so the memory table remains visible for comparison. */
+  .endianness-info-popup{position:fixed;z-index:1450;width:min(390px,calc(100vw - 28px));background:#fff;border:1px solid #c9d0d8;border-radius:14px;box-shadow:0 14px 38px rgba(24,31,38,.22);padding:17px 42px 17px 18px;color:var(--ink)}
+  .endianness-info-popup[hidden]{display:none}
+  .endianness-info-popup h3{margin:0 0 8px;font-size:1.03rem;color:var(--up-maroon)}
+  .endianness-info-body{font-size:.88rem;line-height:1.5;color:#4d5965}
+  .endianness-info-body p{margin:0 0 8px}.endianness-info-body p:last-child{margin-bottom:0}
+  .endianness-info-body .mono{font-weight:800}
+  .endianness-info-close{position:absolute;top:7px;right:9px;border:0;background:transparent;color:#69747f;font-size:1.25rem;line-height:1;padding:3px 5px;cursor:pointer}
+  .endianness-info-close:hover{color:var(--up-maroon)}
   .tutorial-popover{position:fixed;z-index:1201;left:max(18px,calc((100vw - 1500px)/2 + 18px));top:110px;width:min(390px,calc(100vw - 36px));max-height:calc(100vh - 132px);overflow:auto;background:#fff;border:1px solid #cfd6de;border-radius:16px;box-shadow:0 18px 55px rgba(0,0,0,.28);padding:18px 20px}
   .tutorial-progress{font-size:.74rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:var(--up-maroon);margin-bottom:5px}
   .tutorial-popover h3{margin:0 34px 9px 0;font-size:1.2rem;color:#202a34}
@@ -132,6 +145,16 @@
   .section{padding:20px 22px;border-top:1px solid #e7ebef}
   .section:first-child{border-top:none}
   .section h2{margin:0 0 6px;font-size:1.18rem}
+  /* Shared collapsible-panel header controls for Cache configuration
+     and Access series. Only the triangle rotates; the label stays upright. */
+  .config-panel-head,.access-panel-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start}
+  .config-panel-head .section-lead,.access-panel-head .section-lead{margin-bottom:15px}
+  .panel-collapse-toggle{display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;color:#65707b;padding:2px 3px;cursor:pointer;font:750 .75rem/1.1 Inter,system-ui,sans-serif}
+  .panel-collapse-toggle:hover{color:var(--up-maroon)}
+  .collapse-label{white-space:nowrap}
+  .collapse-triangle{display:inline-block;font-size:.78rem;line-height:1;transform-origin:center;transition:transform .16s ease}
+  .panel-collapse-toggle[aria-expanded="false"] .collapse-triangle{transform:rotate(-90deg)}
+  .config-panel-body[hidden],.access-extra-body[hidden]{display:none}
   .section-lead{margin:0 0 15px;color:var(--muted);line-height:1.52;font-size:.9rem}
   .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   .field.full{grid-column:1/-1}
@@ -244,6 +267,8 @@
   table{width:100%;border-collapse:collapse;font-size:.78rem}th,td{padding:8px 9px;text-align:left;border-bottom:1px solid #edf0f3;white-space:nowrap;vertical-align:middle}th{position:sticky;top:0;z-index:2;background:#f5f7f9;color:#4f5a65;font-size:.69rem;text-transform:uppercase;letter-spacing:.035em}tr:last-child td{border-bottom:0}
   .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
   .empty{color:#9099a3;font-style:italic}
+  /* Cache table styling. Data-byte and Status columns stay left-aligned;
+     metadata/geometry columns are centered for quick visual scanning. */
   .cache-table{table-layout:fixed;width:100%;min-width:0;font-size:.94rem}
   .cache-table th,.cache-table td{overflow:hidden;text-overflow:ellipsis;padding:8px 6px}
   .cache-table th{white-space:normal;line-height:1.15;overflow-wrap:anywhere;font-size:.82rem}
@@ -255,11 +280,13 @@
   .cache-table .cache-data-cell,.cache-table .cache-col-data,
   .cache-table .cache-status-cell,.cache-table .cache-col-status{text-align:left}
   .cache-table .cache-set-cell,.cache-table .cache-way-cell{font-weight:400}
-  .cache-table .cache-tag-cell{font-weight:850}
+  .cache-table .cache-tag-cell{font-weight:850;font-size:.98rem}
+  .cache-table .cache-base-cell{font-size:.98rem}
+  .cache-table .cache-col-data{font-size:.9rem}
   .cache-table th[title]{cursor:help}
   .cache-row.current-line td{background:#fff8e8}
-  .cache-row.current-line td:first-child{box-shadow:inset 3px 0 0 rgba(123,17,19,.55)}.cache-row.victim-line td:first-child{box-shadow:inset 3px 0 0 #d6a535}
-  .cache-row.current-line.victim-line td:first-child{box-shadow:inset 3px 0 0 rgba(123,17,19,.55),inset 6px 0 0 #d6a535}
+  .cache-row.current-line td:first-child{box-shadow:inset 3px 0 0 rgba(123,17,19,.55)}
+  .cache-table tbody tr.set-end td{border-bottom:2px solid #aeb7c1}
   .data-bytes{display:grid;gap:4px;min-width:0;max-width:none;justify-content:start}.data-byte-row{display:grid;gap:3px;min-width:0;height:27px;align-items:stretch}.byte{min-width:0;height:27px;padding:0 5px;border-radius:5px;background:#eef2f4;text-align:center;display:flex;align-items:center;justify-content:center;font:780 .9rem/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.byte.active{font-weight:900;color:#fff}.byte.active.hit-byte{background:#00B050;outline:1px solid #00B050}.byte.active.miss-byte{background:#FF341D;outline:1px solid #FF341D}
   .status-text{font-size:.9rem;color:#65707b}
   .pill{display:inline-flex;align-items:center;justify-content:center;min-width:46px;padding:3px 7px;border-radius:999px;font-size:.67rem;font-weight:900}.pill.hit{background:#E8F8EF;color:#00B050}.pill.miss{background:#FFF0ED;color:#FF341D}.pill.read{background:#ebf1f5;color:#526d80}.pill.write{background:#efe8f4;color:#6f5b7d}
@@ -282,7 +309,11 @@
   .memory-switch-state{font-size:.78rem;min-width:118px;text-align:left;white-space:nowrap;line-height:1.2}
   .memory-toolbar{display:grid;grid-template-columns:minmax(150px,1fr) auto auto auto auto;gap:8px;align-items:end;margin-bottom:11px}.memory-toolbar label{margin-bottom:5px}
   .soft-blue{border:1px solid #bfd0df;border-radius:9px;padding:9px 12px;background:#eaf3f9;color:#365b73;font-weight:800}.soft-blue:hover{background:#dfeef7}
-  .memory-table th.byte-head{text-align:center;min-width:48px}.memory-table tbody td:first-child{font-size:.87rem}.memory-table td.mem-byte{text-align:center;padding:5px}.memory-table input{width:44px;text-align:center;padding:6px 3px;border:1px solid #d2d8df;border-radius:6px;font:750 .72rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;text-transform:uppercase}.memory-table tr.source-block td{background:#fff8e8}.memory-table tr.source-block td:first-child{box-shadow:inset 4px 0 0 #c6952c}.memory-table input.active-byte{background:#fff0c7;border-color:#c99f44}
+  /* Short cue used after changing Data byte ordering so students can
+     immediately see which cache/memory column labels were rearranged. */
+  @keyframes orderingHeaderFlash{0%{background:#ffe99a;box-shadow:inset 0 0 0 2px #d2a52d}55%{background:#fff4c5;box-shadow:inset 0 0 0 2px #d2a52d}100%{background:transparent;box-shadow:none}}
+  .ordering-flash{animation:orderingHeaderFlash .8s ease-out}
+  .memory-table th.byte-head{text-align:center;min-width:48px}.memory-table tbody td:first-child{font-size:.98rem}.memory-table td.mem-byte{text-align:center;padding:5px}.memory-table input{width:44px;text-align:center;padding:6px 3px;border:1px solid #d2d8df;border-radius:6px;font:780 .9rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;text-transform:uppercase}.memory-table tr.source-block td{background:#fff8e8}.memory-table tr.source-block td:first-child{box-shadow:inset 4px 0 0 #c6952c}.memory-table input.active-byte{background:#fff0c7;border-color:#c99f44}
   .memory-note{margin-top:9px;color:#66717c;font-size:.8rem;line-height:1.45}
   @keyframes cacheFlash{0%{background:#f2d78f}100%{background:#fff8e8}}
   .cache-row.flash-update td{animation:cacheFlash .62s ease-out 1 both}
@@ -294,6 +325,12 @@
 </style>
 </head>
 <body>
+<!-- ============================================================
+     PAGE HEADER
+     Contains the simulator title, course attribution, and Tutorial
+     mode toggle. The tutorial toggle controls guided, staged access
+     explanations implemented in the JavaScript section below.
+     ============================================================ -->
 <header>
   <div class="wrap banner-wrap">
     <div class="banner-copy">
@@ -319,6 +356,12 @@
   </div>
 </div>
 
+<div id="endiannessInfoPopup" class="endianness-info-popup" hidden role="dialog" aria-modal="false" aria-labelledby="endiannessInfoTitle">
+  <button id="endiannessInfoClose" class="endianness-info-close" type="button" aria-label="Close endianness explanation" title="Close">×</button>
+  <h3 id="endiannessInfoTitle">Little-endian</h3>
+  <div id="endiannessInfoBody" class="endianness-info-body"></div>
+</div>
+
 <div id="startupTutorialBackdrop" class="startup-tutorial-backdrop"></div>
 <div id="startupTutorialModal" class="startup-tutorial-modal" role="dialog" aria-modal="true" aria-labelledby="startupTutorialTitle">
   <button id="startupTutorialClose" class="startup-tutorial-close" type="button" aria-label="Close">×</button>
@@ -335,13 +378,29 @@
   <p class="startup-tutorial-note">Use the highlighted Tutorial mode button in the title banner anytime.</p>
 </div>
 
+<!-- ============================================================
+     MAIN APPLICATION LAYOUT
+     Left column: configuration, access-series editor, summary.
+     Right column: address decode, cache table, memory table, history.
+     ============================================================ -->
 <main>
   <div class="layout">
     <aside class="stack left-stack">
+      <!-- Cache organization controls. This panel is collapsible but
+           starts expanded. Geometry changes rebuild the cache state. -->
       <section class="panel config-panel">
         <div class="section">
-          <h2>1. Cache configuration</h2>
-          <p class="section-lead">Edit your cache organization here.</p>
+          <div class="config-panel-head">
+            <div>
+              <h2>1. Cache configuration</h2>
+              <p class="section-lead">Edit your cache organization here.</p>
+            </div>
+            <button id="configCollapseToggle" class="panel-collapse-toggle" type="button" aria-expanded="true" aria-controls="configPanelBody" title="Collapse cache configuration">
+              <span id="configCollapseLabel" class="collapse-label">Collapse</span>
+              <span class="collapse-triangle" aria-hidden="true">▼</span>
+            </button>
+          </div>
+          <div id="configPanelBody" class="config-panel-body">
           <div class="form-grid">
             <div class="field">
               <label for="addressBits">Address width (bits)</label>
@@ -376,14 +435,25 @@
             </div>
           </div>
           <div id="configMessage" class="message" aria-live="polite"></div>
+          </div>
         </div>
       </section>
 
       <div class="left-sticky-group">
+      <!-- Memory-access editor. Only the helper/generator area collapses;
+           the editable access list and Reset / Undo / Step remain visible. -->
       <section class="panel access-panel">
         <div class="section">
-          <h2>2. Access series</h2>
-          <p class="section-lead">Write your memory accesses here.</p>
+          <div class="access-panel-head">
+            <div>
+              <h2>2. Access series</h2>
+              <p class="section-lead">Write your memory accesses here.</p>
+            </div>
+            <button id="accessCollapseToggle" class="panel-collapse-toggle" type="button" aria-expanded="true" aria-controls="accessExtraBody" title="Collapse Access series helpers">
+              <span id="accessCollapseLabel" class="collapse-label">Collapse</span>
+              <span class="collapse-triangle" aria-hidden="true">▼</span>
+            </button>
+          </div>
           <div class="access-editor-wrap" id="accessEditorWrap">
             <pre id="accessBackdrop" class="access-backdrop" aria-hidden="true"></pre>
             <textarea id="accessInput" class="access-input" spellcheck="false" aria-label="Memory access series">LW 0x00
@@ -396,6 +466,7 @@ SW 0x04 0x12345678
 LB 0x44
 LW 0x04</textarea>
           </div>
+          <div id="accessExtraBody" class="access-extra-body">
           <div class="hint access-guide"><ul><li>Loads: <span class="mono">LB/LH/LW address</span></li><li>Stores: <span class="mono">SB/SH/SW address value</span></li><li>Alignment: word ÷4, halfword ÷2, byte unrestricted</li><li>Multi-byte values: <span id="accessEndianHint">little-endian</span></li><li>Stores: behavior follows the selected write policy</li></ul></div>
           <div id="accessMessage" class="message" aria-live="polite"></div>
 
@@ -443,6 +514,7 @@ LW 0x04</textarea>
               <button class="secondary" id="generateBtn" style="width:100%;margin-top:9px">Generate access series</button>
             </div>
           </details>
+          </div>
 
           <div class="button-row">
             <button id="resetBtn" class="danger" title="Return the access series to the beginning and reinitialize the cache.">Reset</button>
@@ -465,6 +537,7 @@ LW 0x04</textarea>
     </aside>
 
     <section class="stack">
+      <!-- Address partition visualization and current-access decode. -->
       <section class="panel address-panel">
         <div class="section">
           <h2>Address partition</h2>
@@ -487,6 +560,9 @@ LW 0x04</textarea>
       </section>
 
 
+      <!-- Cache contents + metadata table.
+           Columns adapt to mapping/write policy (e.g. fully associative
+           caches omit Set; direct-mapped caches omit Way/LRU). -->
       <section class="panel">
         <div class="section">
           <div class="cache-panel-head">
@@ -516,6 +592,9 @@ LW 0x04</textarea>
         </div>
       </section>
 
+      <!-- Main-memory viewer.
+           Raw bytes are editable. Display ordering is visual only;
+           endianness changes how multi-byte accesses are interpreted. -->
       <section class="panel">
         <div class="section">
           <div class="memory-panel-head">
@@ -561,6 +640,7 @@ LW 0x04</textarea>
         </div>
       </section>
 
+      <!-- Completed-access log. Records semantic results after each Step. -->
       <section class="panel">
         <div class="section">
           <h2>Access history</h2>
@@ -581,14 +661,25 @@ LW 0x04</textarea>
 <script>
 (()=>{
   "use strict";
+
+  // -----------------------------------------------------------------
+  // DOM references
+  // Keep frequently used elements in one object so rendering/event code
+  // does not repeatedly query the document.
+  // -----------------------------------------------------------------
   const $=id=>document.getElementById(id);
   const els={
-    addressBits:$("addressBits"),cacheSize:$("cacheSize"),blockSize:$("blockSize"),ways:$("ways"),replacement:$("replacement"),writePolicy:$("writePolicy"),configMessage:$("configMessage"),
-    accessInput:$("accessInput"),accessBackdrop:$("accessBackdrop"),accessMessage:$("accessMessage"),addressHelperFields:$("addressHelperFields"),addressHelperBits:$("addressHelperBits"),addressHelperHex:$("addressHelperHex"),randomCount:$("randomCount"),randomPattern:$("randomPattern"),randomTemplate:$("randomTemplate"),generateBtn:$("generateBtn"),undoBtn:$("undoBtn"),stepBtn:$("stepBtn"),resetBtn:$("resetBtn"),queueStatus:$("queueStatus"),
+    addressBits:$("addressBits"),cacheSize:$("cacheSize"),blockSize:$("blockSize"),ways:$("ways"),replacement:$("replacement"),writePolicy:$("writePolicy"),configMessage:$("configMessage"),configCollapseToggle:$("configCollapseToggle"),configCollapseLabel:$("configCollapseLabel"),configPanelBody:$("configPanelBody"),
+    accessInput:$("accessInput"),accessBackdrop:$("accessBackdrop"),accessMessage:$("accessMessage"),accessCollapseToggle:$("accessCollapseToggle"),accessCollapseLabel:$("accessCollapseLabel"),accessExtraBody:$("accessExtraBody"),addressHelperFields:$("addressHelperFields"),addressHelperBits:$("addressHelperBits"),addressHelperHex:$("addressHelperHex"),randomCount:$("randomCount"),randomPattern:$("randomPattern"),randomTemplate:$("randomTemplate"),generateBtn:$("generateBtn"),undoBtn:$("undoBtn"),stepBtn:$("stepBtn"),resetBtn:$("resetBtn"),queueStatus:$("queueStatus"),
     geometry:$("geometry"),bitWorkbench:$("bitWorkbench"),currentResult:$("currentResult"),currentAccess:$("currentAccess"),decodeInfo:$("decodeInfo"),summary:$("summary"),cacheTable:$("cacheTable"),cacheCols:$("cacheCols"),cacheHead:$("cacheHead"),cacheBody:$("cacheBody"),cacheInitMode:$("cacheInitMode"),initializeCacheBtn:$("initializeCacheBtn"),historyBody:$("historyBody"),
-    memoryJump:$("memoryJump"),memoryJumpBtn:$("memoryJumpBtn"),memoryPrevBtn:$("memoryPrevBtn"),memoryNextBtn:$("memoryNextBtn"),randomizeMemoryBtn:$("randomizeMemoryBtn"),memoryMessage:$("memoryMessage"),memoryHead:$("memoryHead"),memoryBody:$("memoryBody"),byteOrderToggle:$("byteOrderToggle"),byteOrderState:$("byteOrderState"),endiannessToggle:$("endiannessToggle"),endiannessState:$("endiannessState"),accessEndianHint:$("accessEndianHint"),memoryEndianHint:$("memoryEndianHint"),tutorialToggle:$("tutorialToggle"),tutorialToggleState:$("tutorialToggleState"),tutorialBackdrop:$("tutorialBackdrop"),tutorialPopover:$("tutorialPopover"),tutorialProgress:$("tutorialProgress"),tutorialTitle:$("tutorialTitle"),tutorialBody:$("tutorialBody"),tutorialBack:$("tutorialBack"),tutorialNext:$("tutorialNext"),tutorialClose:$("tutorialClose"),startupTutorialBackdrop:$("startupTutorialBackdrop"),startupTutorialModal:$("startupTutorialModal"),startupTutorialClose:$("startupTutorialClose")
+    memoryJump:$("memoryJump"),memoryJumpBtn:$("memoryJumpBtn"),memoryPrevBtn:$("memoryPrevBtn"),memoryNextBtn:$("memoryNextBtn"),randomizeMemoryBtn:$("randomizeMemoryBtn"),memoryMessage:$("memoryMessage"),memoryHead:$("memoryHead"),memoryBody:$("memoryBody"),byteOrderToggle:$("byteOrderToggle"),byteOrderState:$("byteOrderState"),endiannessToggle:$("endiannessToggle"),endiannessState:$("endiannessState"),endiannessInfoPopup:$("endiannessInfoPopup"),endiannessInfoTitle:$("endiannessInfoTitle"),endiannessInfoBody:$("endiannessInfoBody"),endiannessInfoClose:$("endiannessInfoClose"),accessEndianHint:$("accessEndianHint"),memoryEndianHint:$("memoryEndianHint"),tutorialToggle:$("tutorialToggle"),tutorialToggleState:$("tutorialToggleState"),tutorialBackdrop:$("tutorialBackdrop"),tutorialPopover:$("tutorialPopover"),tutorialProgress:$("tutorialProgress"),tutorialTitle:$("tutorialTitle"),tutorialBody:$("tutorialBody"),tutorialBack:$("tutorialBack"),tutorialNext:$("tutorialNext"),tutorialClose:$("tutorialClose"),startupTutorialBackdrop:$("startupTutorialBackdrop"),startupTutorialModal:$("startupTutorialModal"),startupTutorialClose:$("startupTutorialClose")
   };
 
+  // -----------------------------------------------------------------
+  // Global simulator constants and mutable state
+  // memorySeed drives deterministic pseudo-random main-memory contents.
+  // memoryOverrides stores user edits and store/write-back results.
+  // -----------------------------------------------------------------
   const DEFAULT_MEMORY_SEED=0x15315315;
   const MEMORY_ROWS=8;
   const state={
@@ -596,6 +687,9 @@ LW 0x04</textarea>
     memorySeed:DEFAULT_MEMORY_SEED,memoryOverrides:new Map(),memoryViewBase:0n,flashLineKey:null,flashMemoryBase:null,flashToken:0,notice:"",addressHelperValue:0n,byteOrder:"ASC",endianness:"LITTLE",cacheInitMode:"EMPTY",cacheInitSeed:0x153CACE
   };
   let configTimer=null,accessTimer=null;
+  // Guided tutorial state. beforeState/afterState preserve the real
+  // transaction endpoints; stages exposes PRE / WRITEBACK / FILL / FINAL
+  // snapshots so the visible cache can advance one operation at a time.
   const tutorial={enabled:false,active:false,steps:[],index:0,record:null,focused:[],beforeState:null,afterState:null,stages:null,currentStage:"FINAL",showResult:true};
 
   function isPow2(n){return Number.isSafeInteger(n)&&n>0&&(n&(n-1))===0}
@@ -653,6 +747,11 @@ LW 0x04</textarea>
   }
   function clampBig(v,lo,hi){return v<lo?lo:(v>hi?hi:v)}
 
+  // -----------------------------------------------------------------
+  // Configuration parsing and validation
+  // Converts form values into derived cache geometry (lines, sets,
+  // tag/index/offset widths) and rejects unsupported organizations.
+  // -----------------------------------------------------------------
   function readConfig(){
     const addressBits=Number(els.addressBits.value),cacheSize=Number(els.cacheSize.value),blockSize=Number(els.blockSize.value),ways=Number(els.ways.value);
     const errs=[];
@@ -688,9 +787,19 @@ LW 0x04</textarea>
 
   function geometryKey(c){return c?[c.addressBits,c.cacheSize,c.blockSize,c.ways].join("|"):""}
   function cloneSets(sets){return sets.map(set=>set.map(l=>({...l,data:[...l.data]})))}
+  // -----------------------------------------------------------------
+  // State snapshots
+  // Used both for Undo and for tutorial staging. Cache-line data arrays
+  // and memoryOverrides are cloned so later writes do not mutate history.
+  // -----------------------------------------------------------------
   function snapshot(){return {sets:cloneSets(state.sets),pointer:state.pointer,clock:state.clock,hits:state.hits,misses:state.misses,reads:state.reads,writes:state.writes,writeBacks:state.writeBacks,history:state.history.map(r=>({...r})),current:state.current?{...state.current}:null,memoryOverrides:new Map(state.memoryOverrides),memoryViewBase:state.memoryViewBase}}
   function restoreSnapshot(s){state.sets=cloneSets(s.sets);state.pointer=s.pointer;state.clock=s.clock;state.hits=s.hits;state.misses=s.misses;state.reads=s.reads;state.writes=s.writes;state.writeBacks=s.writeBacks;state.history=s.history.map(r=>({...r}));state.current=s.current?{...s.current}:null;state.memoryOverrides=new Map(s.memoryOverrides);state.memoryViewBase=s.memoryViewBase;state.flashLineKey=null;state.flashMemoryBase=null;renderAll();scrollCurrentAccess()}
 
+  // -----------------------------------------------------------------
+  // Cache initialization
+  // EMPTY hides invalid contents, ZERO exposes all-zero invalid contents,
+  // RANDOM exposes deterministic garbage while always keeping V = 0.
+  // -----------------------------------------------------------------
   function initGarbageByte(si,wi,i){
     let x=(state.cacheInitSeed ^ Math.imul(si+1,0x45d9f3b) ^ Math.imul(wi+3,0x27d4eb2d) ^ Math.imul(i+7,0x165667b1))>>>0;
     x^=x>>>16;x=Math.imul(x,0x7feb352d)>>>0;x^=x>>>15;x=Math.imul(x,0x846ca68b)>>>0;x^=x>>>16;
@@ -753,6 +862,11 @@ LW 0x04</textarea>
     if(/^0x[0-9a-f]+$/.test(s)||/^0b[01]+$/.test(s)||/^\d+$/.test(s)) return BigInt(s);
     throw new Error(`Invalid ${label} “${token}”. Use decimal, 0x… hexadecimal, or 0b… binary.`);
   }
+  // -----------------------------------------------------------------
+  // Access-series parser
+  // Supports LB/LH/LW and SB/SH/SW, validates address range and natural
+  // alignment, and normalizes each line into a simulator access record.
+  // -----------------------------------------------------------------
   function parseAccessText(text,c){
     const raw=String(text).replace(/\r/g,"");if(!raw.trim()) return [];
     const chunks=[];
@@ -793,7 +907,12 @@ LW 0x04</textarea>
     }
   }
 
-  function memoryHashByte(address){
+    // -----------------------------------------------------------------
+  // Main-memory model
+  // Unmodified bytes are generated deterministically from address+seed.
+  // Explicit edits/stores/write-backs live in memoryOverrides.
+  // -----------------------------------------------------------------
+function memoryHashByte(address){
     return memoryByteFromOverrides(address,state.memoryOverrides);
   }
   function memoryByteFromOverrides(address,overrides){
@@ -842,6 +961,11 @@ LW 0x04</textarea>
     }
   }
 
+  // -----------------------------------------------------------------
+  // Cache lookup / replacement helpers
+  // decodeAddress partitions an address; chooseVictim applies the selected
+  // replacement policy; touchLRU maintains dense MRU/LRU ranks.
+  // -----------------------------------------------------------------
   function decodeAddress(address,c){const blockNumber=address/BigInt(c.blockSize),offset=Number(address%BigInt(c.blockSize)),setIndex=Number(blockNumber%BigInt(c.setCount)),tag=blockNumber/BigInt(c.setCount),blockBase=address-BigInt(offset);return {blockNumber,offset,setIndex,tag,blockBase}}
   function chooseVictim(lines,c){const empty=lines.find(l=>!l.valid);if(empty) return empty;if(c.replacement==="RANDOM") return lines[Math.floor(Math.random()*lines.length)];if(c.replacement==="FIFO") return lines.reduce((a,b)=>a.loadedAt<=b.loadedAt?a:b);return lines.reduce((a,b)=>a.lru>=b.lru?a:b)}
   function nextVictim(lines,c){if(lines.some(l=>!l.valid)||c.ways===1||c.replacement==="RANDOM") return null;if(c.replacement==="FIFO") return lines.reduce((a,b)=>a.loadedAt<=b.loadedAt?a:b);return lines.reduce((a,b)=>a.lru>=b.lru?a:b)}
@@ -860,6 +984,12 @@ LW 0x04</textarea>
   function flash(setIndex,wayIndex,memoryBase){
     const token=++state.flashToken;state.flashLineKey=wayIndex==null?null:`${setIndex}:${wayIndex}`;state.flashMemoryBase=memoryBase;setTimeout(()=>{if(state.flashToken===token){state.flashLineKey=null;state.flashMemoryBase=null}},850)
   }
+  // -----------------------------------------------------------------
+  // Execute one memory access
+  // Performs lookup, miss handling, fill/eviction, write policy behavior,
+  // metadata/LRU updates, statistics, history recording, and optionally
+  // launches the staged tutorial using before/after snapshots.
+  // -----------------------------------------------------------------
   function processStep(withTutorial=false){
     if(!state.config||!state.accessValid||state.pointer>=state.accesses.length) return;
     const tutorialBefore=(withTutorial&&tutorial.enabled)?snapshot():null;
@@ -873,6 +1003,8 @@ LW 0x04</textarea>
 
     // Read misses always allocate. Under write-back + write-allocate, store misses allocate too.
     // Under write-through + no-write-allocate, a store miss bypasses the cache.
+    // Read misses allocate under both policies. Store misses allocate only
+    // for write-back + write-allocate; WT+NWA bypasses the cache entirely.
     const shouldAllocate=!hit && (!access.isWrite || c.writePolicy==="WB_WA");
 
     if(shouldAllocate){
@@ -931,6 +1063,11 @@ LW 0x04</textarea>
   function randomBigInt(bits){
     let out=0n,remaining=bits;while(remaining>0){const take=Math.min(remaining,30),max=2**take,part=Math.floor(Math.random()*max);out=(out<<BigInt(take))|BigInt(part);remaining-=take}return out;
   }
+  // -----------------------------------------------------------------
+  // Access-series generator
+  // Produces examples for locality, sequential, random, and conflict-heavy
+  // patterns, with templates for loads and write-policy demonstrations.
+  // -----------------------------------------------------------------
   function buildGeneratedSeries(useRequestedCount=true){
     if(!state.config) return [];
     const c=state.config;
@@ -1063,6 +1200,11 @@ LW 0x04</textarea>
     els.addressHelperHex.textContent=hex(state.addressHelperValue,state.config.addressBits);
   }
 
+  // -----------------------------------------------------------------
+  // Rendering: address geometry and current access
+  // These functions update the derived bit partition, decoded fields,
+  // current HIT/MISS display, and summary statistics.
+  // -----------------------------------------------------------------
   function renderGeometry(){
     const c=state.config;if(!c){els.geometry.innerHTML='<div class="empty">Enter a valid configuration.</div>';els.bitWorkbench.innerHTML="";return}
     const metrics=[[c.lineCount,"Cache lines"],[c.setCount,"Sets"],[c.ways,"Ways / set"],[c.tagBits,"Tag bits"],[c.indexBits,"Index bits"],[c.offsetBits,"Offset bits"]];const metricTips={"Cache lines":`Cache lines = cache size ÷ block size = ${c.cacheSize} ÷ ${c.blockSize} = ${c.lineCount}.`,"Sets":`Sets = cache lines ÷ ways = ${c.lineCount} ÷ ${c.ways} = ${c.setCount}.`,"Ways / set":`Ways per set = associativity = ${c.ways}.`,"Tag bits":`Tag bits = address width − index bits − offset bits = ${c.addressBits} − ${c.indexBits} − ${c.offsetBits} = ${c.tagBits}.`,"Index bits":`Index bits = log2(number of sets) = log2(${c.setCount}) = ${c.indexBits}.`,"Offset bits":`Offset bits = log2(block size in bytes) = log2(${c.blockSize}) = ${c.offsetBits}.`};els.geometry.innerHTML=metrics.map(([v,n],i)=>`<div class="metric metric-${i}" data-metric-index="${i}" title="${metricTips[n]||""}"><span>${n}</span><strong>${v}</strong></div>`).join("");
@@ -1094,6 +1236,11 @@ LW 0x04</textarea>
   }
 
   function renderSummary(){const total=state.hits+state.misses,rate=total?(100*state.hits/total).toFixed(1)+"%":"—",stats=[[total,"Accesses"],[state.hits,"Hits"],[state.misses,"Misses"],[rate,"Hit rate"],[state.writeBacks,"Write-backs"]];els.summary.innerHTML=stats.map(([v,n])=>`<div class="stat"><strong>${v}</strong><span>${n}</span></div>`).join("")}
+  // -----------------------------------------------------------------
+  // Rendering: cache contents
+  // Data-byte ordering is display-only. Active-byte coloring is suppressed
+  // during PRE/WRITEBACK tutorial stages to avoid anticipating a fill.
+  // -----------------------------------------------------------------
   function renderDataBytes(line,c){
     const rows=[];
     const offsets=Array.from({length:line.data.length},(_,i)=>i);
@@ -1105,11 +1252,10 @@ LW 0x04</textarea>
     return `<div class="data-bytes">${rows.join("")}</div>`
   }
   function cacheColumns(c){
-    const direct=c.ways===1,writeThrough=c.writePolicy==="WT_NWA";
-    const cols=[
-      {key:"set",label:"Set",width:5,cls:"col-small",tip:"Set selected by the address index bits. All cache lines mapping to the same set compete for placement."}
-    ];
-    if(!direct) cols.push({key:"way",label:"Way",width:5,cls:"col-small",tip:"Way number within the selected set. This column is hidden for a direct-mapped cache."});
+    const direct=c.ways===1,fullyAssociative=c.setCount===1,writeThrough=c.writePolicy==="WT_NWA";
+    const cols=[];
+    if(!fullyAssociative) cols.push({key:"set",label:"Set",width:5,cls:"col-small",tip:"Set selected by the address index bits. All cache lines mapping to the same set compete for placement."});
+    if(!direct) cols.push({key:"way",label:"Way",width:5,cls:"col-small",tip:fullyAssociative?"Cache-line number in this fully associative cache. Any memory block may occupy any way.":"Way number within the selected set. This column is hidden for a direct-mapped cache."});
     cols.push({key:"valid",label:"V",width:4,cls:"col-small",tip:"Valid bit. 1 means this cache line contains a meaningful memory block. 0 means the other stored bits/data must be ignored, even if they contain zero or garbage values."});
     if(!writeThrough) cols.push({key:"dirty",label:"D",width:4,cls:"col-small",tip:"Dirty bit. Under write-back, 1 means this cached block differs from main memory and must be written back before eviction."});
     if(!direct) cols.push({key:"lru",label:"LRU",width:6,cls:"col-small",tip:"Least-recently-used rank within this set. LRU = 0 is the most recently accessed valid line; the largest value is replaced under LRU."});
@@ -1146,8 +1292,8 @@ LW 0x04</textarea>
       const lines=state.sets[si],victim=nextVictim(lines,c);
       for(const line of lines){
         const key=`${si}:${line.wayIndex}`,classes=["cache-row"];
+        if(line.wayIndex===lines.length-1&&si<state.sets.length-1) classes.push("set-end");
         if(!tutorial.active&&state.current&&state.current.setIndex===si&&state.current.wayIndex===line.wayIndex) classes.push("current-line");
-        if(victim===line) classes.push("victim-line");
         if(state.flashLineKey===key) classes.push("flash-update");
         let stateLabel="";
         if(!tutorial.active&&state.current&&state.current.setIndex===si&&state.current.wayIndex===line.wayIndex) stateLabel=state.current.hit?"Current hit":"Just filled";
@@ -1206,6 +1352,11 @@ LW 0x04</textarea>
   function pageBytes(c){return BigInt(c.blockSize*MEMORY_ROWS)}
   function alignMemoryView(base,c){const p=pageBytes(c),maxPlus=c.maxAddress+1n;if(maxPlus<=p) return 0n;const aligned=(base/p)*p;return clampBig(aligned,0n,((maxPlus-1n)/p)*p)}
   function pageBaseForAddress(address,c){return alignMemoryView(address,c)}
+  // -----------------------------------------------------------------
+  // Rendering: main memory
+  // Each row represents one aligned cache block. Byte cells are editable;
+  // highlighted access bytes follow the staged tutorial transaction state.
+  // -----------------------------------------------------------------
   function renderMemory(){
     const c=state.config;if(!c){els.memoryHead.innerHTML="";els.memoryBody.innerHTML='<tr><td class="empty">Enter a valid configuration.</td></tr>';return}
     state.memoryViewBase=alignMemoryView(state.memoryViewBase,c);els.memoryJump.value=hex(state.memoryViewBase,c.addressBits);
@@ -1222,6 +1373,12 @@ LW 0x04</textarea>
   function randomizeMemory(){state.memorySeed=Math.floor(Math.random()*0xffffffff)>>>0;state.memoryOverrides.clear();setMessage(els.memoryMessage,"ok","Main memory randomized with a new deterministic seed.");restartSimulation("Main memory randomized; cache restarted empty.",false)}
 
 
+  // -----------------------------------------------------------------
+  // Tutorial construction
+  // buildTutorialSteps creates the explanatory sequence for one access.
+  // finalizeTutorialSteps assigns the visible transaction stage to each
+  // popup so Back/Next can replay PRE -> WRITEBACK -> FILL -> FINAL.
+  // -----------------------------------------------------------------
   function tutorialCacheRowSelector(r){
     return r&&r.wayIndex!=null?`#cacheBody tr[data-cache-set="${r.setIndex}"][data-cache-way="${r.wayIndex}"]`:null;
   }
@@ -1354,9 +1511,9 @@ LW 0x04</textarea>
     const totalMetadataBits=metadataBitsPerLine*c.lineCount;
     const totalMetadataBytes=totalMetadataBits/8;
     const metadataParts=[
-      `V = 1 bit`,
-      ...(dirtyBitsPerLine?[`D = 1 bit`]:[]),
-      ...(lruBitsPerLine?[`LRU = log₂(${c.ways}) = ${lruBitsPerLine} bit${lruBitsPerLine===1?"":"s"}`]:[]),
+      `V (Valid) = 1 bit`,
+      ...(dirtyBitsPerLine?[`D (Dirty) = 1 bit`]:[]),
+      ...(lruBitsPerLine?[`LRU (Least Recently Used) = log₂(${c.ways}) = ${lruBitsPerLine} bit${lruBitsPerLine===1?"":"s"}`]:[]),
       `Tag = ${c.tagBits} bit${c.tagBits===1?"":"s"}`
     ];
 
@@ -1375,8 +1532,12 @@ LW 0x04</textarea>
          <div>Metadata / line = ${metadataBitsPerLine} bits</div>
          <div>Total metadata = ${metadataBitsPerLine} × ${c.lineCount} = ${totalMetadataBits} bits${Number.isInteger(totalMetadataBytes)?` = ${totalMetadataBytes} B`:` ≈ ${totalMetadataBytes.toFixed(2)} B`}</div>
        </div>
-       <p>${direct?"Because this cache is direct-mapped, each set has exactly one possible cache line.":"All ways with the same Set value belong to the same set; an incoming block may occupy any eligible way in that set."}</p>
-       <p class="tutorial-note"><strong>Metadata highlighted here:</strong> V${dirtyBitsPerLine?", D":""}${lruBitsPerLine?", LRU":""}, and Tag only. Set, Block base, Data bytes, and Status are not counted as metadata in this tutorial.</p>`,
+       <p>${direct
+         ?"Because this cache is direct-mapped, each set has exactly one possible cache line."
+         :c.setCount===1
+           ?"Because this cache is fully associative, there is only one set and every cache line is a candidate location for an incoming block."
+           :"All ways with the same Set value belong to the same set; an incoming block may occupy any eligible way in that set."}</p>
+       <p class="tutorial-note"><strong>Metadata highlighted here:</strong> V (Valid)${dirtyBitsPerLine?", D (Dirty)":""}${lruBitsPerLine?", LRU (Least Recently Used)":""}, and Tag only. Set, Block base, Data bytes, and Status are not metadata.</p>`,
       [".cache-table-wrap"],[],
       {columnGroups:[
         {host:".cache-table-wrap",selector:".cache-col-data, .cache-data-cell",kind:"data"},
@@ -1619,6 +1780,8 @@ LW 0x04</textarea>
     const dirtyChanged=beforeLine&&afterLine&&beforeDirty!==afterDirty;
     const tagChanged=beforeLine&&afterLine&&beforeLine.tag!==afterLine.tag;
     const dirtyVictimReplaced=!r.hit&&!!r.evictedDirty&&tagChanged;
+    // Only explain metadata when V/D actually changes, or when a dirty
+    // replacement keeps D=1 but transfers that meaning to a different tag.
     const showMetadataStep=!!(validChanged||dirtyChanged||dirtyVictimReplaced);
 
     if(showMetadataStep){
@@ -1669,6 +1832,11 @@ LW 0x04</textarea>
     return finalizeTutorialSteps(steps,r);
   }
 
+  // -----------------------------------------------------------------
+  // Tutorial highlighting
+  // Adds/removes focus classes and grouped outlines around related bits,
+  // rows, columns, or byte ranges while the rest of the UI is dimmed.
+  // -----------------------------------------------------------------
   function clearTutorialFocus(){
     document.querySelectorAll(".tutorial-group-outline,.tutorial-segment-outline").forEach(el=>el.remove());
     document.querySelectorAll(".tutorial-group-host").forEach(el=>el.classList.remove("tutorial-group-host"));
@@ -1798,6 +1966,11 @@ LW 0x04</textarea>
     top=Math.max(minTop,Math.min(maxTop,top));
     pop.style.top=`${Math.round(top)}px`;
   }
+  // -----------------------------------------------------------------
+  // Tutorial playback
+  // Applies the snapshot stage associated with the requested popup, renders
+  // it, then focuses the relevant UI. Closing commits the FINAL state.
+  // -----------------------------------------------------------------
   function showTutorialStep(index){
     if(!tutorial.active||!tutorial.steps.length) return;
     tutorial.index=Math.max(0,Math.min(index,tutorial.steps.length-1));
@@ -1860,6 +2033,11 @@ LW 0x04</textarea>
     if(!tutorial.enabled&&tutorial.active) closeTutorial();
   }
 
+  // -----------------------------------------------------------------
+  // Memory display controls
+  // Byte ordering only rearranges visible columns. Endianness changes the
+  // interpretation of multi-byte accesses and therefore restarts the run.
+  // -----------------------------------------------------------------
   function renderMemoryConfigControls(){
     const desc=state.byteOrder==="DESC",big=state.endianness==="BIG";
     els.byteOrderToggle.setAttribute("aria-pressed",desc?"true":"false");
@@ -1870,6 +2048,19 @@ LW 0x04</textarea>
     els.accessEndianHint.textContent=endianText;
     els.memoryEndianHint.textContent=endianText;
   }
+  function flashByteOrderingHeaders(){
+    const targets=[
+      ...document.querySelectorAll(".cache-col-data"),
+      ...document.querySelectorAll(".memory-table th.byte-head")
+    ];
+    for(const el of targets){
+      el.classList.remove("ordering-flash");
+      void el.offsetWidth;
+      el.classList.add("ordering-flash");
+      setTimeout(()=>el.classList.remove("ordering-flash"),850);
+    }
+  }
+
   function toggleByteOrder(){
     state.byteOrder=state.byteOrder==="ASC"?"DESC":"ASC";
     if(state.config) state.config.byteOrder=state.byteOrder;
@@ -1877,7 +2068,33 @@ LW 0x04</textarea>
     renderCache();
     renderMemory();
     if(tutorial.active) showTutorialStep(tutorial.index);
+    requestAnimationFrame(flashByteOrderingHeaders);
   }
+  function positionEndiannessInfoPopup(){
+    const popup=els.endiannessInfoPopup,anchor=els.endiannessToggle;
+    if(!popup||!anchor||popup.hidden) return;
+    const r=anchor.getBoundingClientRect();
+    const width=popup.offsetWidth||390;
+    const height=popup.offsetHeight||170;
+    const left=Math.max(14,Math.min(window.innerWidth-width-14,r.right-width));
+    let top=r.bottom+10;
+    if(top+height>window.innerHeight-14) top=r.top-height-10;
+    popup.style.left=`${left}px`;
+    popup.style.top=`${Math.max(14,top)}px`;
+  }
+  function showEndiannessInfoPopup(){
+    const big=state.endianness==="BIG";
+    els.endiannessInfoTitle.textContent=big?"Big-endian":"Little-endian";
+    els.endiannessInfoBody.innerHTML=big
+      ? `<p>For a multi-byte value, the <strong>most significant byte</strong> is stored at the lowest memory address.</p><p>Example: <span class="mono">0x12345678</span> appears at increasing addresses as <span class="mono">12 34 56 78</span>.</p>`
+      : `<p>For a multi-byte value, the <strong>least significant byte</strong> is stored at the lowest memory address.</p><p>Example: <span class="mono">0x12345678</span> appears at increasing addresses as <span class="mono">78 56 34 12</span>.</p>`;
+    els.endiannessInfoPopup.hidden=false;
+    requestAnimationFrame(positionEndiannessInfoPopup);
+  }
+  function closeEndiannessInfoPopup(){
+    els.endiannessInfoPopup.hidden=true;
+  }
+
   function toggleEndianness(){
     if(tutorial.active) closeTutorial();
     state.endianness=state.endianness==="LITTLE"?"BIG":"LITTLE";
@@ -1886,20 +2103,66 @@ LW 0x04</textarea>
       restartSimulation(`Endianness changed to ${state.endianness==="BIG"?"big-endian":"little-endian"}; cache restarted empty.`);
     }else renderAll();
     renderMemoryConfigControls();
+    showEndiannessInfoPopup();
+  }
+
+  function setCollapseControl(button,label,expanded,collapseTitle,expandTitle){
+    button.setAttribute("aria-expanded",expanded?"true":"false");
+    label.textContent=expanded?"Collapse":"Expand";
+    button.title=expanded?collapseTitle:expandTitle;
+  }
+
+  // -----------------------------------------------------------------
+  // Collapsible panel controls
+  // Cache configuration hides its full body; Access series only hides
+  // helper/generator content while leaving the editor and transport buttons.
+  // -----------------------------------------------------------------
+  function toggleConfigPanel(){
+    const expanded=els.configCollapseToggle.getAttribute("aria-expanded")!=="false";
+    const nextExpanded=!expanded;
+    setCollapseControl(els.configCollapseToggle,els.configCollapseLabel,nextExpanded,"Collapse cache configuration","Expand cache configuration");
+    els.configPanelBody.hidden=!nextExpanded;
+    const configPanel=document.querySelector(".config-panel");
+    if(configPanel) configPanel.classList.toggle("collapsed",!nextExpanded);
+    requestAnimationFrame(syncTopPanelHeights);
+  }
+
+  function toggleAccessPanel(){
+    const expanded=els.accessCollapseToggle.getAttribute("aria-expanded")!=="false";
+    const nextExpanded=!expanded;
+    setCollapseControl(els.accessCollapseToggle,els.accessCollapseLabel,nextExpanded,"Collapse Access series helpers","Expand Access series helpers");
+    els.accessExtraBody.hidden=!nextExpanded;
   }
 
   function syncTopPanelHeights(){
     const configPanel=document.querySelector('.config-panel'),addressPanel=document.querySelector('.address-panel');
     if(!configPanel||!addressPanel) return;
     configPanel.style.minHeight="";addressPanel.style.minHeight="";
-    if(window.innerWidth<=1100) return;
+    if(configPanel.classList.contains("collapsed")||window.innerWidth<=1100) return;
     const target=Math.max(configPanel.offsetHeight,addressPanel.offsetHeight);
     configPanel.style.minHeight=target+"px";
     addressPanel.style.minHeight=target+"px";
   }
+  // -----------------------------------------------------------------
+  // Final render/event layer
+  // renderAll redraws every visual region from current state. The listeners
+  // below connect configuration changes, editor changes, navigation, memory
+  // controls, tutorial controls, and simulator transport buttons.
+  // -----------------------------------------------------------------
   function updateControls(){const canStep=!!state.config&&state.accessValid&&state.pointer<state.accesses.length;els.stepBtn.disabled=!canStep;els.undoBtn.disabled=!state.undoStack.length;els.resetBtn.disabled=!state.config;els.queueStatus.textContent=state.notice||`${state.pointer} of ${state.accesses.length} processed • ${Math.max(0,state.accesses.length-state.pointer)} remaining`;state.notice=""}
   function renderAll(){renderGeometry();renderAddressHelper();renderCurrent();renderSummary();renderCache();renderAccessEditor();renderHistory();renderMemory();renderMemoryConfigControls();updateControls();requestAnimationFrame(syncTopPanelHeights)}
 
+  els.endiannessInfoClose.addEventListener("click",closeEndiannessInfoPopup);
+  document.addEventListener("pointerdown",e=>{
+    if(els.endiannessInfoPopup.hidden) return;
+    if(els.endiannessInfoPopup.contains(e.target)||els.endiannessToggle.contains(e.target)) return;
+    closeEndiannessInfoPopup();
+  });
+  window.addEventListener("resize",positionEndiannessInfoPopup);
+  window.addEventListener("scroll",positionEndiannessInfoPopup,true);
+
+  els.configCollapseToggle.addEventListener("click",toggleConfigPanel);
+  els.accessCollapseToggle.addEventListener("click",toggleAccessPanel);
   [els.addressBits,els.cacheSize,els.blockSize,els.ways].forEach(el=>el.addEventListener('input',()=>{if(tutorial.active)closeTutorial();if(el===els.ways)updateReplacementAvailability();clearTimeout(configTimer);configTimer=setTimeout(applyConfigFromInputs,120)}));
   [els.cacheSize,els.blockSize,els.ways].forEach(el=>{
     let lastValid=isPow2(Number(el.value))?Number(el.value):null;
