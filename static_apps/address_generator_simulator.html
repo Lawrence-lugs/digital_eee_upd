@@ -28,6 +28,14 @@
 .pe{min-height:143px}.pe-registers{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px;margin:8px 0 4px;text-align:center}.pe-registers small{display:block;font-size:.62rem;font-weight:500;margin-bottom:3px}.pe-registers b{display:block;font-size:var(--register-size,20px);font-weight:800;font-family:ui-monospace,monospace;letter-spacing:-.7px}
 .edge-corner{align-self:center;font-size:.68rem;line-height:1.7;color:var(--muted)}.top-edge{display:flex;flex-direction:column;align-items:center;justify-content:end;gap:6px;padding-top:3px;background:repeating-linear-gradient(0deg,#fafafa 0,#fafafa 31px,#f0f0f2 32px);border-radius:7px}.left-edge{display:flex;gap:6px;align-items:center;justify-content:space-between;background:repeating-linear-gradient(90deg,#fafafa 0,#fafafa 31px,#f0f0f2 32px);border-radius:7px;padding:6px 2px}.left-edge .row-label{width:53px;flex-shrink:0}.edge-slot{display:grid;place-items:center;flex-shrink:0;width:38px;height:34px;font:bold 1.05rem ui-monospace,monospace;color:var(--feat);background:#eff6ff;border:1px solid #93c5fd;border-radius:5px;box-shadow:0 1px 2px #0001}.edge-slot.weight{color:var(--filt);background:#f5f3ff;border-color:#c4b5fd}.edge-slot.invalid{color:#71717a;background:#f4f4f5;border-style:dashed;border-color:#d4d4d8}.edge-arrow{font-size:20px;line-height:20px}.top-edge .col-label{align-self:auto}
 
+
+/* Stream inspection uses conceptual lowered matrices, never a second hardware memory. */
+.below>.panel{min-width:0}.inspect-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.inspect-tabs button{font-size:.73rem;padding:6px 9px}.inspect-tabs [aria-pressed=true]{background:var(--accent);color:white;border-color:var(--accent)}
+.lowered-wrap{overflow:auto;max-height:380px;margin-top:12px;border:1px solid var(--line);border-radius:8px}.lowered-wrap[hidden],.pair-grid[hidden]{display:none}
+.lowered{border-collapse:separate;border-spacing:3px;font-size:.77rem;width:max-content;min-width:100%;padding:3px}.lowered th{font-size:.65rem;font-weight:600;color:var(--muted);background:#fff;padding:5px 7px;white-space:nowrap}.lowered thead th{position:sticky;top:0;z-index:2}.lowered tbody th{position:sticky;left:0;z-index:1;text-align:left}.lowered thead th:first-child{left:0;z-index:3}
+.lowered td{min-width:48px;height:38px;text-align:center;border:1px solid #e4e4e7;border-radius:4px;font:bold .9rem ui-monospace,monospace;padding:5px}.lowered .outside-tile{color:#9ca3af;background:#fafafa}.feature-matrix .in-tile{color:var(--feat);background:#eff6ff;border-color:#bfdbfe}.weight-matrix .in-tile{color:var(--filt);background:#f5f3ff;border-color:#ddd6fe}.lowered .selected-line{box-shadow:inset 0 -2px 0 #9ca3af}.feature-matrix .feeding{background:#bfdbfe;border-color:var(--feat);color:#1d4ed8}.weight-matrix .feeding{background:#ddd6fe;border-color:var(--filt);color:#6d28d9}.lowered .selected-cell{outline:2px solid var(--accent);outline-offset:-1px}.lowered .padding{border-style:dashed}.lowered sup{font-size:.65rem}
+.edge-slot{padding:0}.edge-slot.selected-stream{outline:2px solid var(--accent);outline-offset:3px}.edge-slot:hover{box-shadow:0 0 0 3px #7f1d1d20}.inactive-map{opacity:.65}.lane-detail{height:43px}.address-block{display:flex;flex-direction:column;gap:3px;line-height:1.2}.address-block small{font-size:.65rem}.address-block b{font:bold .93rem ui-monospace,monospace}
+
 @media(max-width:1250px){.flow-grid{grid-template-columns:minmax(230px,.8fr) minmax(300px,1fr)}.array-panel{grid-column:1/-1}.array-grid{margin-left:auto;margin-right:auto}}@media(max-width:700px){.header-inner{display:block}h1{font-size:1.45rem}.badge{display:inline-block;margin-top:10px}.flow-grid,.below,.scope-grid{grid-template-columns:1fr}.array-panel{grid-column:auto}.status{margin-left:0;width:100%}.toolbar{position:static}.header-inner,main{padding-left:10px;padding-right:10px}.config-top{gap:9px}.config-top label{font-size:.7rem}.panel{padding:11px}.message{min-height:96px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important}.flight{display:none}}
 header .header-credit { margin: 5px 0 0; opacity: .78; font-size: .74rem; letter-spacing: .01em; }
 </style>
@@ -42,16 +50,16 @@ header .header-credit { margin: 5px 0 0; opacity: .78; font-size: .74rem; letter
 <div id="tileOverview" class="tile-overview"></div>
 <p class="hint" id="editMessage" role="status">Edit signed integers from −128 to 127. Changing a dimension resizes the editors while preserving overlapping values.</p>
 </details>
-<div class="panel toolbar"><button id="back" title="Undo up to 256 displayed steps">← Back</button><button class="primary" id="step">Step clock →</button><button id="play">▶ Play</button><button id="reset">Reset</button><button id="finish">Finish layer</button><label>Speed <select id="speed"><option value="1600">Slow</option><option value="900" selected>Normal</option><option value="500">Fast</option></select></label><span class="status" id="status"></span></div>
+<div class="panel toolbar"><button id="back" title="Undo up to 256 displayed steps">← Back</button><button class="primary" id="step">Step clock →</button><button id="play">▶ Play</button><button id="reset">Reset</button><span class="status" id="status"></span></div>
 <div class="legend"><span class="feat">Input values</span><span class="filt">Filter values</span><span class="prod">Registered products</span><span class="accu">Stationary sums</span><span class="shift">Collected outputs</span></div>
 <div class="panel message" aria-live="polite" id="message"></div>
 <div class="flow-grid">
  <section class="panel"><div class="stage-heading"><span class="num">1</span><h2>Original tensor memories</h2></div><p class="small muted">Only the original image and filters are stored. There is no stored im2col matrix.</p><div id="memories"></div></section>
  <section class="panel"><div class="stage-heading"><span class="num">2</span><h2>Address walkers &amp; feeder</h2></div><div class="small muted">Each <b>pop</b> requests the current entry and advances that lane. Cards show the response registered at the latest edge.</div><div id="lanes"></div><div class="feeder-explain">One synchronous read port per array row for input data, and per column for weights. A response captured now enters a PE at the <b>next</b> clock edge.</div></section>
- <section class="panel array-panel"><div class="stage-heading"><span class="num">3</span><h2>Output-stationary array</h2></div><div class="small muted" id="groupInfo"></div><div class="array-scroll"><div class="array-grid" id="array"></div></div><div class="pipeline-key">Each PE keeps one output sum. Blue input values move right; purple weights move down.<br><b>Three registered stages:</b> input pair → product → accumulated sum. Click a PE to follow its calculation below.</div></section>
+ <section class="panel array-panel"><div class="stage-heading"><span class="num">3</span><h2>Output-stationary array</h2></div><div class="small muted" id="groupInfo"></div><div class="array-scroll"><div class="array-grid" id="array"></div></div><div class="pipeline-key">Each PE keeps one output sum. Blue input values move right; purple weights move down.<br><b>Three registered stages:</b> input pair → product → accumulated sum. Click a PE for its calculation, a blue stream for the patch matrix, or a purple stream for the filter columns.</div></section>
 </div>
 <div class="below">
- <section class="panel"><h2 id="inspectTitle">Follow one output</h2><div class="small" id="inspectIntro"></div><div class="pair-grid" id="pairs"></div><p class="small muted" id="inspectFooter"></p></section>
+ <section class="panel" id="inspector"><div class="inspect-tabs" role="group" aria-label="Inspection view"><button data-view="pe" aria-pressed="true">PE calculation</button><button data-view="f" aria-pressed="false">Patch matrix</button><button data-view="w" aria-pressed="false">Filter columns</button></div><h2 id="inspectTitle">Follow one output</h2><div class="small" id="inspectIntro"></div><div class="pair-grid" id="pairs"></div><div id="loweredMatrix" class="lowered-wrap" hidden></div><p class="small muted" id="inspectFooter"></p></section>
  <section class="panel"><h2>Convolution output maps</h2><div class="small muted">Large numbers come from the simulated PE accumulators. Small numbers are an independent direct-convolution reference.</div><div class="check" id="check"></div><div class="result-maps" id="results"></div></section>
 </div>
 <details class="panel"><summary>Recent clock trace</summary><p class="small muted">Addresses count elements from zero. These are requested reads, not precomputed matrix operands. “Padding” advances the lane but returns valid=0.</p><div class="trace-wrap"><table class="trace"><thead><tr><th>Edge</th><th>Input requests</th><th>Weight requests</th><th>Array work</th></tr></thead><tbody id="trace"></tbody></table></div></details>
@@ -102,7 +110,7 @@ const FeederEngine=(()=>{
 (()=>{
 const $=id=>document.getElementById(id),E=FeederEngine;
 const fields=[['h','Image height',3],['w','Image width',3],['c','Input channels',1],['k','Filters',2],['r','Filter height',2],['s','Filter width',2],['pad','Padding',0],['stride','Stride',1],['rows','Array rows',4],['cols','Array columns',2],['n','Images',1]];
-let sim=null,editorConfig=null,history=[],timer=null,selected=[0,0],dirty=false,animations=[],refreshTimer=null;
+let sim=null,editorConfig=null,history=[],timer=null,selected=[0,0],inspectMode='pe',streamLane=0,dirty=false,animations=[],refreshTimer=null;
 $('dimensions').innerHTML=fields.map(([key,name,value])=>`<label>${name}<input id="cfg-${key}" type="number" min="${E.limits[key][0]}" max="${E.limits[key][1]}" step="1" value="${value}"></label>`).join('');
 function readConfig(){const raw={};for(const [key]of fields){const el=$('cfg-'+key);if(el.value.trim()==='')throw Error('Every dimension needs a value.');raw[key]=Number(el.value);}return E.config(raw);}
 function getValues(strict=true){const read=side=>[...document.querySelectorAll(`[data-side="${side}"]`)].map(el=>{const v=Number(el.value);if(strict&&(el.value.trim()===''||!Number.isInteger(v)||v< -128||v>127)){throw Error('Every tensor cell needs a signed integer from −128 to 127.');}return Number.isFinite(v)?v:0;});return {x:read('f'),w:read('w')};}
@@ -122,7 +130,7 @@ function scheduleRefresh(){
 function load(){try{
  const d=readConfig();
  if(!editorConfig||['n','c','h','w','k','r','s'].some(k=>d[k]!==editorConfig[k]))buildEditors(d);
- const {x,w}=getValues();pause();clearFlights();sim=E.create(d,x,w);history=[];selected=[0,0];dirty=false;
+ const {x,w}=getValues();pause();clearFlights();sim=E.create(d,x,w);history=[];selected=[0,0];inspectMode='pe';streamLane=0;dirty=false;
  $('shapeInfo').textContent=`Output: ${d.p} × ${d.q} per filter and image · ${d.depth} pairs per output`;
  $('editMessage').className='hint';$('editMessage').textContent='Changes update automatically and restart at edge 0. Colored cells belong to the active tile; gray cells are outside it.';
  render();
@@ -133,23 +141,23 @@ function clearFlights(){animations.forEach(a=>{clearTimeout(a.timeout);a.el.remo
 function pause(){if(timer)clearInterval(timer);timer=null;$('play').textContent='▶ Play';}
 function remember(){history.push(E.clone(sim));if(history.length>256)history.shift();}
 function step(animate=true){if(dirty||!sim||sim.done)return;try{remember();E.step(sim);render();if(animate)fly(sim.event.moves);if(sim.done)pause();}catch(e){pause();$('message').innerHTML='<strong>Simulation stopped</strong>';const p=document.createElement('p');p.textContent=e.message;$('message').append(p);}}
-function play(){if(timer){pause();return;}if(dirty||sim.done)return;$('play').textContent='Ⅱ Pause';step();if(!sim.done)timer=setInterval(()=>step(),Number($('speed').value));}
-function reset(){if(!sim)return;pause();clearFlights();sim=E.create(sim.d,sim.x,sim.w);history=[];selected=[0,0];render();}
-function updateControls(){for(const id of ['step','play','finish'])$(id).disabled=!sim||dirty||sim.done;$('back').disabled=!history.length||dirty;$('reset').disabled=!sim||dirty;}
+function play(){if(timer){pause();return;}if(dirty||sim.done)return;$('play').textContent='Ⅱ Pause';step();if(!sim.done)timer=setInterval(()=>step(),900);}
+function reset(){if(!sim)return;pause();clearFlights();sim=E.create(sim.d,sim.x,sim.w);history=[];selected=[0,0];inspectMode='pe';streamLane=0;render();}
+function updateControls(){for(const id of ['step','play'])$(id).disabled=!sim||dirty||sim.done;$('back').disabled=!history.length||dirty;$('reset').disabled=!sim||dirty;}
 function fmtTarget(p){return `image ${p.n}, (${p.p},${p.q})`;}
 function requestText(v){return !v?'—':!v.valid?`${v.reason} → 0 (v=0)`:`@${v.address} → ${v.value} (v=1)`;}
 function renderMessage(){const s=sim,d=s.d;let title,body;if(s.done){title=E.match(s)?'Complete: every output matches direct convolution.':'Complete: an output mismatch was detected.';body=`The array produced ${d.pixels*d.k} values using ${s.readsF} useful input reads and ${s.readsW} useful weight reads. Repeated patch entries came from the original memories.`;}else if(s.phase==='collect'){title='All products have reached the stationary sums.';body='The memory requests have finished and the PE pipeline has drained. Next, collect these results into their output maps. Result readout is summarized, so this action adds no compute clock.';}else if(s.phase==='init'){title=s.group?'Results collected. Next, start another group.':'The array is ready. Its operands are still in memory.';body=s.group?'The demo will clear the sums, assign the next pixels and filters, and reset the address walkers. The same stored tensors are reused.':'Next edge initializes the address walkers and clears the array. Then the testbench-style request pattern starts row 0 and column 0 first.';}else if(s.event.kind==='initialize'){title='Address walkers initialized. No operands requested yet.';body='Next clock: lane 0 requests entry 0. Each following lane starts one cycle later. That stagger makes matching input and weight entries meet inside the array.';}else{const nf=s.requestsF.filter(Boolean).length,nw=s.requestsW.filter(Boolean).length,np=s.requestsF.filter(v=>v?.reason==='padding').length;title=`Edge ${s.edge}: ${nf} input ${nf===1?'request':'requests'}, ${nw} weight ${nw===1?'request':'requests'}, ${s.event.added||0} ${(s.event.added||0)===1?'sum':'sums'} updated.`;body=nf||nw?`Requested values now sit in the feeder response registers. The array captured the previous responses while older pairs multiplied and accumulated.${np?' Padding slots advanced too; valid=0 becomes zero at the array edge.':''}`:'The feeder has no new requests. Existing operands and products continue through the array until every output is complete.';}
 $('message').innerHTML=`<strong>${title}</strong><p>${body}</p>`;$('status').textContent=`Compute edge ${s.edge} · Group ${Math.min(s.event.kind==='collect'?s.group:s.group+1,s.groups)} / ${s.groups}`;$('step').textContent=s.phase==='collect'?'Collect results →':'Step clock →';}
 function renderMemories(){const s=sim,d=s.d;const one=(side,values,req,title,layout,ports,reads)=>{const hot=new Map();req.forEach((v,i)=>{if(v?.valid){if(!hot.has(v.address))hot.set(v.address,[]);hot.get(v.address).push(i);}});return `<div class="memory-bank ${side==='w'?'weights':''}"><div class="memory-header"><h3 class="${side==='f'?'feat':'filt'}">${title}</h3><span class="small muted">${ports} read ports</span></div><div class="memory-cells" id="scroll-memory-${side}">${values.map((v,i)=>`<div id="mem-${side}-${i}" class="mem ${hot.has(i)?'hot':''}" title="Element address ${i}, value ${v}${hot.has(i)?'. Requested by lanes '+hot.get(i).join(', '):''}"><small>@${i}</small><b>${v}</b></div>`).join('')}</div><p class="memory-meta">${layout}<br>${values.length} stored values · ${reads} useful reads so far</p></div>`;};$('memories').innerHTML=one('f',s.x,s.requestsF,'Input memory','NCHW: image → channel → row → column',d.rows,s.readsF)+one('w',s.w,s.requestsW,'Weight memory','KCRS: filter → channel → row → column',d.cols,s.readsW);}
 function renderLanes(){const s=sim,d=s.d;
- const rows=(side,count,req,walk)=>Array.from({length:count},(_,i)=>{
-  const v=req[i],w=walk[i],target=side==='f'?s.pixelBase+i:s.filterBase+i,exists=target<(side==='f'?d.pixels:d.k);
-  const targetText=exists?(side==='f'?`pixel ${target}`:`filter ${target}`):'unused lane',bookmark=w?Math.min(w.t,d.depth):0;
-  const detail=v?`Entry ${v.t} · ${v.address===null?v.reason:'address '+v.address}`:'No requested operand';
-  const tip=v&&side==='f'?`Input sample: channel ${v.c}, row ${v.h}, column ${v.w}. ${detail}`:detail;
-  return `<div class="lane ${side==='w'?'weight':''}"><div class="lane-top"><strong class="${side==='f'?'feat':'filt'}">${side==='f'?'Row':'Column'} ${i} · ${targetText}</strong><span class="request ${v?'on':''}">pop=${v?1:0}</span></div><div class="lane-detail"><span class="lane-lines" title="${tip}"><span>${detail}</span><span>Next entry: ${bookmark===d.depth?'finished':bookmark}</span></span><span class="lane-response"><span id="resp-${side}-${i}" class="value ${!v?.valid?'invalid':''}">${v?v.valid?v.value:'0*':'—'}</span> <span class="vbit">valid=${v?.valid?1:0}</span></span></div></div>`;
+ const rows=(side,count,req)=>Array.from({length:count},(_,i)=>{
+  const v=req[i],target=side==='f'?s.pixelBase+i:s.filterBase+i,exists=target<(side==='f'?d.pixels:d.k);
+  const targetText=exists?(side==='f'?`pixel ${target}`:`filter ${target}`):'unused lane';
+  const label=!v?'No request':v.reason==='padding'?'Padding':v.reason==='unused'?'Unused lane':'Address';
+  const tip=v&&side==='f'?`Input sample: channel ${v.c}, row ${v.h}, column ${v.w}`:label;
+  return `<div class="lane ${side==='w'?'weight':''}"><div class="lane-top"><strong class="${side==='f'?'feat':'filt'}">${side==='f'?'Row':'Column'} ${i} · ${targetText}</strong><span class="request ${v?'on':''}">pop=${v?1:0}</span></div><div class="lane-detail"><span class="address-block" title="${tip}"><small>${label}</small><b class="${side==='f'?'feat':'filt'}">${v?.address??'—'}</b></span><span class="lane-response"><span id="resp-${side}-${i}" class="value ${!v?.valid?'invalid':''}">${v?v.valid?v.value:'0*':'—'}</span> <span class="vbit">valid=${v?.valid?1:0}</span></span></div></div>`;
  }).join('');
- $('lanes').innerHTML=`<div class="port-title feat">Input responses → array rows</div>${rows('f',d.rows,s.responseF,s.fWalk)}<div class="port-title filt">Weight responses ↓ array columns</div>${rows('w',d.cols,s.responseW,s.wWalk)}<div class="small muted">0* = effective zero; raw memory data is ignored.</div>`;
+ $('lanes').innerHTML=`<div class="port-title feat">Input responses → array rows</div>${rows('f',d.rows,s.responseF)}<div class="port-title filt">Weight responses ↓ array columns</div>${rows('w',d.cols,s.responseW)}<div class="small muted">0* = effective zero; raw memory data is ignored.</div>`;
 }
 function renderTile(){
  const s=sim,d=s.d,addresses=new Set();
@@ -168,10 +176,11 @@ function renderTile(){
   el.classList.toggle('walker-active',!!lanes);
   el.title=lanes?`Address ${i}: requested by ${lanes.length===1?'lane':'lanes'} ${lanes.join(', ')} at the latest clock edge`:active?'Used by the active tile':'Outside the active tile (still editable)';
  });
- let maps='';for(let n=0;n<d.n;n++){
-  maps+=`<div><span class="small muted">Image ${n} output pixels</span><div class="tile-pixels" style="grid-template-columns:repeat(${d.q},22px)">`;
-  for(let p=0;p<d.p;p++)for(let q=0;q<d.q;q++){const id=(n*d.p+p)*d.q+q,active=id>=s.pixelBase&&id<s.pixelBase+d.rows;
-   maps+=`<span class="tile-pixel ${active?'active':''}" title="Output pixel ${id}, row ${p}, column ${q}">${id}</span>`;
+ let maps='';for(let n=0;n<d.n;n++)for(let k=0;k<d.k;k++){
+  const filterActive=k>=s.filterBase&&k<s.filterBase+d.cols;
+  maps+=`<div class="tile-output-map ${filterActive?'':'inactive-map'}" data-image="${n}" data-filter="${k}"><span class="small muted">Image ${n} · Filter ${k}<br>Output channel ${k}</span><div class="tile-pixels" style="grid-template-columns:repeat(${d.q},22px)">`;
+  for(let p=0;p<d.p;p++)for(let q=0;q<d.q;q++){const id=(n*d.p+p)*d.q+q,active=filterActive&&id>=s.pixelBase&&id<s.pixelBase+d.rows;
+   maps+=`<span class="tile-pixel ${active?'active':''}" title="Image ${n}, output channel ${k}, row ${p}, column ${q}">${id}</span>`;
   }maps+='</div></div>';
  }
  const tile=Math.floor(s.filterBase/d.cols)*Math.ceil(d.pixels/d.rows)+Math.floor(s.pixelBase/d.rows)+1;
@@ -181,7 +190,7 @@ function renderArray(){const s=sim,d=s.d;
  const lastPixel=Math.min(d.pixels-1,s.pixelBase+d.rows-1),lastFilter=Math.min(d.k-1,s.filterBase+d.cols-1);
  $('groupInfo').textContent=`Rows own pixels ${s.pixelBase}–${lastPixel}. Columns own filters ${s.filterBase}–${lastFilter}. Edge cells show feeder responses waiting for the next clock.`;
  $('array').style.gridTemplateColumns=`126px repeat(${d.cols},124px)`;
- const edge=(side,i,v)=>`<span id="edge-${side}-${i}" class="edge-slot ${side==='w'?'weight':''} ${!v?.valid?'invalid':''}" title="Feeder response: ${v?requestText(v):'no requested operand'}. Captured by the array on the next edge.">${v?v.valid?v.value:'0*':'—'}</span>`;
+ const edge=(side,i,v)=>`<button id="edge-${side}-${i}" data-stream="${side},${i}" class="edge-slot ${side==='w'?'weight':''} ${!v?.valid?'invalid':''} ${inspectMode===side&&streamLane===i?'selected-stream':''}" aria-label="Inspect ${side==='f'?'input':'weight'} stream ${i}" title="Click to inspect the ${side==='f'?'patch matrix':'filter columns'}. Feeder response: ${v?requestText(v):'no requested operand'}. Captured by the array on the next edge.">${v?v.valid?v.value:'0*':'—'}</button>`;
  let h='<div class="edge-corner">Feeder outputs<br><span class="feat">input →</span><br><span class="filt">weights ↓</span></div>';
  for(let c=0;c<d.cols;c++)h+=`<div class="top-edge"><div class="col-label">${s.filterBase+c<d.k?'Filter '+(s.filterBase+c):'Unused column'}</div>${edge('w',c,s.responseW[c])}<span class="edge-arrow filt">↓</span></div>`;
  for(let r=0;r<d.rows;r++){
@@ -190,16 +199,51 @@ function renderArray(){const s=sim,d=s.d;
   for(let c=0;c<d.cols;c++){
    const pe=s.pe[r][c],active=s.pixelBase+r<d.pixels&&s.filterBase+c<d.k;
    const digits=Math.max(String(pe.product?.value??'—').length,String(pe.sum).length),registerSize=Math.min(20,Math.floor(82/digits));
-   h+=`<button id="pe-${r}-${c}" data-pe="${r},${c}" class="pe ${active?'':'inactive'} ${pe.added?'working':''} ${active&&pe.count===d.depth?'finished':''} ${selected[0]===r&&selected[1]===c?'selected':''} ${c===d.cols-1?'last-col':''} ${r===d.rows-1?'last-row':''}" aria-label="PE row ${r}, column ${c}, sum ${pe.sum}"><span class="pe-head"><span>PE ${r},${c}</span><span>${active?'':'unused'}</span></span><span class="pe-ops"><span class="value">${pe.a?.value??'—'}</span>×<span class="value" style="color:var(--filt);background:#f5f3ff;border-color:#ddd6fe">${pe.b?.value??'—'}</span></span><span class="pe-registers" style="--register-size:${registerSize}px"><span class="prod"><small>product</small><b>${pe.product?.value??'—'}</b></span><span class="accu"><small>sum</small><b>${pe.sum}</b></span></span><span class="pe-count">${active?`${pe.count} / ${d.depth} pairs added`:'zero contribution'}</span></button>`;
+   h+=`<button id="pe-${r}-${c}" data-pe="${r},${c}" class="pe ${active?'':'inactive'} ${pe.added?'working':''} ${active&&pe.count===d.depth?'finished':''} ${inspectMode==='pe'&&selected[0]===r&&selected[1]===c?'selected':''} ${c===d.cols-1?'last-col':''} ${r===d.rows-1?'last-row':''}" aria-label="PE row ${r}, column ${c}, sum ${pe.sum}"><span class="pe-head"><span>PE ${r},${c}</span><span>${active?'':'unused'}</span></span><span class="pe-ops"><span class="value">${pe.a?.value??'—'}</span>×<span class="value" style="color:var(--filt);background:#f5f3ff;border-color:#ddd6fe">${pe.b?.value??'—'}</span></span><span class="pe-registers" style="--register-size:${registerSize}px"><span class="prod"><small>product</small><b>${pe.product?.value??'—'}</b></span><span class="accu"><small>sum</small><b>${pe.sum}</b></span></span><span class="pe-count">${active?`${pe.count} / ${d.depth} pairs added`:'zero contribution'}</span></button>`;
   }
  }
  $('array').innerHTML=h;
 }
-function renderInspector(){const s=sim,d=s.d,[r,c]=selected,pid=s.pixelBase+r,fid=s.filterBase+c,pe=s.pe[r][c];$('inspectTitle').textContent=`Follow PE (${r}, ${c})`;if(pid>=d.pixels||fid>=d.k){$('inspectIntro').textContent='This lane lies beyond the current work. It contributes no output in this group.';$('pairs').innerHTML='';$('inspectFooter').textContent='Its requests still advance, but valid=0 masks the unused lane.';return;}const pos=E.pixel(d,pid);$('inspectIntro').innerHTML=`Output <b>${fmtTarget(pos)}, filter ${fid}</b>. Read the patch across columns, then rows, then channels. Keep every sample paired with the corresponding filter entry.`;let h='';for(let t=0;t<d.depth;t++){const walk={pixel:pid,t,c:Math.floor(t/(d.r*d.s)),r:Math.floor(t/d.s)%d.r,s:t%d.s},a=E.feature(s,walk,r),b=s.w[fid*d.depth+t];h+=`<div class="pair ${t<pe.count?'used':''} ${pe.product?.t===t?'current':''}" title="Input ${a.reason||`channel ${a.c}, row ${a.h}, column ${a.w}`}; weight address ${fid*d.depth+t}"><span class="small">entry ${t} · ch ${a.c}</span><div class="pair-values"><span class="feat">${a.value}${a.valid?'':'*'}</span> × <span class="filt">${b}</span></div><span class="small">${a.valid?'@'+a.address:'padding'} · W@${fid*d.depth+t}</span><b class="prod">${a.value*b}</b></div>`;}$('pairs').innerHTML=h;$('inspectFooter').textContent=`Green entries have reached the sum. Orange is the registered product awaiting accumulation. Current sum ${pe.sum}; direct convolution expects ${s.expected[pid][fid]}. Entry numbers start at 0.`;}
+function renderInspector(){
+ document.querySelectorAll('[data-view]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.view===inspectMode)));
+ $('pairs').hidden=inspectMode!=='pe';$('loweredMatrix').hidden=inspectMode==='pe';
+ if(inspectMode!=='pe'){renderLowered();return;}
+ const s=sim,d=s.d,[r,c]=selected,pid=s.pixelBase+r,fid=s.filterBase+c,pe=s.pe[r][c];$('inspectTitle').textContent=`Follow PE (${r}, ${c})`;if(pid>=d.pixels||fid>=d.k){$('inspectIntro').textContent='This lane lies beyond the current work. It contributes no output in this group.';$('pairs').innerHTML='';$('inspectFooter').textContent='Its requests still advance, but valid=0 masks the unused lane.';return;}const pos=E.pixel(d,pid);$('inspectIntro').innerHTML=`Output <b>${fmtTarget(pos)}, filter ${fid}</b>. Read the patch across columns, then rows, then channels. Keep every sample paired with the corresponding filter entry.`;let h='';for(let t=0;t<d.depth;t++){const walk={pixel:pid,t,c:Math.floor(t/(d.r*d.s)),r:Math.floor(t/d.s)%d.r,s:t%d.s},a=E.feature(s,walk,r),b=s.w[fid*d.depth+t];h+=`<div class="pair ${t<pe.count?'used':''} ${pe.product?.t===t?'current':''}" title="Input ${a.reason||`channel ${a.c}, row ${a.h}, column ${a.w}`}; weight address ${fid*d.depth+t}"><span class="small">entry ${t} · ch ${a.c}</span><div class="pair-values"><span class="feat">${a.value}${a.valid?'':'*'}</span> × <span class="filt">${b}</span></div><span class="small">${a.valid?'@'+a.address:'padding'} · W@${fid*d.depth+t}</span><b class="prod">${a.value*b}</b></div>`;}$('pairs').innerHTML=h;$('inspectFooter').textContent=`Green entries have reached the sum. Orange is the registered product awaiting accumulation. Current sum ${pe.sum}; direct convolution expects ${s.expected[pid][fid]}. Entry numbers start at 0.`;}
+
+function renderLowered(){
+ const s=sim,d=s.d,isFeature=inspectMode==='f',lane=Math.min(streamLane,(isFeature?d.rows:d.cols)-1);
+ const chosen=(isFeature?s.pixelBase:s.filterBase)+lane,validChosen=chosen<(isFeature?d.pixels:d.k);
+ const responses=isFeature?s.responseF:s.responseW,selectedResponse=responses[lane];
+ const flowing=new Set(responses.filter(Boolean).filter(v=>isFeature?v.pixel<d.pixels:v.filter<d.k).map(v=>isFeature?`${v.pixel},${v.t}`:`${v.t},${v.filter}`));
+ const coordinate=t=>{const channel=Math.floor(t/(d.r*d.s)),row=Math.floor(t/d.s)%d.r,col=t%d.s;return {channel,row,col,label:`ch ${channel}<br>(${row},${col})`};};
+ $('inspectTitle').textContent=isFeature?`Full patch matrix · input stream ${lane}`:`Filters as columns · weight stream ${lane}`;
+ const selectedName=validChosen?(isFeature?`pixel ${chosen}`:`filter ${chosen}`):'an unused lane';
+ $('inspectIntro').innerHTML=isFeature?`Each row is one output pixel’s patch; each column is a position within that patch. The selected array row reads <b>${selectedName}</b> from left to right.`:`Each column is one filter; each row is a matching position within its input patch. The selected array column reads <b>${selectedName}</b> from top to bottom.`;
+ let h=`<table class="lowered ${isFeature?'feature-matrix':'weight-matrix'}"><thead><tr><th>${isFeature?'Output pixel / patch':'Filter position'}</th>`;
+ const cols=isFeature?d.depth:d.k,rows=isFeature?d.pixels:d.depth;
+ for(let col=0;col<cols;col++)h+=`<th>${isFeature?coordinate(col).label:'Filter '+col}</th>`;
+ h+='</tr></thead><tbody>';
+ for(let row=0;row<rows;row++){
+  const pixel=isFeature?E.pixel(d,row):null;
+  h+=`<tr><th>${isFeature?`Image ${pixel.n} · pixel ${row}<br>(${pixel.p},${pixel.q})`:coordinate(row).label}</th>`;
+  for(let col=0;col<cols;col++){
+   let value,padding=false,source;
+   if(isFeature){const a=coordinate(col),v=E.feature(s,{pixel:row,t:col,c:a.channel,r:a.row,s:a.col},0);value=v.value;padding=!v.valid;source=v.valid?`input address ${v.address}`:'padding: valid=0, effective zero';}
+   else{value=s.w[col*d.depth+row];source=`weight address ${col*d.depth+row}`;}
+   const inTile=isFeature?row>=s.pixelBase&&row<s.pixelBase+d.rows:col>=s.filterBase&&col<s.filterBase+d.cols;
+   const selectedLine=validChosen&&(isFeature?row===chosen:col===chosen),feeding=flowing.has(`${row},${col}`),selectedCell=selectedLine&&feeding;
+   h+=`<td data-matrix-row="${row}" data-matrix-col="${col}" class="${inTile?'in-tile':'outside-tile'} ${selectedLine?'selected-line':''} ${feeding?'feeding':''} ${selectedCell?'selected-cell':''} ${padding?'padding':''}" title="${source}${feeding?'; currently at the array input boundary':''}">${value}${padding?'<sup>*</sup>':''}</td>`;
+  }h+='</tr>';
+ }
+ $('loweredMatrix').innerHTML=h+'</tbody></table>';
+ const current=selectedResponse?(selectedResponse.reason==='unused'?'This lane has no corresponding matrix row or column.':`Selected stream currently presents ${selectedResponse.value}${selectedResponse.valid?'': ' (padding zero, valid=0)'}.`):'The selected stream has no requested operand at this edge.';
+ $('inspectFooter').textContent=`${current} Light cells belong to this tile; dark cells are the current feeder responses, entering the PEs at the next clock. The outlined cell belongs to your selected stream. * marks padding. This is a teaching view: the hardware stores original tensors and generates these matrix entries on demand.`;
+}
+
 function renderResults(){const s=sim,d=s.d;let done=0,bad=0,h='';for(let n=0;n<d.n;n++)for(let k=0;k<d.k;k++){h+=`<div class="result-map"><h3>Image ${n} · Filter ${k}</h3><table><tbody>`;for(let p=0;p<d.p;p++){h+='<tr>';for(let q=0;q<d.q;q++){const pid=(n*d.p+p)*d.q+q,v=s.observed[pid][k],ex=s.expected[pid][k];if(v!==null){done++;if(v!==ex)bad++;}h+=`<td id="out-${pid}-${k}" class="out ${v===null?'':v===ex?'done':'bad'}"><b>${v??'—'}</b><small>expect ${ex}</small></td>`;}h+='</tr>';}h+='</tbody></table></div>';} $('results').innerHTML=h;$('check').className='check '+(bad?'fail':s.done?'pass':'');$('check').textContent=bad?`${bad} mismatches found.`:s.done?`✓ All ${done} outputs match the independent convolution.`:`${done} / ${d.pixels*d.k} outputs collected. Completed results are preserved between groups.`;}
 function renderTrace(){const laneText=a=>a.map((v,i)=>v?`L${i}: e${v.t} ${requestText(v)}`:null).filter(Boolean).join(' · ')||'No pop';$('trace').innerHTML=sim.trace.slice().reverse().map(x=>`<tr><td>${x.edge}</td><td>${laneText(x.f)}</td><td>${laneText(x.w)}</td><td>${x.kind==='initialize'?'Initialize / clear':`${x.added} sums updated`}</td></tr>`).join('');}
 function render(){
- const ids=['scroll-memory-f','scroll-memory-w','results','pairs'];
+ const ids=['scroll-memory-f','scroll-memory-w','results','pairs','loweredMatrix'];
  const saved=ids.map(id=>({id,top:$(id)?.scrollTop||0,left:$(id)?.scrollLeft||0}));
  renderMessage();renderMemories();renderLanes();renderArray();renderInspector();renderResults();renderTrace();renderTile();updateControls();
  for(const {id,top,left}of saved)if($(id)){$(id).scrollTop=top;$(id).scrollLeft=left;}
@@ -211,7 +255,15 @@ $('dimensions').addEventListener('input',scheduleRefresh);
 $('editors').addEventListener('input',scheduleRefresh);
 $('exampleSelect').onchange=e=>{if(e.target.value!=='custom')preset(e.target.value);};
 $('randomize').onclick=()=>{document.querySelectorAll('[data-side]').forEach(el=>el.value=Math.floor(Math.random()*9)-4);scheduleRefresh();};
-$('step').onclick=()=>{pause();step();};$('play').onclick=play;$('reset').onclick=reset;$('back').onclick=()=>{pause();clearFlights();if(history.length){sim=history.pop();render();}};$('finish').onclick=()=>{pause();clearFlights();remember();let guard=0;while(!sim.done){E.step(sim);if(++guard>30000)throw Error('Unexpected simulation length.');}render();};$('speed').onchange=()=>{if(timer){pause();play();}};$('array').onclick=e=>{const b=e.target.closest('[data-pe]');if(b){selected=b.dataset.pe.split(',').map(Number);renderArray();renderInspector();}};document.addEventListener('keydown',e=>{if(e.target.closest('input,select,textarea,button,summary'))return;if(e.key==='ArrowRight'){e.preventDefault();pause();step();}else if(e.code==='Space'){e.preventDefault();play();}});window.addEventListener('resize',clearFlights);window.addEventListener('scroll',clearFlights,{passive:true});
+$('step').onclick=()=>{pause();step();};$('play').onclick=play;$('reset').onclick=reset;$('back').onclick=()=>{pause();clearFlights();if(history.length){sim=history.pop();render();}};$('array').onclick=e=>{
+ const stream=e.target.closest('[data-stream]'),pe=e.target.closest('[data-pe]');
+ if(stream){const [side,lane]=stream.dataset.stream.split(',');inspectMode=side;streamLane=Number(lane);}
+ else if(pe){selected=pe.dataset.pe.split(',').map(Number);inspectMode='pe';}
+ else return;
+ renderArray();renderInspector();
+};
+document.querySelectorAll('[data-view]').forEach(button=>button.onclick=()=>{inspectMode=button.dataset.view;streamLane=inspectMode==='f'?selected[0]:selected[1];renderArray();renderInspector();});
+document.addEventListener('keydown',e=>{if(e.target.closest('input,select,textarea,button,summary'))return;if(e.key==='ArrowRight'){e.preventDefault();pause();step();}else if(e.code==='Space'){e.preventDefault();play();}});window.addEventListener('resize',clearFlights);window.addEventListener('scroll',clearFlights,{passive:true});
 window.FeederDemo={engine:E,getState:()=>E.clone(sim)};
 preset('lecture');
 })();
