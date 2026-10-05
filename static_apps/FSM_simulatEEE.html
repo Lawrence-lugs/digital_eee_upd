@@ -64,6 +64,10 @@ header .btn { padding:5px 11px; border-radius:6px; }
 .menu-item { width:100%; display:flex; align-items:center; gap:10px; padding:10px 12px; border:none; border-radius:8px; background:transparent; color:var(--text); font-family:var(--sans); font-size:16px; text-align:left; cursor:pointer; }
 .menu-item:hover { background:var(--bg3); }
 .menu-item-check { width:16px; color:var(--accent); font-weight:700; text-align:center; flex-shrink:0; }
+.menu-item-icon { width:18px; text-align:center; flex-shrink:0; color:var(--accent); }
+.menu-item .menu-item-check { margin-left:auto; }
+.menu-item[aria-pressed="true"] { background:var(--bg3); }
+.btn:disabled { opacity:.45; cursor:default; }
 .menu-divider { height:1px; background:var(--border); margin:6px 2px; }
 
 .step-counter { font-family:var(--mono); font-size:18px; color:var(--text2); padding:5px 11px; background:var(--bg3); border:1px solid var(--border); border-radius:6px; min-width:96px; text-align:center; }
@@ -124,6 +128,11 @@ header .btn { padding:5px 11px; border-radius:6px; }
 .input-panel { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:12px 14px; min-width:110px; box-shadow:0 8px 18px rgba(0,0,0,.18); }
 .output-panel { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:12px 14px; min-width:110px; box-shadow:0 8px 18px rgba(0,0,0,.18); }
 .panel-title { font-size:17px; font-weight:600; letter-spacing:1.2px; text-transform:uppercase; color:var(--text3); margin-bottom:8px; }
+.io-panel-heading { display:flex; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
+.io-panel-heading .panel-title { margin:0; flex:1; }
+.io-bit-count { display:flex; gap:4px; }
+.io-bit-count button { padding:2px 7px; font-size:16px; }
+.info-section > .mode-switch { justify-content:center; margin-top:16px; }
 .output-bits { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; }
 .output-bit-box { display:flex; align-items:center; gap:6px; background:var(--bg4); border:1px solid var(--border2); border-radius:8px; padding:4px 6px; }
 .output-bit-box.active { border-color:var(--accent); box-shadow:0 0 0 1px rgba(79,158,255,.35); }
@@ -218,10 +227,14 @@ header .btn { padding:5px 11px; border-radius:6px; }
 .kmap-table td.k1,
 .kmap-table td.kx { color:var(--text); font-weight:700; background:var(--bg2); }
 .kmap-cell-inner { display:flex; flex-direction:column; align-items:center; gap:4px; min-height:30px; }
-.kmap-group-strip { display:flex; justify-content:center; gap:3px; min-height:8px; flex-wrap:wrap; }
-.kmap-group-dot { width:7px; height:7px; border-radius:999px; box-shadow:0 0 0 1px rgba(15,23,42,.25); }
+.kmap-table td { position:relative; padding:16px 18px; }
+.kmap-group-outline { position:absolute; pointer-events:none; border:0 solid; }
+.kmap-cell-inner { position:relative; z-index:1; justify-content:center; }
 .kmap-groups { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
 .kmap-group-item { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid var(--border2); border-radius:999px; background:var(--bg4); font-size:16px; color:var(--text2); }
+button.kmap-group-item { font-family:inherit; background:transparent; cursor:pointer; text-align:left; }
+.kmap-group-item[aria-pressed="true"] { border-color:var(--accent); background:var(--bg4); }
+.kmap-group-muted { opacity:.18; }
 .kmap-group-swatch { width:9px; height:9px; border-radius:999px; flex-shrink:0; }
 .kmap-header-row th { background:var(--bg3); }
 .kmap-corner { background:var(--bg3) !important; color:var(--text3) !important; font-size:16px; }
@@ -278,6 +291,83 @@ body.hide-sidebars .resize-handle { display:none; }
 .info-badge { display:inline-block; padding:2px 7px; border-radius:4px; font-family:var(--mono); font-size:11px; }
 .info-badge.green { background:rgba(62,207,142,.15); color:var(--green); border:1px solid rgba(62,207,142,.3); }
 .info-badge.amber { background:rgba(245,166,35,.15); color:var(--amber); border:1px solid rgba(245,166,35,.3); }
+/* Pass 2: keyboard-visible controls, save feedback and responsive panes. */
+button.panel-tab, button.bottom-tab { font-family:inherit; background:transparent; border:0; border-bottom:2px solid transparent; }
+button.panel-tab.active, button.bottom-tab.active { border-bottom-color:var(--accent); }
+button:focus-visible, select:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+#saveStatus { flex-shrink:0; padding:6px 14px; font-size:12px; color:var(--text2); }
+#saveStatus[hidden] { display:none; }
+#saveStatus[data-state="error"], #saveStatus[data-state="warning"] { color:var(--amber); }
+#storageNotice { flex-shrink:0; padding:8px 14px; background:var(--bg3); color:var(--amber); font-size:14px; }
+#storageNotice[hidden] { display:none; }
+#storageNotice button { margin:4px; padding:5px; font:inherit; cursor:pointer; }
+#statePicker { margin:6px 0 12px; }
+.reset-summary { padding:7px 14px; font-size:14px; line-height:1.5; border-bottom:1px solid var(--border); }
+.info-panel { width:clamp(240px,26vw,420px); }
+.right-panel { width:clamp(280px,30vw,560px); }
+.canvas-wrap { min-width:240px; min-height:160px; }
+.io-panels { max-width:calc(100% - 24px); max-height:45%; overflow:auto; }
+.bottom-header { overflow-x:auto; }
+.bottom-header-right { flex-shrink:0; }
+@media (max-width:1100px) {
+  .main { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); grid-template-rows:minmax(260px,45vh) minmax(200px,40vh); overflow:auto; min-height:160px; }
+  .canvas-wrap { grid-column:1 / -1; grid-row:1; }
+  .info-panel { grid-column:1; grid-row:2; }
+  .right-panel { grid-column:2; grid-row:2; }
+  .info-panel, .right-panel { width:100% !important; min-width:0; }
+  .resize-handle { display:none; }
+  .bottom-panel { max-height:45vh; }
+  .bottom-header-title, #bottomInfo { display:none; }
+  .reset-summary { max-height:80px; overflow:auto; }
+  body.hide-sidebars .main { display:flex; }
+}
+@media (max-width:650px) {
+  header { position:relative; }
+  .menu { position:static; }
+  .menu-dropdown { left:12px; right:12px; top:calc(100% + 4px); min-width:0; }
+  header .btn, .menu-btn { font-size:14px; }
+  .logo { font-size:16px; }
+  .main { grid-template-columns:minmax(0,1fr); grid-template-rows:minmax(280px,45vh) minmax(280px,45vh) minmax(240px,40vh); align-content:start; }
+  .info-panel { grid-row:2; grid-column:1; }
+  .right-panel { grid-row:3; grid-column:1; height:40vh; }
+  .bottom-body { overflow:auto; display:block; }
+  .bottom-pane { overflow:visible; width:100%; }
+  .bottom-pane-divider { display:none !important; }
+  .bottom-tab { font-size:14px; }
+}
+/* Generated embeds retain simulation and analysis, with a fixed authored design. */
+.embed-theme-btn { display:none; }
+body.embed .menu-bar, body.embed header > .menu-btn,
+body.embed #saveStatus, body.embed #storageNotice, body.embed .header-sep,
+body.embed #leftPanel, body.embed #leftResizer, body.embed #rightResizer,
+body.embed .io-bit-count, body.embed #btnRun, body.embed .sim-controls > div[style],
+body.embed .conn-handle { display:none !important; }
+body.embed .embed-theme-btn { display:inline-flex; }
+body.embed header { justify-content:space-between; padding:8px; }
+body.embed .logo { margin-right:auto; }
+body.embed .sim-controls { margin-left:auto; flex-wrap:wrap; justify-content:flex-end; }
+body.embed .main { display:flex; overflow:hidden; min-height:160px; }
+body.embed .canvas-wrap { min-width:0; flex:1; }
+body.embed .right-panel { width:var(--embed-sidebar-width,300px) !important; height:auto; flex:0 0 var(--embed-sidebar-width,300px); }
+body.embed .right-panel.table-view { --embed-sidebar-width:560px; }
+body.embed .panel-content { min-width:0; }
+body.embed .state-table th, body.embed .state-table td { white-space:normal; overflow-wrap:anywhere; }
+body.embed .panel-tab { font-size:13px; padding:10px 8px; }
+body.embed #canvas { cursor:default; }
+body.embed .bottom-panel { height:40vh; max-height:60vh; }
+body.embed.no-synth #synth, body.embed.no-synth #bottomPanel,
+body.embed.no-synth #bottomResizer { display:none !important; }
+#embedError { padding:24px; color:var(--red); }
+#embedError[hidden] { display:none; }
+@media(max-width:900px) {
+  body.embed .main { flex-direction:column; overflow:auto; }
+  body.embed .canvas-wrap { flex:1 0 260px; }
+  body.embed .right-panel { width:100% !important; flex:0 0 200px; }
+  body.embed .btn { font-size:14px; padding:7px 10px; }
+  body.embed .step-counter { min-width:70px; font-size:14px; }
+  body.embed .state-table { font-size:14px; }
+  body.embed .state-table th, body.embed .state-table td { padding:7px 8px; }
+}
 </style>
 </head>
 <body>
@@ -289,16 +379,16 @@ body.hide-sidebars .resize-handle { display:none; }
       <button class="menu-btn" type="button" onclick="toggleMenu('fileMenu')">File</button>
       <div class="menu-dropdown">
         <button class="menu-item" type="button" onclick="handleMenuAction(confirmNewWorkspace)">
-          <span class="menu-item-check"></span><span>New</span>
+          <span class="menu-item-icon" aria-hidden="true">✕</span><span>New</span>
         </button>
         <button class="menu-item" type="button" onclick="handleMenuAction(openLoadDialog)">
-          <span class="menu-item-check"></span><span>Load from file</span>
+          <span class="menu-item-icon" aria-hidden="true">⬆</span><span>Load from file</span>
         </button>
         <button class="menu-item" type="button" onclick="handleMenuAction(saveJSON)">
-          <span class="menu-item-check"></span><span>Save to file</span>
+          <span class="menu-item-icon" aria-hidden="true">⬇</span><span>Save to file</span>
         </button>
         <button class="menu-item" type="button" onclick="handleMenuAction(loadDefaultDesign)">
-          <span class="menu-item-check"></span><span>Load Default</span>
+          <span class="menu-item-icon" aria-hidden="true">⟲</span><span>Load Default</span>
         </button>
       </div>
     </div>
@@ -306,10 +396,13 @@ body.hide-sidebars .resize-handle { display:none; }
       <button class="menu-btn" type="button" onclick="toggleMenu('viewMenu')">View</button>
       <div class="menu-dropdown">
         <button class="menu-item" type="button" onclick="handleMenuAction(toggleSidebars)">
-          <span class="menu-item-check" id="menuCheckSidebars">✓</span><span>Sidebars</span>
+          <span class="menu-item-icon" aria-hidden="true">▥</span><span>Sidebars</span><span class="menu-item-check" id="menuCheckSidebars" aria-hidden="true">✓</span>
         </button>
+        <button class="menu-item" type="button" onclick="handleMenuAction(fitDiagram)"><span class="menu-item-icon" aria-hidden="true">⊕</span><span>Fit Diagram</span></button>
+        <button class="menu-item" type="button" id="btnForce" aria-pressed="false" onclick="handleMenuAction(toggleForceLayout)"><span class="menu-item-icon" aria-hidden="true">⤢</span><span>Force Layout</span><span class="menu-item-check" id="menuCheckForce" aria-hidden="true"></span></button>
+        <button class="menu-item" type="button" id="btnSimplify" aria-pressed="false" onclick="handleMenuAction(toggleSimplify)"><span class="menu-item-icon" aria-hidden="true">⇉</span><span>Simplify Arrows</span><span class="menu-item-check" id="menuCheckSimplify" aria-hidden="true"></span></button>
         <button class="menu-item" type="button" onclick="handleMenuAction(toggleTheme)">
-          <span class="menu-item-check" id="menuCheckTheme"></span><span>Light/Dark</span>
+          <span class="menu-item-icon" id="menuCheckTheme" aria-hidden="true">☀</span><span>Toggle theme</span>
         </button>
       </div>
     </div>
@@ -319,44 +412,45 @@ body.hide-sidebars .resize-handle { display:none; }
   <button class="menu-btn" onclick="openAbout()">About</button>
   
   <div class="header-sep"></div>
-  <div>Input Bit</div>
-  <button class="btn" onclick="addBit()">+</button>
-  <button class="btn" onclick="removeBit()">-</button>
-  <div style="width:1px;height:24px;background:var(--border);margin:0 2px"></div>
-  <div>Output Bit</div>
-  <button class="btn" onclick="addOutputBit()">+</button>
-  <button class="btn" onclick="removeOutputBit()">-</button>
-  <div style="width:1px;height:24px;background:var(--border);margin:0 2px"></div>
-  <div class="mode-switch">
-    <span id="modeSwitchLabel">All Moore</span>
-    <label class="switch">
-      <input type="checkbox" id="modeSwitch" onchange="setAllModesFromSwitch(this.checked)">
-      <span class="slider"></span>
-    </label>
-  </div>
-  <div style="width:1px;height:24px;background:var(--border);margin:0 2px"></div>
   <div class="sim-controls">
     <div class="step-counter" id="stepCounter">STEP 0</div>
-    <button class="btn" onclick="resetSim()">Reset</button>
-    <button class="btn" onclick="stepSim()">Step (clk trigger)</button>
-    <button class="btn success" id="btnRun" onclick="runSim()">Run</button>
+    <button class="btn" aria-label="Reset" onclick="resetSim()"><span aria-hidden="true">↺</span> Reset</button>
+    <button class="btn" id="btnBack" aria-label="Back" onclick="stepBack()" disabled><span aria-hidden="true">←</span> Back</button>
+    <button class="btn" aria-label="Step" onclick="stepSim()"><span aria-hidden="true">→</span> Step</button>
+    <button class="btn embed-theme-btn" aria-label="Toggle theme" title="Toggle theme" onclick="toggleTheme()"><span id="themeIconEmbed" aria-hidden="true">☾</span></button>
+    <button class="btn success" id="btnRun" onclick="runSim()">▶ Run</button>
     <div style="width:1px;height:24px;background:var(--border);margin:0 2px"></div>
     
     
   </div>
 </header>
 
+<div id="saveStatus" role="status" aria-live="polite" hidden></div>
+<div id="storageNotice" role="region" aria-label="Saved-work recovery" hidden>
+  <span id="storageMessage"></span>
+  <button type="button" id="downloadRecovery" onclick="downloadRecoveryData()">Download recovery data</button>
+  <button type="button" id="resumeAutosave" onclick="resumeAutosave()">Keep backup and enable autosave</button>
+</div>
+<div id="embedError" role="alert" hidden></div>
 <div id="appBody">
 <div class="main">
   <div class="info-panel" id="leftPanel">
     <div class="info-section">
       <div class="info-title">Quick Actions</div>
+      <label for="statePicker">Edit state</label>
+      <select id="statePicker" class="editor-input" onchange="selectState(this.value,true)"></select>
       <div class="state-drag-wrap">
-        <div class="state-drag moore" draggable="true" ondragstart="dragStateStart(event,'moore')">Add Moore State</div>
-        <div class="state-drag mealy" draggable="true" ondragstart="dragStateStart(event,'mealy')">Add Mealy State</div>
-        <button class="btn" id="btnForce" onclick="toggleForceLayout()">Force Layout</button>
-        <button class="btn" id="btnSimplify" onclick="toggleSimplify()">Simplify Arrows</button>
+        <button type="button" class="state-drag moore" draggable="true" ondragstart="dragStateStart(event,'moore')" onclick="addStateCentered('moore')">Add Moore State</button>
+        <button type="button" class="state-drag mealy" draggable="true" ondragstart="dragStateStart(event,'mealy')" onclick="addStateCentered('mealy')">Add Mealy State</button>
       </div>
+  <div class="mode-switch">
+    <span id="modeSwitchLabel">All Moore</span>
+    <label class="switch">
+      <input type="checkbox" id="modeSwitch" aria-labelledby="modeSwitchLabel" onchange="setAllModesFromSwitch(this.checked)">
+      <span class="slider"></span>
+    </label>
+  </div>
+
     </div>
     <div class="info-section">
       <div class="editor-panel" id="editorPanel"></div>
@@ -375,12 +469,12 @@ body.hide-sidebars .resize-handle { display:none; }
   <div class="resize-handle" id="rightResizer"></div>
   <div class="right-panel" id="rightPanel">
     <div class="panel-tabs" id="panelTabs">
-      <div class="panel-tab active" id="tabVars" onclick="switchTab('vars')">VARS</div>
+      <button type="button" class="panel-tab active" id="tabVars" onclick="switchTab('vars')">VARS</button>
       
-      <div class="panel-tab" id="tabTable" onclick="switchTab('table')">TABLE</div>
+      <button type="button" class="panel-tab" id="tabTable" onclick="switchTab('table')">TABLE</button>
        
-       <div class="panel-tab" id="synth" onclick="toggleExpandMode();">SYNTHESIZE</div>
-       <div class="panel-tab" id="tabLog" onclick="switchTab('log')">LOG</div>
+       <button type="button" class="panel-tab" id="synth" onclick="toggleExpandMode();">SYNTHESIZE</button>
+       <button type="button" class="panel-tab" id="tabLog" onclick="switchTab('log')">LOG</button>
     </div>
     <div class="panel-content" id="panelContent"></div>
   </div>
@@ -392,14 +486,15 @@ body.hide-sidebars .resize-handle { display:none; }
   <div class="bottom-header">
     <div class="bottom-header-title">EXCITATION ANALYSIS</div>
     <div class="bottom-tab-sep"></div>
-    <div class="bottom-tab active" id="btabExc" onclick="setBottomTab('exc')">EXCITATION TABLE + KMAP</div>
-    <div class="bottom-tab" id="btabOneHot" onclick="setBottomTab('onehot')">ONE-HOT ENCODING</div>
-    <div class="bottom-tab" id="btabRef" onclick="setBottomTab('ref')">FLIP-FLOP REFERENCE</div>
+    <button type="button" class="bottom-tab active" id="btabExc" onclick="setBottomTab('exc')">EXCITATION TABLE + KMAP</button>
+    <button type="button" class="bottom-tab" id="btabOneHot" onclick="setBottomTab('onehot')">ONE-HOT ENCODING</button>
+    <button type="button" class="bottom-tab" id="btabRef" onclick="setBottomTab('ref')">FLIP-FLOP REFERENCE</button>
     <div class="bottom-header-right">
       <span id="bottomInfo" style="font-size:16px;color:var(--text3);font-family:var(--mono)"></span>
       <button class="bottom-close-btn" onclick="closeBottomPanel()">✕ Close</button>
     </div>
   </div>
+  <div id="resetSummary" class="reset-summary"></div>
   <div class="bottom-body" id="bottomBody">
     <div class="bottom-pane" id="bottomLeft"></div>
     <div class="bottom-pane-divider" id="bottomPaneDivider"></div>
@@ -441,7 +536,7 @@ body.hide-sidebars .resize-handle { display:none; }
       <li><strong>Quick Navigation</strong>
         <ul>
           <li>Drag states around the grid</li>
-          <li>Click a state to edit transitions</li>
+          <li>Click a state, or choose it in Edit state, to edit transitions. You can also Tab to a state and press Enter.</li>
           <li>Drag curve handles to reroute arrows</li>
           <li>Drag arrow heads to change target state</li>
           <li>Left-click drag on canvas to pan</li>
@@ -458,40 +553,50 @@ body.hide-sidebars .resize-handle { display:none; }
       <li><strong>Top bar</strong>
         <ul>
           <li><strong>File</strong>: save, load, or manage your current FSM design.</li>
-          <li><strong>View</strong>: show or hide panels and switch between light and dark mode.</li>
+          <li><strong>View</strong>: open diagram tools and appearance settings:
+            <ul>
+              <li><strong>Sidebars</strong>: show or hide the editing and analysis sidebars.</li>
+              <li><strong>Fit Diagram</strong>: fit all states and arrows in the canvas. Manual pan, zoom, or dragging leaves automatic fitting.</li>
+              <li><strong>Force Layout</strong>: automatically reposition states. A check mark means it is enabled.</li>
+              <li><strong>Simplify Arrows</strong>: combine transitions with the same destination and output into one labeled arrow. A check mark means it is enabled.</li>
+              <li><strong>Toggle theme</strong>: switch between light and dark mode.</li>
+            </ul>
+          </li>
           <li><strong>About</strong>: opens project information and credits.</li>
           <li><strong>Help</strong>: opens this guide.</li>
-          <li><strong>+ Input Bit</strong> / <strong>- Input Bit</strong>: add or remove input variables used by transitions.</li>
-          <li><strong>+ Output Bit</strong> / <strong>- Output Bit</strong>: add or remove output variables used by states.</li>
-          <li><strong>All Moore</strong>: toggles whether states behave as Moore-style output states.</li>
           <li><strong>Step 0</strong>: shows the current simulation step count.</li>
           <li><strong>Reset</strong>: returns the simulation to its initial condition and clears the current run state.</li>
-          <li><strong>Step</strong>: advances the FSM by one input evaluation.</li>
-          <li><strong>Run</strong>: runs the simulation continuously.</li>
+          <li><strong>Back</strong>: pause execution and restore the previous clock step, including its inputs, outputs, and log. Up to 300 steps are available in the current session. Reset, loading, Undo, setting the current state manually, or changing FSM logic clears this history. Layout and input toggles retain it. Back is disabled when there is no previous step.</li>
+          <li><strong>Step</strong>: advance the FSM by one clock step using the current inputs.</li>
+          <li><strong>Run</strong>: runs continuously. Focusing a name, transition, or synthesis flip-flop field pauses execution; live input-bit buttons can still be toggled while running.</li>
+          <li><strong>Ctrl/Cmd+S</strong>: exports the current workspace. Browser-local autosave runs quietly; save failures or recovery warnings appear below the toolbar.</li>
+          <li><strong>Recovery</strong>: if saved work cannot be restored, autosave pauses. Download recovery data or retain a browser recovery copy before enabling autosave.</li>
         </ul>
       </li>
       <li><strong>Left panel: quick actions and editor</strong>
         <ul>
-          <li><strong>Add Moore State</strong>: drag this onto the canvas to create a Moore state.</li>
-          <li><strong>Add Mealy State</strong>: drag this onto the canvas to create a Mealy state.</li>
-          <li><strong>Force Layout</strong>: automatically repositions states to keep the graph organized.</li>
-          <li><strong>Simplify Arrows</strong>: merges or tidies overlapping transition arrows when possible.</li>
+          <li><strong>Add Moore State</strong>: drag onto the canvas, or activate the button with click/Enter/Space to add a state in view.</li>
+          <li><strong>Add Mealy State</strong>: drag onto the canvas, or activate the button with click/Enter/Space.</li>
+          <li><strong>All Moore / All Mealy / Mixed</strong>: the switch below the state-creation circles converts all states to Moore or Mealy behavior. Mixed indicates the FSM contains both types; ambiguous Mealy-to-Moore output choices require confirmation.</li>
+          <li><strong>Set Initial</strong>: designates the state used by Reset. Synthesis shows the register initialization values.</li>
           <li><strong>State editor</strong>: click a state on the canvas to edit its name, outputs, and transitions here.</li>
         </ul>
       </li>
+      <li><strong>Website embedding</strong>: save the design to JSON, then run <code>python build_embed.py your_fsm.json</code>. The generated page starts at the initial state with the saved inputs, offers Reset / Back / Step, input toggles, a theme button and analysis, and keeps the design fixed. It does not use browser autosave. Use <code>--no-synth</code> to omit synthesis. In an embed, Space steps, Shift+Space goes back, and R resets when a control is not focused.</li>
       <li><strong>Center canvas</strong>
         <ul>
           <li>Drag states to reposition them on the grid.</li>
-          <li>Click a state to select it and open its editor.</li>
-          <li>Drag the curve handle at the middle of a transition to reshape its path.</li>
+          <li>Click a state to select it and open its editor. Choosing “Choose a state” in the state picker clears that selection.</li>
+          <li>Drag a transition’s curvature handle to reshape its path. Handles stay in front of state circles, so an overlapping handle receives the click.</li>
+          <li>The transition selected by the current input has a bold blue label, including when arrows are simplified. This distinguishes the active label from other outgoing transitions.</li>
           <li>Drag an arrow head to retarget the transition to another state.</li>
-          <li>Left-click and drag on empty canvas space to pan around the diagram.</li>
+          <li>Left-click and drag on empty canvas space to pan around the diagram. State and curve coordinates are bounded to ±1,000,000; the camera origin is bounded to ±100,000,000 so saved designs remain reloadable, even at extreme zoom.</li>
         </ul>
       </li>
       <li><strong>Top-right input and output boxes</strong>
         <ul>
-          <li><strong>Inputs</strong>: click each input bit to toggle between 0 and 1 before stepping or running the machine.</li>
-          <li><strong>Outputs</strong>: shows the current output bits of the active state or transition behavior.</li>
+          <li><strong>Inputs</strong>: use the + / − buttons in this floating panel to add or remove input variables. Click each input bit, or focus it and press Space/Enter, to toggle between 0 and 1 before stepping or while Run continues. Focus stays on that bit for repeated toggles. Wheel scrolling over these panels scrolls their contents instead of zooming the canvas.</li>
+          <li><strong>Outputs</strong>: shows the current output bits of the active state or transition behavior. Its + / − buttons add or remove output variables. Removing an input or output first previews the named bit and the entries/values that will be discarded; Cancel preserves the design, and Undo can restore an accepted removal.</li>
         </ul>
       </li>
       <li><strong>Right panel</strong>
@@ -499,13 +604,13 @@ body.hide-sidebars .resize-handle { display:none; }
           <li><strong>VARS</strong>: displays the current values of input bits, state bits, and related variables.</li>
           
           <li><strong>TABLE</strong>: shows the state transition table for the current FSM.</li>
-          <li><strong>SYNTHESIZE</strong> in the table view: opens the bottom panel with the excitation table and Karnaugh map analysis.</li>
-          <li><strong>LOG</strong>: records simulation events step by step.</li>
+          <li><strong>SYNTHESIZE</strong> in the right sidebar: opens the bottom panel with the excitation table and Karnaugh map analysis.</li>
+          <li><strong>LOG</strong>: records clock events, distinguishing the traversed Mealy transition output (or pre-clock Moore output) from the post-clock output.</li>
         </ul>
       </li>
       <li><strong>Bottom excitation-analysis panel</strong>
         <ul>
-          <li><strong>Excitation Table + KMap</strong>: shows flip-flop input requirements and simplified expressions.</li>
+          <li><strong>Excitation Table + KMap</strong>: shows flip-flop input requirements and simplified expressions. Colored bounding outlines enclose each group using the legend’s colors. Their dimensions follow the cells in the group. Overlapping groups use offset outlines. Groups wrapping across opposite edges or spanning five-/six-variable submaps appear as separate outlined portions with the same group color; hover a cell to see its group numbers. Hover or focus a legend button to emphasize a group; click or press Enter/Space to pin it, and activate it again to show all groups. Groups are scoped to their own map; pins clear when the analysis is rebuilt. A constant-one function outlines the entire map.</li>
           <li><strong>One-Hot Encoding</strong>: shows a one-hot encoded version of the state transition table.</li>
           <li><strong>Flip-Flop Reference</strong>: displays the reference excitation tables for supported flip-flop types.</li>
           
@@ -513,7 +618,7 @@ body.hide-sidebars .resize-handle { display:none; }
         </ul>
       </li>
     </ul>
-    <div class="meta">Tip: for cleaner manual layouts, turn Force Layout off before moving states around. You can then drag curve handles and arrow heads to fine-tune transition routes.</div>
+    <div class="meta">Tip: for cleaner manual layouts, use View → Force Layout to turn it off before moving states around. You can then drag curve handles and arrow heads to fine-tune transition routes.</div>
     <div class="modal-actions">
       <button class="btn" onclick="closeHelp()">Close</button>
     </div>
@@ -533,6 +638,11 @@ body.hide-sidebars .resize-handle { display:none; }
 </div>
 
 <script>
+// build_embed.py replaces only the marked assignment; null keeps the full editor.
+/*BUILD_EMBED_KIND:fsm*/
+const EMBED = null; /*BUILD_EMBED_DESIGN*/
+function embedOpt(name, fallback=true) { return EMBED?.options?.[name] ?? fallback; }
+
 // ══════════════════════════════════════════════════════════════════
 //  STATE
 // ══════════════════════════════════════════════════════════════════
@@ -540,12 +650,39 @@ let states = [];
 let transitions = {};
 let selectedStateId = null;
 let activeStateId = null;
+let initialStateId = null;
 let simStep = 0;
+let stepHistory = [];
+const STEP_HISTORY_LIMIT = 300;
 let simLog = [];
 let showInputLogs = true;
 let simplifyOn = false;
 let undoStack = [];
 const UNDO_LIMIT = 80;
+// Keep synchronous SVG rendering and Boolean minimization within practical bounds.
+const MAX_INPUT_BITS = 6;
+const MAX_OUTPUT_BITS = 16;
+const MAX_STATES = 64;
+const MAX_TRANSITIONS = 1024;
+const MAX_IMPORT_BYTES = 2 * 1024 * 1024;
+const MIN_ZOOM = 0.000001;
+const MAX_ZOOM = 2.5;
+const MAX_COORDINATE = 1e6;
+const MAX_VIEW_COORDINATE = 1e8;
+const TRANSITION_GEOMETRY = ['startAngle','endAngle','cdx','cdy','cx','cy','loopDx','loopDy'];
+function bounded(value,limit) { return Math.max(-limit,Math.min(limit,value)); }
+// Apply the loader's limits to live geometry before rendering or taking a snapshot.
+function constrainGeometry() {
+  view.x=bounded(view.x,MAX_VIEW_COORDINATE); view.y=bounded(view.y,MAX_VIEW_COORDINATE);
+  view.scale=Math.max(MIN_ZOOM,Math.min(MAX_ZOOM,view.scale));
+  states.forEach(s=>{
+    s.x=bounded(s.x,MAX_COORDINATE); s.y=bounded(s.y,MAX_COORDINATE);
+    (transitions[s.id]||[]).forEach(t=>TRANSITION_GEOMETRY.forEach(key=>{
+      if(typeof t[key]==='number') t[key]=bounded(t[key],MAX_COORDINATE);
+    }));
+  });
+}
+const qmCache = new Map();
 let isRunning = false;
 let runInterval = null;
 let idCounter = 1;
@@ -566,15 +703,19 @@ let bottomSplit = 0.5;
 
 let svgEl, canvasWrap;
 let view = { x: 0, y: 0, scale: 1.5 };
+let autoFitView = true;
 let ambiguousStateIds = new Set();
 let pendingMealyToMooreCallback = null;
+let activeModalId = null;
+let modalPreviousFocus = null;
 
 // ── Force layout ────────────────────────────────────────────────
 let forceActive = false;
 let forceAnimId = null;
 let forceTimeoutId = null;
 let forcePinnedId = null;
-const forceVel = {};
+const forceVel = Object.create(null);
+let forceUndoSnapshot = null;
 const FORCE_REPEL  = 18000;
 const FORCE_IDEAL  = 220;
 const FORCE_ATTRACT = 0.055;
@@ -695,7 +836,7 @@ function renderExcitationTableHTML(rows, numFF, stateBitLabels) {
 
   const header2 = `
     <tr>
-      ${hasInputs ? `<th>${inputNames.slice().reverse().join(' ')}</th>` : ''}
+      ${hasInputs ? `<th>${h(inputNames.slice().reverse().join(' '))}</th>` : ''}
       <th>${stateBitLabels}</th>
       <th>${stateBitLabels}</th>
       ${subHeaders.join('')}
@@ -759,8 +900,9 @@ function numFFForStates() {
 /** Ensure flipFlopTypes array is synced */
 function syncFFTypes() {
   const n = numFFForStates();
-  while (flipFlopTypes.length < n) flipFlopTypes.push('D');
-  flipFlopTypes = flipFlopTypes.slice(0, n);
+  // The array is MSB first: new high bits must not reassign existing Q0/Q1 types.
+  while (flipFlopTypes.length < n) flipFlopTypes.unshift('D');
+  flipFlopTypes = flipFlopTypes.slice(-n);
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -768,6 +910,17 @@ function syncFFTypes() {
 // ══════════════════════════════════════════════════════════════════
 
 function quineMcCluskey(minterms, dontCares, numVars) {
+  const ms = [...new Set(minterms)].sort((a,b)=>a-b);
+  const dc = [...new Set(dontCares)].filter(m=>!ms.includes(m)).sort((a,b)=>a-b);
+  const key = JSON.stringify([numVars, ms, dc]);
+  if (qmCache.has(key)) return qmCache.get(key);
+  const result = minimizeBoolean(ms, dc, numVars);
+  if (qmCache.size >= 256) qmCache.delete(qmCache.keys().next().value);
+  qmCache.set(key, result);
+  return result;
+}
+
+function minimizeBoolean(minterms, dontCares, numVars) {
   if (numVars === 0) return minterms.length > 0 ? '1' : '0';
   const uniqueMinterms = [...new Set(minterms)].sort((a, b) => a - b);
   const dcSet = new Set(dontCares.filter(m => !uniqueMinterms.includes(m)));
@@ -876,25 +1029,42 @@ function quineMcCluskey(minterms, dontCares, numVars) {
     function normalizeProduct(product) {
       return [...new Set(product)].sort((a, b) => a - b);
     }
+    let coverWork = 0;
     function absorb(products) {
       const normalized = products
         .map(normalizeProduct)
         .sort((a, b) => a.length - b.length || a.join(',').localeCompare(b.join(',')));
       const result = [];
-      normalized.forEach(prod => {
+      for (const prod of normalized) {
+        coverWork += result.length;
+        if (coverWork > 100000) return null;
         const subsumed = result.some(existing => existing.every(v => prod.includes(v)));
         if (!subsumed) result.push(prod);
-      });
+      }
       return result;
     }
 
     let products = [[]];
     for (const sum of chart) {
+      if (products.length * sum.length > 4096) { products = null; break; }
       const nextProducts = [];
       products.forEach(prod => {
         sum.forEach(choice => nextProducts.push([...prod, choice]));
       });
       products = absorb(nextProducts);
+      if (!products) break;
+    }
+
+    // A bounded greedy cover remains logically exact, but may use extra terms.
+    if (!products) {
+      while (uniqueMinterms.some(m => !covered.has(m))) {
+        const ranked = candidates.filter(pi => !selectedBins.has(pi.bin)).map(pi => ({
+          pi, gain: pi.terms.filter(t => uniqueMinterms.includes(t) && !covered.has(t)).length
+        })).sort((a,b) => b.gain-a.gain || literalCount(a.pi.bin)-literalCount(b.pi.bin));
+        if (!ranked[0]?.gain) throw new Error('Unable to cover Boolean minterms');
+        selectPI(ranked[0].pi);
+      }
+      return { pis: selected, numVars, minimal: false };
     }
 
     const best = products.sort((a, b) => {
@@ -945,6 +1115,9 @@ function getKmapGroupColor(index) {
 }
 
 function buildKmapGroups(qmResult, minterms, dontCares, varNames) {
+  if (new Set(minterms).size===2**varNames.length) {
+    return [{id:0,color:getKmapGroupColor(0),expr:'1',cells:[...new Set(minterms)].sort((a,b)=>a-b)}];
+  }
   if (!qmResult || typeof qmResult === 'string' || !qmResult.pis) return [];
   const allowed = new Set([...minterms, ...dontCares]);
   return qmResult.pis.map((pi, index) => {
@@ -969,15 +1142,53 @@ function buildKmapGroupMap(groups) {
   return map;
 }
 
-function renderKmapCell(localIdx, globalIdx, mintermSet, dcSet, groupMap) {
+function kmapNeighbors(grid,row,col,globalIndexForCell) {
+  const at=(r,c)=>grid[r]?.[c]===undefined?null:globalIndexForCell(grid[r][c]);
+  return {top:at(row-1,col),right:at(row,col+1),bottom:at(row+1,col),left:at(row,col-1)};
+}
+function kmapGroupEdges(group,neighbors) {
+  return Object.fromEntries(Object.entries(neighbors).map(([side,cell])=>[side,cell===null || !group.cells.includes(cell)]));
+}
+function renderKmapCell(localIdx, globalIdx, mintermSet, dcSet, groupMap, neighbors) {
   const groups = groupMap.get(globalIdx) || [];
-  const dots = groups.map(group => `<span class="kmap-group-dot" style="background:${group.color}" title="Group ${group.id + 1}: ${h(group.expr)}"></span>`).join('');
-  return `<td class="${cellClass(localIdx,mintermSet,dcSet)}"><div class="kmap-cell-inner"><span>${cellVal(localIdx,mintermSet,dcSet)}</span>${dots ? `<span class="kmap-group-strip">${dots}</span>` : '<span class="kmap-group-strip"></span>'}</div></td>`;
+  const outlines=groups.map(group=>{
+    const edges=kmapGroupEdges(group,neighbors);
+    // Offset overlapping outlines consistently across every cell of the group.
+    const inset=3+(group.id%4)*3;
+    const style=Object.entries(edges).map(([side,boundary])=>`${side}:${boundary?inset+'px':'-1px'};border-${side}-width:${boundary?2:0}px`).join(';');
+    const corners=[[edges.top,edges.left],[edges.top,edges.right],[edges.bottom,edges.right],[edges.bottom,edges.left]].map(([a,b])=>a&&b?'6px':'0').join(' ');
+    return `<span class="kmap-group-outline" data-group="${group.id}" aria-hidden="true" style="border-color:${group.color};${style};border-radius:${corners}"></span>`;
+  }).join('');
+  const description=groups.map(group=>`G${group.id+1}: ${group.expr}`).join('; ');
+  return `<td class="${cellClass(localIdx,mintermSet,dcSet)}" data-minterm="${globalIdx}" title="${h(description)}">${outlines}<div class="kmap-cell-inner"><span>${cellVal(localIdx,mintermSet,dcSet)}</span></div></td>`;
 }
 
+function emphasizeKmapGroup(section,preview=null) {
+  const selected=section.dataset.selectedGroup ?? null;
+  const active=preview ?? selected;
+  section.querySelectorAll('.kmap-group-outline').forEach(outline=>{
+    outline.classList.toggle('kmap-group-muted',active!==null && outline.dataset.group!==active);
+  });
+  section.querySelectorAll('.kmap-group-item').forEach(button=>{
+    button.setAttribute('aria-pressed',String(button.dataset.group===selected));
+    button.classList.toggle('kmap-group-muted',active!==null && button.dataset.group!==active);
+  });
+}
+function previewKmapGroup(button,show=true) {
+  const section=button.closest('.kmap-section');
+  if(section) emphasizeKmapGroup(section,show?button.dataset.group:null);
+}
+function toggleKmapGroup(button) {
+  const section=button.closest('.kmap-section');
+  if(!section)return;
+  pauseForEditing();
+  if(section.dataset.selectedGroup===button.dataset.group) delete section.dataset.selectedGroup;
+  else section.dataset.selectedGroup=button.dataset.group;
+  emphasizeKmapGroup(section);
+}
 function renderKmapGroupLegend(groups) {
   if (!groups.length) return '';
-  return `<div class="kmap-groups">${groups.map(group => `<div class="kmap-group-item" title="Cells: ${group.cells.join(', ')}"><span class="kmap-group-swatch" style="background:${group.color}"></span><span>G${group.id + 1}: ${h(group.expr)}</span></div>`).join('')}</div>`;
+  return `<div class="kmap-groups">${groups.map(group => `<button type="button" class="kmap-group-item" data-group="${group.id}" aria-pressed="false" title="Cells: ${group.cells.join(', ')}. Click to pin/unpin this group." onmouseenter="previewKmapGroup(this)" onmouseleave="previewKmapGroup(this,false)" onfocus="pauseForEditing();previewKmapGroup(this)" onblur="previewKmapGroup(this,false)" onclick="toggleKmapGroup(this)"><span class="kmap-group-swatch" style="background:${group.color}"></span><span>G${group.id + 1}: ${h(group.expr)}</span></button>`).join('')}</div>`;
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -1034,8 +1245,8 @@ function render1VarKmap(minterms, dontCares, varNames, groupMap, groups, globalI
   const ms = new Set(minterms), dc = new Set(dontCares);
   const v = varNames[0] || 'A';
   return `<table class="kmap-table">
-    <tr><th>${v}'</th><th>${v}</th></tr>
-    <tr>${renderKmapCell(0,globalIndexForCell(0),ms,dc,groupMap)}${renderKmapCell(1,globalIndexForCell(1),ms,dc,groupMap)}</tr>
+    <tr><th>${h(v)}'</th><th>${h(v)}</th></tr>
+    <tr>${renderKmapCell(0,globalIndexForCell(0),ms,dc,groupMap,kmapNeighbors([[0,1]],0,0,globalIndexForCell))}${renderKmapCell(1,globalIndexForCell(1),ms,dc,groupMap,kmapNeighbors([[0,1]],0,1,globalIndexForCell))}</tr>
   </table>${renderKmapGroupLegend(groups)}`;
 }
 
@@ -1047,12 +1258,12 @@ function render2VarKmap(minterms, dontCares, varNames, groupMap, groups, globalI
     let cells = '';
     for (let c = 0; c < 2; c++) {
       const idx = (r << 1) | c;
-      cells += renderKmapCell(idx,globalIndexForCell(idx),ms,dc,groupMap);
+      cells += renderKmapCell(idx,globalIndexForCell(idx),ms,dc,groupMap,kmapNeighbors([[0,1],[2,3]],r,c,globalIndexForCell));
     }
-    rows += `<tr><th>${A}=${r}</th>${cells}</tr>`;
+    rows += `<tr><th>${h(A)}=${r}</th>${cells}</tr>`;
   }
   return `<table class="kmap-table">
-    <tr class="kmap-header-row"><th class="kmap-corner">${A}\\${B}</th><th>${B}=0</th><th>${B}=1</th></tr>
+    <tr class="kmap-header-row"><th class="kmap-corner">${h(A)}\\${h(B)}</th><th>${h(B)}=0</th><th>${h(B)}=1</th></tr>
     ${rows}
   </table>${renderKmapGroupLegend(groups)}`;
 }
@@ -1061,18 +1272,18 @@ function render3VarKmap(minterms, dontCares, varNames, groupMap, groups, globalI
   const ms = new Set(minterms), dc = new Set(dontCares);
   const [A, B, C] = varNames;
   const colGray = [0,1,3,2]; // BC: 00,01,11,10
-  let headerCols = colGray.map(g => `<th>${B}${C}=${g.toString(2).padStart(2,'0')}</th>`).join('');
+  let headerCols = colGray.map(g => `<th>${h(B)}${h(C)}=${g.toString(2).padStart(2,'0')}</th>`).join('');
   let rows = '';
   for (let r = 0; r < 2; r++) {
     let cells = '';
-    for (const c of colGray) {
+    for (const [column,c] of colGray.entries()) {
       const idx = (r << 2) | c;
-      cells += renderKmapCell(idx,globalIndexForCell(idx),ms,dc,groupMap);
+      cells += renderKmapCell(idx,globalIndexForCell(idx),ms,dc,groupMap,kmapNeighbors([[0,1,3,2],[4,5,7,6]],r,column,globalIndexForCell));
     }
-    rows += `<tr><th>${A}=${r}</th>${cells}</tr>`;
+    rows += `<tr><th>${h(A)}=${r}</th>${cells}</tr>`;
   }
   return `<table class="kmap-table">
-    <tr class="kmap-header-row"><th class="kmap-corner">${A}\\${B}${C}</th>${headerCols}</tr>
+    <tr class="kmap-header-row"><th class="kmap-corner">${h(A)}\\${h(B)}${h(C)}</th>${headerCols}</tr>
     ${rows}
   </table>${renderKmapGroupLegend(groups)}`;
 }
@@ -1081,18 +1292,19 @@ function render4VarKmap(minterms, dontCares, varNames, groupMap, groups, globalI
   const ms = new Set(minterms), dc = new Set(dontCares);
   const [A, B, C, D] = varNames;
   const gray2 = [0,1,3,2];
-  let headerCols = gray2.map(g => `<th>${C}${D}=${g.toString(2).padStart(2,'0')}</th>`).join('');
+  let headerCols = gray2.map(g => `<th>${h(C)}${h(D)}=${g.toString(2).padStart(2,'0')}</th>`).join('');
   let rows = '';
-  for (const r of gray2) {
+  const grid=gray2.map(r=>gray2.map(c=>(r<<2)|c));
+  for (const [row,r] of gray2.entries()) {
     let cells = '';
-    for (const c of gray2) {
+    for (const [column,c] of gray2.entries()) {
       const idx = (r << 2) | c;
-      cells += renderKmapCell(idx,globalIndexForCell(idx),ms,dc,groupMap);
+      cells += renderKmapCell(idx,globalIndexForCell(idx),ms,dc,groupMap,kmapNeighbors(grid,row,column,globalIndexForCell));
     }
-    rows += `<tr><th>${A}${B}=${r.toString(2).padStart(2,'0')}</th>${cells}</tr>`;
+    rows += `<tr><th>${h(A)}${h(B)}=${r.toString(2).padStart(2,'0')}</th>${cells}</tr>`;
   }
   return `<table class="kmap-table">
-    <tr class="kmap-header-row"><th class="kmap-corner">${A}${B}\\${C}${D}</th>${headerCols}</tr>
+    <tr class="kmap-header-row"><th class="kmap-corner">${h(A)}${h(B)}\\${h(C)}${h(D)}</th>${headerCols}</tr>
     ${rows}
   </table>${renderKmapGroupLegend(groups)}`;
 }
@@ -1105,8 +1317,8 @@ function render5VarKmap(minterms, dontCares, varNames, groupMap, groups) {
   const ms1 = minterms.filter(m => !!(m & 16)).map(m => m & 15);
   const dc1 = dontCares.filter(m => !!(m & 16)).map(m => m & 15);
   return `<div style="display:flex;gap:16px;flex-wrap:wrap">
-    <div><div class="kmap-axis-label">${A}=0</div>${render4VarKmap(ms0, dc0, sub4vars, groupMap, [], idx => idx)}</div>
-    <div><div class="kmap-axis-label">${A}=1</div>${render4VarKmap(ms1, dc1, sub4vars, groupMap, [], idx => 16 + idx)}</div>
+    <div><div class="kmap-axis-label">${h(A)}=0</div>${render4VarKmap(ms0, dc0, sub4vars, groupMap, [], idx => idx)}</div>
+    <div><div class="kmap-axis-label">${h(A)}=1</div>${render4VarKmap(ms1, dc1, sub4vars, groupMap, [], idx => 16 + idx)}</div>
   </div>${renderKmapGroupLegend(groups)}`;
 }
 
@@ -1119,7 +1331,7 @@ function render6VarKmap(minterms, dontCares, varNames, groupMap, groups) {
     const prefix = ((aVal << 1) | bVal) << 4;
     const ms = minterms.filter(m => (m >> 4) === ((aVal<<1)|bVal)).map(m => m & 15);
     const dc = dontCares.filter(m => (m >> 4) === ((aVal<<1)|bVal)).map(m => m & 15);
-    html += `<div><div class="kmap-axis-label">${A}=${aVal}, ${B}=${bVal}</div>${render4VarKmap(ms, dc, sub4vars, groupMap, [], idx => prefix + idx)}</div>`;
+    html += `<div><div class="kmap-axis-label">${h(A)}=${aVal}, ${h(B)}=${bVal}</div>${render4VarKmap(ms, dc, sub4vars, groupMap, [], idx => prefix + idx)}</div>`;
   }
   html += '</div>';
   return `${html}${renderKmapGroupLegend(groups)}`;
@@ -1338,7 +1550,8 @@ function renderKmapPanel() {
 
   // Variable names: input bits MSB→LSB, then state bits MSB→LSB
   const varNames = [];
-  for (let i = inputBitsCount - 1; i >= 0; i--) varNames.push(inputNames[i] || `b${i}`);
+  const inputAliases=getSynthesisSignalNames().inputs;
+  for (let i = inputBitsCount - 1; i >= 0; i--) varNames.push(inputAliases[i]);
   for (let i = 0; i < numFF; i++) varNames.push(`Q${numFF - 1 - i}`);
 
   let sectionsHTML = '';
@@ -1368,7 +1581,7 @@ function renderKmapPanel() {
 
     sectionsHTML += `<div class="kmap-section">
       <div class="kmap-title">${h(label)}</div>
-      <div class="kmap-expr"><span class="expr-label">Expression:</span>${h(exprStr)}</div>
+      <div class="kmap-expr"><span class="expr-label">Expression:</span>${h(exprStr)}</div>${minimizationNote(qmResult)}
       <div style="font-size:16px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">${mintermStr}${dcStr}</div>
       ${kmapHTML}
     </div>`;
@@ -1394,7 +1607,7 @@ function renderKmapPanel() {
 
     sectionsHTML += `<div class="kmap-section">
       <div class="kmap-title">Output: ${h(name)}</div>
-      <div class="kmap-expr"><span class="expr-label">Expression:</span>${h(exprStr)}</div>
+      <div class="kmap-expr"><span class="expr-label">Expression:</span>${h(exprStr)}</div>${minimizationNote(qmResult)}
       <div style="font-size:16px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">${mintermStr}</div>
       ${kmapHTML}
     </div>`;
@@ -1406,8 +1619,9 @@ function renderKmapPanel() {
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
       <div class="editor-title" style="margin:0">Kmap Solver</div>
       <button class="btn sm" onclick="exitExpandMode()">← Back</button>
-      <span style="font-size:16px;color:var(--text3);font-family:var(--mono)">${numVars} vars: ${varNamesStr}</span>
+      <span style="font-size:16px;color:var(--text3);font-family:var(--mono)">${numVars} vars: ${h(varNamesStr)}</span>
     </div>
+    ${renderSignalAliases()}
     ${sectionsHTML}
   `;
 }
@@ -1420,16 +1634,20 @@ function renderKmapPanel() {
 let bottomTab = 'exc'; // 'exc' | 'onehot' | 'ref'
 
 function enterExpandMode() {
+  if (!embedOpt('synth')) return;
   expandMode = true;
   syncFFTypes();
   const bp = document.getElementById('bottomPanel');
   const br = document.getElementById('bottomResizer');
   bp.classList.add('open');
   br.classList.add('open');
+  document.getElementById('synth').classList.add('active');
   renderBottomPanel();
+  saveToStorage();
 }
 
 function toggleExpandMode() {
+  if (!embedOpt('synth')) return;
   expandMode = !expandMode;
   
   const synthTab = document.getElementById('synth');
@@ -1455,27 +1673,40 @@ function closeBottomPanel() {
   expandMode = false;
   document.getElementById('bottomPanel').classList.remove('open');
   document.getElementById('bottomResizer').classList.remove('open');
-  // Restore normal table view in sidebar so it shows the Expand button again
+  document.getElementById('synth').classList.remove('active');
+  saveToStorage();
+  // Refresh the selected sidebar independently of the bottom panel.
   if (activeTab === 'table') renderNormalTablePanel();
 }
 
 function setBottomTab(tab) {
+  if (!embedOpt('synth')) return;
   bottomTab = tab;
   document.getElementById('btabExc').classList.toggle('active', tab === 'exc');
   document.getElementById('btabOneHot').classList.toggle('active', tab === 'onehot');
   document.getElementById('btabRef').classList.toggle('active', tab === 'ref');
   renderBottomPanel();
+  saveToStorage();
 }
 
 function changeFFType(ffIndex, type) {
+  if (!embedOpt('synth')) return;
   syncFFTypes();
   pushUndo();
   flipFlopTypes[ffIndex] = type;
   renderBottomPanel();
 }
 
+function renderResetSummary() {
+  const initial=getInitialState();
+  if (!initial) return 'Add a state to define reset/initialization values.';
+  const index=states.findIndex(s=>s.id===initial.id);
+  return `Initial state: <strong>${h(initial.name)}</strong>. Classical: ${getStateBitLabels(numFFForStates()).join(' ')} = ${getStateBinary(initial.id,numFFForStates())}. One-hot: Q${index}=1; all other Q bits=0. <span style="color:var(--text2)">Initialize the registers to these values; reset circuitry is not included in the equations.</span>`;
+}
 function renderBottomPanel() {
+  if (!embedOpt('synth')) return;
   syncFFTypes();
+  document.getElementById('resetSummary').innerHTML=renderResetSummary();
   const numFF = flipFlopTypes.length;
   const info = document.getElementById('bottomInfo');
   if (info) info.textContent = `${numFF} Flip-Flops (classical) · ${states.length} Flip-Flops (one-hot) · ${states.length} states · ${inputBitsCount} input bit${inputBitsCount>1?'s':''}`;
@@ -1492,8 +1723,7 @@ function renderBottomPanel() {
   } else {
     if (divider) divider.style.display = 'block';
     if (rightPane) rightPane.style.display = 'block';
-    if (leftPane) leftPane.style.flex = '1 1 0';
-    if (rightPane) rightPane.style.flex = '1 1 0';
+    applyBottomSplit();
     if (bottomTab === 'onehot') {
       renderBottomOneHotEquations();
     } else {
@@ -1541,7 +1771,8 @@ function renderBottomKmap() {
   const { colLabels, mintermSets, dcSets, outMinterms, outDCs } = buildExcitationMinterms();
 
   const varNames = [];
-  for (let i = inputBitsCount - 1; i >= 0; i--) varNames.push(inputNames[i] || `b${i}`);
+  const inputAliases=getSynthesisSignalNames().inputs;
+  for (let i = inputBitsCount - 1; i >= 0; i--) varNames.push(inputAliases[i]);
   for (let i = 0; i < numFF; i++) varNames.push(`Q${numFF - 1 - i}`);
 
   let sectionsHTML = '';
@@ -1563,7 +1794,7 @@ function renderBottomKmap() {
     const dcStr = dc.length > 0 ? ` + d(${dc.sort((a,b)=>a-b).join(',')})` : '';
     sectionsHTML += `<div class="kmap-section">
       <div class="kmap-title">${h(label)}</div>
-      <div class="kmap-expr"><span class="expr-label">Expression:</span>${h(exprStr)}</div>
+      <div class="kmap-expr"><span class="expr-label">Expression:</span>${h(exprStr)}</div>${minimizationNote(qmResult)}
       <div style="font-size:16px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">${mintermStr}${dcStr}</div>
       ${kmapHTML}
     </div>`;
@@ -1585,14 +1816,15 @@ function renderBottomKmap() {
     const mintermStr = ms.length > 0 ? `Σm(${ms.sort((a,b)=>a-b).join(',')})` : 'No minterms';
     sectionsHTML += `<div class="kmap-section">
       <div class="kmap-title">Output: ${h(name)}</div>
-      <div class="kmap-expr"><span class="expr-label">Expression:</span>${h(exprStr)}</div>
+      <div class="kmap-expr"><span class="expr-label">Expression:</span>${h(exprStr)}</div>${minimizationNote(qmResult)}
       <div style="font-size:16px;color:var(--text3);font-family:var(--mono);margin-bottom:8px">${mintermStr}</div>
       ${kmapHTML}
     </div>`;
   });
 
   document.getElementById('bottomRight').innerHTML = `
-    <div class="bottom-pane-label">Kmap Solver <span style="font-weight:400;color:var(--text3)">(vars: ${varNames.join(', ')})</span></div>
+    <div class="bottom-pane-label">Kmap Solver <span style="font-weight:400;color:var(--text3)">(vars: ${h(varNames.join(', '))})</span></div>
+    ${renderSignalAliases()}
     ${sectionsHTML}
   `;
 }
@@ -1604,6 +1836,37 @@ function makeSignalName(raw, fallback) {
   return name;
 }
 
+// Display names remain unchanged; equation identifiers share a unique namespace.
+function getSynthesisSignalNames() {
+  const used = new Set(['D','T','S','R','J','K']);
+  for (let i=0; i<Math.max(states.length,numFFForStates()); i++) {
+    for (const prefix of ['Q','D','T','S','R','J','K']) used.add(`${prefix}${i}`);
+  }
+  const allocate = (raw, fallback) => {
+    const base=makeSignalName(raw,fallback);
+    let alias=base, suffix=2;
+    while (used.has(alias)) alias=`${base}_${suffix++}`;
+    used.add(alias);
+    return alias;
+  };
+  return {
+    inputs:inputNames.map((name,i)=>allocate(name,`x${i}`)),
+    outputs:outputNames.map((name,i)=>allocate(name,`z${i}`))
+  };
+}
+
+function renderSignalAliases() {
+  const aliases=getSynthesisSignalNames();
+  const mappings=[];
+  inputNames.forEach((name,i)=>{ if(name!==aliases.inputs[i]) mappings.push(`Input ${i}: ${name} → ${aliases.inputs[i]}`); });
+  outputNames.forEach((name,i)=>{ if(name!==aliases.outputs[i]) mappings.push(`Output ${i}: ${name} → ${aliases.outputs[i]}`); });
+  return mappings.length ? `<div class="editor-hint">Equation names: ${h(mappings.join('; '))}</div>` : '';
+}
+
+function minimizationNote(result) {
+  return result?.minimal === false ? '<div class="editor-hint">Equivalent expression; a bounded cover was used, so it may not be minimal.</div>' : '';
+}
+
 function getOneHotStateSignals() {
   return states.map((s, idx) => ({
     id: s.id,
@@ -1613,16 +1876,16 @@ function getOneHotStateSignals() {
 }
 
 function getOneHotInputVarNames() {
-  const names = [];
-  for (let i = inputBitsCount - 1; i >= 0; i--) names.push(makeSignalName(inputNames[i] || `x${i}`, `x${i}`));
-  return names;
+  return getSynthesisSignalNames().inputs.slice().reverse();
 }
 
-function buildOneHotInputExpr(minterms, inputVarNames) {
+function buildOneHotInputExpr(minterms, inputVarNames, onHeuristic=()=>{}) {
   const unique = [...new Set(minterms)].sort((a,b)=>a-b);
   if (!unique.length) return '0';
   if (unique.length === (1 << inputBitsCount)) return '1';
-  return formatBoolExpr(quineMcCluskey(unique, [], inputBitsCount), inputVarNames);
+  const result=quineMcCluskey(unique, [], inputBitsCount);
+  if (result?.minimal === false) onHeuristic();
+  return formatBoolExpr(result, inputVarNames);
 }
 
 function combineOneHotTerm(stateSignal, inputExpr) {
@@ -1635,6 +1898,9 @@ function buildOneHotEquations() {
   const stateSignals = getOneHotStateSignals();
   const inputVarNames = getOneHotInputVarNames();
   const signalById = Object.fromEntries(stateSignals.map(s => [s.id, s.signal]));
+  const outputAliases=getSynthesisSignalNames().outputs;
+  let heuristicUsed=false;
+  const inputExpression=ms=>buildOneHotInputExpr(ms,inputVarNames,()=>{heuristicUsed=true;});
 
   const nextStateEquations = stateSignals.map(target => {
     const stateIndex = stateSignals.findIndex(s => s.id === target.id);
@@ -1645,7 +1911,7 @@ function buildOneHotEquations() {
         const t = transitions[source.id]?.[i];
         if (t && t.to === target.id) minterms.push(i);
       }
-      const inputExpr = buildOneHotInputExpr(minterms, inputVarNames);
+      const inputExpr = inputExpression(minterms);
       const term = combineOneHotTerm(signalById[source.id], inputExpr);
       if (term) terms.push(term);
     });
@@ -1669,27 +1935,29 @@ function buildOneHotEquations() {
         const out = t ? normalizeTransitionOutputs(t).out : [];
         if (out[oi] === 1) minterms.push(i);
       }
-      const inputExpr = buildOneHotInputExpr(minterms, inputVarNames);
+      const inputExpr = inputExpression(minterms);
       const term = combineOneHotTerm(signalById[source.id], inputExpr);
       if (term) terms.push(term);
     });
     return {
-      label: makeSignalName(name || `z${oi}`, `z${oi}`),
+      label: outputAliases[oi],
       outputName: name || `z${oi}`,
       expr: terms.length ? terms.join(' + ') : '0'
     };
   });
 
-  return { stateSignals, inputVarNames, nextStateEquations, outputEquations };
+  return { stateSignals, inputVarNames, nextStateEquations, outputEquations, heuristicUsed };
 }
 
 function renderBottomOneHotEquations() {
-  const { stateSignals, inputVarNames, nextStateEquations, outputEquations } = buildOneHotEquations();
+  const { stateSignals, inputVarNames, nextStateEquations, outputEquations, heuristicUsed } = buildOneHotEquations();
 
   const stateLegend = stateSignals.map((s, idx) => `<div style="font-size:18px;color:var(--text2);margin:4px 0"><span style="font-family:var(--mono);font-weight:600">${h(s.name)}</span> = Q${idx}</div>`).join('');
 
   document.getElementById('bottomLeft').innerHTML = `
     <div class="bottom-pane-label">One-Hot Next-State Equations</div>
+    ${renderSignalAliases()}
+    ${minimizationNote({minimal:!heuristicUsed})}
     ${nextStateEquations.map(eq => `
       <div class="equation-card">
         <div class="equation-title">${h(eq.stateName)}</div>
@@ -1748,10 +2016,18 @@ function renderBottomFFRef() {
 function toggleForceLayout() { setForceActive(!forceActive); }
 
 function setForceActive(on) {
+  if (EMBED) return;
+  if (on === forceActive || (on && !states.length)) return;
+  if (on) {
+    pauseForEditing();
+    forceUndoSnapshot=captureState();
+    for (const id of Object.keys(forceVel)) delete forceVel[id];
+  }
   forceActive = on;
   const btn = document.getElementById('btnForce');
   if (btn) {
-    btn.textContent = 'Force Layout';
+    btn.setAttribute('aria-pressed',String(forceActive));
+    document.getElementById('menuCheckForce').textContent=forceActive?'✓':'';
     btn.classList.toggle('active', forceActive);
   }
   if (forceActive) {
@@ -1762,18 +2038,24 @@ function setForceActive(on) {
     if (forceAnimId) cancelAnimationFrame(forceAnimId);
     if (forceTimeoutId) clearTimeout(forceTimeoutId);
     forceAnimId = forceTimeoutId = null;
+    forceUndoSnapshot = null;
+    saveToStorage();
   }
 }
 
 function forceTick() {
   if (!forceActive) return;
   states.forEach(s => { if (!forceVel[s.id]) forceVel[s.id] = { vx:0, vy:0 }; });
-  const force = {};
+  const force = Object.create(null);
   states.forEach(s => { force[s.id] = { fx:0, fy:0 }; });
   for (let a = 0; a < states.length; a++) {
     for (let b = a + 1; b < states.length; b++) {
       const sa = states[a], sb = states[b];
-      const dx = sb.x - sa.x, dy = sb.y - sa.y;
+      let dx = sb.x - sa.x, dy = sb.y - sa.y;
+      if (Math.hypot(dx,dy) < 0.001) {
+        const angle=seededJitter(`${sa.id}:${sb.id}`)*Math.PI*2;
+        dx=Math.cos(angle); dy=Math.sin(angle);
+      }
       const dist = Math.max(Math.hypot(dx, dy), 1);
       const mag = FORCE_REPEL / (dist * dist);
       const ux = dx/dist, uy = dy/dist;
@@ -1813,10 +2095,14 @@ function forceTick() {
     maxV = Math.max(maxV, Math.hypot(v.vx, v.vy));
   });
   if (forcePinnedId || maxV > FORCE_THRESH) updateAutoCurves();
+  if (forceUndoSnapshot && (JSON.stringify(forceUndoSnapshot.states.map(s=>[s.x,s.y])) !== JSON.stringify(states.map(s=>[s.x,s.y])) || JSON.stringify(forceUndoSnapshot.transitions) !== JSON.stringify(transitions))) {
+    recordUndo(forceUndoSnapshot); forceUndoSnapshot=null;
+  }
   render();
   if (forcePinnedId || maxV > FORCE_THRESH) {
     forceAnimId = requestAnimationFrame(forceTick);
   } else {
+    saveToStorage();
     forceTimeoutId = setTimeout(() => {
       forceTimeoutId = null;
       if (forceActive) forceAnimId = requestAnimationFrame(forceTick);
@@ -1825,7 +2111,7 @@ function forceTick() {
 }
 
 function lerp(a, b, t) { return a + (b-a)*t; }
-function lerpAngle(a, b, t) { let d = ((b-a+Math.PI)%(2*Math.PI))-Math.PI; return a+d*t; }
+function lerpAngle(a, b, t) { const tau=2*Math.PI; const d=((b-a+Math.PI)%tau+tau)%tau-Math.PI; return a+d*t; }
 
 function updateAutoCurves() {
   states.forEach(from => {
@@ -1865,72 +2151,287 @@ function formatNameValPairs(names, bits) {
 }
 
 function captureState() {
+  constrainGeometry();
   return JSON.parse(JSON.stringify({
     states, transitions, inputBitsCount, inputBits, inputNames, outputBitsCount, outputBits, outputNames,
-    view, simStep, activeStateId, selectedStateId, idCounter, bottomSplit, simplifyOn, flipFlopTypes,
+    view, autoFitView, simStep, activeStateId, initialStateId, selectedStateId, idCounter, bottomSplit, simplifyOn, flipFlopTypes,
     expandMode, bottomTab, excitationSortMode
   }));
 }
-function pushUndo() { undoStack.push(captureState()); if (undoStack.length>UNDO_LIMIT) undoStack.shift(); saveToStorage(); }
+function recordUndo(snapshot) {
+  undoStack.push(snapshot);
+  if (undoStack.length > UNDO_LIMIT) undoStack.shift();
+}
+function pauseForEditing() {
+  if (isRunning) { stopSimulation(); saveToStorage(); }
+  if (forceActive) setForceActive(false);
+}
+function pushUndo(pause = true) {
+  if (EMBED) return;
+  if (pause) pauseForEditing();
+  recordUndo(captureState());
+  saveToStorage();
+}
+
+// A click is not an edit. Capture before the first real movement and commit once.
+function createDragEdit(e) {
+  pauseForEditing();
+  let before = null;
+  const x = e.clientX ?? 0, y = e.clientY ?? 0;
+  return {
+    move(ev) {
+      if (!before && Math.hypot((ev.clientX ?? x)-x,(ev.clientY ?? y)-y) < 3) return false;
+      if (!before) before = captureState();
+      autoFitView = false;
+      return true;
+    },
+    finish() {
+      if (before && JSON.stringify(before) !== JSON.stringify(captureState())) {
+        recordUndo(before); saveToStorage(); return true;
+      }
+      return false;
+    }
+  };
+}
+
+// Refresh derived values and every visible view after a completed model edit.
+// Text-entry handlers keep their focused input intact and refresh narrower views.
+function refreshWorkspace() {
+  syncFFTypes();
+  updateOutputsFromState();
+  renderInputs(); renderOutputsPanel(); render(); renderEditor();
+  document.getElementById('stepCounter').textContent = `STEP ${simStep}`;
+  document.getElementById('bottomPanel').classList.toggle('open', expandMode);
+  document.getElementById('bottomResizer').classList.toggle('open', expandMode);
+  document.getElementById('synth').classList.toggle('active', expandMode);
+  ['exc', 'onehot', 'ref'].forEach((tab, i) => {
+    document.getElementById(['btabExc', 'btabOneHot', 'btabRef'][i]).classList.toggle('active', bottomTab === tab);
+  });
+  switchTab(activeTab);
+  if (expandMode) renderBottomPanel();
+}
+
+function finishEdit() { refreshWorkspace(); if (autoFitView) fitDiagram(false); saveToStorage(); }
+
+function stopSimulation() {
+  clearInterval(runInterval); runInterval = null; isRunning = false;
+  document.getElementById('btnRun').textContent = '▶ Run';
+  document.getElementById('btnRun').className = 'btn success';
+}
+
+// Validate and copy into a detached model. No live state changes on invalid input.
+function validateDesign(raw) {
+  const fail = msg => { throw new Error(msg); };
+  const object = value => value && typeof value === 'object' && !Array.isArray(value);
+  const integer = (value, fallback, min, max, label) => {
+    const n = value ?? fallback;
+    if (!Number.isSafeInteger(n) || n < min || n > max) fail(`Invalid ${label} (${min}–${max})`);
+    return n;
+  };
+  const finite = (value, fallback, min, max, label) => {
+    const n = value ?? fallback;
+    if (typeof n !== 'number' || !Number.isFinite(n) || n < min || n > max) fail(`Invalid ${label}`);
+    return n;
+  };
+  const name = (value, fallback) => {
+    if (value == null) return fallback;
+    if (typeof value !== 'string' || value.length > 200) fail('Names must be strings of at most 200 characters');
+    return value || fallback;
+  };
+  const bits = (value, count, label, exact = false) => {
+    if (value == null) return Array(count).fill(0);
+    if (!Array.isArray(value) || value.length > count || (exact && value.length !== count) || value.some(b=>b!==0 && b!==1)) fail(`Invalid ${label}`);
+    return [...value, ...Array(count-value.length).fill(0)];
+  };
+  const names = (value, count, prefix) => {
+    if (value != null && (!Array.isArray(value) || value.length > count)) fail(`Invalid ${prefix} names`);
+    return Array.from({length:count}, (_,i)=>name(value?.[i], `${prefix}${i}`));
+  };
+  if (!object(raw) || !Array.isArray(raw.states) || !object(raw.transitions)) fail('Not a valid FSM file');
+  if (raw.version != null && raw.version !== 1) fail('Unsupported FSM file version');
+  const inputCount = integer(raw.inputBitsCount, 1, 0, MAX_INPUT_BITS, 'input count');
+  const outputCount = integer(raw.outputBitsCount, 1, 1, MAX_OUTPUT_BITS, 'output count');
+  if (raw.states.length > MAX_STATES || raw.states.length * 2**inputCount > MAX_TRANSITIONS) fail('Design exceeds the state or transition limit');
+  const ids = new Set();
+  const copiedStates = raw.states.map(s => {
+    if (!object(s) || typeof s.id !== 'string' || !/^[A-Za-z][A-Za-z0-9_-]{0,63}$/.test(s.id) || ['constructor','prototype'].includes(s.id) || ids.has(s.id)) fail('Invalid or duplicate state ID');
+    ids.add(s.id);
+    if (s.mode != null && !['moore','mealy'].includes(s.mode)) fail('Invalid state mode');
+    return { id:s.id, name:name(s.name,s.id), mode:s.mode ?? 'moore',
+      x:finite(s.x,220,-MAX_COORDINATE,MAX_COORDINATE,'state x'), y:finite(s.y,140,-MAX_COORDINATE,MAX_COORDINATE,'state y'),
+      r:finite(s.r,46,1,1000,'state radius'), outputs:bits(s.outputs,outputCount,'state outputs') };
+  });
+  const copiedTransitions = Object.create(null);
+  if (Object.keys(raw.transitions).some(id=>!ids.has(id))) fail('Transitions reference an unknown source state');
+  for (const s of copiedStates) {
+    const list = Object.hasOwn(raw.transitions,s.id) ? raw.transitions[s.id] : null;
+    if (!Array.isArray(list) || list.length !== 2**inputCount) fail(`Wrong transition count for ${s.name}`);
+    copiedTransitions[s.id] = list.map(t => {
+      if (!object(t) || !ids.has(t.to)) fail(`Invalid transition target in ${s.name}`);
+      const copy = {to:t.to, out:bits(t.out,outputCount,'transition outputs')};
+      for (const key of TRANSITION_GEOMETRY) {
+        if (t[key] != null) copy[key] = finite(t[key],0,-MAX_COORDINATE,MAX_COORDINATE,key);
+      }
+      for (const key of ['userStart','userEnd','userCurve','userLoop']) {
+        if (t[key] != null && typeof t[key] !== 'boolean') fail(`Invalid ${key}`);
+        if (t[key] != null) copy[key] = t[key];
+      }
+      return copy;
+    });
+  }
+  const stateRef = (value, label) => {
+    if (value === undefined) return copiedStates[0]?.id ?? null;
+    if (value !== null && !ids.has(value)) fail(`Invalid ${label}`);
+    return value;
+  };
+  const savedView = raw.view ?? {};
+  if (!object(savedView)) fail('Invalid view');
+  const ff = raw.flipFlopTypes ?? [];
+  if (!Array.isArray(ff) || ff.length > 6 || ff.some(t=>!['D','T','SR','JK'].includes(t))) fail('Invalid flip-flop types');
+  const nextId = Math.max(1, ...copiedStates.map(s => /^s\d+$/.test(s.id) ? Number(s.id.slice(1))+1 : 1));
+  const initialId = stateRef(raw.initialStateId,'initial state') ?? copiedStates[0]?.id ?? null;
+  return {
+    states:copiedStates, transitions:copiedTransitions,
+    inputBitsCount:inputCount, inputBits:bits(raw.inputBits,inputCount,'input bits',true), inputNames:names(raw.inputNames,inputCount,'x'),
+    outputBitsCount:outputCount, outputBits:bits(raw.outputBits,outputCount,'output bits'), outputNames:names(raw.outputNames,outputCount,'z'),
+    view:{x:finite(savedView.x,0,-MAX_VIEW_COORDINATE,MAX_VIEW_COORDINATE,'view x'), y:finite(savedView.y,0,-MAX_VIEW_COORDINATE,MAX_VIEW_COORDINATE,'view y'), scale:finite(savedView.scale,1.5,MIN_ZOOM,MAX_ZOOM,'zoom')},
+    autoFitView:raw.autoFitView === true,
+    simStep:integer(raw.simStep,0,0,Number.MAX_SAFE_INTEGER,'step count'),
+    activeStateId:stateRef(raw.activeStateId,'active state') ?? initialId, initialStateId:initialId,
+    selectedStateId:stateRef(raw.selectedStateId,'selected state'),
+    idCounter:Math.max(integer(raw.idCounter,1,1,Number.MAX_SAFE_INTEGER-1,'state counter'), integer(nextId,1,1,Number.MAX_SAFE_INTEGER-1,'generated state counter')),
+    bottomSplit:finite(raw.bottomSplit,0.5,0.25,0.75,'pane split'), simplifyOn:raw.simplifyOn === true,
+    flipFlopTypes:[...ff], expandMode:raw.expandMode === true,
+    bottomTab:['exc','onehot','ref'].includes(raw.bottomTab) ? raw.bottomTab : 'exc',
+    excitationSortMode:raw.excitationSortMode === 'input' ? 'input' : 'state'
+  };
+}
 
 // ── Autosave to localStorage (same pattern as the ASM simulator) ──
 const STORAGE_KEY = 'fsm_simulatEEE_design';
+const RECOVERY_KEY = STORAGE_KEY + '_recovery';
 let _saveTimer = null;
+let autosaveBlocked = false;
+let rejectedAutosave = null;
+let recoveryCopies = [];
+function setSaveStatus(message, state = '') {
+  const el = document.getElementById('saveStatus');
+  el.textContent = message; el.setAttribute('data-state',state);
+  el.hidden = !!EMBED || !['error','warning'].includes(state);
+}
+function updateRecoveryNotice(message = '') {
+  const notice = document.getElementById('storageNotice');
+  notice.hidden = !autosaveBlocked && !recoveryCopies.length;
+  document.getElementById('storageMessage').textContent = message || (autosaveBlocked
+    ? 'Could not restore saved work. Autosave is paused to protect it. You can export this workspace with File → Save to file.'
+    : 'A recovery copy of earlier saved work is retained in this browser.');
+  document.getElementById('downloadRecovery').disabled = rejectedAutosave === null && !recoveryCopies.length;
+  document.getElementById('resumeAutosave').hidden = !autosaveBlocked;
+}
+function readRecoveryCopies() {
+  if (EMBED) return [];
+  const raw = localStorage.getItem(RECOVERY_KEY);
+  if (!raw) return [];
+  try {
+    const copies = JSON.parse(raw);
+    if (Array.isArray(copies) && copies.every(c=>c && typeof c.raw==='string')) return copies;
+  } catch(e) {}
+  // Never discard an unfamiliar or damaged recovery archive either.
+  return [{raw,reason:'Unrecognized recovery archive'}];
+}
+function persistNow() {
+  if (EMBED) return false;
+  clearTimeout(_saveTimer); _saveTimer = null;
+  if (autosaveBlocked) { setSaveStatus('Autosave paused','warning'); return false; }
+  try {
+    const snapshot=captureState();
+    validateDesign(snapshot); // Never replace a good save with an unloadable snapshot.
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+    setSaveStatus('Saved locally','saved'); return true;
+  } catch(e) {
+    setSaveStatus('Could not save locally — use Save to file','error'); return false;
+  }
+}
 function saveToStorage() {
+  if (EMBED) return;
   clearTimeout(_saveTimer);
-  _saveTimer = setTimeout(() => {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(captureState())); } catch(e) {}
-  }, 800);
+  if (autosaveBlocked) { setSaveStatus('Autosave paused','warning'); return; }
+  setSaveStatus('Save pending','pending');
+  _saveTimer = setTimeout(persistNow, 800);
 }
 function loadFromStorage() {
+  if (EMBED) return false;
   try {
+    recoveryCopies = readRecoveryCopies();
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return false;
-    const data = JSON.parse(raw);
-    if (!data || !Array.isArray(data.states) || !data.states.length) return false;
-    applyState(data);
+    updateRecoveryNotice();
+    if (!raw) { setSaveStatus('Not yet saved locally','pending'); return false; }
+    rejectedAutosave = raw;
+    applyState(JSON.parse(raw));
+    rejectedAutosave = null;
+    setSaveStatus('Saved locally','saved');
     return true;
-  } catch(e) { return false; }
+  } catch(e) {
+    autosaveBlocked = true;
+    setSaveStatus('Could not restore — autosave paused','error');
+    updateRecoveryNotice(`Could not restore saved work: ${e.message}. Autosave is paused; the original has not been replaced.`);
+    return false;
+  }
 }
-function applyState(data) {
-  states = data.states||[]; transitions = data.transitions||{};
-  inputBitsCount = data.inputBitsCount||1; inputBits = data.inputBits||[0];
-  inputNames = data.inputNames||[`x0`]; outputBitsCount = data.outputBitsCount||1;
-  outputBits = data.outputBits||[0]; outputNames = data.outputNames||['z0'];
-  view = data.view||{x:0,y:0,scale:1.5}; simStep = data.simStep||0;
-  activeStateId = data.activeStateId||(states[0]?.id||null);
-  selectedStateId = data.selectedStateId||(states[0]?.id||null);
-  idCounter = data.idCounter||(states.length+1);
+function resumeAutosave() {
+  if (EMBED) return;
+  // Explicit user action: archive every distinct previous copy before replacing it.
+  try {
+    const copies = readRecoveryCopies();
+    const existing = localStorage.getItem(STORAGE_KEY);
+    for (const raw of [rejectedAutosave, existing]) {
+      if (raw !== null && !copies.some(c=>c.raw===raw)) copies.push({raw,reason:'Preserved before enabling autosave'});
+    }
+    if (copies.length) localStorage.setItem(RECOVERY_KEY,JSON.stringify(copies));
+    recoveryCopies = copies;
+    autosaveBlocked = false; rejectedAutosave = null;
+    persistNow(); updateRecoveryNotice();
+  } catch(e) {
+    autosaveBlocked = true;
+    setSaveStatus('Could not keep recovery copy — autosave paused','error');
+    updateRecoveryNotice(`Recovery copy could not be saved: ${e.message}. Original work is protected; use Save to file for current work.`);
+  }
+}
+function downloadRecoveryData() {
+  if (EMBED) return;
+  if (rejectedAutosave !== null) downloadText(rejectedAutosave,'fsm_recovery.json');
+  else if (recoveryCopies.length === 1) downloadText(recoveryCopies[0].raw,'fsm_recovery.json');
+  else if (recoveryCopies.length) downloadText(JSON.stringify({recoveryCopies},null,2),'fsm_recovery_archive.json');
+}
+function applyState(data, fromEmbed=false) {
+  if (EMBED && !fromEmbed) return;
+  data = validateDesign(data);
+  stopSimulation();
+  if (forceActive) setForceActive(false);
+  simLog = []; stepHistory=[];
+  states = data.states; transitions = data.transitions;
+  inputBitsCount = data.inputBitsCount; inputBits = data.inputBits;
+  inputNames = data.inputNames; outputBitsCount = data.outputBitsCount;
+  outputBits = data.outputBits; outputNames = data.outputNames;
+  view = data.view; autoFitView = data.autoFitView; simStep = data.simStep;
+  activeStateId = data.activeStateId; initialStateId = data.initialStateId; selectedStateId = data.selectedStateId;
+  idCounter = data.idCounter;
   bottomSplit = typeof data.bottomSplit==='number' ? Math.max(0.25, Math.min(0.75, data.bottomSplit)) : 0.5;
   simplifyOn = !!data.simplifyOn;
   flipFlopTypes = Array.isArray(data.flipFlopTypes) ? data.flipFlopTypes.slice() : [];
   expandMode = !!data.expandMode;
   bottomTab = data.bottomTab==='ref' ? 'ref' : (data.bottomTab==='onehot' ? 'onehot' : 'exc');
   excitationSortMode = data.excitationSortMode==='input' ? 'input' : 'state';
-  states.forEach(s => {
-    if (!s.outputs) s.outputs = Array(outputBitsCount).fill(0);
-    if (!s.mode) s.mode='moore';
-    s.outputs = s.outputs.slice(0,outputBitsCount);
-    while (s.outputs.length<outputBitsCount) s.outputs.push(0);
-  });
-  Object.keys(transitions).forEach(sid => { transitions[sid]=(transitions[sid]||[]).map(t=>normalizeTransitionOutputs(t)); });
-  updateOutputsFromState();
-  applyBottomSplit();
-  updateSimplifyButton();
-  document.getElementById('stepCounter').textContent=`STEP ${simStep}`;
-  document.getElementById('bottomPanel').classList.toggle('open', expandMode);
-  document.getElementById('bottomResizer').classList.toggle('open', expandMode);
-  document.getElementById('btabExc').classList.toggle('active', bottomTab === 'exc');
-  document.getElementById('btabOneHot').classList.toggle('active', bottomTab === 'onehot');
-  document.getElementById('btabRef').classList.toggle('active', bottomTab === 'ref');
-  renderInputs(); renderOutputsPanel(); render(); renderEditor();
-  if (expandMode) renderBottomPanel();
-  else if (activeTab==='log') renderLogPanel();
-  else if (activeTab==='table') renderNormalTablePanel();
-  else renderVarsPanel();
-  syncModeSwitch();
+  refreshWorkspace();
+  if (autoFitView) fitDiagram(false);
 }
-function undo() { if (!undoStack.length) return; applyState(undoStack.pop()); }
+function undo() {
+  if (EMBED) return;
+  if (!undoStack.length) return;
+  applyState(undoStack[undoStack.length-1]);
+  undoStack.pop();
+  saveToStorage();
+}
 
 // ══════════════════════════════════════════════════════════════════
 //  INIT
@@ -1940,9 +2441,15 @@ window.addEventListener('DOMContentLoaded', () => {
   svgEl = document.getElementById('canvas');
   canvasWrap = document.getElementById('canvasWrap');
 
-  new ResizeObserver(() => updateViewBox()).observe(canvasWrap);
+  new ResizeObserver(() => { if(autoFitView && states.length) fitDiagram(false); else updateViewBox(); }).observe(canvasWrap);
 
-  svgEl.addEventListener('click', e => { if (e.target===svgEl) { selectedStateId=null; render(); renderEditor(); } });
+  const pauseOnFieldInteraction=e=>{
+    if (e.target.matches?.('input,select,textarea,[contenteditable="true"]') && e.target.closest?.('#editorPanel,#panelContent,#statePicker,#bottomPanel')) pauseForEditing();
+  };
+  document.addEventListener('focusin',pauseOnFieldInteraction,true);
+  document.addEventListener('mousedown',pauseOnFieldInteraction,true);
+
+  svgEl.addEventListener('click', e => { if (!EMBED && e.target===svgEl) { selectedStateId=null; render(); renderEditor(); } });
   canvasWrap.addEventListener('contextmenu', e => e.preventDefault());
   svgEl.addEventListener('mousedown', e => { if (e.button!==0||e.target!==svgEl) return; startPan(e); });
   document.getElementById('leftResizer').addEventListener('mousedown', e => startResize(e,'left'));
@@ -1950,43 +2457,98 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('bottomResizer').addEventListener('mousedown', e => startResizeBottom(e));
   document.getElementById('bottomPaneDivider').addEventListener('mousedown', e => startResizeBottomSplit(e));
   canvasWrap.addEventListener('wheel', e => {
+    if(EMBED || e.target.closest?.('.io-panels')) return;
     e.preventDefault();
     const r = canvasWrap.getBoundingClientRect();
     const sx = e.clientX-r.left, sy = e.clientY-r.top;
     const world = screenToWorld(sx,sy);
     const dir = e.deltaY>0?0.9:1.1;
-    const next = Math.max(0.4,Math.min(2.5,view.scale*dir));
+    const next = Math.max(MIN_ZOOM,Math.min(MAX_ZOOM,view.scale*dir));
+    autoFitView=false;
     view.scale = next; view.x = world.x-sx/view.scale; view.y = world.y-sy/view.scale;
-    render();
+    render(); saveToStorage();
   }, {passive:false});
-  canvasWrap.addEventListener('dragover', e => e.preventDefault());
+  canvasWrap.addEventListener('dragover', e => { if(!EMBED) e.preventDefault(); });
   canvasWrap.addEventListener('drop', e => dropState(e));
   document.addEventListener('click', e => { if (!e.target.closest('.menu')) closeMenus(); });
   window.addEventListener('keydown', e => {
+    if (activeModalId) {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        if (activeModalId === 'mealyToMooreModal') closeMealyToMooreModal();
+        else closeModal(activeModalId);
+      } else if (e.key === 'Tab') {
+        const modal = document.getElementById(activeModalId);
+        const controls = [...modal.querySelectorAll('button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex="0"]')];
+        const first = controls[0], last = controls[controls.length-1];
+        if (!first) { e.preventDefault(); modal.querySelector('.modal').focus(); }
+        else if (e.shiftKey && (document.activeElement === first || !modal.contains(document.activeElement))) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && (document.activeElement === last || !modal.contains(document.activeElement))) { e.preventDefault(); first.focus(); }
+      }
+      return;
+    }
     const tag = document.activeElement?.tagName||'';
-    if (tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT') return;
+    const editing=tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||document.activeElement?.isContentEditable;
+    if (EMBED) {
+      if (editing || e.ctrlKey || e.metaKey || e.altKey || tag==='BUTTON') return;
+      if (e.key===' ') { e.preventDefault(); e.shiftKey ? stepBack() : stepSim(); }
+      else if (e.key.toLowerCase()==='r') resetSim();
+      return;
+    }
+    if (e.ctrlKey || e.metaKey) {
+      if (e.key.toLowerCase()==='s' && !e.altKey) { e.preventDefault(); saveJSON(); }
+      else if (e.key.toLowerCase()==='z' && !editing && !e.shiftKey && !e.altKey) { e.preventDefault(); undo(); }
+      return;
+    }
+    if (editing || e.altKey) return;
     if (e.key==='Escape') { closeMenus(); return; }
-    if (e.ctrlKey&&(e.key==='z'||e.key==='Z')) { e.preventDefault(); undo(); return; }
     if ((e.key==='Backspace'||e.key==='Delete')&&selectedStateId) { e.preventDefault(); removeState(selectedStateId); }
     const panStep = (e.shiftKey?80:40)/view.scale;
     if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d','W','A','S','D'].includes(e.key)) {
       e.preventDefault();
+      autoFitView=false;
       if (e.key==='ArrowUp'||e.key==='w'||e.key==='W') view.y-=panStep;
       if (e.key==='ArrowDown'||e.key==='s'||e.key==='S') view.y+=panStep;
       if (e.key==='ArrowLeft'||e.key==='a'||e.key==='A') view.x-=panStep;
       if (e.key==='ArrowRight'||e.key==='d'||e.key==='D') view.x+=panStep;
-      render();
+      render(); saveToStorage();
     }
   });
+  window.addEventListener('pagehide', persistNow);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') persistNow(); });
   updateMenuChecks();
-  if (!loadFromStorage()) initDefault();
+  if (EMBED) startEmbed();
+  else if (!loadFromStorage()) initDefault();
 });
 
+// Each visit starts from the authored reset state and input vector. No storage.
+function startEmbed() {
+  document.body.classList.add('embed');
+  document.body.classList.add('light');
+  if (!embedOpt('synth')) document.body.classList.add('no-synth');
+  updateMenuChecks();
+  try {
+    const data=validateDesign(EMBED);
+    if (!data.states.length) throw new Error('The embedded design has no states.');
+    data.activeStateId=data.initialStateId; data.selectedStateId=null;
+    data.simStep=0; data.autoFitView=true; data.expandMode=false;
+    applyState(data,true);
+    fitDiagram(false);
+  } catch(error) {
+    document.getElementById('appBody').hidden=true;
+    document.getElementById('appBody').style.display='none';
+    const notice=document.getElementById('embedError');
+    notice.hidden=false; notice.textContent='Cannot load embedded FSM: '+error.message;
+    document.querySelectorAll('.sim-controls button').forEach(button=>button.disabled=true);
+  }
+}
+
 function initDefault() {
-  states=[]; transitions={};
+  if (EMBED) return;
+  stepHistory=[];
+  states=[]; transitions={}; initialStateId=null; activeStateId=null;
   inputBitsCount=1; inputBits=[1]; inputNames=['x0'];
   outputBitsCount=1; outputBits=[0]; outputNames=['z0'];
-  bottomSplit=0.5;
   addStateAt(220,140,'S0'); addStateAt(460,140,'S1');
   addStateAt(220,320,'S2'); addStateAt(460,320,'S3');
   const [s0,s1,s2,s3]=states.map(s=>s.id);
@@ -1996,21 +2558,21 @@ function initDefault() {
   transitions[s3]=[makeTransition(s0),makeTransition(s2)];
   states.forEach((s,i) => { s.outputs=Array.from({length:outputBitsCount},()=>(i%2)); });
   seedInitialCurves();
-  activeStateId=states[0].id; selectedStateId=states[0].id;
-  updateOutputsFromState(); renderInputs(); renderOutputsPanel();
-  applyBottomSplit();
-  render(); renderEditor(); renderVarsPanel(); syncModeSwitch();
+  initialStateId=states[0].id; activeStateId=initialStateId; selectedStateId=initialStateId;
+  refreshWorkspace(); fitDiagram();
 }
 
 // Replace the current FSM with the built-in default example
 function loadDefaultDesign() {
+  if (EMBED) return;
   if (states.length && !confirm('Replace the current FSM with the default example?')) return;
   pushUndo();
   clearInterval(runInterval); isRunning=false;
-  document.getElementById('btnRun').textContent='Run';
+  document.getElementById('btnRun').textContent='▶ Run';
   document.getElementById('btnRun').className='btn success';
   simStep=0; simLog=[];
   document.getElementById('stepCounter').textContent='STEP 0';
+  if (forceActive) setForceActive(false);
   initDefault();
   saveToStorage();
 }
@@ -2098,20 +2660,42 @@ function seedInitialCurves() {
   });
 }
 
+function designSizeAllowed(stateCount, inputCount) {
+  return inputCount <= MAX_INPUT_BITS && stateCount <= MAX_STATES && stateCount * 2**inputCount <= MAX_TRANSITIONS;
+}
+function explainSizeLimit() {
+  alert(`Design limit: ${MAX_INPUT_BITS} input bits, ${MAX_STATES} states, and ${MAX_TRANSITIONS} total transitions.`);
+}
+function nextStateName() {
+  const used = new Set(states.map(s=>s.name));
+  let i = 0;
+  while (used.has(`S${i}`)) i++;
+  return `S${i}`;
+}
 function addStateAt(x,y,name,mode) {
-  const id='s'+(idCounter++);
-  states.push({id,name:name||('S'+states.length),x,y,r:46,outputs:Array(outputBitsCount).fill(0),mode:mode||'moore'});
+  if (EMBED) return;
+  if (!designSizeAllowed(states.length+1,inputBitsCount)) throw new Error('Design size limit exceeded');
+  let id;
+  do { id='s'+(idCounter++); } while (states.some(s=>s.id===id));
+  x=bounded(x,MAX_COORDINATE); y=bounded(y,MAX_COORDINATE);
+  states.push({id,name:name||nextStateName(),x,y,r:46,outputs:Array(outputBitsCount).fill(0),mode:mode||'moore'});
   const count=2**inputBitsCount;
   transitions[id]=Array.from({length:count},()=>makeTransition(id));
+  if (!initialStateId) initialStateId=id;
+  if (!activeStateId) activeStateId=id;
+  syncFFTypes();
   return id;
 }
 
 function removeState(id) {
+  if (EMBED) return;
   pushUndo();
   states=states.filter(s=>s.id!==id); delete transitions[id];
   Object.keys(transitions).forEach(sid => { transitions[sid]=transitions[sid].map(t=>(t.to===id?{...t,to:sid}:t)); });
-  if (!states.length) { activeStateId=null; selectedStateId=null; }
-  else { if (activeStateId===id) activeStateId=states[0].id; if (selectedStateId===id) selectedStateId=states[0].id; }
+  if (!states.some(s=>s.id===initialStateId)) initialStateId=states[0]?.id ?? null;
+  if (!states.length) { activeStateId=null; selectedStateId=null; stopSimulation(); }
+  else { if (activeStateId===id) activeStateId=initialStateId; if (selectedStateId===id) selectedStateId=states[0].id; }
+  syncFFTypes();
   updateOutputsFromState(); render(); renderEditor();
   updateRightPanelAfterChange(); renderOutputsPanel();
 }
@@ -2121,7 +2705,7 @@ function removeState(id) {
 // ══════════════════════════════════════════════════════════════════
 
 function render() {
-  svgEl.innerHTML=''; updateViewBox(); updateSimplifyButton();
+  svgEl.innerHTML=''; updateViewBox(); updateSimplifyButton(); updateBackButton();
   const defs=ns('defs');
   [['norm','#3a4060'],['active','#4f9eff'],['sel','#f5a623']].forEach(([k,col]) => {
     const m=ns('marker'); setA(m,{id:'arr_'+k,markerWidth:10,markerHeight:10,refX:8,refY:3,orient:'auto'});
@@ -2129,18 +2713,41 @@ function render() {
     m.appendChild(p); defs.appendChild(m);
   });
   svgEl.appendChild(defs);
-  drawConnections(); states.forEach(drawState);
+  const handles=[];
+  drawConnections(handles); states.forEach(drawState);
+  // SVG paint order also determines hit testing: handles must be above states.
+  handles.forEach(handle=>svgEl.appendChild(handle));
 }
 
 function updateViewBox() {
+  constrainGeometry();
   const w=canvasWrap.clientWidth, h=canvasWrap.clientHeight;
   svgEl.setAttribute('viewBox',`${view.x} ${view.y} ${w/view.scale} ${h/view.scale}`);
+}
+function fitDiagram(save=true) {
+  if (!states.length || !canvasWrap.clientWidth || !canvasWrap.clientHeight) return;
+  let box;
+  try { box=svgEl.getBBox(); } catch(e) {}
+  if (!box || !box.width || !box.height) {
+    const left=Math.min(...states.map(s=>s.x-s.r)), top=Math.min(...states.map(s=>s.y-s.r-22));
+    box={x:left,y:top,width:Math.max(...states.map(s=>s.x+s.r))-left,height:Math.max(...states.map(s=>s.y+s.r))-top};
+  }
+  const w=canvasWrap.clientWidth,h=canvasWrap.clientHeight,pad=32;
+  const topInset=Math.min(h*.5,Math.max(document.getElementById('inputPanel').offsetHeight,document.getElementById('outputPanel').offsetHeight,48)+24);
+  const usableHeight=Math.max(1,h-topInset-pad);
+  view.scale=Math.max(MIN_ZOOM,Math.min(MAX_ZOOM,Math.max(1,w-2*pad)/box.width,usableHeight/box.height));
+  view.x=box.x+box.width/2-w/(2*view.scale);
+  view.y=box.y+box.height/2-(topInset+usableHeight/2)/view.scale;
+  autoFitView=true;
+  updateViewBox();
+  if(save)saveToStorage();
 }
 function screenToWorld(sx,sy) { return {x:view.x+sx/view.scale,y:view.y+sy/view.scale}; }
 function getWorldBounds() {
   if (!canvasWrap) return null;
   const w=canvasWrap.clientWidth/view.scale, h=canvasWrap.clientHeight/view.scale;
-  return {minX:view.x+FORCE_PADDING,minY:view.y+FORCE_PADDING,maxX:view.x+w-FORCE_PADDING,maxY:view.y+h-FORCE_PADDING};
+  const px=Math.min(FORCE_PADDING,w/2),py=Math.min(FORCE_PADDING,h/2);
+  return {minX:view.x+px,minY:view.y+py,maxX:view.x+w-px,maxY:view.y+h-py};
 }
 
 function drawState(s) {
@@ -2155,13 +2762,26 @@ function drawState(s) {
   g.appendChild(circle);
   const label=s.mode==='moore'?`${s.name}/${bitsToString(s.outputs)}`:s.name;
   g.appendChild(txt(s.x,s.y,label,'var(--text)',12,'600'));
+  if(s.id===initialStateId)g.appendChild(txt(s.x,s.y-s.r-12,'START','var(--accent)',10,'600'));
+  if (EMBED) {
+    setA(g,{role:'img','aria-label':`State ${label}${s.id===initialStateId?' (initial)':''}`});
+    svgEl.appendChild(g); return;
+  }
+  setA(g,{tabindex:0,role:'button','aria-label':`Edit state ${s.name}${s.id===initialStateId?' (initial)':''}`});
   g.style.cursor='move';
   g.addEventListener('mousedown',e=>startDragState(e,s.id));
-  g.addEventListener('click',e=>{e.stopPropagation();selectedStateId=s.id;render();renderEditor();});
+  g.addEventListener('click',e=>{e.stopPropagation();selectState(s.id);});
+  g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();selectState(s.id,true);}});
   svgEl.appendChild(g);
 }
 
-function drawConnections() {
+function transitionLabel(x,y,label,isActive) {
+  const el=txt(x,y,label,isActive?'var(--accent)':'var(--conn-label)',isActive?11:9.5,isActive?'700':'500');
+  setA(el,{'class':isActive?'transition-label active':'transition-label','pointer-events':'none','paint-order':'stroke',stroke:'var(--bg)','stroke-width':3,'stroke-linejoin':'round'});
+  return el;
+}
+
+function drawConnections(handles=[]) {
   const inputIndex=getInputIndex();
   states.forEach(from => {
     const list=transitions[from.id]||[];
@@ -2179,7 +2799,7 @@ function drawConnections() {
       const to=states.find(s=>s.id===g.toId);
       if (!to) return;
       const isActive=from.id===activeStateId&&g.indices.includes(inputIndex);
-      const isSel=from.id===selectedStateId;
+      const isSel=!EMBED && from.id===selectedStateId;
       const col=isSel?'#f5a623':(isActive?'#4f9eff':'var(--conn)');
       const sw=isActive?2.4:1.4;
       const marker=isSel?'url(#arr_sel)':(isActive?'url(#arr_active)':'url(#arr_norm)');
@@ -2199,15 +2819,15 @@ function drawConnections() {
         const ex=from.x+Math.cos(endA)*from.r, ey=from.y+Math.sin(endA)*from.r;
         const path=`M ${sx} ${sy} A ${dist} ${dist} 0 1 1 ${ex} ${ey}`;
         svgEl.appendChild(sv('path',{d:path,fill:'none',stroke:col,'stroke-width':sw,'marker-end':marker}));
-        svgEl.appendChild(txt(from.x+Math.cos(angle)*(dist+12),from.y+Math.sin(angle)*(dist+12),label,'var(--conn-label)',9.5,'500'));
+        svgEl.appendChild(transitionLabel(from.x+Math.cos(angle)*(dist+12),from.y+Math.sin(angle)*(dist+12),label,isActive));
         if (isSel) {
           const hx=from.x+loop.dx, hy=from.y+loop.dy;
           const handle=sv('circle',{cx:hx,cy:hy,r:7,class:'conn-handle'});
           handle.addEventListener('mousedown',e=>startDragLoop(e,from.id,g.indices));
-          svgEl.appendChild(handle);
+          handles.push(handle);
           const endHandle=sv('circle',{cx:ex,cy:ey,r:6.5,class:'conn-handle end'});
           endHandle.addEventListener('mousedown',e=>startDragEnd(e,from.id,g.indices,{x:sx,y:sy}));
-          svgEl.appendChild(endHandle);
+          handles.push(endHandle);
         }
       } else {
         const da=Math.atan2(to.y-from.y,to.x-from.x);
@@ -2220,17 +2840,17 @@ function drawConnections() {
         const cp=getCurvePoint(t,baseCp);
         const path=`M ${sx} ${sy} Q ${cp.x} ${cp.y} ${tx} ${ty}`;
         svgEl.appendChild(sv('path',{d:path,fill:'none',stroke:col,'stroke-width':sw,'marker-end':marker}));
-        svgEl.appendChild(txt(cp.x,cp.y-4,label,'var(--conn-label)',9.5,'500'));
+        svgEl.appendChild(transitionLabel(cp.x,cp.y-4,label,isActive));
         if (isSel) {
           const sh=sv('circle',{cx:sx,cy:sy,r:6.5,class:'conn-handle start'});
           sh.addEventListener('mousedown',e=>startDragStart(e,from.id,g.indices));
-          svgEl.appendChild(sh);
+          handles.push(sh);
           const ch=sv('circle',{cx:cp.x,cy:cp.y,r:7,class:'conn-handle'});
           ch.addEventListener('mousedown',e=>startDragCurve(e,from.id,g.indices));
-          svgEl.appendChild(ch);
+          handles.push(ch);
           const eh=sv('circle',{cx:tx,cy:ty,r:6.5,class:'conn-handle end'});
           eh.addEventListener('mousedown',e=>startDragEnd(e,from.id,g.indices,{x:sx,y:sy}));
-          svgEl.appendChild(eh);
+          handles.push(eh);
         }
       }
     });
@@ -2242,11 +2862,15 @@ function drawConnections() {
 // ══════════════════════════════════════════════════════════════════
 
 function startDragEnd(e,fromId,indexOrList,startPoint) {
-  e.preventDefault(); e.stopPropagation(); pushUndo();
+  if (EMBED) return;
+  if (e.button != null && e.button !== 0) return;
+  e.preventDefault(); e.stopPropagation();
+  const edit=createDragEdit(e);
   const r=canvasWrap.getBoundingClientRect();
   const indices=Array.isArray(indexOrList)?indexOrList:[indexOrList];
-  indices.forEach(idx=>{const t=transitions[fromId]?.[idx];if(t)t.userEnd=true;});
   const move=ev=>{
+    if(!edit.move(ev))return;
+indices.forEach(idx=>{const t=transitions[fromId]?.[idx];if(t)t.userEnd=true;});
     const world=screenToWorld(ev.clientX-r.left,ev.clientY-r.top);
     const snapped=getMagnetizedEndTarget(world.x,world.y);
     const from=states.find(s=>s.id===fromId);
@@ -2274,29 +2898,9 @@ function startDragEnd(e,fromId,indexOrList,startPoint) {
     render();
   };
   const up=ev=>{
+    move(ev);
     document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);
-    const world=screenToWorld(ev.clientX-r.left,ev.clientY-r.top);
-    const snapped=getMagnetizedEndTarget(world.x,world.y);
-    const from=states.find(s=>s.id===fromId);
-    indices.forEach(idx=>{
-      const t=transitions[fromId]?.[idx];if(!t)return;
-      if (snapped.state) {
-        if (snapped.state.id === fromId) {
-          t.to = fromId;
-          if (from) {
-            t.loopDx = world.x - from.x;
-            t.loopDy = world.y - from.y;
-          }
-        } else {
-          t.to = snapped.state.id;
-          t.endAngle = snapped.angle;
-        }
-      } else if (t.to === fromId && from) {
-        t.loopDx = world.x - from.x;
-        t.loopDy = world.y - from.y;
-      }
-    });
-    render();if(expandMode)renderBottomPanel();if(activeTab==='table')renderNormalTablePanel();else if(activeTab==='log')switchTab('vars');
+    if(edit.finish())finishEdit();
   };
   document.addEventListener('mousemove',move);document.addEventListener('mouseup',up);
 }
@@ -2310,7 +2914,7 @@ function getDefaultCP(sx,sy,tx,ty,i,len) {
 }
 function getCurvePoint(t,baseCp) {
   if(typeof t.cdx==='number'||typeof t.cdy==='number') return {x:baseCp.x+(t.cdx||0),y:baseCp.y+(t.cdy||0)};
-  if(typeof t.cx==='number'&&typeof t.cy==='number'){t.cdx=t.cx-baseCp.x;t.cdy=t.cy-baseCp.y;delete t.cx;delete t.cy;return{x:baseCp.x+t.cdx,y:baseCp.y+t.cdy};}
+  if(typeof t.cx==='number'&&typeof t.cy==='number'){t.cdx=bounded(t.cx-baseCp.x,MAX_COORDINATE);t.cdy=bounded(t.cy-baseCp.y,MAX_COORDINATE);delete t.cx;delete t.cy;return{x:baseCp.x+t.cdx,y:baseCp.y+t.cdy};}
   return baseCp;
 }
 function getLoopHandle(state,t,i,count) {
@@ -2331,11 +2935,14 @@ function getLoopHandle(state,t,i,count) {
 }
 
 function startDragCurve(e,fromId,indexOrList) {
-  e.preventDefault();e.stopPropagation();pushUndo();
+  if (EMBED) return;
+  if (e.button != null && e.button !== 0) return;
+  e.preventDefault();e.stopPropagation();const edit=createDragEdit(e);
   const r=canvasWrap.getBoundingClientRect();
   const indices=Array.isArray(indexOrList)?indexOrList:[indexOrList];
-  indices.forEach(idx=>{const t=transitions[fromId]?.[idx];if(t)t.userCurve=true;});
   const move=ev=>{
+    if(!edit.move(ev))return;
+indices.forEach(idx=>{const t=transitions[fromId]?.[idx];if(t)t.userCurve=true;});
     const world=screenToWorld(ev.clientX-r.left,ev.clientY-r.top);
     indices.forEach(idx=>{
       const t=transitions[fromId]?.[idx];if(!t)return;
@@ -2351,56 +2958,65 @@ function startDragCurve(e,fromId,indexOrList) {
     });
     render();
   };
-  const up=()=>{document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);};
+  const up=()=>{document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);edit.finish();};
   document.addEventListener('mousemove',move);document.addEventListener('mouseup',up);
 }
 
 function startDragLoop(e,fromId,indexOrList) {
-  e.preventDefault();e.stopPropagation();pushUndo();
+  if (EMBED) return;
+  if (e.button != null && e.button !== 0) return;
+  e.preventDefault();e.stopPropagation();const edit=createDragEdit(e);
   const r=canvasWrap.getBoundingClientRect();
   const s=states.find(st=>st.id===fromId);
   const indices=Array.isArray(indexOrList)?indexOrList:[indexOrList];
-  indices.forEach(idx=>{const t=transitions[fromId]?.[idx];if(t)t.userLoop=true;});
   const move=ev=>{
+    if(!edit.move(ev))return;
+indices.forEach(idx=>{const t=transitions[fromId]?.[idx];if(t)t.userLoop=true;});
     const world=screenToWorld(ev.clientX-r.left,ev.clientY-r.top);
     indices.forEach(idx=>{const t=transitions[fromId]?.[idx];if(!t||!s)return;t.loopDx=world.x-s.x;t.loopDy=world.y-s.y;});
     render();
   };
-  const up=()=>{document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);};
+  const up=()=>{document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);edit.finish();};
   document.addEventListener('mousemove',move);document.addEventListener('mouseup',up);
 }
 
 function startDragState(e,id) {
-  e.preventDefault();pushUndo();
+  if (EMBED) return;
+  if (e.button != null && e.button !== 0) return;
+  e.preventDefault();const edit=createDragEdit(e);
   const s=states.find(st=>st.id===id);if(!s)return;
   forcePinnedId=id;
   const r=canvasWrap.getBoundingClientRect();
   const start=screenToWorld(e.clientX-r.left,e.clientY-r.top);
   const ox=start.x-s.x,oy=start.y-s.y;
-  const move=ev=>{const world=screenToWorld(ev.clientX-r.left,ev.clientY-r.top);s.x=world.x-ox;s.y=world.y-oy;render();};
-  const up=()=>{document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);forcePinnedId=null;};
+  const move=ev=>{if(!edit.move(ev))return;const world=screenToWorld(ev.clientX-r.left,ev.clientY-r.top);s.x=world.x-ox;s.y=world.y-oy;render();};
+  const up=()=>{document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);edit.finish();forcePinnedId=null;};
   document.addEventListener('mousemove',move);document.addEventListener('mouseup',up);
 }
 
 function startDragStart(e,fromId,indexOrList) {
-  e.preventDefault();e.stopPropagation();pushUndo();
+  if (EMBED) return;
+  if (e.button != null && e.button !== 0) return;
+  e.preventDefault();e.stopPropagation();const edit=createDragEdit(e);
   const r=canvasWrap.getBoundingClientRect();
   const from=states.find(s=>s.id===fromId);
   const indices=Array.isArray(indexOrList)?indexOrList:[indexOrList];
-  indices.forEach(idx=>{const t=transitions[fromId]?.[idx];if(t)t.userStart=true;});
   const move=ev=>{
+    if(!edit.move(ev))return;
+indices.forEach(idx=>{const t=transitions[fromId]?.[idx];if(t)t.userStart=true;});
     const world=screenToWorld(ev.clientX-r.left,ev.clientY-r.top);
     indices.forEach(idx=>{const t=transitions[fromId]?.[idx];if(!t||!from)return;t.startAngle=Math.atan2(world.y-from.y,world.x-from.x);});
     render();
   };
-  const up=()=>{document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);if(expandMode)renderBottomPanel();if(activeTab==='table')renderNormalTablePanel();};
+  const up=()=>{document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);edit.finish();if(expandMode)renderBottomPanel();if(activeTab==='table')renderNormalTablePanel();};
   document.addEventListener('mousemove',move);document.addEventListener('mouseup',up);
 }
 
 function startPan(e) {
+  if (EMBED) return;
   let lx=e.clientX,ly=e.clientY;
-  const move=ev=>{view.x-=(ev.clientX-lx)/view.scale;view.y-=(ev.clientY-ly)/view.scale;lx=ev.clientX;ly=ev.clientY;render();};
-  const up=()=>{document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);};
+  const move=ev=>{autoFitView=false;view.x-=(ev.clientX-lx)/view.scale;view.y-=(ev.clientY-ly)/view.scale;lx=ev.clientX;ly=ev.clientY;render();};
+  const up=()=>{document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);saveToStorage();};
   document.addEventListener('mousemove',move);document.addEventListener('mouseup',up);
 }
 
@@ -2453,7 +3069,8 @@ function applyBottomSplit() {
 
 function startResizeBottomSplit(e) {
   e.preventDefault();
-  pushUndo();
+  pauseForEditing();
+  const before=captureState();
   const body = document.getElementById('bottomBody');
   const rect = body.getBoundingClientRect();
   const move = ev => {
@@ -2464,20 +3081,36 @@ function startResizeBottomSplit(e) {
   const up = () => {
     document.removeEventListener('mousemove', move);
     document.removeEventListener('mouseup', up);
+    if(before.bottomSplit!==bottomSplit){recordUndo(before);saveToStorage();}
   };
   document.addEventListener('mousemove', move);
   document.addEventListener('mouseup', up);
 }
 
-function dragStateStart(e,mode) { e.dataTransfer.setData('stateMode',mode); }
+function addStateCentered(mode) {
+  if (EMBED) return;
+  if (!designSizeAllowed(states.length+1,inputBitsCount)) { explainSizeLimit(); return; }
+  pushUndo();
+  let x=view.x+canvasWrap.clientWidth/(2*view.scale), y=view.y+canvasWrap.clientHeight/(2*view.scale);
+  for(let i=0;states.some(s=>Math.hypot(s.x-x,s.y-y)<110) && i<MAX_STATES;i++) { x+=110; if(i%4===3){x-=440;y+=110;} }
+  const id=addStateAt(x,y,null,mode);
+  selectedStateId=id; autoFitView=true; finishEdit();
+  document.getElementById('stateNameInput')?.focus();
+}
+function dragStateStart(e,mode) {
+  if (EMBED) return; e.dataTransfer.setData('stateMode',mode); }
 function dropState(e) {
+  if (EMBED) return;
   e.preventDefault();
-  const mode=e.dataTransfer.getData('stateMode');if(!mode)return;
+  const mode=e.dataTransfer.getData('stateMode');if(!['moore','mealy'].includes(mode))return;
+  if (!designSizeAllowed(states.length+1,inputBitsCount)) { explainSizeLimit(); return; }
   pushUndo();
   const r=canvasWrap.getBoundingClientRect();
   const world=screenToWorld(e.clientX-r.left,e.clientY-r.top);
-  addStateAt(world.x,world.y,'S'+states.length,mode);
-  render();renderEditor();updateRightPanelAfterChange();
+  const id=addStateAt(world.x,world.y,null,mode);
+  if (!activeStateId) activeStateId=id;
+  selectedStateId=id;
+  finishEdit();
 }
 function findClosestState(x,y) {
   let best=null,bestDist=Infinity;
@@ -2507,38 +3140,49 @@ function findStateAt(x,y) {
 //  INPUT / OUTPUT PANELS
 // ══════════════════════════════════════════════════════════════════
 
+function renderBitCountControls(title,kind,add,remove) {
+  if (EMBED) return `<div class="io-panel-heading"><div class="panel-title">${title}</div></div>`;
+  return `<div class="io-panel-heading"><div class="panel-title">${title}</div><div class="io-bit-count"><button id="${kind}BitAdd" class="btn" aria-label="Add ${kind} bit" onclick="${add}">+</button><button id="${kind}BitRemove" class="btn" aria-label="Remove ${kind} bit" onclick="${remove}">−</button></div></div>`;
+}
+
 function renderInputs() {
   const panel=document.getElementById('inputPanel');
-  panel.innerHTML=`<div class="panel-title">Inputs</div><div class="input-bits-grid">
+  const focusedId=panel.contains(document.activeElement)?document.activeElement.id:null;
+  panel.innerHTML=`${renderBitCountControls('Inputs','input','addBit()','removeBit()')}<div class="input-bits-grid">
     ${inputBits.slice().reverse().map((b,bi)=>{
       const idx=inputBits.length-1-bi;
       const name=inputNames[idx]||`x${idx}`;
-      return `<div class="input-bit-box${b?' active':''}"><span class="input-bit-label">${h(name)}</span><button class="input-bit-btn" onclick="toggleBit(${idx})">${b}</button></div>`;
+      return `<div class="input-bit-box${b?' active':''}"><span class="input-bit-label">${h(name)}</span><button id="inputBit${idx}" class="input-bit-btn" aria-label="Toggle input ${h(name)}" aria-pressed="${!!b}" onclick="toggleBit(${idx})">${b}</button></div>`;
     }).join('')}
   </div>`;
+  if(focusedId) document.getElementById(focusedId)?.focus({preventScroll:true});
 }
 
 function renderOutputsPanel() {
   const panel=document.getElementById('outputPanel');
-  panel.innerHTML=`<div class="panel-title">Outputs</div><div class="output-bits">
+  const focusedId=panel.contains(document.activeElement)?document.activeElement.id:null;
+  panel.innerHTML=`${renderBitCountControls('Outputs','output','addOutputBit()','removeOutputBit()')}<div class="output-bits">
     ${outputBits.slice().reverse().map((b,bi)=>{
       const idx=outputBits.length-1-bi;
       const name=outputNames[idx]||`z${idx}`;
       return `<div class="output-bit-box${b?' active':''}"><span class="output-bit-label">${h(name)}</span><span class="output-bit-val">${b}</span></div>`;
     }).join('')}
   </div>`;
+  if(focusedId) document.getElementById(focusedId)?.focus({preventScroll:true});
 }
 
 function toggleBit(i) {
-  pushUndo();
+  pushUndo(false);
   inputBits[i]=inputBits[i]?0:1;
-  updateOutputsFromState(); renderInputs(); render(); renderOutputsPanel();
+  updateOutputsFromState(); renderInputs(); render(); renderOutputsPanel(); renderEditor();
   const cur=states.find(s=>s.id===activeStateId);
   addLog('input',`Input (${formatNameValPairs(inputNames,inputBits)}), Current State ${cur?cur.name:'-'}, Output (${formatNameValPairs(outputNames,outputBits)})`);
   if(expandMode)renderBottomPanel();if(activeTab==='vars')renderVarsPanel();else if(activeTab==='log')renderLogPanel();else renderNormalTablePanel();
 }
 
 function addBit() {
+  if (EMBED) return;
+  if (!designSizeAllowed(states.length,inputBitsCount+1)) { explainSizeLimit(); return; }
   pushUndo();
   const oldCount=2**inputBitsCount; inputBitsCount++; inputBits.push(0); inputNames.push(`x${inputBitsCount-1}`);
   const newCount=2**inputBitsCount;
@@ -2548,26 +3192,50 @@ function addBit() {
     for(let i=0;i<Math.min(old.length,oldCount);i++) next[i]=normalizeTransitionOutputs(old[i]);
     transitions[s.id]=next;
   });
-  renderInputs();render();renderEditor();updateRightPanelAfterChange();
+  finishEdit();
+}
+function bitRemovalPreview(kind) {
+  if(kind==='input') {
+    const index=inputBitsCount-1, name=inputNames[index]||`x${index}`;
+    const half=2**index;
+    let different=0;
+    states.forEach(s=>{
+      const list=transitions[s.id]||[];
+      for(let i=0;i<half;i++) if(list[i]?.to!==list[i+half]?.to || (s.mode==='mealy' && JSON.stringify(list[i]?.out)!==JSON.stringify(list[i+half]?.out))) different++;
+    });
+    return `Remove input "${name}" (bit ${index})?\n\nKeep the ${states.length*half} transition entries where this bit is 0. Discard the ${states.length*half} entries where it is 1. ${different} discarded entries have a different destination or Mealy output from the retained entry.\n\nUndo can restore this removal.`;
+  }
+  const index=outputBitsCount-1, name=outputNames[index]||`z${index}`;
+  let vectors=0,ones=0;
+  states.forEach(s=>{
+    vectors++; if(s.outputs[index]===1) ones++;
+    (transitions[s.id]||[]).forEach(t=>{vectors++;if(t.out?.[index]===1)ones++;});
+  });
+  return `Remove output "${name}" (bit ${index})?\n\nDiscard this bit from ${vectors} stored state/transition output vectors, including ${ones} values set to 1. All other output bits remain.\n\nUndo can restore this removal.`;
 }
 function removeBit() {
-  if(inputBitsCount<=0)return;pushUndo();
+  if (EMBED) return;
+  if(inputBitsCount<=0 || !confirm(bitRemovalPreview('input')))return;
+  pushUndo();
   inputBitsCount--;inputBits.pop();inputNames.pop();
   const newCount=2**inputBitsCount;
   states.forEach(s=>{
     transitions[s.id]=(transitions[s.id]||[]).slice(0,newCount).map(t=>normalizeTransitionOutputs(t));
     while(transitions[s.id].length<newCount)transitions[s.id].push(makeTransition(s.id));
   });
-  renderInputs();render();renderEditor();updateRightPanelAfterChange();
+  finishEdit();
 }
 function addOutputBit() {
+  if (EMBED) return;
+  if (outputBitsCount >= MAX_OUTPUT_BITS) { alert(`Maximum ${MAX_OUTPUT_BITS} output bits.`); return; }
   pushUndo();outputBitsCount++;outputBits.push(0);outputNames.push(`z${outputBitsCount-1}`);
   states.forEach(s=>{if(!s.outputs)s.outputs=[];s.outputs.push(0);});
   Object.keys(transitions).forEach(sid=>{transitions[sid]=transitions[sid].map(t=>normalizeTransitionOutputs(t));});
   updateOutputsFromState();render();renderOutputsPanel();renderEditor();updateRightPanelAfterChange();
 }
 function removeOutputBit() {
-  if(outputBitsCount<=1)return;pushUndo();outputBitsCount--;outputBits.pop();outputNames.pop();
+  if (EMBED) return;
+  if(outputBitsCount<=1 || !confirm(bitRemovalPreview('output')))return;pushUndo();outputBitsCount--;outputBits.pop();outputNames.pop();
   states.forEach(s=>{if(s.outputs&&s.outputs.length)s.outputs.pop();});
   Object.keys(transitions).forEach(sid=>{transitions[sid]=transitions[sid].map(t=>normalizeTransitionOutputs(t));});
   updateOutputsFromState();render();renderOutputsPanel();renderEditor();updateRightPanelAfterChange();
@@ -2585,8 +3253,14 @@ function formatInputKV(index) {
 //  EDITOR PANEL
 // ══════════════════════════════════════════════════════════════════
 
-function renderEditor() {
+function renderEditor(preserveNameFocus=false) {
+  if (EMBED) { document.getElementById('editorPanel').innerHTML=''; return; }
+  const field=document.activeElement;
+  const selection=preserveNameFocus && field?.id==='stateNameInput'
+    ? {start:field.selectionStart,end:field.selectionEnd,direction:field.selectionDirection} : null;
   syncModeSwitch();
+  const picker=document.getElementById('statePicker');
+  picker.innerHTML='<option value="">Choose a state</option>'+states.map(s=>`<option value="${s.id}" ${s.id===selectedStateId?'selected':''}>${h(s.name)}</option>`).join('');
   const panel=document.getElementById('editorPanel');
   const selected=states.find(s=>s.id===selectedStateId);
   const current=states.find(s=>s.id===activeStateId);
@@ -2598,43 +3272,71 @@ function renderEditor() {
   const list=(transitions[selected.id]||[]).map((t,i)=>{
     const out=normalizeTransitionOutputs(t).out;
     const outBits=selected.mode==='mealy'?`<div style="margin-top:6px"><div class="editor-hint" style="margin-top:0;margin-bottom:4px">Mealy Outputs</div><div class="output-bit-row" style="justify-content:flex-start;gap:4px">${out.slice().reverse().map((b,bi)=>{const idx=out.length-1-bi;const name=outputNames[idx]||`y${idx}`;return`<button class="output-bit-btn tiny-bit-btn ${b?'active':''}" title="${h(name)}" onclick="toggleTransitionOutput('${selected.id}',${i},${idx})">${h(name)}:${b}</button>`;}).join('')}</div></div>`:'';
-    return `<div class="editor-row"><div class="editor-label">${formatInputKV(i)}</div><div style="flex:1"><select class="editor-input" onchange="setTransition('${selected.id}',${i},this.value)">${sortedStates.map(s=>`<option value="${s.id}" ${s.id===t.to?'selected':''}>${h(s.name)}</option>`).join('')}</select>${outBits}</div></div>`;
+    return `<div class="editor-row"><div class="editor-label">${formatInputKV(i)}</div><div style="flex:1"><select aria-label="Next state for input ${h(formatInput(i)) || 'none'}" class="editor-input" onchange="setTransition('${selected.id}',${i},this.value)">${sortedStates.map(s=>`<option value="${s.id}" ${s.id===t.to?'selected':''}>${h(s.name)}</option>`).join('')}</select>${outBits}</div></div>`;
   }).join('');
   const outIndices=selected.outputs.map((_,i)=>i).reverse();
   panel.innerHTML=`
     <div class="editor-title">Editor</div>
     <div class="editor-row"><div class="editor-label">Selected</div><div class="state-badge">${h(selected.name)}</div><div style="flex:1"></div><button class="btn danger" onclick="removeState('${selected.id}')">Delete</button></div>
-    <div class="editor-row"><div class="editor-label">Name</div><input class="editor-input" value="${h(selected.name)}" oninput="renameState('${selected.id}',this.value)"></div>
+    <div class="editor-row"><div class="editor-label">Name</div><input id="stateNameInput" aria-label="State name" class="editor-input" maxlength="200" value="${h(selected.name)}" oninput="renameState('${selected.id}',this.value)"></div>
     <div class="editor-row"><div class="editor-label">Current</div><div class="state-badge">${current?h(current.name):'-'}</div><div style="flex:1"></div><button class="btn" onclick="setCurrentState('${selected.id}')">Set Current</button></div>
-    <div class="editor-row"><div class="editor-label">Type</div><select class="editor-input" onchange="setStateMode('${selected.id}',this.value)"><option value="moore" ${selected.mode==='moore'?'selected':''}>Moore</option><option value="mealy" ${selected.mode==='mealy'?'selected':''}>Mealy</option></select></div>
+    <div class="editor-row"><div class="editor-label">Reset to</div><div class="state-badge">${h(getInitialState()?.name || '-')}</div><button class="btn" onclick="setInitialState('${selected.id}')" ${selected.id===initialStateId?'disabled':''}>Set Initial</button></div>
+    <div class="editor-row"><div class="editor-label">Type</div><select aria-label="State type" class="editor-input" onchange="setStateMode('${selected.id}',this.value)"><option value="moore" ${selected.mode==='moore'?'selected':''}>Moore</option><option value="mealy" ${selected.mode==='mealy'?'selected':''}>Mealy</option></select></div>
     <div class="editor-row"><div class="editor-label">Outputs</div>${selected.mode==='moore'?`<div class="output-bit-row">${outIndices.map(i=>{const b=selected.outputs[i];const name=outputNames[i]||`y${i}`;return`<button class="output-bit-btn ${b?'active':''}" title="${h(name)}" onclick="toggleOutputBit('${selected.id}',${i})">${h(name)}:${b}</button>`;}).join('')}</div>`:`<div class="editor-hint">Mealy outputs are set per transition.</div>`}</div>
     <div class="editor-hint">Current input pattern (MSB→LSB): ${formatInput(getInputIndex())}</div>
     ${list||'<div style="color:var(--text3);font-size:12px">No transitions</div>'}
   `;
+  if (selection) {
+    const replacement=document.getElementById('stateNameInput');
+    replacement.focus();
+    replacement.setSelectionRange(selection.start,selection.end,selection.direction);
+  }
 }
 
 function toggleOutputBit(stateId,index) {
+  if (EMBED) return;
   const s=states.find(st=>st.id===stateId);if(!s||!s.outputs)return;pushUndo();
   s.outputs[index]=s.outputs[index]?0:1;
   if(stateId===activeStateId)updateOutputsFromState();
   render();renderOutputsPanel();renderEditor();updateRightPanelAfterChange();
 }
 function toggleTransitionOutput(stateId,transIndex,bitIndex) {
+  if (EMBED) return;
   const t=transitions[stateId]?.[transIndex];if(!t)return;pushUndo();
   normalizeTransitionOutputs(t);t.out[bitIndex]=t.out[bitIndex]?0:1;
   updateOutputsFromState();render();renderOutputsPanel();renderEditor();updateRightPanelAfterChange();
 }
+function setInitialState(stateId) {
+  if (EMBED) return;
+  if (stateId===initialStateId || !states.some(s=>s.id===stateId)) return;
+  pushUndo(); initialStateId=stateId; finishEdit();
+}
+function selectState(stateId, focusName=false) {
+  if (EMBED) return;
+  if (stateId==='') {
+    pauseForEditing(); selectedStateId=null;
+    render(); renderEditor(); saveToStorage(); return;
+  }
+  if (!states.some(s=>s.id===stateId)) return;
+  pauseForEditing(); selectedStateId=stateId;
+  render(); renderEditor(); saveToStorage();
+  if (focusName) document.getElementById('stateNameInput')?.focus();
+}
 function setCurrentState(stateId) {
-  pushUndo();activeStateId=stateId;if(simStep===0)simStep=1;
+  if (EMBED) return;
+  if (!states.some(s=>s.id===stateId) || stateId===activeStateId) return;
+  pushUndo();stepHistory=[];activeStateId=stateId;
   updateOutputsFromState();document.getElementById('stepCounter').textContent=`STEP ${simStep}`;
   render();renderOutputsPanel();renderEditor();updateRightPanelAfterChange();
 }
 function renameInput(index,value) {
-  pushUndo();inputNames[index]=value||`x${index}`;renderInputs();renderOutputsPanel();
+  if (EMBED) return;
+  pushUndo();inputNames[index]=String(value||`x${index}`).slice(0,200);renderInputs();renderOutputsPanel();renderEditor();
   if(expandMode)renderBottomPanel();if(activeTab==='table')renderNormalTablePanel();else if(activeTab==='log')switchTab('vars');
 }
 function renameOutput(index,value) {
-  pushUndo();outputNames[index]=value||`z${index}`;renderOutputsPanel();renderInputs();
+  if (EMBED) return;
+  pushUndo();outputNames[index]=String(value||`z${index}`).slice(0,200);renderOutputsPanel();renderInputs();renderEditor();
   if(expandMode)renderBottomPanel();if(activeTab==='table')renderNormalTablePanel();else if(activeTab==='log')switchTab('vars');
 }
 function copyMooreOutputsToTransitions(s) {
@@ -2648,6 +3350,7 @@ function copyTransitionOutputsToMoore(s) {
   s.outputs = [...out];
 }
 function showMealyToMooreModal(statesToConvert, callback) {
+  if (EMBED) return;
   const ambiguous = statesToConvert.filter(s => {
     if (s.mode !== 'mealy') return false;
     const trans = transitions[s.id] || [];
@@ -2673,25 +3376,27 @@ function showMealyToMooreModal(statesToConvert, callback) {
   });
   document.getElementById('mealyToMooreContent').innerHTML = html;
   render();
-  document.getElementById('mealyToMooreModal').style.display = 'flex';
+  openModal('mealyToMooreModal');
 }
 function confirmMealyToMoore() {
+  if (EMBED) return;
   if (!pendingMealyToMooreCallback) return;
   pushUndo();
   const cb = pendingMealyToMooreCallback;
   ambiguousStateIds = new Set();
   pendingMealyToMooreCallback = null;
-  document.getElementById('mealyToMooreModal').style.display = 'none';
   cb();
+  closeModal('mealyToMooreModal');
 }
 function closeMealyToMooreModal(e) {
   if (e && e.target && e.target.id !== 'mealyToMooreModal') return;
   ambiguousStateIds = new Set();
   pendingMealyToMooreCallback = null;
-  document.getElementById('mealyToMooreModal').style.display = 'none';
-  render();
+  render(); renderEditor(); syncModeSwitch();
+  closeModal('mealyToMooreModal');
 }
 function setStateMode(stateId,mode) {
+  if (EMBED) return;
   const s=states.find(st=>st.id===stateId);if(!s)return;
   if (mode==='mealy'&&s.mode==='moore') {
     pushUndo();copyMooreOutputsToTransitions(s);s.mode='mealy';
@@ -2704,6 +3409,7 @@ function setStateMode(stateId,mode) {
   }
 }
 function setAllModesFromSwitch(isMealy) {
+  if (EMBED) return;
   if (isMealy) {
     pushUndo();
     states.forEach(s=>{ if(s.mode==='moore') copyMooreOutputsToTransitions(s); s.mode='mealy'; });
@@ -2722,12 +3428,14 @@ function syncModeSwitch() {
   label.textContent=allMealy?'All Mealy':(states.every(s=>s.mode!=='mealy')?'All Moore':'Mixed');
 }
 function renameState(id,name) {
+  if (EMBED) return;
   const s=states.find(st=>st.id===id);if(!s)return;
-  const next=name||s.name;
+  const next=String(name||s.name).slice(0,200);
   if(s.name===next)return;
-  pushUndo();s.name=next;render();updateRightPanelAfterChange();
+  pushUndo();s.name=next;render();renderEditor(true);updateRightPanelAfterChange();
 }
 function setTransition(fromId,index,toId) {
+  if (EMBED) return;
   if(!transitions[fromId])return;pushUndo();
   transitions[fromId][index]={...transitions[fromId][index],to:toId};
   render();updateRightPanelAfterChange();
@@ -2751,6 +3459,7 @@ function updateOutputsFromState() {
 
 function switchTab(tab) {
   activeTab = tab;
+  document.getElementById('rightPanel').classList.toggle('table-view', tab==='table');
   document.getElementById('tabVars').classList.toggle('active', tab==='vars');
   document.getElementById('tabLog').classList.toggle('active', tab==='log');
   document.getElementById('tabTable').classList.toggle('active', tab==='table');
@@ -2775,9 +3484,9 @@ function renderVarsPanel() {
   const nextState=states.find(s=>s.id===nextId);
   document.getElementById('panelContent').innerHTML=`
     <div class="editor-title" style="margin-bottom:6px">Inputs</div>
-    ${inputBits.map((b,i)=>`<div class="var-row"><input class="name-input" value="${h(inputNames[i]||`x${i}`)}" oninput="renameInput(${i},this.value)"><span class="var-val">${b}</span></div>`).join('')}
+    ${inputBits.map((b,i)=>`<div class="var-row">${EMBED?`<span class="var-name">${h(inputNames[i]||`x${i}`)}</span>`:`<input class="name-input" maxlength="200" value="${h(inputNames[i]||`x${i}`)}" oninput="renameInput(${i},this.value)">`}<span class="var-val">${b}</span></div>`).join('')}
     <div class="editor-title" style="margin:12px 0 6px">Outputs</div>
-    ${outputBits.slice().reverse().map((b,bi)=>{const idx=outputBits.length-1-bi;return`<div class="var-row"><input class="name-input" value="${h(outputNames[idx]||`z${idx}`)}" oninput="renameOutput(${idx},this.value)"><span class="var-val">${b}</span></div>`;}).join('')}
+    ${outputBits.slice().reverse().map((b,bi)=>{const idx=outputBits.length-1-bi;return`<div class="var-row">${EMBED?`<span class="var-name">${h(outputNames[idx]||`z${idx}`)}</span>`:`<input class="name-input" maxlength="200" value="${h(outputNames[idx]||`z${idx}`)}" oninput="renameOutput(${idx},this.value)">`}<span class="var-val">${b}</span></div>`;}).join('')}
     <div class="editor-title" style="margin:12px 0 6px">State</div>
     <div class="var-row"><span class="var-name">current</span><span class="var-val">${cur?h(cur.name):'-'}</span></div>
     <div class="var-row"><span class="var-name">next</span><span class="var-val">${nextState?h(nextState.name):'-'}</span></div>
@@ -2798,7 +3507,7 @@ function renderNormalTablePanel() {
       const t=transitions[s.id]?.[i];
       const next=t?states.find(st=>st.id===t.to):null;
       const outBits=s.mode==='mealy'?(t?normalizeTransitionOutputs(t).out:Array(outputBitsCount).fill(0)):(s.outputs||Array(outputBitsCount).fill(0));
-      rows.push({input:formatInput(i),current:s.name||s.id,next:next?next.name:'-',output:bitsToString(outBits)});
+      rows.push({stateId:s.id,input:formatInput(i),current:s.name||s.id,next:next?next.name:'-',output:bitsToString(outBits)});
     }
   });
   const cur=states.find(s=>s.id===activeStateId);
@@ -2819,7 +3528,7 @@ function renderNormalTablePanel() {
           </tr>
         </thead>
         <tbody>
-          ${rows.map(r=>`<tr class="${r.current===(cur?cur.name:'')&&(inputBitsCount===0||r.input===formatInput(curInput))?'table-active':''}">${inputBitsCount>0?`<td>${h(r.input)}</td>`:''}<td>${h(r.current)}</td><td>${h(r.next)}</td><td>${h(r.output)}</td></tr>`).join('')}
+          ${rows.map(r=>`<tr class="${r.stateId===activeStateId&&(inputBitsCount===0||r.input===formatInput(curInput))?'table-active':''}">${inputBitsCount>0?`<td>${h(r.input)}</td>`:''}<td>${h(r.current)}</td><td>${h(r.next)}</td><td>${h(r.output)}</td></tr>`).join('')}
         </tbody>
       </table>
     </div>
@@ -2839,61 +3548,89 @@ function updateMenuChecks() {
   const sidebarCheck=document.getElementById('menuCheckSidebars');
   const themeCheck=document.getElementById('menuCheckTheme');
   if(sidebarCheck) sidebarCheck.textContent=document.body.classList.contains('hide-sidebars')?'':'✓';
-  if(themeCheck) themeCheck.textContent=document.body.classList.contains('light')?'✓':'';
+  if(themeCheck) themeCheck.textContent=document.body.classList.contains('light')?'☾':'☀';
+  const embedIcon=document.getElementById('themeIconEmbed');
+  if(embedIcon) embedIcon.textContent=document.body.classList.contains('light')?'☾':'☀';
 }
-function openLoadDialog() { document.getElementById('fileInput').click(); }
-function toggleSidebars() { document.body.classList.toggle('hide-sidebars'); updateMenuChecks(); }
+function openLoadDialog() {
+  if (EMBED) return; document.getElementById('fileInput').click(); }
+function toggleSidebars() {
+  if (EMBED) return; document.body.classList.toggle('hide-sidebars'); updateMenuChecks(); }
 function toggleTheme() { document.body.classList.toggle('light'); updateMenuChecks(); }
-function toggleSimplify() { simplifyOn=!simplifyOn; updateSimplifyButton(); render(); if(expandMode)renderBottomPanel();if(activeTab==='table')renderNormalTablePanel(); }
-function updateSimplifyButton() { const btn=document.getElementById('btnSimplify');if(btn){btn.textContent='Simplify Arrows';btn.classList.toggle('active',simplifyOn);} }
+function toggleSimplify() {
+  if (EMBED) return; pushUndo(); simplifyOn=!simplifyOn; updateSimplifyButton(); render(); if(expandMode)renderBottomPanel();if(activeTab==='table')renderNormalTablePanel(); }
+function updateSimplifyButton() { const btn=document.getElementById('btnSimplify');if(btn){btn.setAttribute('aria-pressed',String(simplifyOn));document.getElementById('menuCheckSimplify').textContent=simplifyOn?'✓':'';btn.classList.toggle('active',simplifyOn);} }
 
 // ══════════════════════════════════════════════════════════════════
 //  SIMULATION
 // ══════════════════════════════════════════════════════════════════
 
+function getInitialState() {
+  return states.find(s=>s.id===initialStateId) || states[0] || null;
+}
+// History tracks clocks, independently of editor Undo and diagram geometry.
+function simulationStructureKey() {
+  return JSON.stringify([initialStateId,inputBitsCount,outputBitsCount,states.map(s=>[s.id,s.mode,s.outputs,(transitions[s.id]||[]).map(t=>[t.to,t.out])])]);
+}
+function updateBackButton() {
+  if (stepHistory.length && stepHistory[stepHistory.length-1].modelKey!==simulationStructureKey()) stepHistory=[];
+  const btn=document.getElementById('btnBack');
+  if (btn) {
+    btn.disabled=!stepHistory.length;
+    btn.title=stepHistory.length?'Go back one clock step':'No previous clock step in this session';
+  }
+}
+function stepBack() {
+  pauseForEditing();
+  updateBackButton();
+  const snapshot=stepHistory.pop();
+  if (!snapshot) return;
+  activeStateId=snapshot.activeStateId; simStep=snapshot.simStep;
+  inputBits=[...snapshot.inputBits]; simLog=snapshot.simLog.map(entry=>({...entry}));
+  refreshWorkspace(); saveToStorage();
+}
 function resetSim() {
-  clearInterval(runInterval);isRunning=false;
-  document.getElementById('btnRun').textContent='Run';document.getElementById('btnRun').className='btn success';
-  simStep=0;simLog=[];activeStateId=states[0]?.id||null;
-  updateOutputsFromState();document.getElementById('stepCounter').textContent='STEP 0';
-  render();renderOutputsPanel();renderEditor();
-  if(expandMode)renderBottomPanel();if(activeTab==='log')renderLogPanel();else if(activeTab==='table')renderNormalTablePanel();else renderVarsPanel();
+  if (EMBED) inputBits=validateDesign(EMBED).inputBits;
+  stopSimulation();
+  stepHistory=[]; simStep=0; simLog=[]; activeStateId=getInitialState()?.id ?? null;
+  refreshWorkspace(); saveToStorage();
 }
-
-function stepSim() {
-  if(!states.length)return;
+function advanceSimulation() {
+  if (!states.length) { stopSimulation(); return; }
+  if (!states.some(s=>s.id===activeStateId)) activeStateId=getInitialState().id;
   const prevState=states.find(s=>s.id===activeStateId);
-  if(simStep===0){activeStateId=states[0].id;const idx=getInputIndex();activeStateId=transitions[activeStateId]?.[idx]?.to||activeStateId;simStep=1;}
-  else{const idx=getInputIndex();activeStateId=transitions[activeStateId]?.[idx]?.to||activeStateId;simStep++;}
+  const t=transitions[activeStateId]?.[getInputIndex()];
+  const nextState=states.find(s=>s.id===t?.to);
+  if (!nextState || simStep >= Number.MAX_SAFE_INTEGER) { stopSimulation(); return; }
   updateOutputsFromState();
-  const nextState=states.find(s=>s.id===activeStateId);
-  addLog('step',`Input (${formatNameValPairs(inputNames,inputBits)}), State ${prevState?prevState.name:'?'} -> ${nextState?nextState.name:'?'}, Output (${formatNameValPairs(outputNames,outputBits)})`);
-  document.getElementById('stepCounter').textContent=`STEP ${simStep}`;
-  render();renderOutputsPanel();renderEditor();
-  if(expandMode)renderBottomPanel();if(activeTab==='log')renderLogPanel();else if(activeTab==='table')renderNormalTablePanel();else renderVarsPanel();
+  const before=[...outputBits];
+  updateBackButton();
+  stepHistory.push({modelKey:simulationStructureKey(),activeStateId,simStep,inputBits:[...inputBits],simLog:simLog.map(entry=>({...entry}))});
+  if(stepHistory.length>STEP_HISTORY_LIMIT)stepHistory.shift();
+  activeStateId=nextState.id; simStep++;
+  updateOutputsFromState();
+  const beforeLabel=prevState.mode==='mealy' ? 'Transition output' : 'Pre-clock output';
+  addLog('step',`Input (${formatNameValPairs(inputNames,inputBits)}), State ${prevState.name} -> ${nextState.name}, ${beforeLabel} (${formatNameValPairs(outputNames,before)}), Post-clock output (${formatNameValPairs(outputNames,outputBits)})`);
+  refreshWorkspace(); saveToStorage();
 }
-
+function stepSim() { stopSimulation(); advanceSimulation(); }
 function runSim() {
-  if(isRunning){clearInterval(runInterval);isRunning=false;document.getElementById('btnRun').textContent='Run';document.getElementById('btnRun').className='btn success';return;}
-  if(!states.length)return;
-  if(simStep===0)activeStateId=states[0].id;
-  isRunning=true;document.getElementById('btnRun').textContent='Stop';document.getElementById('btnRun').className='btn danger';
-  runInterval=setInterval(()=>{
-    const prevState=states.find(s=>s.id===activeStateId);
-    const idx=getInputIndex();activeStateId=transitions[activeStateId]?.[idx]?.to||activeStateId;simStep++;
-    updateOutputsFromState();const nextState=states.find(s=>s.id===activeStateId);
-    addLog('step',`Input (${formatNameValPairs(inputNames,inputBits)}), State ${prevState?prevState.name:'?'} -> ${nextState?nextState.name:'?'}, Output (${formatNameValPairs(outputNames,outputBits)})`);
-    document.getElementById('stepCounter').textContent=`STEP ${simStep}`;
-    render();renderOutputsPanel();renderEditor();
-    if(expandMode)renderBottomPanel();if(activeTab==='log')renderLogPanel();else if(activeTab==='table')renderNormalTablePanel();else renderVarsPanel();
-  },650);
+  if (EMBED) return;
+  if (isRunning) { stopSimulation(); saveToStorage(); return; }
+  if (!states.length) return;
+  if (!states.some(s=>s.id===activeStateId)) activeStateId=getInitialState().id;
+  isRunning=true;
+  document.getElementById('btnRun').textContent='■ Stop';
+  document.getElementById('btnRun').className='btn danger';
+  runInterval=setInterval(advanceSimulation,650);
 }
 
 function confirmNewWorkspace() {
+  if (EMBED) return;
   if(!confirm('Create a new workspace? This will clear the current FSM on the canvas.')) return;
   pushUndo();
   clearInterval(runInterval);isRunning=false;
-  document.getElementById('btnRun').textContent='Run';document.getElementById('btnRun').className='btn success';
+  document.getElementById('btnRun').textContent='▶ Run';document.getElementById('btnRun').className='btn success';
   simLog=[];simplifyOn=false;flipFlopTypes=['D'];
   applyState({
     states:[],
@@ -2917,33 +3654,67 @@ function confirmNewWorkspace() {
 //  SAVE / LOAD
 // ══════════════════════════════════════════════════════════════════
 
+function downloadText(text, name) {
+  const blob=new Blob([text],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
 function saveJSON() {
-  const data={version:1,states,transitions,inputBitsCount,inputBits,inputNames,outputBitsCount,outputBits,outputNames,view,simStep,activeStateId,selectedStateId,idCounter,simplifyOn,flipFlopTypes};
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  if (EMBED) return;
+  const data={version:1,...captureState()};
+  try { validateDesign(data); } catch(err) { alert('Save failed: '+err.message); return; }
   let name=prompt('Save as file name:','fsm_diagram.json');
   if(name===null)return;name=String(name).trim()||'fsm_diagram.json';
   if(!/\.json$/i.test(name))name+='.json';
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href);
+  downloadText(JSON.stringify(data,null,2),name);
 }
 
 function loadJSON(e) {
+  if (EMBED) return;
   const file=e.target.files[0];if(!file)return;
+  if (file.size > MAX_IMPORT_BYTES) { alert('Load failed: FSM files must be at most 2 MiB.'); e.target.value=''; return; }
   const rd=new FileReader();
+  rd.onerror=()=>alert('Load failed: could not read the file.');
   rd.onload=ev=>{
     try{
-      const data=JSON.parse(ev.target.result);
-      if(!data.states||!data.transitions)throw new Error('Not a valid FSM file');
+      const data=validateDesign(JSON.parse(ev.target.result));
       pushUndo();
-      if(data.flipFlopTypes)flipFlopTypes=data.flipFlopTypes;
       applyState(data);
-      simplifyOn=!!data.simplifyOn;updateSimplifyButton();
+      saveToStorage();
     }catch(err){alert('Load failed: '+err.message);}
   };
   rd.readAsText(file);e.target.value='';
 }
 
-function openModal(id){const modal=document.getElementById(id);if(modal)modal.style.display='flex';}
-function closeModal(id,e){if(e&&e.target&&e.target.id!==id)return;const modal=document.getElementById(id);if(modal)modal.style.display='none';}
+function openModal(id) {
+  const modal=document.getElementById(id); if(!modal)return;
+  modalPreviousFocus=document.activeElement;
+  activeModalId=id;
+  document.querySelector('header').inert=true;
+  document.getElementById('appBody').inert=true;
+  document.getElementById('storageNotice').inert=true;
+  modal.style.display='flex';
+  const dialog=modal.querySelector('.modal');
+  dialog.setAttribute('tabindex','-1');
+  if (id === 'helpModal') {
+    // Focusing the bottom Close button scrolls the long Help content out of view.
+    dialog.focus({preventScroll:true});
+    dialog.scrollTop=0;
+  } else {
+    (modal.querySelector('button, input, select, textarea, a[href]') || dialog).focus();
+  }
+}
+function closeModal(id,e) {
+  if(e&&e.target&&e.target.id!==id)return;
+  const modal=document.getElementById(id);if(modal)modal.style.display='none';
+  if(activeModalId!==id)return;
+  activeModalId=null;
+  document.querySelector('header').inert=false;
+  document.getElementById('appBody').inert=false;
+  document.getElementById('storageNotice').inert=false;
+  const target=modalPreviousFocus?.isConnected ? modalPreviousFocus : document.getElementById('modeSwitch');
+  target?.focus(); modalPreviousFocus=null;
+}
 function openAbout(){openModal('aboutModal');}
 function closeAbout(e){closeModal('aboutModal',e);}
 function openHelp(){openModal('helpModal');}
