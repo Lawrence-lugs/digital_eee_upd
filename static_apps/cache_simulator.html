@@ -98,7 +98,7 @@
   .tutorial-binary-value{font:850 .88rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#202b35;overflow-wrap:anywhere;word-break:break-all}
   .tutorial-binary-partition{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-top:7px;font:900 .88rem/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
   .tutorial-binary-partition .tag{background:#ece5f4;color:#5f4777;padding:2px 5px;border-radius:5px}
-  .tutorial-binary-partition .index{background:#e4eef7;color:#315f84;padding:2px 5px;border-radius:5px}
+  .tutorial-binary-partition .index{background:var(--index);color:#496858;padding:2px 5px;border-radius:5px}
   .tutorial-binary-partition .offset{background:#f8ead8;color:#855d2f;padding:2px 5px;border-radius:5px}
   .tutorial-binary-key{margin-top:5px;color:#697480;font-size:.74rem;line-height:1.35}
   .tutorial-conversions{display:flex;flex-wrap:wrap;gap:7px;margin:9px 0}
@@ -517,7 +517,7 @@ LW 0x04</textarea>
           </div>
 
           <div class="button-row">
-            <button id="resetBtn" class="danger" title="Return the access series to the beginning and reinitialize the cache.">Reset</button>
+            <button id="resetBtn" class="danger" title="Return the access series to the beginning, reinitialize the cache, and restore main memory to its current deterministic baseline.">Reset</button>
             <span class="spacer"></span>
             <button id="undoBtn" class="secondary" title="Restore the state before the previous Step.">Undo</button>
             <button id="stepBtn" class="primary" title="Process the currently highlighted memory access.">Step</button>
@@ -579,7 +579,7 @@ LW 0x04</textarea>
                   <option value="RANDOM">Random values</option>
                 </select>
               </div>
-              <button id="initializeCacheBtn" class="soft-blue" type="button" title="Reinitialize the cache using the selected initialization setting.">Initialize cache</button>
+              <button id="initializeCacheBtn" class="soft-blue" type="button" title="Reinitialize the cache and restore main memory to its current deterministic baseline.">Initialize cache</button>
             </div>
           </div>
           <div class="table-wrap cache-table-wrap">
@@ -678,13 +678,14 @@ LW 0x04</textarea>
   // -----------------------------------------------------------------
   // Global simulator constants and mutable state
   // memorySeed drives deterministic pseudo-random main-memory contents.
+  // memoryBaselineSeed records the most recently chosen starting pattern.
   // memoryOverrides stores user edits and store/write-back results.
   // -----------------------------------------------------------------
   const DEFAULT_MEMORY_SEED=0x15315315;
   const MEMORY_ROWS=8;
   const state={
     config:null,sets:[],accesses:[],accessValid:true,accessErrorLine:null,pointer:0,clock:0,hits:0,misses:0,reads:0,writes:0,writeBacks:0,history:[],current:null,undoStack:[],
-    memorySeed:DEFAULT_MEMORY_SEED,memoryOverrides:new Map(),memoryViewBase:0n,flashLineKey:null,flashMemoryBase:null,flashToken:0,notice:"",addressHelperValue:0n,byteOrder:"ASC",endianness:"LITTLE",cacheInitMode:"EMPTY",cacheInitSeed:0x153CACE
+    memorySeed:DEFAULT_MEMORY_SEED,memoryBaselineSeed:DEFAULT_MEMORY_SEED,memoryOverrides:new Map(),memoryViewBase:0n,flashLineKey:null,flashMemoryBase:null,flashToken:0,notice:"",addressHelperValue:0n,byteOrder:"ASC",endianness:"LITTLE",cacheInitMode:"EMPTY",cacheInitSeed:0x153CACE
   };
   let configTimer=null,accessTimer=null;
   // Guided tutorial state. beforeState/afterState preserve the real
@@ -831,10 +832,20 @@ LW 0x04</textarea>
       return {setIndex:si,wayIndex:wi,valid:false,dirty,tag,blockBase,data,loadedAt:0,lru,hasInvalidValues};
     }));
   }
-  function initializeCacheFromControl(reason="Cache initialized."){
+  // Restore main memory to its current deterministic baseline.
+  // The baseline begins at DEFAULT_MEMORY_SEED and is replaced whenever the
+  // user clicks "Randomize main memory". Manual edits, stores, and write-backs
+  // never modify the baseline; Reset/Initialize simply clear those overrides.
+  function resetMainMemoryToBaseline(){
+    state.memorySeed=state.memoryBaselineSeed;
+    state.memoryOverrides.clear();
+  }
+
+  function initializeCacheFromControl(reason="Cache initialized.",resetMemory=false){
     if(tutorial.active) closeTutorial();
     state.cacheInitMode=els.cacheInitMode.value;
     if(state.cacheInitMode==="RANDOM") state.cacheInitSeed=(Math.random()*0xffffffff)>>>0;
+    if(resetMemory) resetMainMemoryToBaseline();
     restartSimulation(reason);
   }
 
@@ -1167,12 +1178,12 @@ function memoryHashByte(address){
     const mask=(1n<<BigInt(c.addressBits))-1n;
     state.addressHelperValue&=mask;
     const fields=[
-      {name:"Tag",bits:c.tagBits,cls:"tag"},
-      {name:"Index",bits:c.indexBits,cls:"index"},
-      {name:"Offset",bits:c.offsetBits,cls:"offset"}
+      {name:"Tag",short:"T",bits:c.tagBits,cls:"tag"},
+      {name:"Index",short:"I",bits:c.indexBits,cls:"index"},
+      {name:"Offset",short:"O",bits:c.offsetBits,cls:"offset"}
     ].filter(f=>f.bits>0);
     els.addressHelperFields.innerHTML=fields.map(f=>
-      `<div class="address-helper-field ${f.cls}" style="flex:${f.bits} 1 0" title="${f.name}: ${f.bits} bit${f.bits===1?"":"s"}">${f.name}</div>`
+      `<div class="address-helper-field ${f.cls}" style="flex:${f.bits} 1 0" title="${f.name}: ${f.bits} bit${f.bits===1?"":"s"}">${f.short}</div>`
     ).join("");
 
     const bits=binaryFixed(state.addressHelperValue,c.addressBits);
@@ -1370,7 +1381,15 @@ function memoryHashByte(address){
   function onMemoryEdit(e){try{const addr=BigInt(e.target.dataset.memoryAddress),v=parseByteInput(e.target.value);setMemoryByte(addr,v);setMessage(els.memoryMessage,"ok",`${hex(addr,state.config.addressBits)} set to 0x${byteHex(v)}.`);restartSimulation("Main memory edited; cache restarted empty.");}catch(err){setMessage(els.memoryMessage,"error",err.message);renderMemory()}}
   function jumpMemory(){if(!state.config) return;try{const a=parseLiteral(els.memoryJump.value,"memory address");if(a<0n||a>state.config.maxAddress) throw new Error(`Address must fit in ${state.config.addressBits} bits.`);state.memoryViewBase=pageBaseForAddress(a,state.config);setMessage(els.memoryMessage,"","");renderMemory()}catch(e){setMessage(els.memoryMessage,"error",e.message)}}
   function moveMemoryPage(dir){if(!state.config) return;const p=pageBytes(state.config);state.memoryViewBase=alignMemoryView(state.memoryViewBase+BigInt(dir)*p,state.config);renderMemory()}
-  function randomizeMemory(){state.memorySeed=Math.floor(Math.random()*0xffffffff)>>>0;state.memoryOverrides.clear();setMessage(els.memoryMessage,"ok","Main memory randomized with a new deterministic seed.");restartSimulation("Main memory randomized; cache restarted empty.",false)}
+  function randomizeMemory(){
+    state.memorySeed=Math.floor(Math.random()*0xffffffff)>>>0;
+    // A newly randomized memory image becomes the baseline restored by
+    // Reset and Initialize cache until Randomize main memory is used again.
+    state.memoryBaselineSeed=state.memorySeed;
+    state.memoryOverrides.clear();
+    setMessage(els.memoryMessage,"ok","Main memory randomized; this pattern is now the reset baseline.");
+    restartSimulation("Main memory randomized; cache restarted empty.",false);
+  }
 
 
   // -----------------------------------------------------------------
@@ -2198,8 +2217,14 @@ function memoryHashByte(address){
   els.generateBtn.addEventListener('click',generateSeries);
   els.stepBtn.addEventListener('click',()=>processStep(tutorial.enabled));
   els.undoBtn.addEventListener('click',()=>{if(tutorial.active)closeTutorial();undoStep()});
-  els.resetBtn.addEventListener('click',()=>{if(tutorial.active)closeTutorial();state.cacheInitMode=els.cacheInitMode.value;if(state.cacheInitMode==="RANDOM")state.cacheInitSeed=(Math.random()*0xffffffff)>>>0;restartSimulation("Access series reset to the beginning.")});
-  els.initializeCacheBtn.addEventListener('click',()=>initializeCacheFromControl("Cache initialized; access series restarted."));
+  els.resetBtn.addEventListener('click',()=>{
+    if(tutorial.active) closeTutorial();
+    state.cacheInitMode=els.cacheInitMode.value;
+    if(state.cacheInitMode==="RANDOM") state.cacheInitSeed=(Math.random()*0xffffffff)>>>0;
+    resetMainMemoryToBaseline();
+    restartSimulation("Access series and main memory reset to the current baseline state.");
+  });
+  els.initializeCacheBtn.addEventListener('click',()=>initializeCacheFromControl("Cache initialized; main memory restored to its current baseline and access series restarted.",true));
   els.startupTutorialClose.addEventListener("click",closeStartupTutorial);
   els.startupTutorialBackdrop.addEventListener("click",closeStartupTutorial);
   els.tutorialToggle.addEventListener("click",()=>setTutorialEnabled(!tutorial.enabled));
