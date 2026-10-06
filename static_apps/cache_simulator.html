@@ -149,6 +149,11 @@
      and Access series. Only the triangle rotates; the label stays upright. */
   .config-panel-head,.access-panel-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start}
   .config-panel-head .section-lead,.access-panel-head .section-lead{margin-bottom:15px}
+  .access-head-controls{display:flex;flex-direction:column;align-items:flex-end;gap:16px}
+  .advanced-toggle{display:flex;align-items:center;gap:6px;font-size:.78rem;white-space:nowrap;cursor:pointer;margin:0}
+  .advanced-toggle input{width:auto;margin:0;accent-color:var(--up-maroon)}
+  [hidden]{display:none!important}
+  #programVariables{overflow-wrap:anywhere;margin-top:7px}
   .panel-collapse-toggle{display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;color:#65707b;padding:2px 3px;cursor:pointer;font:750 .75rem/1.1 Inter,system-ui,sans-serif}
   .panel-collapse-toggle:hover{color:var(--up-maroon)}
   .collapse-label{white-space:nowrap}
@@ -205,11 +210,11 @@
   .access-panel{position:static}.left-sticky-group{position:sticky;top:18px;z-index:4;display:grid;gap:18px}
   .access-editor-wrap{position:relative;height:225px;border:1px solid #bfc7d1;border-radius:9px;background:#fff;overflow:hidden}
   .access-editor-wrap:focus-within{border-color:var(--up-maroon);box-shadow:0 0 0 3px rgba(123,17,19,.12)}
-  .access-backdrop,.access-input{position:absolute;inset:0;width:100%;height:100%;margin:0;padding:10px 11px;border:0;border-radius:0;overflow:auto;white-space:pre;tab-size:2;font:650 1.06rem/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .access-backdrop,.access-input{position:absolute;inset:0;width:100%;height:100%;margin:0;padding:10px 11px;border:0;border-radius:0;overflow:auto;white-space:pre;tab-size:2;font:650 1.06rem/26px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
   .access-backdrop{z-index:0;pointer-events:none;background:#fff;color:transparent;scrollbar-width:none}
   .access-backdrop::-webkit-scrollbar{display:none}
   .access-input{z-index:1;resize:none;background:transparent!important;color:#16202a;caret-color:#16202a;outline:none!important;box-shadow:none!important}
-  .access-backdrop .access-line{display:block;min-height:1.5em;margin:0 -11px;padding:0 11px}
+  .access-backdrop .access-line{display:block;min-height:26px;margin:0 -11px;padding:0 11px}
   .access-backdrop .access-line.done{background:#f7f8f9}
   .access-backdrop .access-line.next{box-shadow:inset 3px 0 0 #b1b8c0}
   .access-backdrop .access-line.current{background:#fff0c7;box-shadow:inset 4px 0 0 var(--up-maroon)}
@@ -263,7 +268,7 @@
   .summary-row{display:grid;grid-template-columns:repeat(5,minmax(90px,1fr));gap:9px}.left-sticky-group .summary-row{grid-template-columns:repeat(3,minmax(0,1fr))}.stat{border:1px solid #dfe4e9;border-radius:10px;padding:10px 11px;background:#fbfcfd}.stat strong{display:block;font-size:1.08rem}.stat span{color:var(--muted);font-size:.7rem}
   .table-wrap{overflow:auto;border:1px solid #dfe4e9;border-radius:11px;background:#fff}
   .cache-valid-cell.valid-zero{color:#d9362b!important;font-weight:950}.cache-valid-cell.valid-one{color:#00A94F!important;font-weight:950}
-  .cache-table-wrap{overflow-x:hidden}
+  .cache-table-wrap{overflow-x:auto}
   table{width:100%;border-collapse:collapse;font-size:.78rem}th,td{padding:8px 9px;text-align:left;border-bottom:1px solid #edf0f3;white-space:nowrap;vertical-align:middle}th{position:sticky;top:0;z-index:2;background:#f5f7f9;color:#4f5a65;font-size:.69rem;text-transform:uppercase;letter-spacing:.035em}tr:last-child td{border-bottom:0}
   .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
   .empty{color:#9099a3;font-style:italic}
@@ -276,6 +281,9 @@
   .cache-table .col-status{white-space:normal;line-height:1.25;font-size:.9rem}
   .cache-table .col-tag,.cache-table .col-base{font-size:.87rem}
   .cache-table .col-small{font-size:.93rem;font-weight:650}
+  .cache-table.paged{min-width:760px}
+  .cache-table.paged .col-small{padding-inline:4px;font-size:.82rem}
+  .cache-table.paged th.col-small{white-space:nowrap}
   .cache-table th,.cache-table td{text-align:center}
   .cache-table .cache-data-cell,.cache-table .cache-col-data,
   .cache-table .cache-status-cell,.cache-table .cache-col-status{text-align:left}
@@ -307,11 +315,28 @@
   .memory-switch[aria-pressed="true"] .switch-track{background:var(--up-maroon);box-shadow:inset 0 0 0 1px var(--up-maroon-dark)}
   .memory-switch[aria-pressed="true"] .switch-knob{transform:translateX(17px)}
   .memory-switch-state{font-size:.78rem;min-width:118px;text-align:left;white-space:nowrap;line-height:1.2}
-  .memory-toolbar{display:grid;grid-template-columns:minmax(150px,1fr) auto auto auto auto;gap:8px;align-items:end;margin-bottom:11px}.memory-toolbar label{margin-bottom:5px}
+  .memory-toolbar{display:grid;grid-template-columns:minmax(90px,1fr) repeat(5,auto);gap:8px;align-items:end;margin-bottom:11px}.memory-toolbar label{margin-bottom:5px}
+  .memory-toolbar button{padding-inline:9px}
+  .memory-file-dialog{width:min(600px,calc(100% - 32px));max-height:calc(100vh - 40px);overflow:auto;border:1px solid #cbd3dc;border-radius:14px;padding:24px;color:#27323d;box-shadow:0 20px 70px #0004}
+  .memory-file-dialog::backdrop{background:#19232e88}
+  .memory-file-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .memory-file-head h2{margin:0}
+  .memory-file-guide{font-size:.86rem;line-height:1.5}
+  .memory-file-guide pre{padding:12px;background:#f5f7f9;border-radius:8px;overflow:auto;font:600 .85rem/1.5 ui-monospace,Consolas,monospace}
+  .memory-file-drop{border:2px dashed #a6bacb;border-radius:10px;padding:22px 12px;text-align:center;background:#f7fbfe;margin-top:16px}
+  .memory-file-drop.dragging{border-color:var(--up-maroon);background:#fff0f2}
+  .memory-file-drop p{margin:0 0 10px}
+  .memory-file-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+  #memoryBaselineInfo{margin-bottom:10px;overflow-wrap:anywhere}
+  @media(min-width:721px) and (max-width:1250px){.memory-toolbar{grid-template-columns:minmax(90px,1fr) auto auto}.memory-toolbar button{min-width:0}}
+  .cache-toolbar{display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap;margin:12px 0 8px}
+  .cache-toolbar .cache-jump-field{flex:1 1 140px;max-width:220px}
+  .cache-toolbar label{margin-bottom:5px}
+  .cache-page-status{margin:0}
   .soft-blue{border:1px solid #bfd0df;border-radius:9px;padding:9px 12px;background:#eaf3f9;color:#365b73;font-weight:800}.soft-blue:hover{background:#dfeef7}
   /* Short cue used after changing Data byte ordering so students can
      immediately see which cache/memory column labels were rearranged. */
-  @keyframes orderingHeaderFlash{0%{background:#ffe99a;box-shadow:inset 0 0 0 2px #d2a52d}55%{background:#fff4c5;box-shadow:inset 0 0 0 2px #d2a52d}100%{background:transparent;box-shadow:none}}
+  @keyframes orderingHeaderFlash{0%{background:#ffe99a;box-shadow:inset 0 0 0 2px #d2a52d}55%{background:#fff4c5;box-shadow:inset 0 0 0 2px #d2a52d}100%{box-shadow:none}}
   .ordering-flash{animation:orderingHeaderFlash .8s ease-out}
   .memory-table th.byte-head{text-align:center;min-width:48px}.memory-table tbody td:first-child{font-size:.98rem}.memory-table td.mem-byte{text-align:center;padding:5px}.memory-table input{width:44px;text-align:center;padding:6px 3px;border:1px solid #d2d8df;border-radius:6px;font:780 .9rem ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;text-transform:uppercase}.memory-table tr.source-block td{background:#fff8e8}.memory-table tr.source-block td:first-child{box-shadow:inset 4px 0 0 #c6952c}.memory-table input.active-byte{background:#fff0c7;border-color:#c99f44}
   .memory-note{margin-top:9px;color:#66717c;font-size:.8rem;line-height:1.45}
@@ -449,10 +474,13 @@
               <h2>2. Access series</h2>
               <p class="section-lead">Write your memory accesses here.</p>
             </div>
+            <div class="access-head-controls">
             <button id="accessCollapseToggle" class="panel-collapse-toggle" type="button" aria-expanded="true" aria-controls="accessExtraBody" title="Collapse Access series helpers">
               <span id="accessCollapseLabel" class="collapse-label">Collapse</span>
               <span class="collapse-triangle" aria-hidden="true">▼</span>
             </button>
+            <label class="advanced-toggle" title="Enable variables, while … end loops, and pause. Run stops at pause or completion; Step performs one memory access."><input id="advancedMode" type="checkbox" />Advanced</label>
+            </div>
           </div>
           <div class="access-editor-wrap" id="accessEditorWrap">
             <pre id="accessBackdrop" class="access-backdrop" aria-hidden="true"></pre>
@@ -467,7 +495,14 @@ LB 0x44
 LW 0x04</textarea>
           </div>
           <div id="accessExtraBody" class="access-extra-body">
-          <div class="hint access-guide"><ul><li>Loads: <span class="mono">LB/LH/LW address</span></li><li>Stores: <span class="mono">SB/SH/SW address value</span></li><li>Alignment: word ÷4, halfword ÷2, byte unrestricted</li><li>Multi-byte values: <span id="accessEndianHint">little-endian</span></li><li>Stores: behavior follows the selected write policy</li></ul></div>
+          <div id="basicGuide" class="hint access-guide"><ul><li>Loads: <span class="mono">LB/LH/LW address</span></li><li>Stores: <span class="mono">SB/SH/SW address value</span></li><li>Alignment: word ÷4, halfword ÷2, byte unrestricted</li><li>Multi-byte values: <span id="accessEndianHint">little-endian</span></li><li>Stores: behavior follows the selected write policy</li></ul></div>
+          <div id="advancedGuide" class="hint access-guide" hidden><ul>
+            <li>Initialize variables (case sensitive)</li>
+            <li>Loops: <span class="mono">while (condition) … end</span></li>
+            <li>Compare: <span class="mono">&lt; &lt;= &gt; &gt;= == !=</span></li>
+            <li>Math: <span class="mono">+ - * ( )</span></li>
+            <li><span class="mono">pause</span> keyword: program breakpoint</li>
+          </ul></div>
           <div id="accessMessage" class="message" aria-live="polite"></div>
 
           <details class="address-helper-details">
@@ -487,11 +522,11 @@ LW 0x04</textarea>
             <summary>Generate access series</summary>
             <div class="generator-body">
               <div class="random-grid">
-                <div>
+                <div id="basicCountField">
                   <label for="randomCount">Count</label>
                   <input id="randomCount" type="number" min="1" max="500" value="20" />
                 </div>
-                <div>
+                <div id="basicPatternField">
                   <label for="randomPattern">Generated pattern</label>
                   <select id="randomPattern">
                     <option value="locality" selected>Temporal / spatial locality</option>
@@ -500,7 +535,7 @@ LW 0x04</textarea>
                     <option value="conflict">Same-set conflicts</option>
                   </select>
                 </div>
-                <div style="grid-column:1/-1">
+                <div id="basicTemplateField" style="grid-column:1/-1">
                   <label for="randomTemplate">Memory access template</label>
                   <select id="randomTemplate" title="Changing the template immediately regenerates the access list using the current Count and Generated pattern.">
                     <option value="word-loads" selected>Word loads only</option>
@@ -508,6 +543,16 @@ LW 0x04</textarea>
                     <option value="mixed-rw">Mixed loads and stores</option>
                     <option value="write-hit">Write-hit demonstration</option>
                     <option value="write-miss">Write-miss / allocation demonstration</option>
+                  </select>
+                </div>
+                <div id="advancedExampleField" style="grid-column:1/-1" hidden>
+                  <label for="advancedExample">Loop example</label>
+                  <select id="advancedExample">
+                    <option value="sequential">Sequential scan — one loop</option>
+                    <option value="passes">Repeated scans — pause after each pass</option>
+                    <option value="conflict">Same-set conflicts — nested loops</option>
+                    <option value="stores">Store then load — one loop</option>
+                    <option value="matrix">Matrix A / B traversal — four loops</option>
                   </select>
                 </div>
               </div>
@@ -518,11 +563,13 @@ LW 0x04</textarea>
 
           <div class="button-row">
             <button id="resetBtn" class="danger" title="Return the access series to the beginning, reinitialize the cache, and restore main memory to its current deterministic baseline.">Reset</button>
+            <button id="runBtn" class="primary" hidden title="Run until pause or the end of the program.">Run</button>
             <span class="spacer"></span>
-            <button id="undoBtn" class="secondary" title="Restore the state before the previous Step.">Undo</button>
+            <button id="undoBtn" class="secondary" title="Undo the previous Step, Run, or Continue.">Undo</button>
             <button id="stepBtn" class="primary" title="Process the currently highlighted memory access.">Step</button>
           </div>
           <div class="hint" id="queueStatus">0 accesses processed.</div>
+          <div class="hint mono" id="programVariables" hidden></div>
         </div>
       </section>
 
@@ -589,6 +636,19 @@ LW 0x04</textarea>
               <tbody id="cacheBody"></tbody>
             </table>
           </div>
+          <div id="cachePager" hidden>
+            <div class="cache-toolbar">
+              <div class="cache-jump-field">
+                <label for="cacheJump">Jump to line</label>
+                <input id="cacheJump" type="text" inputmode="numeric" value="0" spellcheck="false" title="Enter a zero-based cache-line number. Line = set × ways + way; Jump opens the page containing it." />
+              </div>
+              <button id="cacheJumpBtn" class="secondary" type="button">Jump</button>
+              <button id="cachePrevBtn" class="secondary" type="button">← Previous</button>
+              <button id="cacheNextBtn" class="secondary" type="button">Next →</button>
+            </div>
+            <div id="cachePageStatus" class="hint cache-page-status" aria-live="polite"></div>
+            <div id="cachePageMessage" class="message" aria-live="polite"></div>
+          </div>
         </div>
       </section>
 
@@ -627,9 +687,11 @@ LW 0x04</textarea>
             <button id="memoryJumpBtn" class="secondary">Jump</button>
             <button id="memoryPrevBtn" class="secondary">← Previous</button>
             <button id="memoryNextBtn" class="secondary">Next →</button>
-            <button id="randomizeMemoryBtn" class="soft-blue">Randomize main memory</button>
+            <button id="loadMemoryBtn" class="soft-blue" type="button">Load from file</button>
+            <button id="randomizeMemoryBtn" class="soft-blue">Randomize memory</button>
           </div>
           <div id="memoryMessage" class="message" aria-live="polite"></div>
+          <div id="memoryBaselineInfo" class="hint" hidden></div>
           <div class="table-wrap">
             <table class="memory-table">
               <thead id="memoryHead"></thead>
@@ -658,6 +720,35 @@ LW 0x04</textarea>
   <footer>Cache model: byte-addressable memory with natural alignment (word ÷4, halfword ÷2, byte unrestricted), selectable endianness, aligned power-of-two blocks, selectable write policy, and whole-block fill on read misses.</footer>
 </main>
 
+<dialog id="memoryFileDialog" class="memory-file-dialog" aria-labelledby="memoryFileTitle">
+  <div class="memory-file-head">
+    <h2 id="memoryFileTitle">Load memory from file</h2>
+    <button id="memoryFileClose" class="secondary" type="button" aria-label="Close file loader">×</button>
+  </div>
+  <div class="memory-file-guide">
+    <p>Use a UTF-8 text file with any extension (up to 4 MiB). Declare the default for unassigned addresses, then list a starting address and consecutive hexadecimal bytes:</p>
+    <pre>default = zero
+
+0x1000: 12 34 AB CD
+0x1010: FF 00 80 7F</pre>
+    <ul>
+      <li>Use <code>default = random</code> for a random background. Add <code>seed = 153</code> to reproduce it; otherwise a seed is chosen for you.</li>
+      <li>Addresses begin with <code>0x</code>; each byte has two hex digits (<code>00</code>–<code>FF</code>). A seed is a 32-bit unsigned decimal or hex integer.</li>
+      <li>Blank lines, spaces, and <code># comments</code> are allowed. Address ranges cannot overlap or exceed the configured address space.</li>
+      <li>Bytes load in the order written, regardless of endianness. Loading restarts the program and cache; Reset restores this imported memory image.</li>
+    </ul>
+  </div>
+  <div id="memoryFileDrop" class="memory-file-drop">
+    <p>Drop a text file here, or</p>
+    <button id="memoryFileChoose" class="soft-blue" type="button">Choose file</button>
+    <input id="memoryFileInput" type="file" hidden />
+  </div>
+  <div id="memoryFileMessage" class="message" aria-live="polite"></div>
+  <div class="memory-file-actions">
+    <button id="memoryFileCancel" class="secondary" type="button">Cancel</button>
+    <button id="memoryFileLoad" class="primary" type="button" disabled>Load memory</button>
+  </div>
+</dialog>
 <script>
 (()=>{
   "use strict";
@@ -669,6 +760,9 @@ LW 0x04</textarea>
   // -----------------------------------------------------------------
   const $=id=>document.getElementById(id);
   const els={
+    loadMemoryBtn:$("loadMemoryBtn"),memoryFileDialog:$("memoryFileDialog"),memoryFileClose:$("memoryFileClose"),memoryFileChoose:$("memoryFileChoose"),memoryFileInput:$("memoryFileInput"),memoryFileDrop:$("memoryFileDrop"),memoryFileMessage:$("memoryFileMessage"),memoryFileCancel:$("memoryFileCancel"),memoryFileLoad:$("memoryFileLoad"),memoryBaselineInfo:$("memoryBaselineInfo"),
+    cachePager:$("cachePager"),cacheJump:$("cacheJump"),cacheJumpBtn:$("cacheJumpBtn"),cachePrevBtn:$("cachePrevBtn"),cacheNextBtn:$("cacheNextBtn"),cachePageStatus:$("cachePageStatus"),cachePageMessage:$("cachePageMessage"),
+    advancedMode:$("advancedMode"),runBtn:$("runBtn"),basicGuide:$("basicGuide"),advancedGuide:$("advancedGuide"),advancedExample:$("advancedExample"),programVariables:$("programVariables"),
     addressBits:$("addressBits"),cacheSize:$("cacheSize"),blockSize:$("blockSize"),ways:$("ways"),replacement:$("replacement"),writePolicy:$("writePolicy"),configMessage:$("configMessage"),configCollapseToggle:$("configCollapseToggle"),configCollapseLabel:$("configCollapseLabel"),configPanelBody:$("configPanelBody"),
     accessInput:$("accessInput"),accessBackdrop:$("accessBackdrop"),accessMessage:$("accessMessage"),accessCollapseToggle:$("accessCollapseToggle"),accessCollapseLabel:$("accessCollapseLabel"),accessExtraBody:$("accessExtraBody"),addressHelperFields:$("addressHelperFields"),addressHelperBits:$("addressHelperBits"),addressHelperHex:$("addressHelperHex"),randomCount:$("randomCount"),randomPattern:$("randomPattern"),randomTemplate:$("randomTemplate"),generateBtn:$("generateBtn"),undoBtn:$("undoBtn"),stepBtn:$("stepBtn"),resetBtn:$("resetBtn"),queueStatus:$("queueStatus"),
     geometry:$("geometry"),bitWorkbench:$("bitWorkbench"),currentResult:$("currentResult"),currentAccess:$("currentAccess"),decodeInfo:$("decodeInfo"),summary:$("summary"),cacheTable:$("cacheTable"),cacheCols:$("cacheCols"),cacheHead:$("cacheHead"),cacheBody:$("cacheBody"),cacheInitMode:$("cacheInitMode"),initializeCacheBtn:$("initializeCacheBtn"),historyBody:$("historyBody"),
@@ -679,15 +773,21 @@ LW 0x04</textarea>
   // Global simulator constants and mutable state
   // memorySeed drives deterministic pseudo-random main-memory contents.
   // memoryBaselineSeed records the most recently chosen starting pattern.
+  // memoryImage holds imported baseline bytes over memoryDefault's background.
   // memoryOverrides stores user edits and store/write-back results.
   // -----------------------------------------------------------------
   const DEFAULT_MEMORY_SEED=0x15315315;
   const MEMORY_ROWS=8;
+  const CACHE_PAGE_LINES=16;
   const state={
+    memoryImage:new Map(),memoryDefault:"random",memoryImageName:"",
+    cacheViewBase:0,
+    advanced:false,program:[],execution:null,running:false,runToken:0,basicText:"",advancedText:null,
     config:null,sets:[],accesses:[],accessValid:true,accessErrorLine:null,pointer:0,clock:0,hits:0,misses:0,reads:0,writes:0,writeBacks:0,history:[],current:null,undoStack:[],
     memorySeed:DEFAULT_MEMORY_SEED,memoryBaselineSeed:DEFAULT_MEMORY_SEED,memoryOverrides:new Map(),memoryViewBase:0n,flashLineKey:null,flashMemoryBase:null,flashToken:0,notice:"",addressHelperValue:0n,byteOrder:"ASC",endianness:"LITTLE",cacheInitMode:"EMPTY",cacheInitSeed:0x153CACE
   };
   let configTimer=null,accessTimer=null;
+  let pendingMemoryFile=null,memoryFileTicket=0;
   // Guided tutorial state. beforeState/afterState preserve the real
   // transaction endpoints; stages exposes PRE / WRITEBACK / FILL / FINAL
   // snapshots so the visible cache can advance one operation at a time.
@@ -793,8 +893,9 @@ LW 0x04</textarea>
   // Used both for Undo and for tutorial staging. Cache-line data arrays
   // and memoryOverrides are cloned so later writes do not mutate history.
   // -----------------------------------------------------------------
-  function snapshot(){return {sets:cloneSets(state.sets),pointer:state.pointer,clock:state.clock,hits:state.hits,misses:state.misses,reads:state.reads,writes:state.writes,writeBacks:state.writeBacks,history:state.history.map(r=>({...r})),current:state.current?{...state.current}:null,memoryOverrides:new Map(state.memoryOverrides),memoryViewBase:state.memoryViewBase}}
-  function restoreSnapshot(s){state.sets=cloneSets(s.sets);state.pointer=s.pointer;state.clock=s.clock;state.hits=s.hits;state.misses=s.misses;state.reads=s.reads;state.writes=s.writes;state.writeBacks=s.writeBacks;state.history=s.history.map(r=>({...r}));state.current=s.current?{...s.current}:null;state.memoryOverrides=new Map(s.memoryOverrides);state.memoryViewBase=s.memoryViewBase;state.flashLineKey=null;state.flashMemoryBase=null;renderAll();scrollCurrentAccess()}
+  function snapshot(){return {execution:cloneExecution(),sets:cloneSets(state.sets),pointer:state.pointer,clock:state.clock,hits:state.hits,misses:state.misses,reads:state.reads,writes:state.writes,writeBacks:state.writeBacks,history:state.history.slice(),current:state.current?{...state.current}:null,memoryOverrides:new Map(state.memoryOverrides),memoryViewBase:state.memoryViewBase,cacheViewBase:state.cacheViewBase}}
+  function rememberUndo(action){state.undoStack.push({...snapshot(),undoAction:action});if(state.undoStack.length>100)state.undoStack.shift()}
+  function restoreSnapshot(s){stopProgramRun();state.execution=s.execution?{...s.execution,vars:new Map(s.execution.vars)}:null;state.accessErrorLine=null;state.sets=cloneSets(s.sets);state.pointer=s.pointer;state.clock=s.clock;state.hits=s.hits;state.misses=s.misses;state.reads=s.reads;state.writes=s.writes;state.writeBacks=s.writeBacks;state.history=s.history.slice();state.current=s.current?{...s.current}:null;state.memoryOverrides=new Map(s.memoryOverrides);state.memoryViewBase=s.memoryViewBase;state.cacheViewBase=s.cacheViewBase??0;state.flashLineKey=null;state.flashMemoryBase=null;if(state.advanced)setMessage(els.accessMessage,"ok",`Restored to before the previous ${s.undoAction||"Step"}.`);renderAll();scrollCurrentAccess()}
 
   // -----------------------------------------------------------------
   // Cache initialization
@@ -834,7 +935,8 @@ LW 0x04</textarea>
   }
   // Restore main memory to its current deterministic baseline.
   // The baseline begins at DEFAULT_MEMORY_SEED and is replaced whenever the
-  // user clicks "Randomize main memory". Manual edits, stores, and write-backs
+  // user loads a memory file or clicks "Randomize memory". Imported bytes stay
+  // in memoryImage. Manual edits, stores, and write-backs
   // never modify the baseline; Reset/Initialize simply clear those overrides.
   function resetMainMemoryToBaseline(){
     state.memorySeed=state.memoryBaselineSeed;
@@ -850,6 +952,9 @@ LW 0x04</textarea>
   }
 
   function restartSimulation(reason="",preserveView=true){
+    state.cacheViewBase=0;setMessage(els.cachePageMessage,"","");
+    stopProgramRun();state.execution=newExecution();
+    if(state.advanced&&state.accessValid){state.accessErrorLine=null;setMessage(els.accessMessage,state.program.length?"ok":"warn",state.program.length?"Program syntax valid. Addresses and store values are checked as they execute.":"Enter a program to begin.")}
     if(!state.config){state.sets=[];state.pointer=0;state.history=[];state.current=null;state.undoStack=[];renderAll();return}
     state.sets=buildEmptySets(state.config);state.pointer=0;state.clock=0;state.hits=0;state.misses=0;state.reads=0;state.writes=0;state.writeBacks=0;state.history=[];state.current=null;state.undoStack=[];state.flashLineKey=null;state.flashMemoryBase=null;
     if(!preserveView) state.memoryViewBase=0n;
@@ -860,7 +965,7 @@ LW 0x04</textarea>
     updateReplacementAvailability();
     state.cacheInitMode=els.cacheInitMode.value;
     const result=readConfig();
-    if(!result.ok){setMessage(els.configMessage,"error",result.errors.join(" "));state.config=null;state.sets=[];renderAll();return}
+    if(!result.ok){stopProgramRun();setMessage(els.configMessage,"error",result.errors.join(" "));state.config=null;state.sets=[];renderAll();return}
     const c=result.config;
     setMessage(els.configMessage,"","");
     const oldKey=geometryKey(state.config),newKey=geometryKey(c);
@@ -906,14 +1011,191 @@ LW 0x04</textarea>
       return {mn,op:spec.write?"W":"R",isWrite:spec.write,size,address,value,source:chunk,sourceLine:lineIndex};
     });
   }
+  // Advanced programs are parsed into instructions, never evaluated as JavaScript
+  // or expanded into a full access trace. Values remain exact BigInt integers.
+  const PROGRAM_STATEMENT_LIMIT=10000000,ADVANCED_HISTORY_LIMIT=500;
+  function newExecution(){return {pc:0,vars:new Map(),paused:false,pauseLine:null,finished:!state.program.length,error:false,statements:0}}
+  function cloneExecution(){return state.execution?{...state.execution,vars:new Map(state.execution.vars)}:null}
+  function stopProgramRun(){state.running=false;state.runToken++}
+  function programError(message,line){accessError(`Line ${line+1}: ${message}`,line)}
+  function expressionReader(source,line,initialized){
+    const tokens=[];let rest=source;
+    while(rest.trim()){
+      rest=rest.trimStart();
+      const match=rest.match(/^(0x[0-9a-f]+|0b[01]+|\d+|[A-Za-z_][A-Za-z0-9_]*|<=|>=|==|!=|[()+*\-<>,])/i);
+      if(!match)programError(`Unexpected character “${rest[0]}”.`,line);
+      tokens.push(match[0]);rest=rest.slice(match[0].length);
+    }
+    let pos=0,depth=0;
+    function primary(){
+      if(++depth>100)programError("Expression nesting is too deep.",line);
+      const token=tokens[pos++];let node;
+      if(token==="+"||token==="-")node={op:token==="-"?"neg":"pos",right:primary()};
+      else if(token==="("){node=expression();if(tokens[pos++]!==")")programError("Expected a closing parenthesis.",line)}
+      else if(token&&/^(0x[0-9a-f]+|0b[01]+|\d+)$/i.test(token))node={value:BigInt(token)};
+      else if(token&&/^[A-Za-z_][A-Za-z0-9_]*$/.test(token)){
+        if(!initialized.has(token))programError(`Variable “${token}” must be initialized before use. Initialize it before a loop if it is needed after that loop.`,line);
+        node={name:token};
+      }else programError("Expected an integer, initialized variable, or parenthesized expression.",line);
+      depth--;return node;
+    }
+    function expression(min=0){
+      let left=primary();
+      while(pos<tokens.length){
+        const op=tokens[pos],precedence=op==="*"?2:(op==="+"||op==="-"?1:0);
+        if(!precedence||precedence<=min)break;
+        pos++;left={op,left,right:expression(precedence)};
+      }
+      return left;
+    }
+    return {expression,peek:()=>tokens[pos],take:()=>tokens[pos++],finish:()=>{if(pos!==tokens.length)programError(`Unexpected token “${tokens[pos]}”.`,line)}};
+  }
+  function compileProgram(text){
+    if(text.length>100000)throw new Error("Programs are limited to 100,000 characters.");
+    const instructions=[],loops=[];let initialized=new Set();
+    const reserved=/^(while|end|pause|LB|LH|LW|SB|SH|SW)$/i;
+    String(text).replace(/\r/g,"").split("\n").forEach((raw,line)=>{
+      const source=raw.split("#")[0].trim();if(!source)return;
+      let match;
+      if((match=source.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(?!=)(.+)$/))){
+        if(reserved.test(match[1]))programError(`“${match[1]}” is a reserved keyword.`,line);
+        const reader=expressionReader(match[2],line,initialized),value=reader.expression();reader.finish();
+        instructions.push({kind:"assign",name:match[1],value,line});initialized.add(match[1]);
+      }else if((match=source.match(/^while\s+(.+)$/i))){
+        let condition=match[1].trim();
+        // Accept optional parentheses around the complete comparison.
+        if(condition.startsWith("(")){
+          let balance=0,outer=true;
+          for(let i=0;i<condition.length;i++){if(condition[i]==="(")balance++;if(condition[i]===")")balance--;if(balance===0&&i<condition.length-1){outer=false;break}}
+          if(outer&&condition.endsWith(")"))condition=condition.slice(1,-1);
+        }
+        const reader=expressionReader(condition,line,initialized),left=reader.expression(),op=reader.take();
+        if(!["<","<=",">",">=","==","!="].includes(op))programError("A while condition needs <, <=, >, >=, ==, or !=.",line);
+        const right=reader.expression();reader.finish();
+        loops.push({index:instructions.length,initialized:new Set(initialized)});
+        instructions.push({kind:"while",left,op,right,line});
+      }else if(/^end$/i.test(source)){
+        const loop=loops.pop();if(!loop)programError("Unexpected end; there is no open while loop.",line);
+        instructions.push({kind:"end",target:loop.index,line});instructions[loop.index].target=instructions.length;
+        // A loop may execute zero times, so new body variables are not definite
+        // initializations after it. Existing variables retain their new values.
+        initialized=loop.initialized;
+      }else if(/^pause$/i.test(source))instructions.push({kind:"pause",line});
+      else if((match=source.match(/^(LB|LH|LW|SB|SH|SW)\s+(.+)$/i))){
+        const mn=match[1].toUpperCase(),reader=expressionReader(match[2],line,initialized),address=reader.expression();let value=null;
+        if(ACCESS_SPECS[mn].write){if(reader.peek()===",")reader.take();value=reader.expression()}
+        reader.finish();instructions.push({kind:"access",mn,address,value,line,source});
+      }else programError("Use assignment, while … end, pause, or a memory access. Write one statement per line.",line);
+    });
+    if(loops.length)programError("This while loop is missing its end.",instructions[loops[loops.length-1].index].line);
+    return instructions;
+  }
+  function evaluateExpression(node,vars,line){
+    let value;
+    if("value" in node)value=node.value;
+    else if(node.name){if(!vars.has(node.name))programError(`Variable “${node.name}” is not initialized.`,line);value=vars.get(node.name)}
+    else{
+      const right=evaluateExpression(node.right,vars,line);
+      if(node.op==="neg")value=-right;
+      else if(node.op==="pos")value=right;
+      else{const left=evaluateExpression(node.left,vars,line);value=node.op==="+"?left+right:node.op==="-"?left-right:left*right}
+    }
+    if(value<-(1n<<256n)||value>=(1n<<256n))programError("Integer exceeds the 256-bit arithmetic limit.",line);
+    return value;
+  }
+  function nextProgramEvent(stopAtPause,budget=2000){
+    const e=state.execution;
+    for(let count=0;count<budget&&e.pc<state.program.length;count++){
+      const instruction=state.program[e.pc],line=instruction.line;
+      if(++e.statements>PROGRAM_STATEMENT_LIMIT)programError("Execution limit reached (10,000,000 statements). Check the loop condition and increment, then Reset.",line);
+      const evaluate=node=>evaluateExpression(node,e.vars,line);
+      if(instruction.kind==="assign"){e.vars.set(instruction.name,evaluate(instruction.value));e.pc++}
+      else if(instruction.kind==="while"){
+        const left=evaluate(instruction.left),right=evaluate(instruction.right);
+        const condition={"<":left<right,"<=":left<=right,">":left>right,">=":left>=right,"==":left===right,"!=":left!==right}[instruction.op];
+        e.pc=condition?e.pc+1:instruction.target;
+      }else if(instruction.kind==="end")e.pc=instruction.target;
+      else if(instruction.kind==="pause"){
+        e.pc++;if(stopAtPause){e.paused=true;e.pauseLine=line;return {kind:"pause"}}
+      }else{
+        const address=evaluate(instruction.address),value=instruction.value?evaluate(instruction.value):null;
+        if(address<0n)programError("Memory addresses cannot be negative.",line);
+        if(value!==null&&value<0n)programError("Store values cannot be negative.",line);
+        let access;
+        try{access=parseAccessText(`${instruction.mn} ${address}${value!==null?` ${value}`:""}`,state.config)[0]}
+        catch(error){programError(error.message.replace(/ on line 1/g,""),line)}
+        return {kind:"access",access:{...access,source:instruction.source,sourceLine:line}};
+      }
+    }
+    if(e.pc>=state.program.length){e.finished=true;return {kind:"end"}}
+    return {kind:"yield"};
+  }
+  function startProgramRun(singleStep=false){
+    if(state.running){stopProgramRun();state.execution.paused=true;state.execution.pauseLine=state.program[state.execution.pc]?.line??null;renderAll();return}
+    if(!state.config||!state.accessValid||state.execution.finished||state.execution.error)return;
+    if(tutorial.active)closeTutorial();
+    // A Run/Continue owns one checkpoint, including variables and pause state.
+    // Its individual accesses skip snapshots; manual Steps keep their own Undo.
+    if(!singleStep)rememberUndo(state.execution.paused?"Continue":"Run");
+    state.execution.paused=false;state.execution.pauseLine=null;state.running=true;
+    const token=++state.runToken;let lastPaint=performance.now();
+    function pump(){
+      if(token!==state.runToken)return;
+      const start=performance.now();let done=false;
+      try{
+        do{
+          const event=nextProgramEvent(!singleStep);
+          if(event.kind==="access"){
+            processStep(singleStep&&tutorial.enabled,event.access,true,singleStep);
+            if(singleStep){done=true;break}
+          }else if(event.kind!=="yield"){done=true;break}
+        }while(performance.now()-start<12);
+      }catch(error){
+        state.execution.error=true;state.accessErrorLine=error.sourceLine??null;
+        setMessage(els.accessMessage,"error",error.message);done=true;
+      }
+      if(done){state.running=false;if(!tutorial.active){renderAll();scrollCurrentAccess()}else updateControls();return}
+      if(performance.now()-lastPaint>=150){renderAll();lastPaint=performance.now()}
+      setTimeout(pump,0);
+    }
+    updateControls();pump();
+  }
+  function advancedExampleText(kind="sequential"){
+    const c=state.config;if(!c)return "x = 0\nwhile x < 8\n    LB x\n    x = x + 1\nend";
+    const size=Math.min(4,c.blockSize),load=size===4?"LW":size===2?"LH":"LB",store=size===4?"SW":size===2?"SH":"SB";
+    const count=Number(clampBig((c.maxAddress+1n)/BigInt(size),1n,16n));
+    if(kind==="passes")return `pass = 0\nwhile pass < 3\n    x = 0\n    while x < ${count}\n        ${load} (${size}*x)\n        x = x + 1\n    end\n    pause\n    pass = pass + 1\nend`;
+    if(kind==="conflict"){
+      const stride=c.setCount*c.blockSize,blocks=Number(clampBig((c.maxAddress+1n)/BigInt(stride),1n,BigInt(c.ways+2)));
+      return `# Addresses separated by ${stride} bytes map to the same set.\npass = 0\nwhile pass < 3\n    x = 0\n    while x < ${blocks}\n        ${load} (${stride}*x)\n        x = x + 1\n    end\n    pause\n    pass = pass + 1\nend`;
+    }
+    if(kind==="stores")return `x = 0\nwhile x < ${count}\n    ${store} (${size}*x) (x + 1)\n    ${load} (${size}*x)\n    x = x + 1\nend`;
+    if(kind==="matrix")return "# 4-byte integers; use at least 16 address bits and 4-byte blocks.\nM = 64\nN = 64\nK = 64\nX = 1\nx = 0\nwhile x < X\n    m = 0\n    while m < M\n        n = 0\n        while n < N\n            k = 0\n            while k < K\n                LW (0x0000 + 4*(K*m + k))\n                LW (0x8000 + 4*(N*k + n))\n                k = k + 1\n            end\n            n = n + 1\n        end\n        m = m + 1\n    end\n    pause\n    x = x + 1\nend";
+    const base=c.maxAddress>=0x1000n+BigInt(count*size-1)?"0x1000":"0x0";
+    return `x = 0\nwhile x < ${count}\n    ${load} ${base} + (${size}*x)\n    x = x + 1\nend`;
+  }
+  function toggleAdvancedMode(){
+    if(tutorial.active)closeTutorial();stopProgramRun();
+    if(state.advanced)state.advancedText=els.accessInput.value;else state.basicText=els.accessInput.value;
+    state.advanced=els.advancedMode.checked;
+    els.accessInput.value=state.advanced?(state.advancedText??advancedExampleText()):state.basicText;
+    els.basicGuide.hidden=state.advanced;els.advancedGuide.hidden=!state.advanced;els.runBtn.hidden=!state.advanced;
+    ["basicCountField","basicPatternField","basicTemplateField"].forEach(id=>$(id).hidden=state.advanced);
+    $("advancedExampleField").hidden=!state.advanced;els.programVariables.hidden=!state.advanced;
+    els.accessInput.scrollTop=0;resetMainMemoryToBaseline();parseAccessesLive(true);
+  }
   function parseAccessesLive(restart=true){
+    stopProgramRun();
     if(!state.config){state.accesses=[];state.accessValid=false;state.accessErrorLine=null;setMessage(els.accessMessage,"warn","Fix the cache configuration before accesses can be validated.");renderAccessEditor();updateControls();return}
     try{
-      state.accesses=parseAccessText(els.accessInput.value,state.config);state.accessValid=true;state.accessErrorLine=null;
-      setMessage(els.accessMessage,state.accesses.length?"ok":"warn",state.accesses.length?`${state.accesses.length} access${state.accesses.length===1?"":"es"} ready\nsyntax and access-size alignment valid.`:"Enter at least one access to step the simulator.");
+      if(state.advanced){state.program=compileProgram(els.accessInput.value);state.accesses=[];state.execution=newExecution()}
+      else{state.accesses=parseAccessText(els.accessInput.value,state.config);state.program=[]}
+      state.accessValid=true;state.accessErrorLine=null;
+      if(state.advanced)setMessage(els.accessMessage,state.program.length?"ok":"warn",state.program.length?"Program syntax valid. Addresses and store values are checked as they execute.":"Enter a program to begin.");
+      else setMessage(els.accessMessage,state.accesses.length?"ok":"warn",state.accesses.length?`${state.accesses.length} access${state.accesses.length===1?"":"es"} ready\nsyntax and access-size alignment valid.`:"Enter at least one access to step the simulator.");
       if(restart) restartSimulation("Access series changed; cache restarted empty.");else renderAll();
     }catch(e){
-      state.accesses=[];state.accessValid=false;state.accessErrorLine=Number.isInteger(e.sourceLine)?e.sourceLine:null;
+      state.accesses=[];state.program=[];state.accessValid=false;state.accessErrorLine=Number.isInteger(e.sourceLine)?e.sourceLine:null;
       setMessage(els.accessMessage,"error",e.message);if(restart) restartSimulation("Access series is invalid.");else renderAll();
     }
   }
@@ -928,6 +1210,8 @@ function memoryHashByte(address){
   }
   function memoryByteFromOverrides(address,overrides){
     const key=address.toString();if(overrides.has(key)) return overrides.get(key);
+    if(state.memoryImage.has(key))return state.memoryImage.get(key);
+    if(state.memoryDefault==="zero")return 0;
     let x=BigInt.asUintN(64,address^BigInt(state.memorySeed>>>0));x=BigInt.asUintN(64,(x^0x9E3779B97F4A7C15n)*0xBF58476D1CE4E5B9n);x^=x>>30n;x=BigInt.asUintN(64,x*0x94D049BB133111EBn);x^=x>>31n;return Number(x&255n);
   }
   function visualStateFromSnapshot(s){
@@ -1001,12 +1285,13 @@ function memoryHashByte(address){
   // metadata/LRU updates, statistics, history recording, and optionally
   // launches the staged tutorial using before/after snapshots.
   // -----------------------------------------------------------------
-  function processStep(withTutorial=false){
-    if(!state.config||!state.accessValid||state.pointer>=state.accesses.length) return;
+  function processStep(withTutorial=false,suppliedAccess=null,deferRender=false,recordUndo=true){
+    if(!state.config||!state.accessValid||(!suppliedAccess&&state.pointer>=state.accesses.length)) return;
     const tutorialBefore=(withTutorial&&tutorial.enabled)?snapshot():null;
-    state.undoStack.push(snapshot());if(state.undoStack.length>100) state.undoStack.shift();
+    if(recordUndo)rememberUndo("Step");
 
-    const access=state.accesses[state.pointer],c=state.config,d=decodeAddress(access.address,c),lines=state.sets[d.setIndex];
+    const access=suppliedAccess||state.accesses[state.pointer],c=state.config,d=decodeAddress(access.address,c),lines=state.sets[d.setIndex];
+    if(suppliedAccess){state.execution.pc++;state.execution.finished=state.execution.pc>=state.program.length}
     state.clock++;if(access.isWrite) state.writes++;else state.reads++;
 
     let line=lines.find(l=>l.valid&&l.tag===d.tag),hit=!!line,eviction="",writeBack=false,allocated=false,evictedBlockBase=null,evictedTag=null,evictedDirty=false;
@@ -1055,6 +1340,7 @@ function memoryHashByte(address){
     }
 
     const wayIndex=line&&line.valid&&(hit||allocated)?line.wayIndex:null;
+    state.cacheViewBase=alignCacheView(d.setIndex*c.ways+(wayIndex??0));
     const rec={
       step:state.pointer+1,mn:access.mn,op:access.op,isWrite:access.isWrite,size:access.size,address:access.address,
       tag:d.tag,setIndex:d.setIndex,offset:d.offset,blockBase:d.blockBase,hit,wayIndex,value:observed,
@@ -1062,10 +1348,11 @@ function memoryHashByte(address){
       writeBypass:access.isWrite&&!hit&&c.writePolicy==="WT_NWA"
     };
     state.current=rec;state.history.push(rec);state.pointer++;
+    if(state.advanced&&state.history.length>ADVANCED_HISTORY_LIMIT)state.history.shift();
     if(withTutorial&&tutorial.enabled){
       const tutorialAfter=snapshot();
       startTutorial(rec,tutorialBefore,tutorialAfter);
-    }else{
+    }else if(!deferRender){
       flash(d.setIndex,wayIndex,d.blockBase);renderAll();scrollCurrentAccess();
     }
   }
@@ -1157,6 +1444,8 @@ function memoryHashByte(address){
   }
 
   function applyGeneratedSeries(useRequestedCount=true){
+    if(tutorial.active)closeTutorial();
+    if(state.advanced){els.accessInput.value=advancedExampleText(els.advancedExample.value);parseAccessesLive(true);return}
     const out=buildGeneratedSeries(useRequestedCount);
     if(!out.length) return;
     els.accessInput.value=out.join("\n");
@@ -1246,7 +1535,7 @@ function memoryHashByte(address){
     const placementParts=String(placement).split(";").map(s=>s.trim()).filter(Boolean);const placementHtml=placementParts.map((p,i)=>`<div class="placement-line">${esc(p)}${i<placementParts.length-1?";":""}</div>`).join("");els.decodeInfo.innerHTML=`<div class="k">Tag</div><div class="v">${hex(d.tag)} (${d.tag})</div><div class="k">Set index</div><div class="v">${d.setIndex}</div><div class="k">Block offset</div><div class="v">${d.offset}</div><div class="k">Access bytes</div><div class="v">${d.offset}…${d.offset+target.size-1} (${target.size} byte${target.size===1?"":"s"})</div><div class="k">Block range</div><div class="v">${hex(base,c.addressBits)} – ${hex(end,c.addressBits)}</div><div class="k">Placement</div><div class="v placement-value">${placementHtml}</div>`;
   }
 
-  function renderSummary(){const total=state.hits+state.misses,rate=total?(100*state.hits/total).toFixed(1)+"%":"—",stats=[[total,"Accesses"],[state.hits,"Hits"],[state.misses,"Misses"],[rate,"Hit rate"],[state.writeBacks,"Write-backs"]];els.summary.innerHTML=stats.map(([v,n])=>`<div class="stat"><strong>${v}</strong><span>${n}</span></div>`).join("")}
+  function renderSummary(){const total=state.hits+state.misses,rate=total?(100*state.hits/total).toFixed(2)+"%":"—",stats=[[total,"Accesses"],[state.hits,"Hits"],[state.misses,"Misses"],[rate,"Hit rate"],[state.writeBacks,"Write-backs"]];els.summary.innerHTML=stats.map(([v,n])=>`<div class="stat"><strong>${v}</strong><span>${n}</span></div>`).join("")}
   // -----------------------------------------------------------------
   // Rendering: cache contents
   // Data-byte ordering is display-only. Active-byte coloring is suppressed
@@ -1265,6 +1554,7 @@ function memoryHashByte(address){
   function cacheColumns(c){
     const direct=c.ways===1,fullyAssociative=c.setCount===1,writeThrough=c.writePolicy==="WT_NWA";
     const cols=[];
+    if(c.lineCount>CACHE_PAGE_LINES)cols.push({key:"line",label:"Line",width:7,cls:"col-small",tip:"Zero-based cache-line number: set × ways + way. Used by Jump to line."});
     if(!fullyAssociative) cols.push({key:"set",label:"Set",width:5,cls:"col-small",tip:"Set selected by the address index bits. All cache lines mapping to the same set compete for placement."});
     if(!direct) cols.push({key:"way",label:"Way",width:5,cls:"col-small",tip:fullyAssociative?"Cache-line number in this fully associative cache. Any memory block may occupy any way.":"Way number within the selected set. This column is hidden for a direct-mapped cache."});
     cols.push({key:"valid",label:"V",width:4,cls:"col-small",tip:"Valid bit. 1 means this cache line contains a meaningful memory block. 0 means the other stored bits/data must be ignored, even if they contain zero or garbage values."});
@@ -1284,14 +1574,35 @@ function memoryHashByte(address){
   }
 
   function renderCacheStructure(c){
+    els.cacheTable.classList.toggle("paged",c.lineCount>CACHE_PAGE_LINES);
     const cols=cacheColumns(c);
     els.cacheCols.innerHTML=cols.map(col=>`<col style="width:${col.width}%">`).join("");
     els.cacheHead.innerHTML=`<tr>${cols.map(col=>`<th class="${col.cls||""} cache-col-${col.key}" title="${esc(col.tip)}">${col.label}</th>`).join("")}</tr>`;
     return cols;
   }
 
+  function alignCacheView(line){
+    const last=Math.max(0,(state.config?.lineCount??1)-1);
+    return Math.floor(Math.max(0,Math.min(last,line))/CACHE_PAGE_LINES)*CACHE_PAGE_LINES;
+  }
+  function jumpCache(){
+    if(!state.config)return;
+    try{
+      const text=els.cacheJump.value.trim();
+      if(!/^\d+$/.test(text))throw new Error("Enter a whole-number cache line.");
+      const line=Number(text);
+      if(!Number.isSafeInteger(line)||line>=state.config.lineCount)throw new Error(`Line must be from 0 to ${state.config.lineCount-1}.`);
+      state.cacheViewBase=alignCacheView(line);setMessage(els.cachePageMessage,"","");renderCache();
+    }catch(error){setMessage(els.cachePageMessage,"error",error.message)}
+  }
+  function moveCachePage(direction){
+    if(!state.config)return;
+    state.cacheViewBase=alignCacheView(state.cacheViewBase+direction*CACHE_PAGE_LINES);
+    setMessage(els.cachePageMessage,"","");renderCache();
+  }
   function renderCache(){
     const c=state.config;
+    els.cachePager.hidden=!c||c.lineCount<=CACHE_PAGE_LINES;
     if(!c||!state.sets.length){
       els.cacheCols.innerHTML="";
       els.cacheHead.innerHTML="";
@@ -1299,9 +1610,17 @@ function memoryHashByte(address){
       return;
     }
     const cols=renderCacheStructure(c),rows=[];
-    for(let si=0;si<state.sets.length;si++){
+    state.cacheViewBase=alignCacheView(state.cacheViewBase);
+    const start=state.cacheViewBase,end=Math.min(start+CACHE_PAGE_LINES,c.lineCount);
+    const firstSet=Math.floor(start/c.ways),lastSet=Math.floor((end-1)/c.ways);
+    els.cacheJump.value=String(start);
+    els.cachePrevBtn.disabled=start===0;els.cacheNextBtn.disabled=end>=c.lineCount;
+    const location=firstSet===lastSet?`Set ${firstSet} · ways ${start%c.ways}–${(end-1)%c.ways}`:`Sets ${firstSet}–${lastSet}`;
+    els.cachePageStatus.textContent=`Lines ${start}–${end-1} of ${c.lineCount} · ${location} · Page ${Math.floor(start/CACHE_PAGE_LINES)+1} of ${Math.ceil(c.lineCount/CACHE_PAGE_LINES)}`;
+    for(let si=firstSet;si<=lastSet;si++){
       const lines=state.sets[si],victim=nextVictim(lines,c);
-      for(const line of lines){
+      for(let wi=Math.max(0,start-si*c.ways);wi<Math.min(c.ways,end-si*c.ways);wi++){
+        const line=lines[wi];
         const key=`${si}:${line.wayIndex}`,classes=["cache-row"];
         if(line.wayIndex===lines.length-1&&si<state.sets.length-1) classes.push("set-end");
         if(!tutorial.active&&state.current&&state.current.setIndex===si&&state.current.wayIndex===line.wayIndex) classes.push("current-line");
@@ -1313,6 +1632,7 @@ function memoryHashByte(address){
         const status=line.valid?`Loaded at: ${line.loadedAt}${stateLabel?`; ${stateLabel}`:""}`:(rawInvalid?"Invalid values":"—");
 
         const cell={
+          line:`<td class="col-small">${si*c.ways+line.wayIndex}</td>`,
           set:`<td class="col-small cache-set-cell">${si}</td>`,
           way:`<td class="col-small cache-way-cell">${line.wayIndex}</td>`,
           valid:`<td class="col-small cache-valid-cell ${line.valid?"valid-one":"valid-zero"}">${line.valid?1:0}</td>`,
@@ -1331,9 +1651,9 @@ function memoryHashByte(address){
 
   function renderAccessEditor(){
     const lines=String(els.accessInput.value).replace(/\r/g,"").split("\n");
-    const currentLine=state.current?.sourceLine ?? (state.pointer>0?state.accesses[state.pointer-1]?.sourceLine:null);
-    const nextLine=state.pointer<state.accesses.length?state.accesses[state.pointer]?.sourceLine:null;
-    const doneLines=new Set(state.accesses.slice(0,state.pointer).map(a=>a.sourceLine));
+    const currentLine=state.advanced&&state.execution?.paused?state.execution.pauseLine:(state.current?.sourceLine ?? (state.pointer>0?state.accesses[state.pointer-1]?.sourceLine:null));
+    const nextLine=state.advanced?state.program[state.execution?.pc]?.line:(state.pointer<state.accesses.length?state.accesses[state.pointer]?.sourceLine:null);
+    const doneLines=new Set((state.advanced?state.history:state.accesses.slice(0,state.pointer)).map(a=>a.sourceLine));
     els.accessBackdrop.innerHTML=lines.map((line,i)=>{
       let cls="";
       if(i===state.accessErrorLine) cls="invalid";
@@ -1344,10 +1664,17 @@ function memoryHashByte(address){
     }).join("");
     syncAccessEditorScroll();
   }
-  function syncAccessEditorScroll(){els.accessBackdrop.scrollTop=els.accessInput.scrollTop;els.accessBackdrop.scrollLeft=els.accessInput.scrollLeft}
+  function syncAccessEditorScroll(){
+    // Hidden backdrop scrollbars must not give it a larger viewport: otherwise
+    // its scroll position clamps early near the last line or longest column.
+    els.accessBackdrop.style.width=els.accessInput.clientWidth+"px";
+    els.accessBackdrop.style.height=els.accessInput.clientHeight+"px";
+    els.accessBackdrop.scrollTop=els.accessInput.scrollTop;
+    els.accessBackdrop.scrollLeft=els.accessInput.scrollLeft;
+  }
   function scrollCurrentAccess(){
     requestAnimationFrame(()=>{
-      const lineIndex=state.current?.sourceLine;
+      const lineIndex=state.accessErrorLine??(state.advanced&&state.execution?.paused?state.execution.pauseLine:state.current?.sourceLine);
       if(lineIndex==null) return;
       const cs=getComputedStyle(els.accessInput),lineHeight=parseFloat(cs.lineHeight)||21,paddingTop=parseFloat(cs.paddingTop)||0;
       const lineCenter=paddingTop+(lineIndex+.5)*lineHeight;
@@ -1369,6 +1696,8 @@ function memoryHashByte(address){
   // highlighted access bytes follow the staged tutorial transaction state.
   // -----------------------------------------------------------------
   function renderMemory(){
+    els.memoryBaselineInfo.hidden=!state.memoryImageName;
+    els.memoryBaselineInfo.textContent=state.memoryImageName?`Baseline: ${state.memoryImageName} · ${state.memoryImage.size} explicit bytes · ${state.memoryDefault==="zero"?"unassigned bytes = 00":`random background, seed ${state.memoryBaselineSeed}`}`:"";
     const c=state.config;if(!c){els.memoryHead.innerHTML="";els.memoryBody.innerHTML='<tr><td class="empty">Enter a valid configuration.</td></tr>';return}
     state.memoryViewBase=alignMemoryView(state.memoryViewBase,c);els.memoryJump.value=hex(state.memoryViewBase,c.addressBits);
     const offsets=Array.from({length:c.blockSize},(_,i)=>i);if(c.byteOrder==="DESC") offsets.reverse();
@@ -1381,10 +1710,79 @@ function memoryHashByte(address){
   function onMemoryEdit(e){try{const addr=BigInt(e.target.dataset.memoryAddress),v=parseByteInput(e.target.value);setMemoryByte(addr,v);setMessage(els.memoryMessage,"ok",`${hex(addr,state.config.addressBits)} set to 0x${byteHex(v)}.`);restartSimulation("Main memory edited; cache restarted empty.");}catch(err){setMessage(els.memoryMessage,"error",err.message);renderMemory()}}
   function jumpMemory(){if(!state.config) return;try{const a=parseLiteral(els.memoryJump.value,"memory address");if(a<0n||a>state.config.maxAddress) throw new Error(`Address must fit in ${state.config.addressBits} bits.`);state.memoryViewBase=pageBaseForAddress(a,state.config);setMessage(els.memoryMessage,"","");renderMemory()}catch(e){setMessage(els.memoryMessage,"error",e.message)}}
   function moveMemoryPage(dir){if(!state.config) return;const p=pageBytes(state.config);state.memoryViewBase=alignMemoryView(state.memoryViewBase+BigInt(dir)*p,state.config);renderMemory()}
+  const MEMORY_FILE_MAX_BYTES=4*1024*1024;
+  function parseMemoryImage(text,c){
+    if(!c)throw new Error("Fix the cache configuration before loading memory.");
+    if(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(text))throw new Error("The file contains non-text control characters. Use a UTF-8 text file.");
+    const bytes=new Map();let mode=null,seed=null;
+    const fail=(line,message)=>{throw new Error(`Line ${line+1}: ${message}`)};
+    text.replace(/^\uFEFF/,"").split(/\r\n|\n|\r/).forEach((raw,line)=>{
+      const source=raw.split("#")[0].trim();if(!source)return;
+      let match;
+      if((match=source.match(/^default\s*=\s*(zero|random)$/i))){
+        if(mode!==null)fail(line,"Declare default only once.");mode=match[1].toLowerCase();
+      }else if((match=source.match(/^seed\s*=\s*(0x[0-9a-f]+|\d+)$/i))){
+        if(seed!==null)fail(line,"Declare seed only once.");
+        const value=BigInt(match[1]);if(value>0xffffffffn)fail(line,"Seed must be between 0 and 4294967295.");seed=Number(value);
+      }else if((match=source.match(/^(0x[0-9a-f]+)\s*:\s*(.+)$/i))){
+        const start=BigInt(match[1]),values=match[2].trim().split(/\s+/);
+        if(start+BigInt(values.length-1)>c.maxAddress)fail(line,`Byte range exceeds the ${c.addressBits}-bit address space.`);
+        values.forEach((value,offset)=>{
+          if(!/^[0-9a-f]{2}$/i.test(value))fail(line,`Invalid byte “${value}”; use two hex digits (00–FF).`);
+          const address=start+BigInt(offset),key=address.toString();
+          if(bytes.has(key))fail(line,`Address ${hex(address)} overlaps an earlier row.`);
+          bytes.set(key,parseInt(value,16));
+        });
+      }else fail(line,"Use default = zero/random, seed = integer, or 0xADDRESS: XX XX …");
+    });
+    if(mode===null)throw new Error("Include default = zero or default = random.");
+    if(seed!==null&&mode!=="random")throw new Error("A seed is only used with default = random.");
+    return {bytes,mode,seed};
+  }
+  function commitMemoryImage(image,name){
+    if(!state.config)throw new Error("Fix the cache configuration before loading memory.");
+    for(const key of image.bytes.keys())if(BigInt(key)>state.config.maxAddress)throw new Error("The address configuration changed. Select the file again to validate its addresses.");
+    if(tutorial.active)closeTutorial();
+    state.memoryImage=image.bytes;state.memoryDefault=image.mode;state.memoryImageName=name;
+    state.memoryBaselineSeed=image.seed??(Math.floor(Math.random()*0x100000000)>>>0);
+    resetMainMemoryToBaseline();
+    let first=null;for(const key of image.bytes.keys()){const address=BigInt(key);if(first===null||address<first)first=address}
+    state.memoryViewBase=pageBaseForAddress(first??0n,state.config);
+    setMessage(els.memoryMessage,"ok",`Loaded ${name}: ${image.bytes.size} explicit bytes. Reset will restore this memory image.`);
+    restartSimulation("Memory file loaded; program and cache restarted.");
+  }
+  function openMemoryFileDialog(){
+    if(!state.config)return;
+    if(tutorial.active)closeTutorial();
+    if(state.running)startProgramRun();
+    pendingMemoryFile=null;memoryFileTicket++;els.memoryFileInput.value="";els.memoryFileLoad.disabled=true;
+    setMessage(els.memoryFileMessage,"","");els.memoryFileDialog.showModal();
+  }
+  async function prepareMemoryFile(file){
+    const ticket=++memoryFileTicket;pendingMemoryFile=null;els.memoryFileLoad.disabled=true;
+    setMessage(els.memoryFileMessage,"","");if(!file)return;
+    try{
+      if(file.size>MEMORY_FILE_MAX_BYTES)throw new Error("File is too large; the limit is 4 MiB.");
+      setMessage(els.memoryFileMessage,"warn",`Reading ${file.name}…`);
+      const buffer=await file.arrayBuffer();if(ticket!==memoryFileTicket)return;
+      let text;try{text=new TextDecoder("utf-8",{fatal:true}).decode(buffer)}catch{throw new Error("Cannot decode this file as UTF-8 text.")}
+      const image=parseMemoryImage(text,state.config);
+      if(image.mode==="random"&&image.seed===null)image.seed=Math.floor(Math.random()*0x100000000)>>>0;
+      pendingMemoryFile={image,name:file.name};els.memoryFileLoad.disabled=false;
+      setMessage(els.memoryFileMessage,"ok",`${file.name}: ${image.bytes.size} explicit bytes. Unassigned bytes: ${image.mode==="zero"?"zero":`random (seed ${image.seed})`}. Ready to load.`);
+    }catch(error){if(ticket===memoryFileTicket)setMessage(els.memoryFileMessage,"error",error.message)}
+  }
+  function loadPreparedMemoryFile(){
+    if(!pendingMemoryFile)return;
+    try{commitMemoryImage(pendingMemoryFile.image,pendingMemoryFile.name);els.memoryFileDialog.close()}
+    catch(error){setMessage(els.memoryFileMessage,"error",error.message)}
+  }
   function randomizeMemory(){
+    if(tutorial.active)closeTutorial();
+    state.memoryImage=new Map();state.memoryDefault="random";state.memoryImageName="";
     state.memorySeed=Math.floor(Math.random()*0xffffffff)>>>0;
     // A newly randomized memory image becomes the baseline restored by
-    // Reset and Initialize cache until Randomize main memory is used again.
+    // Reset until memory is randomized again or another file is loaded.
     state.memoryBaselineSeed=state.memorySeed;
     state.memoryOverrides.clear();
     setMessage(els.memoryMessage,"ok","Main memory randomized; this pattern is now the reset baseline.");
@@ -2168,10 +2566,36 @@ function memoryHashByte(address){
   // below connect configuration changes, editor changes, navigation, memory
   // controls, tutorial controls, and simulator transport buttons.
   // -----------------------------------------------------------------
-  function updateControls(){const canStep=!!state.config&&state.accessValid&&state.pointer<state.accesses.length;els.stepBtn.disabled=!canStep;els.undoBtn.disabled=!state.undoStack.length;els.resetBtn.disabled=!state.config;els.queueStatus.textContent=state.notice||`${state.pointer} of ${state.accesses.length} processed • ${Math.max(0,state.accesses.length-state.pointer)} remaining`;state.notice=""}
+  function updateControls(){
+    els.loadMemoryBtn.disabled=!state.config;
+    const execution=state.execution,canStep=!!state.config&&state.accessValid&&(state.advanced?!!execution&&!execution.finished&&!execution.error:state.pointer<state.accesses.length);
+    els.stepBtn.disabled=!canStep||state.running;els.undoBtn.disabled=!state.undoStack.length||state.running;els.resetBtn.disabled=!state.config;
+    els.undoBtn.title=state.undoStack.length?`Restore the state before the previous ${state.undoStack[state.undoStack.length-1].undoAction||"Step"}.`:"Undo the previous Step, Run, or Continue.";
+    els.runBtn.disabled=!canStep&&!state.running;els.runBtn.textContent=state.running?"Stop":execution?.paused?"Continue":"Run";
+    els.runBtn.title=state.running?"Stop execution; Continue resumes at the next statement.":"Run until pause or the end of the program.";
+    if(state.advanced){
+      const status=!state.accessValid?"Fix the program errors":execution?.error?"Execution stopped — fix the error or Reset":state.running?"Running…":execution?.paused?`Paused${execution.pauseLine!==null?` at line ${execution.pauseLine+1}`:""}`:execution?.finished?"Finished":"Ready";
+      els.queueStatus.textContent=`${status} • ${state.pointer.toLocaleString()} accesses processed${state.pointer>ADVANCED_HISTORY_LIMIT?` • History shows the latest ${ADVANCED_HISTORY_LIMIT}`:""}`;
+      els.programVariables.textContent=execution?.vars.size?Array.from(execution.vars,([name,value])=>`${name} = ${value}`).join(" · "):"Variables appear here during execution.";
+    }else els.queueStatus.textContent=state.notice||`${state.pointer} of ${state.accesses.length} processed • ${Math.max(0,state.accesses.length-state.pointer)} remaining`;
+    state.notice="";
+  }
   function renderAll(){renderGeometry();renderAddressHelper();renderCurrent();renderSummary();renderCache();renderAccessEditor();renderHistory();renderMemory();renderMemoryConfigControls();updateControls();requestAnimationFrame(syncTopPanelHeights)}
 
   els.endiannessInfoClose.addEventListener("click",closeEndiannessInfoPopup);
+  els.loadMemoryBtn.addEventListener("click",openMemoryFileDialog);
+  els.memoryFileChoose.addEventListener("click",()=>els.memoryFileInput.click());
+  els.memoryFileInput.addEventListener("change",()=>prepareMemoryFile(els.memoryFileInput.files[0]));
+  els.memoryFileLoad.addEventListener("click",loadPreparedMemoryFile);
+  [els.memoryFileClose,els.memoryFileCancel].forEach(button=>button.addEventListener("click",()=>els.memoryFileDialog.close()));
+  els.memoryFileDialog.addEventListener("close",()=>{memoryFileTicket++;pendingMemoryFile=null;els.memoryFileLoad.disabled=true;els.memoryFileDrop.classList.remove("dragging")});
+  ["dragenter","dragover"].forEach(type=>els.memoryFileDialog.addEventListener(type,event=>{event.preventDefault();els.memoryFileDrop.classList.add("dragging")}));
+  els.memoryFileDialog.addEventListener("dragleave",event=>{if(!els.memoryFileDialog.contains(event.relatedTarget))els.memoryFileDrop.classList.remove("dragging")});
+  els.memoryFileDialog.addEventListener("drop",event=>{
+    event.preventDefault();els.memoryFileDrop.classList.remove("dragging");
+    if(event.dataTransfer.files.length!==1){memoryFileTicket++;pendingMemoryFile=null;els.memoryFileLoad.disabled=true;setMessage(els.memoryFileMessage,"error","Drop one text file at a time.");return}
+    prepareMemoryFile(event.dataTransfer.files[0]);
+  });
   document.addEventListener("pointerdown",e=>{
     if(els.endiannessInfoPopup.hidden) return;
     if(els.endiannessInfoPopup.contains(e.target)||els.endiannessToggle.contains(e.target)) return;
@@ -2182,6 +2606,13 @@ function memoryHashByte(address){
 
   els.configCollapseToggle.addEventListener("click",toggleConfigPanel);
   els.accessCollapseToggle.addEventListener("click",toggleAccessPanel);
+  els.cacheJumpBtn.addEventListener("click",jumpCache);
+  els.cacheJump.addEventListener("keydown",e=>{if(e.key==="Enter")jumpCache()});
+  els.cachePrevBtn.addEventListener("click",()=>moveCachePage(-1));
+  els.cacheNextBtn.addEventListener("click",()=>moveCachePage(1));
+  els.advancedMode.addEventListener("change",toggleAdvancedMode);
+  els.runBtn.addEventListener("click",()=>startProgramRun());
+  els.advancedExample.addEventListener("change",()=>applyGeneratedSeries(true));
   [els.addressBits,els.cacheSize,els.blockSize,els.ways].forEach(el=>el.addEventListener('input',()=>{if(tutorial.active)closeTutorial();if(el===els.ways)updateReplacementAvailability();clearTimeout(configTimer);configTimer=setTimeout(applyConfigFromInputs,120)}));
   [els.cacheSize,els.blockSize,els.ways].forEach(el=>{
     let lastValid=isPow2(Number(el.value))?Number(el.value):null;
@@ -2212,10 +2643,11 @@ function memoryHashByte(address){
   els.cacheInitMode.addEventListener("change",()=>initializeCacheFromControl("Cache initialization changed; cache reinitialized and access series restarted."));
   els.accessInput.addEventListener('input',()=>{if(tutorial.active)closeTutorial();renderAccessEditor();parseAccessesLive(true)});
   els.accessInput.addEventListener('scroll',syncAccessEditorScroll);
+  new ResizeObserver(syncAccessEditorScroll).observe(els.accessInput);
   els.addressHelperBits.addEventListener('change',onAddressHelperChange);
   els.randomTemplate.addEventListener('change',()=>applyGeneratedSeries(true));
   els.generateBtn.addEventListener('click',generateSeries);
-  els.stepBtn.addEventListener('click',()=>processStep(tutorial.enabled));
+  els.stepBtn.addEventListener('click',()=>state.advanced?startProgramRun(true):processStep(tutorial.enabled));
   els.undoBtn.addEventListener('click',()=>{if(tutorial.active)closeTutorial();undoStep()});
   els.resetBtn.addEventListener('click',()=>{
     if(tutorial.active) closeTutorial();
