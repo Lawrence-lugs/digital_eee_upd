@@ -150,8 +150,19 @@
   .config-panel-head,.access-panel-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start}
   .config-panel-head .section-lead,.access-panel-head .section-lead{margin-bottom:15px}
   .access-head-controls{display:flex;flex-direction:column;align-items:flex-end;gap:16px}
-  .advanced-toggle{display:flex;align-items:center;gap:6px;font-size:.78rem;white-space:nowrap;cursor:pointer;margin:0}
+  .advanced-toggle{display:flex;align-items:center;gap:6px;font-size:.78rem;white-space:nowrap;cursor:pointer;margin:0;color:var(--up-maroon)}
   .advanced-toggle input{width:auto;margin:0;accent-color:var(--up-maroon)}
+  .breakpoint-options{display:grid;gap:8px;padding:12px}
+  .breakpoint-options label{display:flex;align-items:center;gap:7px;margin:0;font-size:.8rem}
+  .breakpoint-options input[type=checkbox]{width:auto;accent-color:var(--up-maroon)}
+  .breakpoint-range{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .breakpoint-match-row{display:grid;grid-template-columns:minmax(0,1fr) 64px;gap:8px}
+  .breakpoint-match-row>div{display:grid;gap:8px;min-width:0}
+  .breakpoint-match-row select{padding-left:8px;padding-right:4px;font-size:.76rem}
+  .current-result-stack{grid-column:2;grid-row:2;align-self:center;justify-self:end;text-align:right}
+  .miss-classification{max-width:115px;font-size:.76rem;line-height:1.3;font-weight:800;color:#FF341D;margin:4px auto 0;text-align:center}
+  .current-access-panel .current-result-stack #currentResult{text-align:center;justify-self:center}
+  #breakpointNotice{margin-top:8px;font-size:.8rem;line-height:1.45;color:var(--up-maroon)}
   [hidden]{display:none!important}
   #programVariables{overflow-wrap:anywhere;margin-top:7px}
   .panel-collapse-toggle{display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;color:#65707b;padding:2px 3px;cursor:pointer;font:750 .75rem/1.1 Inter,system-ui,sans-serif}
@@ -162,6 +173,15 @@
   .config-panel-body[hidden],.access-extra-body[hidden]{display:none}
   .section-lead{margin:0 0 15px;color:var(--muted);line-height:1.52;font-size:.9rem}
   .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .quantity-input{position:relative}
+  .quantity-input input[type=text],.quantity-input input[type=number]{padding-right:34px}
+  .quantity-input input[type=number]{appearance:textfield;-moz-appearance:textfield}
+  .quantity-input input[type=number]::-webkit-inner-spin-button,.quantity-input input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  .quantity-stepper{position:absolute;right:2px;top:2px;bottom:2px;width:25px;display:grid;grid-template-rows:1fr 1fr;border-left:1px solid #d6dde5;border-radius:0 7px 7px 0;overflow:hidden}
+  .quantity-stepper button{display:flex;align-items:center;justify-content:center;border:0;padding:0;background:#f3f5f7;color:#59636e;font-size:10px;line-height:1;min-height:0}
+  .quantity-stepper button+button{border-top:1px solid #d6dde5}
+  .quantity-stepper button:hover{background:#e9edf2;color:var(--up-maroon)}
+  .quantity-stepper button:focus-visible{outline:2px solid var(--up-maroon);outline-offset:-2px}
   .field.full{grid-column:1/-1}
   label{display:block;font-weight:800;margin-bottom:7px;font-size:.84rem}
   input[type=text],input[type=number],select,textarea{width:100%;min-width:0;border:1px solid #bfc7d1;background:#fff;border-radius:9px;padding:10px 11px;color:#16202a;outline:none}
@@ -208,12 +228,18 @@
   .random-grid{display:grid;grid-template-columns:86px 1fr;gap:9px;align-items:end}
   .left-stack{align-self:stretch;align-content:start}
   .access-panel{position:static}.left-sticky-group{position:sticky;top:18px;z-index:4;display:grid;gap:18px}
-  .access-editor-wrap{position:relative;height:225px;border:1px solid #bfc7d1;border-radius:9px;background:#fff;overflow:hidden}
+  .access-editor-wrap{position:relative;height:225px;min-height:225px;resize:vertical;border:1px solid #bfc7d1;border-radius:9px;background:#fff;overflow:hidden}
   .access-editor-wrap:focus-within{border-color:var(--up-maroon);box-shadow:0 0 0 3px rgba(123,17,19,.12)}
   .access-backdrop,.access-input{position:absolute;inset:0;width:100%;height:100%;margin:0;padding:10px 11px;border:0;border-radius:0;overflow:auto;white-space:pre;tab-size:2;font:650 1.06rem/26px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-  .access-backdrop{z-index:0;pointer-events:none;background:#fff;color:transparent;scrollbar-width:none}
+  .access-backdrop{z-index:0;pointer-events:none;background:#fff;color:#000;scrollbar-width:none}
   .access-backdrop::-webkit-scrollbar{display:none}
-  .access-input{z-index:1;resize:none;background:transparent!important;color:#16202a;caret-color:#16202a;outline:none!important;box-shadow:none!important}
+  .access-input{z-index:1;resize:none;background:transparent!important;color:transparent;-webkit-text-fill-color:transparent;caret-color:#000;outline:none!important;box-shadow:none!important}
+  .access-input::selection{background:rgba(66,133,244,.25);color:transparent}
+  .access-backdrop .syntax-op{color:#135fba}
+  .access-backdrop .syntax-comment{color:#6b7280}
+  .access-backdrop .syntax-variable{color:#08756b}
+  .access-backdrop .syntax-keyword{color:#7b1113}
+  @media(forced-colors:active){.access-input{color:CanvasText;-webkit-text-fill-color:CanvasText;caret-color:CanvasText}.access-backdrop{visibility:hidden}.access-input::selection{background:Highlight;color:HighlightText;-webkit-text-fill-color:HighlightText}}
   .access-backdrop .access-line{display:block;min-height:26px;margin:0 -11px;padding:0 11px}
   .access-backdrop .access-line.done{background:#f7f8f9}
   .access-backdrop .access-line.next{box-shadow:inset 3px 0 0 #b1b8c0}
@@ -265,6 +291,21 @@
   .big-result{font-size:1.25rem;font-weight:950;margin-bottom:8px}.big-result.hit{color:#00B050}.big-result.miss{color:#FF341D}
   .kv{display:grid;grid-template-columns:114px minmax(0,1fr);gap:5px 10px;font-size:.8rem;line-height:1.45}.kv .k{color:var(--muted)}.kv .v{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;overflow-wrap:anywhere}
   .placement-value{display:grid;gap:3px}.placement-line{line-height:1.3;white-space:normal}
+  .left-sticky-group .summary-row{grid-template-rows:repeat(2,68px)}
+  .summary-misses{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;grid-column:3;grid-row:1;text-align:left;color:var(--ink);font:inherit;cursor:pointer;min-width:0;width:100%;position:relative;box-shadow:none}
+  .summary-misses[aria-expanded="true"]{grid-row:1 / span 2}
+  .summary-misses:hover{background:#fff4f1}
+  .summary-misses:focus-visible{outline:2px solid var(--up-maroon);outline-offset:2px}
+  .summary-misses .miss-heading{display:block;color:var(--muted);font-size:.7rem}
+  .summary-misses .miss-toggle-cue{position:absolute;right:6px;bottom:5px;display:flex;align-items:center;gap:3px;color:var(--up-maroon);font-size:.6rem;font-weight:800;line-height:1}
+  .miss-toggle-cue svg{width:15px;height:15px;flex:none}
+  .summary-misses[aria-expanded="true"] .miss-toggle-cue svg{transform:rotate(180deg)}
+  .miss-breakdown{display:grid;gap:6px;margin-top:10px}
+  .miss-breakdown[hidden]{display:none}
+  .summary-misses .miss-breakdown span{font-size:.65rem}
+  .miss-breakdown>span{display:flex;justify-content:space-between;gap:3px;font-size:.65rem;line-height:1.25}
+  .miss-breakdown b{color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:anywhere;min-width:0}
+  @media(max-width:400px){.summary-misses{padding-inline:7px}.miss-breakdown{gap:2px;margin-top:5px}.miss-breakdown>span{display:block}.summary-misses .miss-breakdown span{font-size:.6rem;line-height:1.1}.miss-breakdown b{display:block;text-align:right}}
   .summary-row{display:grid;grid-template-columns:repeat(5,minmax(90px,1fr));gap:9px}.left-sticky-group .summary-row{grid-template-columns:repeat(3,minmax(0,1fr))}.stat{border:1px solid #dfe4e9;border-radius:10px;padding:10px 11px;background:#fbfcfd}.stat strong{display:block;font-size:1.08rem}.stat span{color:var(--muted);font-size:.7rem}
   .table-wrap{overflow:auto;border:1px solid #dfe4e9;border-radius:11px;background:#fff}
   .cache-valid-cell.valid-zero{color:#d9362b!important;font-weight:950}.cache-valid-cell.valid-one{color:#00A94F!important;font-weight:950}
@@ -429,19 +470,43 @@
           <div class="form-grid">
             <div class="field">
               <label for="addressBits">Address width (bits)</label>
+              <div class="quantity-input">
               <input id="addressBits" type="number" min="1" max="64" step="1" value="16" />
+                <div class="quantity-stepper">
+                  <button type="button" data-direction="1" aria-label="Increase address width" title="Increase by one bit">▲</button>
+                  <button type="button" data-direction="-1" aria-label="Decrease address width" title="Decrease by one bit">▼</button>
+                </div>
+              </div>
             </div>
             <div class="field">
               <label for="cacheSize">Cache size (bytes)</label>
-              <input id="cacheSize" type="number" min="1" step="any" value="64" data-pow2-step="1" />
+              <div class="quantity-input">
+              <input id="cacheSize" type="text" value="64" data-pow2-step="1" spellcheck="false" autocomplete="off" title="Enter a power of two. Binary shorthand: 32k = 32768; k, m, g (or KiB, MiB, GiB). Up/Down selects adjacent powers of two." />
+                <div class="quantity-stepper">
+                  <button type="button" data-direction="1" aria-label="Increase cache size" title="Next power of two">▲</button>
+                  <button type="button" data-direction="-1" aria-label="Decrease cache size" title="Previous power of two">▼</button>
+                </div>
+              </div>
             </div>
             <div class="field">
               <label for="blockSize">Block size (bytes)</label>
-              <input id="blockSize" type="number" min="1" step="any" value="8" data-pow2-step="1" />
+              <div class="quantity-input">
+              <input id="blockSize" type="text" value="8" data-pow2-step="1" spellcheck="false" autocomplete="off" title="Enter a power of two. Binary shorthand: 32k = 32768; k, m, g (or KiB, MiB, GiB). Up/Down selects adjacent powers of two." />
+                <div class="quantity-stepper">
+                  <button type="button" data-direction="1" aria-label="Increase block size" title="Next power of two">▲</button>
+                  <button type="button" data-direction="-1" aria-label="Decrease block size" title="Previous power of two">▼</button>
+                </div>
+              </div>
             </div>
             <div class="field">
               <label for="ways">Associativity (ways)</label>
-              <input id="ways" type="number" min="1" step="any" value="2" data-pow2-step="1" />
+              <div class="quantity-input">
+              <input id="ways" type="text" value="2" data-pow2-step="1" spellcheck="false" autocomplete="off" title="Enter a power of two. Binary shorthand: 32k = 32768; k, m, g (or KiB, MiB, GiB). Up/Down selects adjacent powers of two." />
+                <div class="quantity-stepper">
+                  <button type="button" data-direction="1" aria-label="Increase associativity" title="Next power of two">▲</button>
+                  <button type="button" data-direction="-1" aria-label="Decrease associativity" title="Previous power of two">▼</button>
+                </div>
+              </div>
             </div>
             <div class="field full">
               <label for="replacement">Replacement policy</label>
@@ -479,7 +544,7 @@
               <span id="accessCollapseLabel" class="collapse-label">Collapse</span>
               <span class="collapse-triangle" aria-hidden="true">▼</span>
             </button>
-            <label class="advanced-toggle" title="Enable variables, while … end loops, and pause. Run stops at pause or completion; Step performs one memory access."><input id="advancedMode" type="checkbox" />Advanced</label>
+            <label class="advanced-toggle" title="Enable variables, while loops, if / else if / else branches, and pause. Close each loop or if chain with end. Step performs one memory access."><input id="advancedMode" type="checkbox" />Advanced</label>
             </div>
           </div>
           <div class="access-editor-wrap" id="accessEditorWrap">
@@ -497,10 +562,11 @@ LW 0x04</textarea>
           <div id="accessExtraBody" class="access-extra-body">
           <div id="basicGuide" class="hint access-guide"><ul><li>Loads: <span class="mono">LB/LH/LW address</span></li><li>Stores: <span class="mono">SB/SH/SW address value</span></li><li>Alignment: word ÷4, halfword ÷2, byte unrestricted</li><li>Multi-byte values: <span id="accessEndianHint">little-endian</span></li><li>Stores: behavior follows the selected write policy</li></ul></div>
           <div id="advancedGuide" class="hint access-guide" hidden><ul>
-            <li>Initialize variables (case sensitive)</li>
+            <li>Initialize variables (case sensitive), ints only</li>
             <li>Loops: <span class="mono">while (condition) … end</span></li>
+            <li title="An else if on one line belongs to the same chain and shares its end. An if on a new line inside else is nested and needs its own end.">Branches: <span class="mono">if … else if … else … end</span></li>
             <li>Compare: <span class="mono">&lt; &lt;= &gt; &gt;= == !=</span></li>
-            <li>Math: <span class="mono">+ - * ( )</span></li>
+            <li>Math: <span class="mono">+ - * /(floor) %(modulo) ( )</span></li>
             <li><span class="mono">pause</span> keyword: program breakpoint</li>
           </ul></div>
           <div id="accessMessage" class="message" aria-live="polite"></div>
@@ -559,8 +625,37 @@ LW 0x04</textarea>
               <button class="secondary" id="generateBtn" style="width:100%;margin-top:9px">Generate access series</button>
             </div>
           </details>
+          <details id="breakpointPanel" class="generator-details" hidden>
+            <summary>Custom breakpoints</summary>
+            <div class="breakpoint-options">
+              <div class="hint">Run pauses before a matching access. Step executes one access. Enabled conditions are combined with OR.</div>
+              <label><input id="breakOnMiss" type="checkbox" />On cache miss</label>
+              <label><input id="breakOnEviction" type="checkbox" />On eviction of a valid line</label>
+              <label><input id="breakOnWriteBack" type="checkbox" />On dirty write-back</label>
+              <label><input id="breakOnAddress" type="checkbox" />On address or inclusive range</label>
+              <div class="breakpoint-range">
+                <input id="breakAddressStart" aria-label="Breakpoint start address" placeholder="Start: 0x1000" spellcheck="false" type="text" disabled />
+                <input id="breakAddressEnd" aria-label="Breakpoint end address" placeholder="End (optional)" spellcheck="false" type="text" disabled />
+              </div>
+              <div class="hint">Address matching includes every byte touched by the instruction, excluding fills and write-backs.</div>
+              <div class="breakpoint-match-row"><div>
+              <label for="breakMatchMode">When to break</label>
+              <select id="breakMatchMode">
+                <option value="every">Every match</option>
+                <option value="skip">Skip first N matches</option>
+                <option value="nth">Nth match only</option>
+              </select>
+              </div><div>
+              <label for="breakMatchCount">N</label>
+              <input id="breakMatchCount" type="number" min="0" step="1" value="1" disabled />
+              </div></div>
+              <div id="breakMatchStatus" class="hint" aria-live="polite">0 matches counted.</div>
+              <div class="hint">Count matching accesses during Run/Continue, once per access. Step does not count. Reset or changing these settings restarts the count; Undo restores it.</div>
+              <div id="breakpointMessage" class="message" aria-live="polite"></div>
+            </div>
+          </details>
           </div>
-
+          <div id="breakpointNotice" hidden aria-live="polite"></div>
           <div class="button-row">
             <button id="resetBtn" class="danger" title="Return the access series to the beginning, reinitialize the cache, and restore main memory to its current deterministic baseline.">Reset</button>
             <button id="runBtn" class="primary" hidden title="Run until pause or the end of the program.">Run</button>
@@ -595,7 +690,10 @@ LW 0x04</textarea>
           <div class="current-grid">
             <div class="subpanel current-access-panel">
               <h3>Current access</h3>
-              <div id="currentResult" class="big-result">Not started</div>
+              <div class="current-result-stack">
+                <div id="currentResult" class="big-result">Not started</div>
+                <div id="missClassification" class="miss-classification" hidden></div>
+              </div>
               <div id="currentAccess" class="kv"></div>
             </div>
             <div class="subpanel">
@@ -720,6 +818,16 @@ LW 0x04</textarea>
   <footer>Cache model: byte-addressable memory with natural alignment (word ÷4, halfword ÷2, byte unrestricted), selectable endianness, aligned power-of-two blocks, selectable write policy, and whole-block fill on read misses.</footer>
 </main>
 
+<dialog id="breakpointDialog" class="memory-file-dialog" aria-labelledby="breakpointTitle">
+  <div class="memory-file-head"><h2 id="breakpointTitle">Breakpoint — before access</h2></div>
+  <p id="breakpointDescription"></p>
+  <p class="hint">Cache, memory, and statistics still show the state before this access. Inspect closes this popup. Step executes the pending access; Continue executes it once and runs to the next breakpoint.</p>
+  <div class="memory-file-actions">
+    <button id="breakpointInspect" class="secondary" type="button">Inspect</button>
+    <button id="breakpointStep" class="primary" type="button">Step</button>
+    <button id="breakpointContinue" class="primary" type="button">Continue</button>
+  </div>
+</dialog>
 <dialog id="memoryFileDialog" class="memory-file-dialog" aria-labelledby="memoryFileTitle">
   <div class="memory-file-head">
     <h2 id="memoryFileTitle">Load memory from file</h2>
@@ -763,6 +871,7 @@ LW 0x04</textarea>
     loadMemoryBtn:$("loadMemoryBtn"),memoryFileDialog:$("memoryFileDialog"),memoryFileClose:$("memoryFileClose"),memoryFileChoose:$("memoryFileChoose"),memoryFileInput:$("memoryFileInput"),memoryFileDrop:$("memoryFileDrop"),memoryFileMessage:$("memoryFileMessage"),memoryFileCancel:$("memoryFileCancel"),memoryFileLoad:$("memoryFileLoad"),memoryBaselineInfo:$("memoryBaselineInfo"),
     cachePager:$("cachePager"),cacheJump:$("cacheJump"),cacheJumpBtn:$("cacheJumpBtn"),cachePrevBtn:$("cachePrevBtn"),cacheNextBtn:$("cacheNextBtn"),cachePageStatus:$("cachePageStatus"),cachePageMessage:$("cachePageMessage"),
     advancedMode:$("advancedMode"),runBtn:$("runBtn"),basicGuide:$("basicGuide"),advancedGuide:$("advancedGuide"),advancedExample:$("advancedExample"),programVariables:$("programVariables"),
+    breakMatchMode:$("breakMatchMode"),breakMatchCount:$("breakMatchCount"),breakMatchStatus:$("breakMatchStatus"),breakpointPanel:$("breakpointPanel"),breakOnMiss:$("breakOnMiss"),breakOnEviction:$("breakOnEviction"),breakOnWriteBack:$("breakOnWriteBack"),breakOnAddress:$("breakOnAddress"),breakAddressStart:$("breakAddressStart"),breakAddressEnd:$("breakAddressEnd"),breakpointMessage:$("breakpointMessage"),breakpointNotice:$("breakpointNotice"),breakpointDialog:$("breakpointDialog"),breakpointDescription:$("breakpointDescription"),breakpointInspect:$("breakpointInspect"),breakpointStep:$("breakpointStep"),breakpointContinue:$("breakpointContinue"),missClassification:$("missClassification"),
     addressBits:$("addressBits"),cacheSize:$("cacheSize"),blockSize:$("blockSize"),ways:$("ways"),replacement:$("replacement"),writePolicy:$("writePolicy"),configMessage:$("configMessage"),configCollapseToggle:$("configCollapseToggle"),configCollapseLabel:$("configCollapseLabel"),configPanelBody:$("configPanelBody"),
     accessInput:$("accessInput"),accessBackdrop:$("accessBackdrop"),accessMessage:$("accessMessage"),accessCollapseToggle:$("accessCollapseToggle"),accessCollapseLabel:$("accessCollapseLabel"),accessExtraBody:$("accessExtraBody"),addressHelperFields:$("addressHelperFields"),addressHelperBits:$("addressHelperBits"),addressHelperHex:$("addressHelperHex"),randomCount:$("randomCount"),randomPattern:$("randomPattern"),randomTemplate:$("randomTemplate"),generateBtn:$("generateBtn"),undoBtn:$("undoBtn"),stepBtn:$("stepBtn"),resetBtn:$("resetBtn"),queueStatus:$("queueStatus"),
     geometry:$("geometry"),bitWorkbench:$("bitWorkbench"),currentResult:$("currentResult"),currentAccess:$("currentAccess"),decodeInfo:$("decodeInfo"),summary:$("summary"),cacheTable:$("cacheTable"),cacheCols:$("cacheCols"),cacheHead:$("cacheHead"),cacheBody:$("cacheBody"),cacheInitMode:$("cacheInitMode"),initializeCacheBtn:$("initializeCacheBtn"),historyBody:$("historyBody"),
@@ -780,6 +889,9 @@ LW 0x04</textarea>
   const MEMORY_ROWS=8;
   const CACHE_PAGE_LINES=16;
   const state={
+    missCounts:{Compulsory:0,Capacity:0,Conflict:0},missSummaryExpanded:false,
+    breakpointMatches:0,
+    seenBlocks:new Set(),referenceLRU:new Map(),pendingAccess:null,
     memoryImage:new Map(),memoryDefault:"random",memoryImageName:"",
     cacheViewBase:0,
     advanced:false,program:[],execution:null,running:false,runToken:0,basicText:"",advancedText:null,
@@ -794,6 +906,15 @@ LW 0x04</textarea>
   const tutorial={enabled:false,active:false,steps:[],index:0,record:null,focused:[],beforeState:null,afterState:null,stages:null,currentStage:"FINAL",showResult:true};
 
   function isPow2(n){return Number.isSafeInteger(n)&&n>0&&(n&(n-1))===0}
+  function parseConfigQuantity(value){
+    const text=String(value).trim(),match=text.match(/^(\d+(?:\.\d+)?|\.\d+)\s*([kmg])(?:i?b)?$/i);
+    const n=match?Number(match[1])*1024**({k:1,m:2,g:3}[match[2].toLowerCase()]):(/^[+]?\d+(?:\.\d*)?(?:e[+-]?\d+)?$/i.test(text)?Number(text):NaN);
+    return Number.isSafeInteger(n)?n:NaN;
+  }
+  function normalizeConfigQuantity(el){
+    const n=parseConfigQuantity(el.value);
+    if(isPow2(n))el.value=String(n);
+  }
   function nextPow2(n){
     n=Number(n);
     if(!Number.isFinite(n)||n<1) return 1;
@@ -809,7 +930,7 @@ LW 0x04</textarea>
     return p;
   }
   function stepPowerOfTwo(el,direction){
-    const current=Number(el.value);
+    const current=parseConfigQuantity(el.value);
     const next=direction>0 ? nextPow2(current) : prevPow2(current);
     el.value=String(next);
     el.dispatchEvent(new Event("input",{bubbles:true}));
@@ -854,7 +975,7 @@ LW 0x04</textarea>
   // tag/index/offset widths) and rejects unsupported organizations.
   // -----------------------------------------------------------------
   function readConfig(){
-    const addressBits=Number(els.addressBits.value),cacheSize=Number(els.cacheSize.value),blockSize=Number(els.blockSize.value),ways=Number(els.ways.value);
+    const addressBits=Number(els.addressBits.value),cacheSize=parseConfigQuantity(els.cacheSize.value),blockSize=parseConfigQuantity(els.blockSize.value),ways=parseConfigQuantity(els.ways.value);
     const errs=[];
     if(!Number.isInteger(addressBits)||addressBits<1||addressBits>64) errs.push("Address width must be an integer from 1 to 64 bits.");
     if(!isPow2(cacheSize)) errs.push("Cache size must be a positive power of two.");
@@ -879,7 +1000,7 @@ LW 0x04</textarea>
   }
 
   function updateReplacementAvailability(){
-    const directMapped=Number(els.ways.value)===1;
+    const directMapped=parseConfigQuantity(els.ways.value)===1;
     els.replacement.disabled=directMapped;
     els.replacement.title=directMapped
       ?"Replacement policy does not apply to a direct-mapped cache because each set has only one possible line."
@@ -893,9 +1014,9 @@ LW 0x04</textarea>
   // Used both for Undo and for tutorial staging. Cache-line data arrays
   // and memoryOverrides are cloned so later writes do not mutate history.
   // -----------------------------------------------------------------
-  function snapshot(){return {execution:cloneExecution(),sets:cloneSets(state.sets),pointer:state.pointer,clock:state.clock,hits:state.hits,misses:state.misses,reads:state.reads,writes:state.writes,writeBacks:state.writeBacks,history:state.history.slice(),current:state.current?{...state.current}:null,memoryOverrides:new Map(state.memoryOverrides),memoryViewBase:state.memoryViewBase,cacheViewBase:state.cacheViewBase}}
+  function snapshot(){return {missCounts:{...state.missCounts},breakpointMatches:state.breakpointMatches,seenBlocks:new Set(state.seenBlocks),referenceLRU:new Map(state.referenceLRU),pendingAccess:state.pendingAccess?{...state.pendingAccess}:null,execution:cloneExecution(),sets:cloneSets(state.sets),pointer:state.pointer,clock:state.clock,hits:state.hits,misses:state.misses,reads:state.reads,writes:state.writes,writeBacks:state.writeBacks,history:state.history.slice(),current:state.current?{...state.current}:null,memoryOverrides:new Map(state.memoryOverrides),memoryViewBase:state.memoryViewBase,cacheViewBase:state.cacheViewBase}}
   function rememberUndo(action){state.undoStack.push({...snapshot(),undoAction:action});if(state.undoStack.length>100)state.undoStack.shift()}
-  function restoreSnapshot(s){stopProgramRun();state.execution=s.execution?{...s.execution,vars:new Map(s.execution.vars)}:null;state.accessErrorLine=null;state.sets=cloneSets(s.sets);state.pointer=s.pointer;state.clock=s.clock;state.hits=s.hits;state.misses=s.misses;state.reads=s.reads;state.writes=s.writes;state.writeBacks=s.writeBacks;state.history=s.history.slice();state.current=s.current?{...s.current}:null;state.memoryOverrides=new Map(s.memoryOverrides);state.memoryViewBase=s.memoryViewBase;state.cacheViewBase=s.cacheViewBase??0;state.flashLineKey=null;state.flashMemoryBase=null;if(state.advanced)setMessage(els.accessMessage,"ok",`Restored to before the previous ${s.undoAction||"Step"}.`);renderAll();scrollCurrentAccess()}
+  function restoreSnapshot(s){state.missCounts={...s.missCounts};state.breakpointMatches=s.breakpointMatches??0;stopProgramRun();invalidatePreparedAccess();state.seenBlocks=new Set(s.seenBlocks);state.referenceLRU=new Map(s.referenceLRU);state.pendingAccess=s.pendingAccess?{...s.pendingAccess}:null;state.execution=s.execution?{...s.execution,vars:new Map(s.execution.vars)}:null;state.accessErrorLine=null;state.sets=cloneSets(s.sets);state.pointer=s.pointer;state.clock=s.clock;state.hits=s.hits;state.misses=s.misses;state.reads=s.reads;state.writes=s.writes;state.writeBacks=s.writeBacks;state.history=s.history.slice();state.current=s.current?{...s.current}:null;state.memoryOverrides=new Map(s.memoryOverrides);state.memoryViewBase=s.memoryViewBase;state.cacheViewBase=s.cacheViewBase??0;state.flashLineKey=null;state.flashMemoryBase=null;if(state.advanced)setMessage(els.accessMessage,"ok",`Restored to before the previous ${s.undoAction||"Step"}.`);renderAll();scrollCurrentAccess()}
 
   // -----------------------------------------------------------------
   // Cache initialization
@@ -952,6 +1073,9 @@ LW 0x04</textarea>
   }
 
   function restartSimulation(reason="",preserveView=true){
+    state.missCounts={Compulsory:0,Capacity:0,Conflict:0};
+    state.breakpointMatches=0;
+    state.seenBlocks=new Set();state.referenceLRU=new Map();invalidatePreparedAccess();
     state.cacheViewBase=0;setMessage(els.cachePageMessage,"","");
     stopProgramRun();state.execution=newExecution();
     if(state.advanced&&state.accessValid){state.accessErrorLine=null;setMessage(els.accessMessage,state.program.length?"ok":"warn",state.program.length?"Program syntax valid. Addresses and store values are checked as they execute.":"Enter a program to begin.")}
@@ -965,12 +1089,12 @@ LW 0x04</textarea>
     updateReplacementAvailability();
     state.cacheInitMode=els.cacheInitMode.value;
     const result=readConfig();
-    if(!result.ok){stopProgramRun();setMessage(els.configMessage,"error",result.errors.join(" "));state.config=null;state.sets=[];renderAll();return}
+    if(!result.ok){stopProgramRun();invalidatePreparedAccess();setMessage(els.configMessage,"error",result.errors.join(" "));state.config=null;state.sets=[];renderAll();return}
     const c=result.config;
     setMessage(els.configMessage,"","");
     const oldKey=geometryKey(state.config),newKey=geometryKey(c);
     if(!state.config||oldKey!==newKey){state.config=c;state.memoryViewBase=alignMemoryView(state.memoryViewBase,c);restartSimulation("Cache geometry changed; cache rebuilt empty.");parseAccessesLive(false)}
-    else{state.config={...state.config,replacement:els.replacement.value,writePolicy:els.writePolicy.value,byteOrder:state.byteOrder,endianness:state.endianness};renderAll()}
+    else{invalidatePreparedAccess();state.config={...state.config,replacement:els.replacement.value,writePolicy:els.writePolicy.value,byteOrder:state.byteOrder,endianness:state.endianness};renderAll()}
   }
 
   function parseLiteral(token,label="value"){
@@ -1022,7 +1146,7 @@ LW 0x04</textarea>
     const tokens=[];let rest=source;
     while(rest.trim()){
       rest=rest.trimStart();
-      const match=rest.match(/^(0x[0-9a-f]+|0b[01]+|\d+|[A-Za-z_][A-Za-z0-9_]*|<=|>=|==|!=|[()+*\-<>,])/i);
+      const match=rest.match(/^(0x[0-9a-f]+|0b[01]+|\d+|[A-Za-z_][A-Za-z0-9_]*|<=|>=|==|!=|[()+*\/%\-<>,])/i);
       if(!match)programError(`Unexpected character “${rest[0]}”.`,line);
       tokens.push(match[0]);rest=rest.slice(match[0].length);
     }
@@ -1034,7 +1158,7 @@ LW 0x04</textarea>
       else if(token==="("){node=expression();if(tokens[pos++]!==")")programError("Expected a closing parenthesis.",line)}
       else if(token&&/^(0x[0-9a-f]+|0b[01]+|\d+)$/i.test(token))node={value:BigInt(token)};
       else if(token&&/^[A-Za-z_][A-Za-z0-9_]*$/.test(token)){
-        if(!initialized.has(token))programError(`Variable “${token}” must be initialized before use. Initialize it before a loop if it is needed after that loop.`,line);
+        if(!initialized.has(token))programError(`Variable “${token}” must be initialized before use on every possible path.`,line);
         node={name:token};
       }else programError("Expected an integer, initialized variable, or parenthesized expression.",line);
       depth--;return node;
@@ -1042,7 +1166,7 @@ LW 0x04</textarea>
     function expression(min=0){
       let left=primary();
       while(pos<tokens.length){
-        const op=tokens[pos],precedence=op==="*"?2:(op==="+"||op==="-"?1:0);
+        const op=tokens[pos],precedence=["*","/","%"].includes(op)?2:(op==="+"||op==="-"?1:0);
         if(!precedence||precedence<=min)break;
         pos++;left={op,left,right:expression(precedence)};
       }
@@ -1052,8 +1176,19 @@ LW 0x04</textarea>
   }
   function compileProgram(text){
     if(text.length>100000)throw new Error("Programs are limited to 100,000 characters.");
-    const instructions=[],loops=[];let initialized=new Set();
-    const reserved=/^(while|end|pause|LB|LH|LW|SB|SH|SW)$/i;
+    const instructions=[],blocks=[];let initialized=new Set();
+    const reserved=/^(while|if|else|end|pause|LB|LH|LW|SB|SH|SW)$/i;
+    function conditionNode(condition,line,kind){
+      condition=condition.trim();
+      if(condition.startsWith("(")){
+        let balance=0,outer=true;
+        for(let i=0;i<condition.length;i++){if(condition[i]==="(")balance++;if(condition[i]===")")balance--;if(balance===0&&i<condition.length-1){outer=false;break}}
+        if(outer&&condition.endsWith(")"))condition=condition.slice(1,-1);
+      }
+      const reader=expressionReader(condition,line,initialized),left=reader.expression(),op=reader.take();
+      if(!["<","<=",">",">=","==","!="].includes(op))programError(`A ${kind} condition needs <, <=, >, >=, ==, or !=.`,line);
+      const right=reader.expression();reader.finish();return {kind,left,op,right,line};
+    }
     String(text).replace(/\r/g,"").split("\n").forEach((raw,line)=>{
       const source=raw.split("#")[0].trim();if(!source)return;
       let match;
@@ -1061,33 +1196,39 @@ LW 0x04</textarea>
         if(reserved.test(match[1]))programError(`“${match[1]}” is a reserved keyword.`,line);
         const reader=expressionReader(match[2],line,initialized),value=reader.expression();reader.finish();
         instructions.push({kind:"assign",name:match[1],value,line});initialized.add(match[1]);
-      }else if((match=source.match(/^while\s+(.+)$/i))){
-        let condition=match[1].trim();
-        // Accept optional parentheses around the complete comparison.
-        if(condition.startsWith("(")){
-          let balance=0,outer=true;
-          for(let i=0;i<condition.length;i++){if(condition[i]==="(")balance++;if(condition[i]===")")balance--;if(balance===0&&i<condition.length-1){outer=false;break}}
-          if(outer&&condition.endsWith(")"))condition=condition.slice(1,-1);
-        }
-        const reader=expressionReader(condition,line,initialized),left=reader.expression(),op=reader.take();
-        if(!["<","<=",">",">=","==","!="].includes(op))programError("A while condition needs <, <=, >, >=, ==, or !=.",line);
-        const right=reader.expression();reader.finish();
-        loops.push({index:instructions.length,initialized:new Set(initialized)});
-        instructions.push({kind:"while",left,op,right,line});
+      }else if((match=source.match(/^(while|if)\s+(.+)$/i))){
+        const kind=match[1].toLowerCase(),node=conditionNode(match[2],line,kind);
+        blocks.push({kind,index:instructions.length,initialized:new Set(initialized),lastTest:instructions.length,jumps:[],branches:[],hasElse:false});
+        instructions.push(node);
+      }else if((match=source.match(/^else(?:\s+if\s+(.+))?$/i))){
+        const block=blocks[blocks.length-1];
+        if(!block||block.kind!=="if")programError("Unexpected else; the innermost open block must be an if.",line);
+        if(block.hasElse)programError("No branch can follow else in the same if chain.",line);
+        block.branches.push(new Set(initialized));initialized=new Set(block.initialized);
+        block.jumps.push(instructions.length);instructions.push({kind:"jump",line});
+        instructions[block.lastTest].target=instructions.length;
+        if(match[1]){block.lastTest=instructions.length;instructions.push(conditionNode(match[1],line,"if"))}
+        else{block.hasElse=true;block.lastTest=null}
       }else if(/^end$/i.test(source)){
-        const loop=loops.pop();if(!loop)programError("Unexpected end; there is no open while loop.",line);
-        instructions.push({kind:"end",target:loop.index,line});instructions[loop.index].target=instructions.length;
-        // A loop may execute zero times, so new body variables are not definite
-        // initializations after it. Existing variables retain their new values.
-        initialized=loop.initialized;
+        const block=blocks.pop();if(!block)programError("Unexpected end; there is no open while or if block.",line);
+        if(block.kind==="while"){
+          instructions.push({kind:"end",target:block.index,line});instructions[block.index].target=instructions.length;
+          initialized=block.initialized; // A loop may execute zero times.
+        }else{
+          block.branches.push(new Set(initialized));
+          if(!block.hasElse)block.branches.push(block.initialized);
+          initialized=new Set([...block.branches[0]].filter(name=>block.branches.every(branch=>branch.has(name))));
+          if(block.lastTest!==null)instructions[block.lastTest].target=instructions.length;
+          for(const jump of block.jumps)instructions[jump].target=instructions.length;
+        }
       }else if(/^pause$/i.test(source))instructions.push({kind:"pause",line});
       else if((match=source.match(/^(LB|LH|LW|SB|SH|SW)\s+(.+)$/i))){
         const mn=match[1].toUpperCase(),reader=expressionReader(match[2],line,initialized),address=reader.expression();let value=null;
         if(ACCESS_SPECS[mn].write){if(reader.peek()===",")reader.take();value=reader.expression()}
         reader.finish();instructions.push({kind:"access",mn,address,value,line,source});
-      }else programError("Use assignment, while … end, pause, or a memory access. Write one statement per line.",line);
+      }else programError("Use assignment, while, if / else if / else, end, pause, or a memory access. Write one statement per line.",line);
     });
-    if(loops.length)programError("This while loop is missing its end.",instructions[loops[loops.length-1].index].line);
+    if(blocks.length){const block=blocks[blocks.length-1];programError(`This ${block.kind} block is missing its end.`,instructions[block.index].line)}
     return instructions;
   }
   function evaluateExpression(node,vars,line){
@@ -1098,23 +1239,33 @@ LW 0x04</textarea>
       const right=evaluateExpression(node.right,vars,line);
       if(node.op==="neg")value=-right;
       else if(node.op==="pos")value=right;
-      else{const left=evaluateExpression(node.left,vars,line);value=node.op==="+"?left+right:node.op==="-"?left-right:left*right}
+      else{
+        const left=evaluateExpression(node.left,vars,line);
+        if(node.op==="/"||node.op==="%"){
+          if(right===0n)programError(node.op==="/"?"Cannot divide by zero.":"Cannot take modulo by zero.",line);
+          // BigInt division truncates toward zero; adjust to mathematical floor.
+          let quotient=left/right;
+          if(left%right!==0n&&(left<0n)!==(right<0n))quotient--;
+          value=node.op==="/"?quotient:left-quotient*right;
+        }else value=node.op==="+"?left+right:node.op==="-"?left-right:left*right;
+      }
     }
     if(value<-(1n<<256n)||value>=(1n<<256n))programError("Integer exceeds the 256-bit arithmetic limit.",line);
     return value;
   }
   function nextProgramEvent(stopAtPause,budget=2000){
+    if(state.pendingAccess)return {kind:"access",access:state.pendingAccess.access};
     const e=state.execution;
     for(let count=0;count<budget&&e.pc<state.program.length;count++){
       const instruction=state.program[e.pc],line=instruction.line;
       if(++e.statements>PROGRAM_STATEMENT_LIMIT)programError("Execution limit reached (10,000,000 statements). Check the loop condition and increment, then Reset.",line);
       const evaluate=node=>evaluateExpression(node,e.vars,line);
       if(instruction.kind==="assign"){e.vars.set(instruction.name,evaluate(instruction.value));e.pc++}
-      else if(instruction.kind==="while"){
+      else if(instruction.kind==="while"||instruction.kind==="if"){
         const left=evaluate(instruction.left),right=evaluate(instruction.right);
         const condition={"<":left<right,"<=":left<=right,">":left>right,">=":left>=right,"==":left===right,"!=":left!==right}[instruction.op];
         e.pc=condition?e.pc+1:instruction.target;
-      }else if(instruction.kind==="end")e.pc=instruction.target;
+      }else if(instruction.kind==="end"||instruction.kind==="jump")e.pc=instruction.target;
       else if(instruction.kind==="pause"){
         e.pc++;if(stopAtPause){e.paused=true;e.pauseLine=line;return {kind:"pause"}}
       }else{
@@ -1133,6 +1284,8 @@ LW 0x04</textarea>
   function startProgramRun(singleStep=false){
     if(state.running){stopProgramRun();state.execution.paused=true;state.execution.pauseLine=state.program[state.execution.pc]?.line??null;renderAll();return}
     if(!state.config||!state.accessValid||state.execution.finished||state.execution.error)return;
+    let breakpoints=null;
+    if(!singleStep){try{breakpoints=readBreakpoints();setMessage(els.breakpointMessage,"","")}catch(error){setMessage(els.breakpointMessage,"error",error.message);return}}
     if(tutorial.active)closeTutorial();
     // A Run/Continue owns one checkpoint, including variables and pause state.
     // Its individual accesses skip snapshots; manual Steps keep their own Undo.
@@ -1146,7 +1299,10 @@ LW 0x04</textarea>
         do{
           const event=nextProgramEvent(!singleStep);
           if(event.kind==="access"){
-            processStep(singleStep&&tutorial.enabled,event.access,true,singleStep);
+            const resuming=!!state.pendingAccess,plan=state.pendingAccess||prepareAccess(event.access);
+            const matches=!singleStep&&!resuming?matchBreakpoints(plan,breakpoints):[];
+            if(matches.length&&shouldPauseOnMatch(breakpoints)){pauseBeforeAccess(plan,matches);done=true;break}
+            processStep(singleStep&&tutorial.enabled,event.access,true,singleStep,plan);
             if(singleStep){done=true;break}
           }else if(event.kind!=="yield"){done=true;break}
         }while(performance.now()-start<12);
@@ -1285,26 +1441,26 @@ function memoryHashByte(address){
   // metadata/LRU updates, statistics, history recording, and optionally
   // launches the staged tutorial using before/after snapshots.
   // -----------------------------------------------------------------
-  function processStep(withTutorial=false,suppliedAccess=null,deferRender=false,recordUndo=true){
+  function processStep(withTutorial=false,suppliedAccess=null,deferRender=false,recordUndo=true,prepared=null){
     if(!state.config||!state.accessValid||(!suppliedAccess&&state.pointer>=state.accesses.length)) return;
     const tutorialBefore=(withTutorial&&tutorial.enabled)?snapshot():null;
     if(recordUndo)rememberUndo("Step");
 
-    const access=suppliedAccess||state.accesses[state.pointer],c=state.config,d=decodeAddress(access.address,c),lines=state.sets[d.setIndex];
+    const access=suppliedAccess||state.accesses[state.pointer],c=state.config,plan=prepared||prepareAccess(access),d=plan.d,lines=state.sets[d.setIndex];
+    state.pendingAccess=null;
     if(suppliedAccess){state.execution.pc++;state.execution.finished=state.execution.pc>=state.program.length}
     state.clock++;if(access.isWrite) state.writes++;else state.reads++;
 
-    let line=lines.find(l=>l.valid&&l.tag===d.tag),hit=!!line,eviction="",writeBack=false,allocated=false,evictedBlockBase=null,evictedTag=null,evictedDirty=false;
-    if(hit) state.hits++;else state.misses++;
+    let line=plan.wayIndex===null?null:lines[plan.wayIndex],hit=plan.hit,eviction="",writeBack=false,allocated=false,evictedBlockBase=null,evictedTag=null,evictedDirty=false;
+    if(hit) state.hits++;else{state.misses++;state.missCounts[plan.missClass]++;}
 
     // Read misses always allocate. Under write-back + write-allocate, store misses allocate too.
     // Under write-through + no-write-allocate, a store miss bypasses the cache.
     // Read misses allocate under both policies. Store misses allocate only
     // for write-back + write-allocate; WT+NWA bypasses the cache entirely.
-    const shouldAllocate=!hit && (!access.isWrite || c.writePolicy==="WB_WA");
+    const shouldAllocate=plan.shouldAllocate;
 
     if(shouldAllocate){
-      line=chooseVictim(lines,c);
       if(line.valid){
         evictedBlockBase=line.blockBase;evictedTag=line.tag;evictedDirty=!!line.dirty;
         eviction=`tag ${hex(line.tag)} @ ${hex(line.blockBase,c.addressBits)}`;
@@ -1345,8 +1501,10 @@ function memoryHashByte(address){
       step:state.pointer+1,mn:access.mn,op:access.op,isWrite:access.isWrite,size:access.size,address:access.address,
       tag:d.tag,setIndex:d.setIndex,offset:d.offset,blockBase:d.blockBase,hit,wayIndex,value:observed,
       eviction,writeBack,evictedBlockBase,evictedTag,evictedDirty,sourceLine:access.sourceLine,
-      writeBypass:access.isWrite&&!hit&&c.writePolicy==="WT_NWA"
+      writeBypass:access.isWrite&&!hit&&c.writePolicy==="WT_NWA",
+      missClass:plan.missClass,classificationPolicy:c.replacement!=="LRU"||c.writePolicy!=="WB_WA"
     };
+    recordReferenceAccess(d.blockNumber);
     state.current=rec;state.history.push(rec);state.pointer++;
     if(state.advanced&&state.history.length>ADVANCED_HISTORY_LIMIT)state.history.shift();
     if(withTutorial&&tutorial.enabled){
@@ -1454,7 +1612,7 @@ function memoryHashByte(address){
 
   function generateSeries(){applyGeneratedSeries(true)}
 
-  function activeAddress(){if(state.current) return state.current.address;if(state.accesses.length&&state.pointer<state.accesses.length) return state.accesses[state.pointer].address;if(state.accesses.length) return state.accesses[0].address;return 0n}
+  function activeAddress(){if(state.pendingAccess)return state.pendingAccess.access.address;if(state.current) return state.current.address;if(state.accesses.length&&state.pointer<state.accesses.length) return state.accesses[state.pointer].address;if(state.accesses.length) return state.accesses[0].address;return 0n}
 
   function renderAddressHelper(){
     const c=state.config;
@@ -1514,17 +1672,18 @@ function memoryHashByte(address){
     els.bitWorkbench.innerHTML=`<div class="bit-scroll"><div class="bit-index-row">${idx}</div><div class="bit-value-row">${vals}</div></div>`;
   }
   function renderCurrent(){
-    const c=state.config,r=state.current;if(!c){els.currentResult.textContent="Invalid configuration";els.currentResult.className="big-result";els.currentAccess.innerHTML="";els.decodeInfo.innerHTML="";return}
-    const target=r|| (state.accesses.length&&state.pointer<state.accesses.length?(()=>{const a=state.accesses[state.pointer],d=decodeAddress(a.address,c);return {...a,...d,preview:true}})():null);
+    const c=state.config,r=state.current;els.missClassification.hidden=true;if(!c){els.currentResult.textContent="Invalid configuration";els.currentResult.className="big-result";els.currentAccess.innerHTML="";els.decodeInfo.innerHTML="";return}
+    const target=(state.pendingAccess?{...state.pendingAccess.access,...state.pendingAccess.d,preview:true,pending:true}:null)||r|| (state.accesses.length&&state.pointer<state.accesses.length?(()=>{const a=state.accesses[state.pointer],d=decodeAddress(a.address,c);return {...a,...d,preview:true}})():null);
     if(!target){els.currentResult.textContent="Not started";els.currentResult.className="big-result";els.currentAccess.innerHTML='<div class="current-address">—</div><div class="k">Operation</div><div class="v">—</div><div class="k">Value</div><div class="v">—</div>';els.decodeInfo.innerHTML='<div class="k">Tag</div><div class="v">—</div><div class="k">Set index</div><div class="v">—</div><div class="k">Block offset</div><div class="v">—</div><div class="k">Block range</div><div class="v">—</div><div class="k">Placement</div><div class="v">—</div>';return}
     const d=target.preview?target:decodeAddress(target.address,c),base=d.blockBase??target.blockBase,end=base+BigInt(c.blockSize-1);
-    if(target.preview){els.currentResult.textContent="Init";els.currentResult.className="big-result"}
+    if(target.preview){els.currentResult.textContent=target.pending?"Pending":"Init";els.currentResult.className="big-result"}
     else if(tutorial.active&&!tutorial.showResult){els.currentResult.textContent="—";els.currentResult.className="big-result"}
     else{els.currentResult.textContent=target.hit?"HIT":"MISS";els.currentResult.className=`big-result ${target.hit?"hit":"miss"}`}
+    if(!target.preview&&!target.hit&&target.missClass&&(!tutorial.active||tutorial.showResult)){els.missClassification.hidden=false;els.missClassification.textContent=target.missClass+(target.classificationPolicy?" (LRU reference)":"");els.missClassification.title=missExplanation(target).replace(/<[^>]*>/g,"")}
     const shownValue=target.preview?(target.isWrite?`<div class="access-value-stack"><span class="hex">${valueHex(target.value,target.size)} (hex)</span><span class="dec">${BigInt(target.value)} (decimal)</span></div>`:"—"):`<div class="access-value-stack"><span class="hex">${valueHex(target.value,target.size)} (hex)</span><span class="dec">${BigInt(target.value)} (decimal)</span></div>`;
     els.currentAccess.innerHTML=`<div class="current-address">${hex(target.address,c.addressBits)} <span class="decimal">(${target.address})</span></div><div class="k">Operation</div><div class="v">${esc(operationText(target))}</div><div class="k">Value</div><div class="v">${shownValue}</div>`;
     let placement;
-    if(target.preview) placement=`Maps to set ${d.setIndex}; tag comparison has not occurred yet.`;
+    if(target.preview) placement=target.pending?`Pending access maps to set ${d.setIndex}; cache contents are unchanged.`:`Maps to set ${d.setIndex}; tag comparison has not occurred yet.`;
     else if(tutorial.active&&tutorial.currentStage!=="FINAL"){
       if(target.writeBypass) placement=tutorial.currentStage==="PRE"?`Maps to set ${target.setIndex}; no cache allocation has occurred yet.`:`Write miss bypasses the cache; main memory update pending.`;
       else if(target.hit) placement=`Matching line is in set ${target.setIndex}, way ${target.wayIndex}; access action not yet completed.`;
@@ -1535,7 +1694,14 @@ function memoryHashByte(address){
     const placementParts=String(placement).split(";").map(s=>s.trim()).filter(Boolean);const placementHtml=placementParts.map((p,i)=>`<div class="placement-line">${esc(p)}${i<placementParts.length-1?";":""}</div>`).join("");els.decodeInfo.innerHTML=`<div class="k">Tag</div><div class="v">${hex(d.tag)} (${d.tag})</div><div class="k">Set index</div><div class="v">${d.setIndex}</div><div class="k">Block offset</div><div class="v">${d.offset}</div><div class="k">Access bytes</div><div class="v">${d.offset}…${d.offset+target.size-1} (${target.size} byte${target.size===1?"":"s"})</div><div class="k">Block range</div><div class="v">${hex(base,c.addressBits)} – ${hex(end,c.addressBits)}</div><div class="k">Placement</div><div class="v placement-value">${placementHtml}</div>`;
   }
 
-  function renderSummary(){const total=state.hits+state.misses,rate=total?(100*state.hits/total).toFixed(2)+"%":"—",stats=[[total,"Accesses"],[state.hits,"Hits"],[state.misses,"Misses"],[rate,"Hit rate"],[state.writeBacks,"Write-backs"]];els.summary.innerHTML=stats.map(([v,n])=>`<div class="stat"><strong>${v}</strong><span>${n}</span></div>`).join("")}
+  function renderSummary(){
+    const total=state.hits+state.misses,rate=total?(100*state.hits/total).toFixed(2)+"%":"—";
+    const stat=(value,label)=>`<div class="stat"><strong>${value}</strong><span>${label}</span></div>`;
+    const breakdown=Object.entries(state.missCounts).map(([label,count])=>`<span><span>${label}</span><b>${count}</b></span>`).join("");
+    els.summary.innerHTML=stat(total,"Accesses")+stat(state.hits,"Hits")+
+      `<button type="button" class="stat summary-misses" aria-expanded="${state.missSummaryExpanded}" aria-controls="missBreakdown" title="Show or hide miss counts by category. Categories use the fully associative LRU reference."><strong>${state.misses}</strong><span class="miss-heading">Misses</span><span id="missBreakdown" class="miss-breakdown" ${state.missSummaryExpanded?"":"hidden"}>${breakdown}</span><span class="miss-toggle-cue">${state.missSummaryExpanded?"Collapse":"Expand"}<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 5.5 8 10.5 13 5.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>`+
+      stat(rate,"Hit rate")+stat(state.writeBacks,"Write-backs");
+  }
   // -----------------------------------------------------------------
   // Rendering: cache contents
   // Data-byte ordering is display-only. Active-byte coloring is suppressed
@@ -1649,6 +1815,22 @@ function memoryHashByte(address){
     els.cacheBody.innerHTML=rows.join("");
   }
 
+  function highlightAccessLine(line,advanced=state.advanced){
+    // Tokenize the raw text before escaping; spans change color only, never metrics.
+    const tokens=/#[^\n]*|0x[0-9a-f_]+|0b[01_]+|[0-9][0-9_]*|[A-Za-z_][A-Za-z0-9_]*/gi;
+    let html="",offset=0;
+    for(const match of line.matchAll(tokens)){
+      html+=esc(line.slice(offset,match.index));
+      const token=match[0];let kind="";
+      if(token.startsWith("#")){if(advanced)kind="comment"}
+      else if(/^(LW|LH|LB|SW|SH|SB)$/i.test(token))kind="op";
+      else if(advanced&&/^(while|if|else|end|pause)$/i.test(token))kind="keyword";
+      else if(advanced&&/^[A-Za-z_]/.test(token))kind="variable";
+      html+=kind?`<span class="syntax-${kind}">${esc(token)}</span>`:esc(token);
+      offset=match.index+token.length;
+    }
+    return html+esc(line.slice(offset));
+  }
   function renderAccessEditor(){
     const lines=String(els.accessInput.value).replace(/\r/g,"").split("\n");
     const currentLine=state.advanced&&state.execution?.paused?state.execution.pauseLine:(state.current?.sourceLine ?? (state.pointer>0?state.accesses[state.pointer-1]?.sourceLine:null));
@@ -1660,7 +1842,7 @@ function memoryHashByte(address){
       else if(i===currentLine) cls="current";
       else if(doneLines.has(i)) cls="done";
       else if(i===nextLine) cls="next";
-      return `<span class="access-line ${cls}">${esc(line)||" "}</span>`;
+      return `<span class="access-line ${cls}">${highlightAccessLine(line)||" "}</span>`;
     }).join("");
     syncAccessEditorScroll();
   }
@@ -1738,6 +1920,76 @@ function memoryHashByte(address){
     if(mode===null)throw new Error("Include default = zero or default = random.");
     if(seed!==null&&mode!=="random")throw new Error("A seed is only used with default = random.");
     return {bytes,mode,seed};
+  }
+  // Reference model: fully associative LRU, same line count, allocate on every
+  // access. Classification is relative to this model even under other policies.
+  function classifyMiss(blockNumber){
+    if(!state.seenBlocks.has(blockNumber))return "Compulsory";
+    return state.referenceLRU.has(blockNumber)?"Conflict":"Capacity";
+  }
+  function recordReferenceAccess(blockNumber){
+    state.seenBlocks.add(blockNumber);
+    state.referenceLRU.delete(blockNumber);state.referenceLRU.set(blockNumber,true);
+    if(state.referenceLRU.size>state.config.lineCount)state.referenceLRU.delete(state.referenceLRU.keys().next().value);
+  }
+  function missExplanation(r){
+    if(!r||r.hit||!r.missClass)return "";
+    const reason=r.missClass==="Compulsory"?"This is the first access to this memory block since the simulation restarted.":r.missClass==="Capacity"?"This block has been accessed before and also misses in a fully associative LRU cache with the same capacity and block size.":"This block has been accessed before and would hit in a fully associative LRU cache with the same capacity and block size.";
+    const policy=r.classificationPolicy?" The reference allocates on every access. With FIFO, Random, or no-write-allocate, differences can come from policy as well as placement; Conflict is a label relative to that reference.":"";
+    return `<p><strong>${r.missClass} miss${r.classificationPolicy?" (LRU reference)":""}.</strong> ${reason}${policy}</p>`;
+  }
+  function prepareAccess(access){
+    const c=state.config,d=decodeAddress(access.address,c),lines=state.sets[d.setIndex];
+    let line=lines.find(candidate=>candidate.valid&&candidate.tag===d.tag);
+    const hit=!!line,shouldAllocate=!hit&&(!access.isWrite||c.writePolicy==="WB_WA");
+    if(shouldAllocate)line=chooseVictim(lines,c); // Choose Random once; retain its way.
+    const eviction=shouldAllocate&&!!line.valid,writeBack=eviction&&!!line.dirty;
+    return {access,d,hit,shouldAllocate,wayIndex:line?.wayIndex??null,eviction,writeBack,evictedBlockBase:eviction?line.blockBase:null,missClass:hit?null:classifyMiss(d.blockNumber)};
+  }
+  function readBreakpoints(){
+    const rules={miss:els.breakOnMiss.checked,eviction:els.breakOnEviction.checked,writeBack:els.breakOnWriteBack.checked,address:els.breakOnAddress.checked};
+    if(rules.address){
+      rules.start=parseLiteral(els.breakAddressStart.value,"breakpoint start address");
+      rules.end=els.breakAddressEnd.value.trim()?parseLiteral(els.breakAddressEnd.value,"breakpoint end address"):rules.start;
+      if(rules.start>rules.end||rules.end>state.config.maxAddress)throw new Error(`Breakpoint range must be ordered and fit in ${state.config.addressBits} bits.`);
+    }
+    rules.mode=els.breakMatchMode.value||"every";
+    if(rules.mode!=="every"){
+      const input=els.breakMatchCount.value.trim();rules.count=Number(input);
+      if(!/^\d+$/.test(input)||!Number.isSafeInteger(rules.count)||rules.count<(rules.mode==="nth"?1:0))throw new Error(rules.mode==="nth"?"Nth match must be a positive whole number.":"Skip count must be a nonnegative whole number.");
+    }
+    return rules;
+  }
+  function shouldPauseOnMatch(rules){
+    state.breakpointMatches++;
+    return rules.mode==="skip"?state.breakpointMatches>rules.count:rules.mode==="nth"?state.breakpointMatches===rules.count:true;
+  }
+  function matchBreakpoints(plan,rules){
+    if(!rules)return [];
+    const matches=[];
+    if(rules.miss&&!plan.hit)matches.push("cache miss");
+    if(rules.eviction&&plan.eviction)matches.push("eviction");
+    if(rules.writeBack&&plan.writeBack)matches.push("dirty write-back");
+    if(rules.address&&plan.access.address<=rules.end&&plan.access.address+BigInt(plan.access.size-1)>=rules.start)matches.push("address match");
+    return matches;
+  }
+  function pendingDescription(plan){
+    const c=state.config,a=plan.access;
+    const operation=`${a.mn} ${hex(a.address,c.addressBits)}${a.isWrite?` ${valueHex(a.value,a.size)}`:""}`;
+    const result=plan.hit?"cache hit":`cache miss (${plan.missClass.toLowerCase()}${c.replacement!=="LRU"||c.writePolicy!=="WB_WA"?", LRU reference":""})`;
+    const effect=plan.eviction?`; will evict ${plan.writeBack?"a dirty":"a clean"} line at ${hex(plan.evictedBlockBase,c.addressBits)} from set ${plan.d.setIndex}, way ${plan.wayIndex}${plan.writeBack?" and write it back to memory":""}`:plan.shouldAllocate?`; will fill an invalid line in set ${plan.d.setIndex}, way ${plan.wayIndex}`:!plan.hit?"; store will bypass the cache":`; set ${plan.d.setIndex}, way ${plan.wayIndex}`;
+    return `About to execute ${operation}: ${result}${effect}. Match #${plan.matchNumber}: ${plan.matches.join(", ")}.`;
+  }
+  function pauseBeforeAccess(plan,matches){
+    state.pendingAccess={...plan,matches,matchNumber:state.breakpointMatches};state.execution.paused=true;state.execution.pauseLine=plan.access.sourceLine;
+    state.cacheViewBase=alignCacheView(plan.d.setIndex*state.config.ways+(plan.wayIndex??0));
+    state.memoryViewBase=pageBaseForAddress(plan.d.blockBase,state.config);
+    els.breakpointDescription.textContent=pendingDescription(state.pendingAccess);
+    els.breakpointDialog.showModal();
+  }
+  function invalidatePreparedAccess(){
+    state.pendingAccess=null;
+    if(els.breakpointDialog.open)els.breakpointDialog.close();
   }
   function commitMemoryImage(image,name){
     if(!state.config)throw new Error("Fix the cache configuration before loading memory.");
@@ -2032,6 +2284,7 @@ function memoryHashByte(address){
         "Why this access is a MISS",
         `<p>This is a <strong>MISS</strong>: Index <strong>${indexBinary||"—"}</strong> selected set <strong>${d.setIndex}</strong>, but that set did not contain a valid line with Tag <strong>${tagBinary||"—"}</strong> = <strong>${hex(d.tag)}</strong>.</p>
          ${tagIndexConversionsHtml}
+         ${missExplanation(r)}
          <p>Under no-write-allocate, the miss is serviced by memory without changing cache placement.</p>`,
         [".current-access-panel",".cache-table-wrap"],["#currentResult"]
       ));
@@ -2237,7 +2490,7 @@ function memoryHashByte(address){
       `Why this access is a ${r.hit?"HIT":"MISS"}`,
       r.hit
         ? `<p>This is a <strong>HIT</strong> because Index <strong>${indexBinary||"—"}</strong> selected set <strong>${d.setIndex}</strong>, and that set already contained a <strong>valid</strong> line whose Tag matched <strong>${tagBinary||"—"}</strong> = <strong>${hex(d.tag)}</strong>.</p>${tagIndexConversionsHtml}`
-        : `<p>This is a <strong>MISS</strong> because Index <strong>${indexBinary||"—"}</strong> selected set <strong>${d.setIndex}</strong>, but no valid line there had Tag <strong>${tagBinary||"—"}</strong> = <strong>${hex(d.tag)}</strong> before the access.</p>${tagIndexConversionsHtml}<p>The line shown now is the result of servicing that miss.</p>`,
+        : `<p>This is a <strong>MISS</strong> because Index <strong>${indexBinary||"—"}</strong> selected set <strong>${d.setIndex}</strong>, but no valid line there had Tag <strong>${tagBinary||"—"}</strong> = <strong>${hex(d.tag)}</strong> before the access.</p>${tagIndexConversionsHtml}${missExplanation(r)}<p>The line shown now is the result of servicing that miss.</p>`,
       [".current-access-panel",".cache-table-wrap"],["#currentResult",row].filter(Boolean)
     ));
 
@@ -2567,6 +2820,12 @@ function memoryHashByte(address){
   // controls, tutorial controls, and simulator transport buttons.
   // -----------------------------------------------------------------
   function updateControls(){
+    els.generateBtn.hidden=state.advanced;
+    els.breakAddressStart.disabled=els.breakAddressEnd.disabled=!els.breakOnAddress.checked;
+    els.breakMatchCount.disabled=els.breakMatchMode.value==="every";els.breakMatchCount.min=els.breakMatchMode.value==="nth"?"1":"0";
+    els.breakMatchStatus.textContent=`${state.breakpointMatches.toLocaleString()} matches counted.`;
+    els.breakpointPanel.hidden=!state.advanced;
+    els.breakpointNotice.hidden=!state.pendingAccess;els.breakpointNotice.textContent=state.pendingAccess?pendingDescription(state.pendingAccess):"";
     els.loadMemoryBtn.disabled=!state.config;
     const execution=state.execution,canStep=!!state.config&&state.accessValid&&(state.advanced?!!execution&&!execution.finished&&!execution.error:state.pointer<state.accesses.length);
     els.stepBtn.disabled=!canStep||state.running;els.undoBtn.disabled=!state.undoStack.length||state.running;els.resetBtn.disabled=!state.config;
@@ -2575,13 +2834,22 @@ function memoryHashByte(address){
     els.runBtn.title=state.running?"Stop execution; Continue resumes at the next statement.":"Run until pause or the end of the program.";
     if(state.advanced){
       const status=!state.accessValid?"Fix the program errors":execution?.error?"Execution stopped — fix the error or Reset":state.running?"Running…":execution?.paused?`Paused${execution.pauseLine!==null?` at line ${execution.pauseLine+1}`:""}`:execution?.finished?"Finished":"Ready";
-      els.queueStatus.textContent=`${status} • ${state.pointer.toLocaleString()} accesses processed${state.pointer>ADVANCED_HISTORY_LIMIT?` • History shows the latest ${ADVANCED_HISTORY_LIMIT}`:""}`;
+      els.queueStatus.textContent=`${status} • ${state.pointer.toLocaleString()} accesses processed`;
       els.programVariables.textContent=execution?.vars.size?Array.from(execution.vars,([name,value])=>`${name} = ${value}`).join(" · "):"Variables appear here during execution.";
     }else els.queueStatus.textContent=state.notice||`${state.pointer} of ${state.accesses.length} processed • ${Math.max(0,state.accesses.length-state.pointer)} remaining`;
     state.notice="";
   }
   function renderAll(){renderGeometry();renderAddressHelper();renderCurrent();renderSummary();renderCache();renderAccessEditor();renderHistory();renderMemory();renderMemoryConfigControls();updateControls();requestAnimationFrame(syncTopPanelHeights)}
 
+  els.summary.addEventListener("click",event=>{
+    if(!event.target.closest(".summary-misses"))return;
+    state.missSummaryExpanded=!state.missSummaryExpanded;renderSummary();
+    els.summary.querySelector(".summary-misses").focus({preventScroll:true});
+  });
+  els.breakpointInspect.addEventListener("click",()=>{els.breakpointDialog.close();document.querySelector(".cache-table-wrap").scrollIntoView({block:"center",behavior:"smooth"})});
+  els.breakpointStep.addEventListener("click",()=>{els.breakpointDialog.close();startProgramRun(true)});
+  els.breakpointContinue.addEventListener("click",()=>{els.breakpointDialog.close();startProgramRun()});
+  [els.breakOnMiss,els.breakOnEviction,els.breakOnWriteBack,els.breakOnAddress,els.breakAddressStart,els.breakAddressEnd,els.breakMatchMode,els.breakMatchCount].forEach(el=>el.addEventListener("input",()=>{state.breakpointMatches=0;if(state.running){stopProgramRun();state.execution.paused=true;state.execution.pauseLine=state.program[state.execution.pc]?.line??null}try{if(state.config)readBreakpoints();setMessage(els.breakpointMessage,"","")}catch(error){setMessage(els.breakpointMessage,"error",error.message)}updateControls()}));
   els.endiannessInfoClose.addEventListener("click",closeEndiannessInfoPopup);
   els.loadMemoryBtn.addEventListener("click",openMemoryFileDialog);
   els.memoryFileChoose.addEventListener("click",()=>els.memoryFileInput.click());
@@ -2614,31 +2882,26 @@ function memoryHashByte(address){
   els.runBtn.addEventListener("click",()=>startProgramRun());
   els.advancedExample.addEventListener("change",()=>applyGeneratedSeries(true));
   [els.addressBits,els.cacheSize,els.blockSize,els.ways].forEach(el=>el.addEventListener('input',()=>{if(tutorial.active)closeTutorial();if(el===els.ways)updateReplacementAvailability();clearTimeout(configTimer);configTimer=setTimeout(applyConfigFromInputs,120)}));
-  [els.cacheSize,els.blockSize,els.ways].forEach(el=>{
-    let lastValid=isPow2(Number(el.value))?Number(el.value):null;
-    el.addEventListener("keydown",e=>{
-      if(e.key==="ArrowUp"||e.key==="ArrowDown"){
-        e.preventDefault();
-        stepPowerOfTwo(el,e.key==="ArrowUp"?1:-1);
-        lastValid=Number(el.value);
-      }
-    });
-    el.addEventListener("input",e=>{
-      const n=Number(el.value);
-      // Native number-input spinner clicks usually produce an input event without
-      // an inputType. If they move one step away from a known power of two,
-      // snap in the same direction to the next valid power of two.
-      if(!e.inputType && lastValid && Number.isFinite(n) && !isPow2(n)){
-        if(n>lastValid) el.value=String(nextPow2(lastValid));
-        else if(n<lastValid) el.value=String(prevPow2(lastValid));
-      }
-      if(isPow2(Number(el.value))) lastValid=Number(el.value);
-    });
-    el.addEventListener("blur",()=>{
-      if(isPow2(Number(el.value))) lastValid=Number(el.value);
+  els.addressBits.parentElement.querySelectorAll(".quantity-stepper button").forEach(button=>{
+    button.addEventListener("click",()=>{
+      if(Number(button.dataset.direction)>0)els.addressBits.stepUp();else els.addressBits.stepDown();
+      els.addressBits.dispatchEvent(new Event("input",{bubbles:true}));
+      clearTimeout(configTimer);applyConfigFromInputs();
     });
   });
-  els.replacement.addEventListener('change',()=>{if(state.config){state.config.replacement=els.replacement.value;renderCache();updateControls()}});
+  [els.cacheSize,els.blockSize,els.ways].forEach(el=>{
+    const commit=()=>{normalizeConfigQuantity(el);clearTimeout(configTimer);applyConfigFromInputs()};
+    el.addEventListener("keydown",e=>{
+      if(e.key==="ArrowUp"||e.key==="ArrowDown"){
+        e.preventDefault();stepPowerOfTwo(el,e.key==="ArrowUp"?1:-1);
+      }else if(e.key==="Enter"){e.preventDefault();commit()}
+    });
+    el.addEventListener("blur",commit);
+    el.parentElement.querySelectorAll(".quantity-stepper button").forEach(button=>{
+      button.addEventListener("click",()=>{stepPowerOfTwo(el,Number(button.dataset.direction));commit()});
+    });
+  });
+  els.replacement.addEventListener('change',()=>{if(state.config){if(state.running){stopProgramRun();state.execution.paused=true}invalidatePreparedAccess();state.config.replacement=els.replacement.value;renderCache();updateControls()}});
   els.writePolicy.addEventListener('change',()=>{if(tutorial.active)closeTutorial();if(state.config){state.config.writePolicy=els.writePolicy.value;restartSimulation("Write policy changed; cache restarted using the selected initialization setting.");}});
   els.cacheInitMode.addEventListener("change",()=>initializeCacheFromControl("Cache initialization changed; cache reinitialized and access series restarted."));
   els.accessInput.addEventListener('input',()=>{if(tutorial.active)closeTutorial();renderAccessEditor();parseAccessesLive(true)});
