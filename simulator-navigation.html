@@ -1,0 +1,47 @@
+<script>
+// Enhance Quarto's flat menu headings while preserving its resolved link URLs.
+// Without JavaScript, the same categories and links remain visible as a list.
+document.addEventListener('DOMContentLoaded', () => {
+  const categories = new Set([
+    'Digital Design Fundamentals',
+    'Computer Architecture',
+    'Hardware for Machine Learning'
+  ]);
+
+  document.querySelectorAll('.navbar .dropdown-menu').forEach(menu => {
+    const items = Array.from(menu.children);
+    if (!items.some(item => categories.has(item.textContent.trim()))) return;
+
+    menu.classList.add('simulator-categories');
+    let links;
+    items.forEach(item => {
+      const label = item.textContent.trim();
+      if (categories.has(label)) {
+        const group = document.createElement('li');
+        const details = document.createElement('details');
+        const summary = document.createElement('summary');
+        summary.className = 'dropdown-item';
+        summary.textContent = label;
+        links = document.createElement('ul');
+        links.className = 'simulator-category-links';
+        details.append(summary, links);
+        group.append(details);
+        item.replaceWith(group);
+
+        // Let the native disclosure toggle without closing Bootstrap's menu.
+        summary.addEventListener('click', event => event.stopPropagation());
+        details.addEventListener('keydown', event => {
+          if (event.key === 'Escape' && details.open) {
+            event.preventDefault();
+            event.stopPropagation();
+            details.open = false;
+            summary.focus();
+          }
+        });
+      } else if (links) {
+        links.append(item);
+      }
+    });
+  });
+});
+</script>

@@ -38,6 +38,7 @@ website:
             text: Logic Labs
       - text: Simulators
         menu:
+          - text: Digital Design Fundamentals
           - href: kmapgameee
             text: kmap-gamEEE
           - href: FSM_simulatEEE.html
@@ -46,12 +47,14 @@ website:
             text: ASM_simulatEEE
           - href: timing_simulatEEE.html
             text: Timing Simulator
+          - text: Computer Architecture
           - href: ripes/
             text: RIPES
           - href: RV32I_encoding_simulator.html
             text: RV32I Encoding Simulator
           - href: cache_simulator.html
             text: Cache Memory Simulator
+          - text: Hardware for Machine Learning
           - href: systolic_array_simulator.html
             text: Systolic Array Simulator
           - href: convolution_simulator.html
@@ -180,6 +183,7 @@ format:
       - custom.scss
       # - darkly
     css: styles.css
+    include-after-body: simulator-navigation.html
     toc: true
     # code-overflow: wrap
     code-block-bg: true

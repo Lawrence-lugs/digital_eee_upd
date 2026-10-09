@@ -1,5 +1,51 @@
 /* css styles */
 
+/* Expand simulator categories in place on desktop and mobile. */
+.navbar .simulator-categories {
+  min-width: min(21rem, calc(100vw - 2rem));
+  max-width: calc(100vw - 2rem);
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.simulator-categories summary.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  cursor: pointer;
+  white-space: normal;
+  font-weight: 600;
+  list-style: none;
+}
+
+.simulator-categories summary::-webkit-details-marker {
+  display: none;
+}
+
+.simulator-categories summary::after {
+  content: "▸";
+  margin-left: auto;
+}
+
+.simulator-categories details[open] > summary::after {
+  content: "▾";
+}
+
+.simulator-category-links {
+  list-style: none;
+  padding: 0 0 .5rem .75rem;
+  margin: 0;
+}
+
+.simulator-category-links .dropdown-item {
+  white-space: normal;
+}
+
+.simulator-categories summary:focus-visible {
+  outline: 2px solid #6B0D1A;
+  outline-offset: -2px;
+}
+
 /* Sticky Table of Contents for Quarto sidebar */
 .quarto-sidebar-toc {
 	position: sticky;
