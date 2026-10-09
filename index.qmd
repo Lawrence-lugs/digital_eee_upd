@@ -227,8 +227,8 @@ include-in-header:
         </p>
       </a>
 
-      <!-- Address Generator for Systolic Arrays -->
-      <a href="address_generator_simulator.html"
+      <!-- Convolution Simulator -->
+      <a href="convolution_simulator.html"
          class="block bg-white rounded-xl border border-gray-200 p-6
                 hover:shadow-md hover:border-red-300 transition-all group">
         <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
@@ -239,11 +239,11 @@ include-in-header:
           </svg>
         </div>
         <h3 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">
-          Address Generator for Systolic Arrays
+          Convolution Simulator
         </h3>
         <p class="text-sm text-gray-500 leading-relaxed">
-          Explore how feature and filter addresses feed a systolic array,
-          and follow data movement cycle by cycle.
+          Follow inputs through an output-stationary systolic array,
+          compute each tile, and build a complete convolution layer.
         </p>
       </a>
 

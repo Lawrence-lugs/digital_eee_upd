@@ -9,7 +9,7 @@ project:
     - cp static_apps/ASM_simulatEEE.html _site/
     - cp static_apps/RV32I_encoding_simulator.html _site/
     - cp static_apps/systolic_array_simulator.html _site/
-    - cp static_apps/address_generator_simulator.html _site/
+    - cp static_apps/convolution_simulator.html _site/
     - cp static_apps/cache_simulator.html _site/
     - cp -r static_apps/ripes _site/
   resources:
@@ -44,16 +44,18 @@ website:
             text: FSM_simulatEEE
           - href: ASM_simulatEEE.html
             text: ASM_simulatEEE
+          - href: timing_simulatEEE.html
+            text: Timing Simulator
           - href: ripes/
             text: RIPES
           - href: RV32I_encoding_simulator.html
             text: RV32I Encoding Simulator
-          - href: systolic_array_simulator.html
-            text: Systolic Array Simulator
-          - href: address_generator_simulator.html
-            text: Address Generator for Systolic Arrays
           - href: cache_simulator.html
             text: Cache Memory Simulator
+          - href: systolic_array_simulator.html
+            text: Systolic Array Simulator
+          - href: convolution_simulator.html
+            text: Convolution Simulator
       - href: contributing.qmd
         text: Contribute
 
