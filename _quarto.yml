@@ -4,6 +4,8 @@ project:
     - "*.qmd"
     - pages/**/*.qmd  
   post-render:
+    - cp static_apps/transistor_fabrication.html _site/
+    - cp static_apps/transistor_characterization.html _site/
     - cp static_apps/FSM_simulatEEE.html _site/
     - cp static_apps/timing_simulatEEE.html _site/
     - cp static_apps/ASM_simulatEEE.html _site/
@@ -38,6 +40,11 @@ website:
             text: Logic Labs
       - text: Simulators
         menu:
+          - text: MOS Transistor Fundamentals
+          - href: transistor_fabrication.html
+            text: MOS Transistor Fabrication
+          - href: transistor_characterization.html
+            text: MOS Transistor Characterization
           - text: Digital Design Fundamentals
           - href: kmapgameee
             text: kmap-gamEEE

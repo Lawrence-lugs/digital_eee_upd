@@ -67,6 +67,46 @@ include-in-header:
     <p class="text-gray-500 mb-8 text-sm">Browser-based tools — no installation needed</p>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
 
+      <!-- MOS Transistor Fabrication -->
+      <a href="transistor_fabrication.html"
+         class="block bg-white rounded-xl border border-gray-200 p-6
+                hover:shadow-md hover:border-red-300 transition-all group">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
+             style="background: #fee2e2;">
+          <svg class="w-5 h-5" style="color: #7B0D1E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 7l9-4 9 4-9 4-9-4zm0 5l9 4 9-4M3 17l9 4 9-4"/>
+          </svg>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">
+          MOS Transistor Fabrication
+        </h3>
+        <p class="text-sm text-gray-500 leading-relaxed">
+          Explore MOS transistor fabrication step by step with a 3D model
+          and controls for material visibility and transparency.
+        </p>
+      </a>
+
+      <!-- MOS Transistor Characterization -->
+      <a href="transistor_characterization.html"
+         class="block bg-white rounded-xl border border-gray-200 p-6
+                hover:shadow-md hover:border-red-300 transition-all group">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
+             style="background: #fee2e2;">
+          <svg class="w-5 h-5" style="color: #7B0D1E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 4v16h16M7 16c3 0 3-8 7-8h6M7 18c3 0 4-5 7-5h6"/>
+          </svg>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">
+          MOS Transistor Characterization
+        </h3>
+        <p class="text-sm text-gray-500 leading-relaxed">
+          Adjust transistor bias conditions and explore MOS transistor
+          output and transfer characteristics.
+        </p>
+      </a>
+
       <!-- FSM Simulator -->
       <a href="FSM_simulatEEE.html"
          class="block bg-white rounded-xl border border-gray-200 p-6

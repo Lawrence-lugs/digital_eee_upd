@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="An interactive NMOS and PMOS transistor observatory. Explore terminal voltages, characteristic curves, channel formation, and short-channel effects.">
+  <title>MOS Transistor Characteristics Visualization</title>
+  <style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0}button,input,select{font:inherit}button,a,input,summary{-webkit-tap-highlight-color:transparent}button,summary{cursor:pointer}button{color:var(--text);background:var(--panel-alt);border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:12px;transition:background .15s,border-color .15s,transform .15s}button:hover{border-color:var(--accent)}button:active{transform:translateY(1px)}button.active,button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--bg)}button:focus-visible,input:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--accent2);outline-offset:4px}input{accent-color:var(--accent)}[data-mount]{min-width:0}a{color:var(--accent)}.eyebrow{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700}.mode-switch{display:flex;gap:5px;flex-wrap:wrap}.mode-switch button{padding:10px 16px;font-weight:600}.model-note,.property-note{font-size:11px;color:var(--muted);line-height:1.7;margin:10px 0 0}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.metric{min-width:0}.metric label{font-size:11px;color:var(--muted);display:block;margin-bottom:8px}.metric strong{font-size:25px;line-height:1.2;font-weight:550;letter-spacing:-.04em;font-variant-numeric:tabular-nums;display:block}.metric small{display:block;margin-top:5px;font-size:10px;color:var(--muted)}.metric:last-child strong{font-size:19px;color:var(--accent)}.voltage-controls{display:grid;gap:24px}.control-top{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px}.control-top label{font-weight:600}.control-top output{font-family:Consolas,monospace;font-size:14px;color:var(--accent);font-weight:600}.voltage-control input[type=range]{display:block;width:100%;height:24px;margin:12px 0 0;cursor:ew-resize}.range-ends{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:4px}.preset-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:24px}.preset-row button{font-size:10px;padding:7px 10px}.transport-row{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-top:16px}.transport-row button{font-size:11px}.transport-row label,.plot-toolbar label{font-size:11px;display:flex;gap:5px;align-items:center;color:var(--muted)}.plot-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.plot-card{min-width:0}.plot-heading{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:0 0 6px}.plot-heading h3{font-size:13px;margin:0;font-weight:600}.plot-heading span{color:var(--muted);font-size:10px}.plot-svg{display:block;width:100%;height:auto;overflow:visible;background:var(--plot-bg,var(--panel))}.plot-svg text{font-family:Segoe UI,Arial,sans-serif;fill:var(--muted);font-size:10px}.plot-svg .grid{stroke:var(--line);stroke-width:.8}.plot-svg .axis{stroke:var(--muted);stroke-width:.8}.plot-svg .family{stroke:var(--accent);stroke-width:1.3;opacity:.23;fill:none}.plot-svg .curve{stroke:var(--accent);stroke-width:2.6;fill:none}.plot-svg .reference{stroke:var(--accent2);stroke-width:1.6;stroke-dasharray:5 4;fill:none;opacity:.8}.plot-svg .cursor-line{stroke:var(--accent);stroke-dasharray:3 5;stroke-width:1;opacity:.5}.plot-svg .op-dot{fill:var(--accent);stroke:var(--panel);stroke-width:2}.plot-foot{font-size:10px;color:var(--muted);min-height:30px;line-height:1.5;margin:6px 0 0}.plot-toolbar{display:flex;gap:18px;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap}.plot-legend{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:10px;color:var(--muted)}.legend-item{display:inline-flex;align-items:center;gap:6px}.legend-line{width:18px;border-top:2px solid var(--accent)}.legend-line.ref{border-color:var(--accent2);border-top-style:dashed}.legend-dot{width:6px;height:6px;background:var(--accent);border-radius:50%}.cross-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;font-size:11px;color:var(--muted)}.region-pill{display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:700}.region-pill::before{content:'';width:6px;height:6px;background:currentColor;border-radius:50%}.device-svg{display:block;width:100%;height:auto}.device-svg text{font-family:Segoe UI,Arial,sans-serif;fill:var(--muted);font-size:12px}.device-svg .device-name{font-size:13px;font-weight:600;fill:var(--text)}.device-svg .terminal-value{font-family:Consolas,monospace;font-size:14px;fill:var(--accent)}.device-svg .device-wire{stroke:var(--muted);stroke-width:1.4;fill:none}.device-svg .electron{fill:var(--accent);stroke:var(--panel);stroke-width:.8}.device-svg .carrier-trail{stroke:var(--accent);opacity:.2;stroke-width:1.5}.cross-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:10px;color:var(--muted)}.cross-note{font-size:11px;line-height:1.7;color:var(--muted);margin:12px 0 0}.cross-legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px}.insight-card{height:100%;position:relative}.insight-card h3{font-size:22px;letter-spacing:-.03em;line-height:1.2;margin:10px 0 12px}.insight-card p{font-size:12px;line-height:1.8;color:var(--muted);margin:10px 0}.equation{font-size:19px;overflow-x:auto;max-width:100%;padding:16px 4px;color:var(--text);line-height:1.7}.equation math{font-family:Cambria Math,STIX Two Math,serif}.insight-numbers{border-top:1px solid var(--line);padding-top:14px;font-size:11px;color:var(--muted);line-height:1.9}.insight-numbers b{color:var(--text);font-weight:600}.properties-details,.guide-details{font-size:13px}.properties-details>summary,.guide-details>summary{font-size:14px;font-weight:600;padding:4px 0;list-style-position:inside}.property-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:24px}.property-grid label{font-size:11px;color:var(--muted);min-width:0}.property-grid small{display:block;font-size:10px;margin:4px 0 8px;opacity:.85}.property-grid input{width:100%;border:1px solid var(--line);border-radius:6px;background:var(--panel-alt);color:var(--text);padding:10px;min-width:0}.property-grid input:disabled{opacity:.4;cursor:not-allowed}.property-note{margin-bottom:16px}.guide-content{font-size:12px;line-height:1.8;color:var(--muted);padding-top:18px}.guide-content h3{font-size:16px;color:var(--text);margin:18px 0 8px}.guide-content p{margin:8px 0 14px}.guide-columns{display:grid;grid-template-columns:1fr 1fr;gap:30px}.guide-content .equation{font-size:18px;color:var(--text);padding:10px 0}.source-links{display:flex;gap:16px;flex-wrap:wrap;font-size:11px}.teaching-toast{position:fixed;z-index:30;right:24px;bottom:24px;width:min(420px,calc(100vw - 32px));background:var(--panel);border:1px solid var(--accent);box-shadow:0 14px 70px #0003;border-radius:var(--radius,12px);padding:20px 42px 20px 20px;color:var(--text);opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .2s,transform .2s}.teaching-toast.show{opacity:1;transform:translateY(0);pointer-events:auto}.teaching-toast h4{font-size:16px;margin:8px 0}.teaching-toast p{font-size:12px;color:var(--muted);line-height:1.6;margin:8px 0}.teaching-toast .equation{font-size:18px;padding:8px 0}.toast-close{position:absolute;top:8px;right:8px;border:0;background:transparent;font-size:20px;padding:2px 8px}.bias-note{font-size:11px;line-height:1.6;color:var(--muted);margin-top:16px}.section-count{font-family:Consolas,monospace;color:var(--accent)}[hidden]{display:none!important}@media(max-width:1050px){.plot-grid{gap:10px}.metric strong{font-size:22px}.property-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:700px){.plot-grid{grid-template-columns:1fr;gap:26px}.metrics{grid-template-columns:1fr 1fr;gap:20px}.property-grid{grid-template-columns:1fr 1fr}.guide-columns{grid-template-columns:1fr;gap:4px}.cross-toolbar{align-items:flex-start;font-size:10px}.cross-legend{gap:8px 15px}.teaching-toast{right:16px;bottom:16px}.equation{font-size:17px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+.device-viewport{overflow-x:auto;max-width:100%;scrollbar-color:var(--accent) var(--panel-alt);scrollbar-width:thin}.diagram-hint{display:none}@media(max-width:700px){.device-svg{min-width:620px}.diagram-hint{display:block;color:var(--muted);font-size:10px;margin:0 0 8px}}
+
+  </style>
+  <style>
+    :root {
+      color-scheme: light;
+      --up-maroon: #7b1113;
+      --up-maroon-dark: #5d0d0f;
+      --bg: #f3f5f7;
+      --panel: #ffffff;
+      --panel-alt: #f7f9fb;
+      --text: #17212b;
+      --muted: #667085;
+      --line: #d6dde5;
+      --accent: var(--up-maroon);
+      --accent2: #756585;
+      --warm: #8a652c;
+      --shadow: 0 10px 28px rgba(28,39,49,.07);
+      --radius: 16px;
+      --plot-bg: #ffffff;
+      --substrate: #edf1f4;
+      --junction: #e2eee8;
+      --gate: #e7e1ef;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body { margin: 0; background: var(--bg); color: var(--text); }
+    a { color: var(--accent); text-underline-offset: 3px; }
+    button { font-weight: 650; }
+    button:hover { background: #f6f8fa; }
+    button.active, button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+    :focus-visible { outline: 3px solid var(--accent2); outline-offset: 4px; }
+    .page-banner { background: linear-gradient(135deg,var(--up-maroon),var(--up-maroon-dark)); color: #fff; padding: 17px 22px 18px; }
+    .banner-wrap, .site-shell { max-width: 1500px; margin: 0 auto; }
+    .banner-wrap { display: flex; align-items: flex-start; justify-content: space-between; gap: 28px; }
+    .banner-copy { flex: 1 1 0; min-width: 0; }
+    .banner-controls { flex: 0 0 auto; max-width: 100%; }
+    h1 { margin: 0 0 5px; font-size: clamp(1.6rem,2.8vw,2.3rem); line-height: 1.06; font-weight: 700; }
+    .banner-subtitle { margin: 0; color: #f5e8e8; font-size: 1rem; line-height: 1.38; }
+    .banner-credit { display: block; margin-top: 7px; font-size: .76rem; color: #ead7d8; }
+    .site-shell { padding: 8px 18px 0; }
+    .model-selectors { display: flex; align-items: flex-start; gap: 10px; }
+    .selector-group { min-width: 0; padding: 6px 10px 7px; border: 1px solid rgba(255,255,255,.45); border-radius: 10px; background: rgba(255,255,255,.08); }
+    .selector-label { display: block; font-size: 11px; font-weight: 700; color: #f5e8e8; margin-bottom: 6px; }
+    .mode-switch { display: flex; flex-wrap: nowrap; gap: 4px; padding: 0; background: transparent; border: 0; border-radius: 6px; }
+    .mode-switch button { flex: 1; padding: 6px 11px; border: 0; border-radius: 6px; background: transparent; color: #fff; font-size: 12px; font-weight: 750; white-space: nowrap; }
+    .mode-switch button:hover { color: #fff; background: rgba(255,255,255,.16); }
+    .mode-switch button.active, .mode-switch button[aria-pressed="true"] { background: #fff; color: var(--up-maroon); }
+    .mode-switch button:focus-visible { outline-color: #fff; outline-offset: 3px; }
+    .model-note { color: #ead7d8; font-size: 11px; line-height: 1.55; margin: 4px 0 0; text-align: right; }
+    .readout-frame { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); overflow: hidden; box-shadow: var(--shadow); }
+    .readout-cap { padding: 5px 22px 0; color: var(--muted); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; display: flex; justify-content: space-between; gap: 16px; }
+    .readout-cap span:last-child { font-weight: 500; text-transform: none; letter-spacing: 0; }
+    .metrics { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 0; padding: 4px 0 5px; }
+    .metric { min-width: 0; padding: 0 22px; border-right: 1px solid var(--line); }
+    .metric:last-child { border-right: 0; }
+    .metric label { color: var(--muted); font-size: 12px; margin-bottom: 2px; }
+    .metric strong { color: var(--text); font-weight: 700; font-size: clamp(22px,2.1vw,31px); line-height: 1.3; letter-spacing: -.7px; margin: 1px 0; }
+    .metric small { color: var(--muted); font-size: 11px; line-height: 1.4; margin-top: 1px; }
+    .metric:nth-child(3) strong { color: var(--accent); }
+    .metric:nth-child(4) strong { color: var(--accent2); font-size: 21px; }
+    .workbench { display: grid; grid-template-columns: 300px minmax(0,1fr); column-gap: 18px; row-gap: 10px; margin-top: 8px; align-items: start; }
+    .bias-rail { position: sticky; top: 12px; min-width: 0; }
+    .bias-rail.has-docked-popup { position: static; }
+    .toast-dock { grid-column: 1 / -1; }
+    .rail-panel { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 22px; background: var(--panel); box-shadow: var(--shadow); }
+    .section-kicker { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; font-weight: 750; margin: 0 0 6px; display: flex; align-items: center; gap: 9px; }
+    .section-kicker .index { color: var(--accent); font-variant-numeric: tabular-nums; }
+    .rail-heading { margin: 0 0 5px; font-size: 20px; font-weight: 750; letter-spacing: -.4px; }
+    .rail-intro { color: var(--muted); font-size: 12px; line-height: 1.6; margin: 0 0 12px; }
+    .voltage-controls { display: grid; gap: 12px; }
+    .control-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 3px; }
+    .control-top label { color: var(--text); font-size: 13px; font-weight: 700; }
+    .control-top output { color: var(--accent); font-size: 14px; font-family: Consolas,monospace; font-variant-numeric: tabular-nums; background: var(--panel-alt); border: 1px solid var(--line); padding: 5px 8px; border-radius: 6px; }
+    .voltage-control input[type="range"] { accent-color: var(--accent); width: 100%; cursor: pointer; margin-top: 2px; }
+    .range-ends { color: var(--muted); font-size: 10px; margin-top: 1px; }
+    .preset-row { gap: 6px; padding-top: 10px; margin-top: 10px; border-top: 1px solid var(--line); }
+    .preset-row button { color: var(--text); background: var(--panel); border: 1px solid #c7ced7; border-radius: 7px; padding: 7px 9px; font-size: 11px; }
+    .preset-row button:hover { background: var(--panel-alt); border-color: var(--accent); color: var(--accent); }
+    .bias-note { margin: 10px 0 0; }
+    .bias-rail [data-mount="properties"] { margin-top: 10px; }
+    .properties-details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); padding: 0; overflow: hidden; box-shadow: var(--shadow); }
+    .properties-details summary { padding: 12px 18px; color: var(--text); font-size: 12px; font-weight: 750; }
+    .property-grid { padding: 0 17px 15px; gap: 13px; grid-template-columns: repeat(2,minmax(0,1fr)); margin-top: 14px; }
+    .property-grid label { color: var(--muted); font-size: 11px; }
+    .property-grid input { background: var(--panel); color: var(--text); border: 1px solid #bfc7d1; border-radius: 7px; font-size: 12px; padding: 8px; }
+    .property-grid input:disabled { opacity: .6; background: var(--bg); }
+    .property-note { font-size: 11px; padding: 0 17px; line-height: 1.6; }
+    .properties-details > button { margin: 0 17px 17px; font-size: 11px; }
+    .rail-footnote { color: var(--muted); font-size: 11px; line-height: 1.7; margin: 10px 9px 0; }
+    .science-column { min-width: 0; }
+    .plot-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); column-gap: 16px; row-gap: 12px; }
+    .plot-card { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); padding: 8px 16px 6px; box-shadow: var(--shadow); overflow: hidden; min-width: 0; }
+    .plot-heading { color: var(--text); margin-bottom: 5px; }
+    .plot-heading h3 { font-size: 13px; font-weight: 750; }
+    .plot-svg { background: var(--plot-bg); border-radius: 7px; }
+    .plot-svg .family { opacity: .3; }
+    .plot-foot { font-size: 11px; line-height: 1.5; min-height: 0; margin-top: 4px; }
+    .family-toggle { display: flex; align-items: center; gap: 4px; color: var(--muted); font-size: 11px; white-space: nowrap; }
+    .device-section { margin-top: 8px; }
+    .device-panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); overflow: hidden; box-shadow: var(--shadow); padding: 8px 20px; }
+    .device-svg .hole { fill: var(--panel); stroke: var(--accent); stroke-width: 1.5; }
+    .device-svg [data-device-part] { cursor: help; }
+    .device-svg [data-device-part]:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .device-tooltip { position: fixed; z-index: 60; width: max-content; max-width: min(320px,calc(100vw - 24px)); padding: 12px 14px; border: 1px solid var(--accent); border-radius: 10px; background: var(--panel); color: var(--text); box-shadow: 0 8px 28px rgba(28,39,49,.18); pointer-events: none; font-size: 12px; line-height: 1.5; }
+    .device-tooltip strong { display: block; color: var(--accent); font-size: 13px; margin-bottom: 4px; }
+    .device-tooltip p { margin: 0; }
+    .cross-toolbar { flex-wrap: wrap; font-size: 12px; margin-bottom: 2px; }
+    .cross-legend, .cross-note { font-size: 11px; margin-top: 6px; }
+    .cross-note { line-height: 1.6; margin-bottom: 0; }
+    .equation { background: var(--panel-alt); border: 1px solid var(--line); color: var(--text); border-radius: 9px; padding: 14px 17px; overflow-x: auto; }
+    .insight-numbers { color: var(--muted); font-size: 12px; margin-top: 12px; line-height: 1.7; }
+    .teaching-toast { left: 24px; right: auto; width: min(420px,calc(100% - 32px)); max-height: min(560px,calc(100dvh - 32px)); overflow-y: auto; overscroll-behavior: contain; transform: none; transition: opacity .2s; }
+    .teaching-toast.show { transform: none; }
+    .toast-drag-handle { display: flex; align-items: center; gap: 7px; width: 100%; border: 0; padding: 0; background: transparent; color: var(--muted); cursor: grab; touch-action: none; user-select: none; text-align: left; }
+    .toast-drag-handle:hover { background: transparent; }
+    .toast-drag-handle:active { transform: none; }
+    .toast-drag-handle.dragging { cursor: grabbing; }
+    .drag-grip { font-size: 20px; line-height: 1; flex: 0 0 auto; }
+    .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+    .toast-details { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 10px; }
+    .toast-details summary { color: var(--accent); cursor: pointer; font-size: 11px; font-weight: 700; line-height: 1.5; }
+    .toast-details[open] summary { margin-bottom: 8px; }
+    .teaching-toast .toast-details p, .teaching-toast .insight-numbers { font-size: 11px; line-height: 1.6; }
+    .toast-details .insight-numbers { margin-top: 8px; }
+    .reference-section { margin-top: 12px; }
+    .guide-details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); padding: 0; box-shadow: var(--shadow); }
+    .guide-details summary { padding: 19px 22px; color: var(--text); font-size: 13px; font-weight: 750; }
+    .guide-content { padding: 0 22px 24px; color: var(--muted); font-size: 13px; line-height: 1.8; }
+    .guide-content h3 { color: var(--text); font-size: 15px; font-weight: 750; }
+    .guide-content .equation { padding: 12px; }
+    .guide-columns { gap: 24px; }
+    .footer { border-top: 1px solid var(--line); margin-top: 30px; padding: 20px 0 30px; color: var(--muted); font-size: 11px; line-height: 1.7; }
+    .footer-mark { display: inline-block; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; margin-right: 7px; }
+    @media (max-width: 1120px) {
+      .workbench { grid-template-columns: 278px minmax(0,1fr); }
+      .rail-panel { padding: 14px 18px; }
+      .plot-grid { gap: 10px; }
+      .plot-card { padding: 10px; }
+    }
+    @media (max-width: 1000px) {
+      .banner-wrap { flex-direction: column; gap: 16px; }
+      .banner-copy { flex-basis: auto; }
+      .model-note { text-align: left; }
+    }
+    @media (max-width: 920px) {
+      .workbench { grid-template-columns: 1fr; }
+      .bias-rail { position: static; display: grid; grid-template-columns: minmax(0,1fr) 235px; gap: 16px; align-items: start; }
+      .bias-rail [data-mount="properties"] { margin-top: 0; }
+      .rail-footnote { display: none; }
+      .voltage-controls { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; }
+      .control-top { flex-wrap: wrap; }
+      .rail-intro { margin-bottom: 12px; }
+      .preset-row { margin-top: 10px; padding-top: 10px; }
+      .science-column { margin-top: 0; }
+    }
+    @media (max-width: 700px) {
+      .page-banner { padding: 15px 18px 16px; }
+      .teaching-toast { left: 16px; }
+      .banner-subtitle { font-size: .9rem; }
+      .site-shell { padding: 10px 10px 0; }
+      .metrics { grid-template-columns: repeat(2,minmax(0,1fr)); padding: 8px 0 3px; row-gap: 8px; }
+      .metric { padding: 0 17px 6px; }
+      .metric:nth-child(2) { border-right: 0; }
+      .metric strong { font-size: 25px; }
+      .metric:nth-child(4) strong { font-size: 19px; }
+      .readout-cap { padding: 8px 17px 0; }
+      .readout-cap span:last-child { display: none; }
+      .bias-rail { display: block; }
+      .bias-rail [data-mount="properties"] { margin-top: 10px; }
+      .workbench { margin-top: 12px; gap: 12px; }
+      .rail-panel { padding: 13px 17px; }
+      .voltage-controls { gap: 12px; }
+      .control-top { display: block; }
+      .control-top label { display: block; font-size: 12px; margin-bottom: 7px; }
+      .control-top output { display: inline-block; font-size: 13px; padding: 4px 7px; }
+      .plot-grid { grid-template-columns: 1fr; gap: 12px; }
+      .plot-card { padding: 10px 13px; }
+      .device-panel { padding: 10px; }
+      .cross-toolbar { font-size: 11px; }
+      .guide-details summary { padding: 17px; }
+      .guide-content { padding: 0 17px 20px; }
+      .guide-columns { grid-template-columns: 1fr; gap: 4px; }
+      .footer { margin-top: 26px; padding-bottom: 24px; }
+    }
+    @media (max-width: 480px) {
+      .banner-controls { width: 100%; }
+      .model-selectors { display: grid; grid-template-columns: minmax(0,1fr); }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
+  </style>
+</head>
+<body>
+  <header class="page-banner">
+    <div class="banner-wrap">
+      <div class="banner-copy">
+        <h1 id="page-title">MOS Transistor Characteristics Visualization</h1>
+        <p class="banner-subtitle">Explore how terminal voltages shape current, characteristic curves, and the conducting channel in NMOS and PMOS transistors.
+          <span class="banner-credit">Conceptualized by Adelson Chua</span>
+        </p>
+      </div>
+      <div class="banner-controls" data-mount="mode"></div>
+    </div>
+  </header>
+  <div class="site-shell">
+    <main aria-labelledby="page-title">
+      <section class="readout-frame" aria-label="Operating point readouts">
+        <div class="readout-cap"><span>Operating point</span><span>Terminal voltages → channel physics → current</span></div>
+        <div data-mount="metrics"></div>
+      </section>
+
+      <div class="workbench">
+        <aside class="bias-rail" aria-label="Bias and device controls">
+          <section class="rail-panel">
+            <p class="section-kicker"><span class="index">01</span> Bias console</p>
+            <h2 class="rail-heading">Set the conditions.</h2>
+            <p class="rail-intro">Move a voltage slider. Every view follows the same operating point.</p>
+            <div data-mount="controls"></div>
+          </section>
+          <div data-mount="properties"></div>
+          <p class="rail-footnote">Follow a preset, then vary one voltage at a time to discover what the transistor is responding to.</p>
+        </aside>
+
+        <div class="science-column">
+          <section aria-label="Transistor characteristic plots">
+            <div data-mount="plots"></div>
+          </section>
+
+          <section class="device-section" aria-label="Transistor cross-section">
+            <div class="device-panel"><div data-mount="cross"></div></div>
+          </section>
+
+          <section class="reference-section" aria-label="Model equations and learning guide">
+            <div data-mount="guide"></div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <span><span class="footer-mark"></span>MOS Transistor Characteristics Visualization · A visual study of field-effect behavior.</span>
+    </footer>
+  </div>
+  <script>/* Deterministic, SI-unit current engine. Geometry inputs: µm, oxide: nm. */
+const MOS = (() => {
+  const defaults = { W:10, L:1, tox:5, mu:350, vt:0.55, vsat:10, eta:0.08, lambda:0.10, theta:0.18, n:1.45, temp:300, i0:10 };
+  // Illustrative teaching parameters, not calibrated process models. vt is
+  // the threshold magnitude for either polarity; short mode reduces it by DIBL.
+  function defaultsFor(polarity='n',mode='long') {
+    return {...defaults, ...(polarity==='p'?{mu:150,vsat:8}:{}), L:mode==='short'?0.12:1};
+  }
+  const fields = [
+    ['W','Channel width W','µm',0.1,100,0.1], ['L','Channel length L','µm',0.05,10,0.01],
+    ['tox','Oxide thickness tₒₓ','nm',1,30,0.1], ['mu','Low-field mobility μ₀','cm²/(V·s)',50,1000,10],
+    ['vt','Zero-drain threshold Vₜ₀','V',0.2,1.2,0.01], ['vsat','Saturation velocity vₛₐₜ','10⁶ cm/s',2,20,0.1],
+    ['eta','DIBL coefficient η','V/V',0,0.2,0.005], ['lambda','Channel modulation λ','1/V',0,0.5,0.01],
+    ['theta','Mobility degradation θ','1/V',0,1,0.01], ['n','Subthreshold factor n','dimensionless',1,2,0.05],
+    ['temp','Temperature T','K',250,400,5], ['i0','Weak-current scale I₀','nA × W/L',0.1,100,0.1]
+  ];
+  function intrinsic(g,d,p,mode='long') {
+    d=Math.max(0,d);
+    const short=mode==='short', ut=8.617333262e-5*p.temp;
+    const vt=p.vt-(short?p.eta*d:0), ov=g-vt, u=Math.max(ov,0);
+    const mu=p.mu/(1+(short?p.theta*u:0));
+    const cox=3.9*8.8541878128e-12/(p.tox*1e-9);
+    const beta=mu*1e-4*cox*p.W/p.L;
+    const vc=p.vsat*1e6*(p.L*1e-4)/mu;
+    const sat=short?2*u/(1+Math.sqrt(1+2*u/vc)):u;
+    const v=Math.min(d,sat);
+    const clm=short?(1+p.lambda*d)/(1+p.lambda*v):1;
+    const strong=beta*(u*v-v*v/2)/(short?1+v/vc:1)*clm;
+    const weak=short?p.i0*1e-9*(p.W/p.L)*Math.exp(Math.min(ov/(p.n*ut),0))*(-Math.expm1(-d/ut)):0;
+    const id=Math.max(0,strong+weak);
+    const region=ov<=0?(short?'weak':'cutoff'):d<1e-9?'equilibrium':d<sat?'linear':'saturation';
+    return {id,strong,weak,g,d,vt,ov,u,mu,cox,beta,vc,sat,v,ut,clm,region,short};
+  }
+  function terminal(vg,vd,vs,p,mode,polarity='n') {
+    // The body tracks the electrical source: lowest terminal for nMOS,
+    // highest for pMOS. signedId is positive into the labeled drain.
+    const sign=polarity==='p'?-1:1, reverse=sign*(vd-vs)<0;
+    const se=polarity==='p'?Math.max(vd,vs):Math.min(vd,vs);
+    const d=Math.abs(vd-vs), g=sign*(vg-se), magnitude=intrinsic(g,d,p,mode);
+    return {...magnitude, vg,vd,vs,se,reverse,polarity,vgs:vg-vs,vds:vd-vs, signedId:sign*(reverse?-1:1)*magnitude.id};
+  }
+  return {defaults,defaultsFor,fields,intrinsic,terminal};
+})();
+if(typeof module!=='undefined') module.exports=MOS;
+
+(() => {
+  'use strict';
+  const $=s=>document.querySelector(s);
+  const mount=(key,html)=>$(`[data-mount="${key}"]`).innerHTML=html;
+  const params=Object.fromEntries(['n','p'].map(type=>[type,Object.fromEntries(['long','short'].map(mode=>[mode,MOS.defaultsFor(type,mode)]))]));
+  const state={polarity:'n',mode:'long',vg:1.2,vd:1.2,vs:0,family:true};
+  const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
+  const names={cutoff:'Cutoff',weak:'Weak inversion',equilibrium:'No net flow',linear:'Linear / triode',saturation:'Saturation'};
+  const p=()=>params[state.polarity][state.mode];
+  const isP=()=>state.polarity==='p';
+  const deviceName=()=>isP()?'PMOS':'NMOS';
+  const carrier=()=>isP()?'holes':'electrons';
+  const gateBias=()=>isP()?'VSG*':'VGS*';
+  const drainBias=()=>isP()?'VSD*':'VDS*';
+  const fixed=(n,k=2)=>Number(n).toFixed(k);
+  function current(a){const v=Math.abs(a),sign=a<0?'−':'';if(v===0)return '0 A';if(v<1e-12)return sign+'< 1 pA';if(v<1e-9)return sign+fixed(v*1e12,1)+' pA';if(v<1e-6)return sign+fixed(v*1e9,1)+' nA';if(v<1e-3)return sign+fixed(v*1e6,1)+' µA';return sign+fixed(v*1e3,2)+' mA';}
+  const sub=(a,b)=>`<msub><mi>${a}</mi><mi>${b}</mi></msub>`;
+  const frac=(a,b)=>`<mfrac><mrow>${a}</mrow><mrow>${b}</mrow></mfrac>`;
+  const square=a=>`<msup><mrow>${a}</mrow><mn>2</mn></msup>`;
+  const math=s=>`<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">${s}</math>`;
+  function makeEquations(){
+    const effective=indices=>`<msup>${sub('V',indices)}<mo>*</mo></msup>`;
+    const vgs=effective(isP()?'SG':'GS'),vds=effective(isP()?'SD':'DS');
+    const vt=`<msup>${sub('V','T')}<mo>*</mo></msup>`,ids=`<mrow><mo>|</mo>${sub('I','D')}<mo>|</mo></mrow>`,u='<mi>u</mi>',beta='<mi>β</mi>';
+    return {
+    cutoff:math(`${vgs}<mo>≤</mo>${vt}<mo>⇒</mo>${ids}<mo>=</mo><mn>0</mn>`),
+    equilibrium:math(`${vds}<mo>=</mo><mn>0</mn><mo>⇒</mo>${ids}<mo>=</mo><mn>0</mn>`),
+    linear:math(`${ids}<mo>=</mo>${beta}<mo>[</mo><mo>(</mo>${vgs}<mo>−</mo>${vt}<mo>)</mo>${vds}<mo>−</mo>${frac(square(vds),'<mn>2</mn>')}<mo>]</mo>`),
+    saturation:math(`${ids}<mo>=</mo>${frac(beta,'<mn>2</mn>')}${square(`<mo>(</mo>${vgs}<mo>−</mo>${vt}<mo>)</mo>`)}`),
+    weak:math(`${sub('I','weak')}<mo>=</mo>${sub('I','0')}${frac('<mi>W</mi>','<mi>L</mi>')}<msup><mi>e</mi><mrow>${frac(`${vgs}<mo>−</mo>${vt}`,`<mi>n</mi>${sub('U','T')}`)}</mrow></msup><mo>(</mo><mn>1</mn><mo>−</mo><msup><mi>e</mi><mrow><mo>−</mo>${frac(vds,sub('U','T'))}</mrow></msup><mo>)</mo>`),
+    short:math(`${sub('I','strong')}<mo>=</mo>${beta}${frac(`${u}<mi>v</mi><mo>−</mo>${frac(square('<mi>v</mi>'),'<mn>2</mn>')}`,`<mn>1</mn><mo>+</mo>${frac('<mi>v</mi>',sub('V','c'))}`)}<mi>M</mi>`),
+    dibl:math(`${vt}<mo>=</mo><mo>|</mo>${sub('V','T0')}<mo>|</mo><mo>−</mo><mi>η</mi>${vds}`),
+    velocity:math(`${sub('V','sat')}<mo>=</mo>${sub('V','c')}<mo>(</mo><msqrt><mn>1</mn><mo>+</mo>${frac(`<mn>2</mn>${u}`,sub('V','c'))}</msqrt><mo>−</mo><mn>1</mn><mo>)</mo>`),
+    body:math(`${vgs}<mo>=</mo>${sub('V',isP()?'S,e':'G')}<mo>−</mo>${sub('V',isP()?'G':'S,e')}<mo>,</mo><mspace width="1em"/>${vds}<mo>=</mo><mo>|</mo>${sub('V','D')}<mo>−</mo>${sub('V','S')}<mo>|</mo>`)
+    };
+  }
+  let eq=makeEquations();
+  mount('mode',`<div class="model-selectors"><div class="selector-group"><span class="selector-label">Device type</span><div class="mode-switch" role="group" aria-label="Device type"><button data-polarity="n" class="active" aria-pressed="true">NMOS</button><button data-polarity="p" aria-pressed="false">PMOS</button></div></div><div class="selector-group"><span class="selector-label">Channel model</span><div class="mode-switch" role="group" aria-label="Transistor model"><button data-mode="long" class="active" aria-pressed="true">Long channel</button><button data-mode="short" aria-pressed="false">Short channel</button></div></div></div><p class="model-note" id="model-note"></p>`);
+  mount('metrics',`<div class="metrics"><div class="metric"><label>Gate–source · V<sub>GS</sub></label><strong id="metric-vgs"></strong><small>V<sub>G</sub> − V<sub>S</sub></small></div><div class="metric"><label>Drain–source · V<sub>DS</sub></label><strong id="metric-vds"></strong><small>V<sub>D</sub> − V<sub>S</sub></small></div><div class="metric"><label>Drain current · I<sub>DS</sub></label><strong id="metric-id"></strong><small>Positive into labeled drain</small></div><div class="metric"><label>Operating region</label><strong id="metric-region"></strong><small id="metric-overdrive"></small></div></div>`);
+  mount('controls',`<div class="voltage-controls">${[['vg','Gate','G'],['vd','Drain','D'],['vs','Source','S']].map(([id,label,sym])=>`<div class="voltage-control"><div class="control-top"><label for="${id}">${label} <span>V<sub>${sym}</sub></span></label><output for="${id}" id="${id}-out"></output></div><input id="${id}" type="range" min="0" max="2.5" step="0.01" value="${state[id]}" aria-label="${label} voltage"><div class="range-ends"><span>0 V</span><span>2.5 V</span></div></div>`).join('')}</div><div class="preset-row" aria-label="Bias presets"><button data-preset="off">Cutoff</button><button data-preset="linear">Linear</button><button data-preset="sat">Saturation</button></div><p class="bias-note" id="bias-note"></p>`);
+  mount('plots',`<div class="plot-grid"><div class="plot-card"><div class="plot-heading"><h3>Output characteristics</h3><label class="family-toggle"><input id="family" type="checkbox" checked> Show family curves</label></div><svg id="output-plot" class="plot-svg" viewBox="0 0 440 278" role="img" aria-label="Drain current magnitude versus effective drain bias"></svg><p class="plot-foot" id="output-foot"></p></div><div class="plot-card"><div class="plot-heading"><h3>Transfer characteristics</h3></div><svg id="transfer-plot" class="plot-svg" viewBox="0 0 440 278" role="img" aria-label="Drain current magnitude versus effective gate bias"></svg><p class="plot-foot" id="transfer-foot"></p></div></div>`);
+  mount('cross',`<div class="cross-toolbar"><span class="region-pill" id="cross-region"></span><span id="cross-scale"></span></div><p class="diagram-hint">Swipe across the diagram to explore →</p><div class="device-viewport"><svg class="device-svg" id="device" viewBox="0 0 900 340" role="group" aria-label="Animated MOSFET cross-section with inversion channel and carrier flow"><defs><linearGradient id="bulk-grad" x1="0" y1="0" x2="0" y2="1"><stop stop-color="var(--substrate)"/><stop offset="1" stop-color="var(--panel)"/></linearGradient><linearGradient id="channel-grad"><stop stop-color="var(--accent)" stop-opacity=".8"/><stop offset="1" stop-color="var(--accent2)" stop-opacity=".4"/></linearGradient><pattern id="bulk-dots" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="13" cy="13" r="1" fill="var(--muted)" opacity=".18"/></pattern><marker id="arrow-a" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7Z" fill="var(--accent)"/></marker><marker id="arrow-b" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7Z" fill="var(--warm)"/></marker></defs><rect id="substrate-fill" x="68" y="144" width="764" height="138" rx="8" fill="url(#bulk-grad)" stroke="var(--line)"/><rect id="substrate-pattern" x="68" y="144" width="764" height="138" rx="8" fill="url(#bulk-dots)"/><g id="n-well-structure" display="none"><path id="n-well-fill" d="M80 144 H820 V250 Q820 282 788 282 H112 Q80 282 80 250 Z" fill="var(--well,#e8edf8)" stroke="var(--accent2)" stroke-width="1.4"/><text id="substrate-label" x="450" y="318" text-anchor="middle" class="device-name">p-type substrate</text></g><path id="depletion" fill="var(--accent2)" opacity=".09" stroke="var(--accent2)" stroke-dasharray="5 5"/><rect id="source-region" x="145" y="143" width="106" height="72" rx="14" fill="var(--junction)" stroke="var(--accent2)" stroke-opacity=".45"/><rect id="drain-region" x="649" y="143" width="157" height="72" rx="14" fill="var(--junction)" stroke="var(--accent2)" stroke-opacity=".45"/><text x="198" y="185" text-anchor="middle" class="device-name" id="source-doping">n⁺ source</text><text x="728" y="185" text-anchor="middle" class="device-name" id="drain-doping">n⁺ drain</text><rect id="gate-electrode" x="251" y="113" width="398" height="27" rx="3" fill="var(--gate)" stroke="var(--accent)" stroke-opacity=".4"/><rect id="gate-oxide" x="251" y="140" width="398" height="7" fill="var(--warm)" opacity=".75"/><path id="channel" fill="url(#channel-grad)"/><path id="high-field" fill="var(--warm)" opacity=".2"/><g id="gate-charges"></g><g id="carriers"></g><g id="body-contact"><rect id="body-tap" x="90" y="143" width="38" height="46" rx="6" fill="var(--gate)" stroke="var(--accent2)"/><text id="tap-doping" x="109" y="163" text-anchor="middle" class="device-name">p⁺</text><text id="tap-label" x="109" y="180" text-anchor="middle" style="font-size:10px">tap</text><rect id="tap-contact" x="102" y="139" width="14" height="8" rx="1" fill="var(--muted)"/><path id="body-wire" class="device-wire" d="M109 139 V85 H170"/><circle id="body-junction" cx="170" cy="85" r="3" fill="var(--muted)"/></g><path id="terminal-connections" class="device-wire" d="M170 143 V67 M728 143 V67 M450 113 V44"/><circle id="source-connection" cx="170" cy="66" r="3" fill="var(--accent)"/><circle id="drain-connection" cx="728" cy="66" r="3" fill="var(--accent)"/><circle id="gate-connection" cx="450" cy="44" r="3" fill="var(--accent)"/><text id="source-label" x="170" y="33" text-anchor="middle" class="device-name">SOURCE</text><text x="170" y="54" text-anchor="middle" class="terminal-value" id="svg-vs"></text><text id="drain-label" x="728" y="33" text-anchor="middle" class="device-name">DRAIN</text><text x="728" y="54" text-anchor="middle" class="terminal-value" id="svg-vd"></text><text id="gate-label" x="450" y="17" text-anchor="middle" class="device-name">GATE</text><text x="468" y="65" class="terminal-value" id="svg-vg"></text><text id="gate-electrode-label" x="450" y="132" text-anchor="middle" style="font-size:11px;fill:var(--text)">gate electrode</text><path id="oxide-leader" class="device-wire" d="M653 142 H678 L693 119"/><text id="oxide-label" x="696" y="116" style="font-size:11px">oxide · insulating</text><text x="450" y="244" text-anchor="middle" class="device-name" id="body-doping">p-type silicon body</text><text x="450" y="265" text-anchor="middle" style="font-size:10px" id="body-label"></text><g id="device-annotations"><line id="length-line" x1="254" y1="295" x2="646" y2="295" stroke="var(--line)"/><path id="length-ticks" d="M254 290 V300 M646 290 V300" stroke="var(--muted)"/><text x="450" y="313" text-anchor="middle" id="length-label"></text><path id="carrier-arrow" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arrow-a)"/><path id="current-arrow" stroke="var(--warm)" stroke-width="1.5" marker-end="url(#arrow-b)"/><text x="79" y="322" style="font-size:10px;fill:var(--accent)" id="flow-label">electron drift →</text><text x="694" y="322" style="font-size:10px;fill:var(--warm)" id="current-label">← conventional current</text></g><text id="channel-label" x="450" y="208" text-anchor="middle" style="font-size:11px;fill:var(--accent)"></text></svg></div><div class="cross-legend"><span><i style="background:var(--accent)"></i><span id="carrier-legend">Electrons / inversion</span></span><span><i style="background:var(--accent2);opacity:.5"></i>Depletion region</span><span id="well-legend" hidden><i style="background:var(--well,#e8edf8);border:1px solid var(--accent2)"></i>n-well / PMOS body</span><span><i style="background:var(--warm)"></i>Oxide / high-field region</span></div><p class="cross-note" id="cross-note"></p>`);
+  const device=$('#device'),deviceTooltip=document.createElement('div');
+  deviceTooltip.id='device-tooltip';deviceTooltip.className='device-tooltip';
+  deviceTooltip.setAttribute('role','tooltip');deviceTooltip.hidden=true;
+  deviceTooltip.innerHTML='<strong></strong><p></p>';document.body.append(deviceTooltip);
+  // The first target is the one keyboard stop; the remaining labels share its hover description.
+  const deviceParts={
+    source:['source-region','source-doping','source-label','svg-vs'],
+    drain:['drain-region','drain-doping','drain-label','svg-vd'],
+    gate:['gate-electrode','gate-electrode-label','gate-label','svg-vg'],
+    oxide:['gate-oxide','oxide-leader','oxide-label'],
+    channel:['channel','channel-label'],depletion:['depletion'],highField:['high-field'],
+    substrate:['substrate-fill','substrate-pattern','substrate-label'],well:['n-well-fill'],
+    tap:['body-tap','tap-doping','tap-label','tap-contact'],wire:['body-wire','body-junction','body-label'],
+    terminals:['terminal-connections','source-connection','drain-connection','gate-connection'],
+    gateCharge:['gate-charges'],carriers:['carriers'],
+    drift:['carrier-arrow','flow-label'],current:['current-arrow','current-label'],
+    geometry:['length-label','length-line','length-ticks']
+  };
+  const deviceTargets={};
+  for(const [key,ids] of Object.entries(deviceParts)){
+    deviceTargets[key]=ids.map(id=>$('#'+id));
+    deviceTargets[key].forEach(target=>target.dataset.devicePart=key);
+    const primary=deviceTargets[key][0];primary.setAttribute('role','img');primary.setAttribute('tabindex','0');
+  }
+  let deviceDescriptions={},activeDevicePart=null,deviceTooltipAnchor=null,tooltipOwner=null;
+  function hideDeviceTooltip(){
+    deviceTooltip.hidden=true;activeDevicePart=null;deviceTooltipAnchor=null;
+    if(tooltipOwner)tooltipOwner.removeAttribute('aria-describedby');tooltipOwner=null;
+  }
+  function placeDeviceTooltip(){
+    if(deviceTooltip.hidden||!deviceTooltipAnchor)return;
+    const inset=12,width=deviceTooltip.offsetWidth,height=deviceTooltip.offsetHeight;
+    const viewportWidth=document.documentElement.clientWidth,viewportHeight=window.innerHeight;
+    let {x,y}=deviceTooltipAnchor,left=x+16,top=y+16;
+    if(left+width>viewportWidth-inset)left=x-width-16;
+    if(top+height>viewportHeight-inset)top=y-height-16;
+    deviceTooltip.style.left=Math.max(inset,Math.min(left,viewportWidth-width-inset))+'px';
+    deviceTooltip.style.top=Math.max(inset,Math.min(top,viewportHeight-height-inset))+'px';
+  }
+  function showDeviceTooltip(key,anchor,owner){
+    const description=deviceDescriptions[key];if(!description||description.available===false)return;
+    if(tooltipOwner&&tooltipOwner!==owner)tooltipOwner.removeAttribute('aria-describedby');
+    activeDevicePart=key;deviceTooltipAnchor=anchor;tooltipOwner=owner;
+    deviceTooltip.querySelector('strong').textContent=description.title;
+    deviceTooltip.querySelector('p').textContent=description.text;
+    owner.setAttribute('aria-describedby',deviceTooltip.id);deviceTooltip.hidden=false;placeDeviceTooltip();
+  }
+  function devicePartTarget(node){
+    const target=node instanceof Element?node.closest('[data-device-part]'):null;
+    return target&&device.contains(target)?target:null;
+  }
+  device.addEventListener('pointerover',event=>{
+    const target=devicePartTarget(event.target),previous=devicePartTarget(event.relatedTarget);
+    if(!target||previous?.dataset.devicePart===target.dataset.devicePart)return;
+    showDeviceTooltip(target.dataset.devicePart,{x:event.clientX,y:event.clientY,pointer:true},target);
+  });
+  device.addEventListener('pointermove',event=>{
+    const target=devicePartTarget(event.target);
+    if(!target||activeDevicePart!==target.dataset.devicePart||!deviceTooltipAnchor?.pointer)return;
+    deviceTooltipAnchor={x:event.clientX,y:event.clientY,pointer:true};placeDeviceTooltip();
+  });
+  device.addEventListener('pointerout',event=>{
+    const target=devicePartTarget(event.target),next=devicePartTarget(event.relatedTarget);
+    if(target&&target.dataset.devicePart!==next?.dataset.devicePart)hideDeviceTooltip();
+  });
+  device.addEventListener('focusin',event=>{
+    const target=devicePartTarget(event.target);if(!target)return;
+    const rect=target.getBoundingClientRect();
+    showDeviceTooltip(target.dataset.devicePart,{x:(rect.left+rect.right)/2,y:rect.bottom,pointer:false},target);
+  });
+  device.addEventListener('focusout',hideDeviceTooltip);
+  document.addEventListener('keydown',event=>{if(event.key==='Escape')hideDeviceTooltip();});
+  function updateDeviceTooltipPosition(){
+    if(!deviceTooltip.hidden&&!deviceTooltipAnchor?.pointer&&tooltipOwner===document.activeElement){
+      const rect=tooltipOwner.getBoundingClientRect();
+      if(rect.bottom>0&&rect.top<window.innerHeight){deviceTooltipAnchor={x:(rect.left+rect.right)/2,y:rect.bottom,pointer:false};placeDeviceTooltip();return;}
+    }
+    hideDeviceTooltip();
+  }
+  window.addEventListener('scroll',updateDeviceTooltipPosition,true);window.addEventListener('resize',updateDeviceTooltipPosition);
+  function refreshDeviceDescriptions(){
+    const pmos=isP(),charge=pmos?'holes':'electrons',doping=pmos?'p⁺':'n⁺';
+    const sourceRole=q.reverse?'collects':'supplies',drainRole=q.reverse?'supplies':'collects';
+    const roleNote=q.reverse?' Terminal electrical roles are currently reversed.':'';
+    const flow=q.id>1e-14&&q.d>1e-8;
+    deviceDescriptions={
+      source:{title:doping+' labeled source',text:'Heavily doped '+(pmos?'p-type':'n-type')+' silicon '+sourceRole+' '+charge+(q.reverse?' from':' to')+' the channel.'+roleNote},
+      drain:{title:doping+' labeled drain',text:'Heavily doped '+(pmos?'p-type':'n-type')+' silicon '+drainRole+' '+charge+(q.reverse?' to':' from')+' the channel.'+roleNote},
+      gate:{title:'Gate electrode',text:'The gate voltage controls charge at the silicon surface. '+(pmos?'Lowering':'Raising')+' the gate relative to the electrical source forms '+(pmos?'a hole':'an electron')+' channel.'},
+      oxide:{title:'Gate oxide',text:'This thin insulating layer separates the gate from silicon. Its electric field controls the channel; this model assumes no gate current.'},
+      channel:{title:'Inversion channel',text:'A gate-induced layer of '+charge+' conducts between the terminals. Its drawn thickness represents relative inversion charge, not physical depth.',available:!!$('#channel').getAttribute('d')},
+      depletion:{title:'Depletion region',text:(pmos?'Electrons':'Holes')+' are pushed away from the surface, exposing fixed '+(pmos?'positively':'negatively')+' charged dopant ions. The shaded extent is illustrative.'},
+      highField:{title:'High-field drain region',text:q.short?'A strong electric field limits carrier speed. Saturation can occur while inversion charge remains.':'Near the electrical drain, the inversion layer pinches off. Carriers still cross this region, so current continues.',available:!!$('#high-field').getAttribute('d')},
+      substrate:{title:pmos?'p-type substrate':'p-type silicon body',text:pmos?'The p-type substrate surrounds the n-well. The well–substrate junction is shown structurally; its electrical behavior is not simulated.':'The p-type body contains the n⁺ source and drain. An electron inversion channel forms at its surface under the gate.'},
+      well:{title:'n-well · PMOS body',text:'An n-type well inside the p-type substrate forms the PMOS body. It contains the p⁺ source and drain and supports a hole inversion channel.',available:pmos},
+      tap:{title:pmos?'n⁺ well tap':'p⁺ substrate contact',text:'This heavily doped '+(pmos?'n⁺ well tap provides a low-resistance connection to the n-well body.':'p⁺ substrate contact provides a low-resistance connection to the p-type body.')},
+      wire:{title:'Body-to-source connection',text:'Connects the body tap to the '+(pmos?'higher':'lower')+'-potential electrical source, currently the labeled '+(q.reverse?'drain':'source')+'. This teaching model moves the connection automatically when terminal roles reverse.'},
+      terminals:{title:'Terminal connections',text:'Conductive connections apply the labeled source, drain, and gate voltages. The oxide insulates the gate from the silicon.'},
+      gateCharge:{title:'Gate charge',text:(pmos?'Negative':'Positive')+' gate charge attracts '+charge+' toward the silicon surface. The symbols illustrate charge qualitatively.',available:$('#gate-charges').children.length>0},
+      carriers:{title:pmos?'Holes':'Electrons',text:'The dots represent '+charge+(flow?' moving through the channel.':' in the channel, with no appreciable net drift.')+' Their speed, spacing, and size are illustrative.',available:$('#carriers').children.length>0},
+      drift:{title:pmos?'Hole drift':'Electron drift',text:flow?'Shows net '+(pmos?'hole':'electron')+' motion from the electrical source toward the electrical drain.':q.d<=1e-8?'Equal terminal voltages give zero net drift; random thermal motion still exists.':'There is no appreciable net carrier flow at this operating point.'},
+      current:{title:'Conventional current',text:(pmos?'Conventional current points in the same direction as hole motion.':'Conventional current points opposite to electron motion.')+(flow?'':' There is no appreciable net current at this operating point.')},
+      geometry:{title:'Channel length and width',text:'L is the channel length between source and drain. W is the channel width extending into the page. The drawing is not to scale.'}
+    };
+    // These labels remain useful hover/focus targets even when their corresponding arrow is absent.
+    for(const key of ['drift','current']){
+      const [arrow,label]=deviceTargets[key],primary=flow?arrow:label;
+      for(const target of [arrow,label]){target.setAttribute('tabindex',target===primary?'0':'-1');target.setAttribute('role','img');}
+    }
+    $('#body-doping').dataset.devicePart=pmos?'well':'substrate';
+    $('#channel-label').dataset.devicePart=deviceDescriptions.channel.available?'channel':'depletion';
+    for(const [key,targets] of Object.entries(deviceTargets)){
+      const description=deviceDescriptions[key],primary=targets[0];
+      if(!['drift','current'].includes(key))primary.setAttribute('tabindex',description.available===false?'-1':'0');
+      for(const target of targets){const targetDescription=deviceDescriptions[target.dataset.devicePart];target.setAttribute('aria-label',targetDescription.title);target.setAttribute('aria-description',targetDescription.text);}
+    }
+    if(activeDevicePart){
+      if(deviceDescriptions[activeDevicePart]?.available===false)hideDeviceTooltip();
+      else showDeviceTooltip(activeDevicePart,deviceTooltipAnchor,tooltipOwner);
+    }
+  }
+  mount('properties',`<details class="properties-details"><summary>Device properties <span style="font-weight:400;opacity:.6">· editable, with defaults</span></summary><div class="property-grid">${MOS.fields.map(([key,label,unit,min,max,step])=>`<label for="prop-${key}">${key==='vt'?'Threshold magnitude |Vₜ₀|':label}<small>${unit}</small><input id="prop-${key}" data-property="${key}" type="number" min="${min}" max="${max}" step="${step}" value="${p()[key]}"></label>`).join('')}</div><p class="property-note" id="property-note"></p><button id="reset-properties">Restore this model’s defaults</button></details>`);
+  function renderGuide(){
+    const expanded=$('.guide-details')?.open;
+    mount('guide',`<details class="guide-details" ${expanded?'open':''}><summary>Inside the model · equations & assumptions</summary><div class="guide-content">
+      <p>This is an interactive <b>NMOS and PMOS teaching model</b>. It predicts steady-state current; animated particles illustrate net ${isP()?'hole':'electron'} motion in the selected ${deviceName()}. It is not a calibrated process model, SPICE replacement, or a Poisson / drift–diffusion solver.</p>
+      <div class="guide-columns"><div><h3>01 / Bias and the ideal long channel</h3>
+      <p>${isP()?'A gate below the source attracts holes to the surface of an n-type body. PMOS uses effective source–gate drive VSG* and nonnegative source–drain bias VSD*. Its zero-drain enhancement threshold is negative.':'A gate above the source attracts electrons to the surface of a p-type body. NMOS uses effective gate–source drive VGS* and nonnegative drain–source bias VDS*. Its zero-drain enhancement threshold is positive.'} The threshold input is the positive zero-drain magnitude |V<sub>T0</sub>|. Equations use the normalized effective threshold V<sub>T</sub>*: signed V<sub>T</sub> = V<sub>T</sub>* for NMOS and −V<sub>T</sub>* for PMOS. The asterisk means the effective electrical source, which can differ from the labeled source.</p>
+      <div class="equation">${eq.body}</div>
+      <p>Below threshold, the ideal long-channel model has zero inversion current. Above threshold, u = max(${gateBias()} − V<sub>T</sub>*, 0). C<sub>ox</sub> = 3.9 ε₀ / t<sub>ox</sub> and β = μ C<sub>ox</sub> W/L. Current formulas return |I<sub>D</sub>|.</p>
+      <div class="equation">${eq.linear}</div>
+      <p>For 0 ≤ ${drainBias()} &lt; u the device is in the linear region. At ${drainBias()} ≥ u, the ideal current saturates:</p><div class="equation">${eq.saturation}</div>
+      <p>Pinch-off does not stop current. Carriers cross the high-field drain region. Long-channel mode omits subthreshold leakage, mobility degradation, DIBL, and output slope.</p>
+      <h3>02 / Terminal signs and body connection</h3>
+      <p>The top readouts always show signed V<sub>GS</sub> = V<sub>G</sub> − V<sub>S</sub>, V<sub>DS</sub> = V<sub>D</sub> − V<sub>S</sub>, and I<sub>DS</sub> positive <em>into the labeled drain</em>. ${isP()?'Forward PMOS operation therefore has negative VGS, VDS, and IDS. Holes and conventional current flow from source to drain.':'Forward NMOS operation has positive VGS, VDS, and IDS. Electrons move from source to drain, opposite to conventional current.'}</p>
+      <p>Electrical source V<sub>S,e</sub> = ${isP()?'max':'min'}(V<sub>S</sub>, V<sub>D</sub>). The plots show ${gateBias()} = ${isP()?'max(VS, VD) − VG':'VG − min(VS, VD)'}, ${drainBias()} = |VD − VS|, and |I<sub>DS</sub>|. If source and drain swap electrical roles, current into the labeled drain reverses sign.</p>
+      ${isP()?'<p><b>PMOS well structure:</b> p⁺ source and drain lie inside an n-well formed in a p-type substrate. The n-well is the PMOS body; the hole channel forms at its surface under the gate. The drawing shows this well boundary, while the well–substrate junction and its capacitance are not modeled. The n⁺ well tap provides the body contact and is wired to the electrical source.</p>':''}
+      <p>${isP()?'The n⁺ well tap':'The p⁺ substrate contact'} is connected by the drawn wire to the ${isP()?'higher':'lower'}-potential electrical source, so V<sub>BS</sub> = 0. This automatic body connection is a teaching assumption, not a fixed-substrate circuit. Body effect, gate current, junction diodes, breakdown, self-heating, and transient capacitances are omitted.</p>
+      </div><div><h3>03 / Short-channel transport</h3><div class="equation">${eq.dibl}</div>
+      <p>DIBL lowers V<sub>T</sub>* = |V<sub>T0</sub>| − η${drainBias()}. Extreme parameter choices can drive V<sub>T</sub>* below zero; the signed threshold then crosses zero as well. μ = μ₀ / (1 + θu), V<sub>c</sub> = v<sub>sat</sub>L/μ, and v<sub>drift</sub> = μE / (1 + μE/v<sub>sat</sub>). These polarity-normalized biases let the same teaching approximation describe both polarities. Gate drive can be negative below turn-on.</p>
+      <div class="equation">${eq.short}</div><p>v = min(${drainBias()}, V<sub>sat</sub>) and M = (1 + λ${drainBias()}) / (1 + λv). This factor equals one before saturation, preserves continuity, and adds an output slope afterward.</p>
+      <div class="equation">${eq.velocity}</div><p>Velocity saturation can limit current while inversion remains at the drain end; the illustration keeps this residual channel visible.</p>
+      <h3>04 / Weak inversion and parameter scope</h3><div class="equation">${eq.weak}</div>
+      <p>U<sub>T</sub> = kT/q; subthreshold swing S = ln(10)nU<sub>T</sub>. The exponential argument is capped at zero above threshold. This diffusion tail is added to I<sub>strong</sub> for a continuous teaching approximation with a derivative kink at threshold; it is not a complete moderate-inversion model. I₀ is a selectable nA scale per unit W/L. Temperature only changes this diffusion term.</p>
+      <p>NMOS defaults use μ₀ = 350 cm²/(V·s), v<sub>sat</sub> = 10 × 10⁶ cm/s; PMOS uses 150 and 8, respectively. These are illustrative choices, not measured process data. Both start with |V<sub>T0</sub>| = 0.55 V. η, λ, and θ do not automatically scale with L. Geometry and particle speed are illustrative.</p></div></div>
+    </div></details>`);
+  }
+  renderGuide();
+  const toast=document.createElement('aside');
+  toast.className='teaching-toast';toast.hidden=true;
+  toast.setAttribute('aria-label','Operating point explanation');toast.setAttribute('aria-live','polite');
+  toast.innerHTML=`<button class="toast-close" aria-label="Dismiss teaching popup">×</button><button type="button" class="toast-drag-handle" aria-label="Move teaching popup" aria-describedby="toast-move-help" title="Drag to move · Arrow keys to move · Home to reset"><span class="drag-grip" aria-hidden="true">⠿</span><span class="eyebrow" id="toast-context"></span></button><span class="visually-hidden" id="toast-move-help">Drag to move. Arrow keys move 10 pixels; hold Shift to move 40 pixels. Home restores the default position.</span><h4 id="toast-title"></h4><p id="toast-copy"></p><p id="toast-role-note" hidden></p><div class="equation" id="toast-equation"></div><details class="toast-details"><summary>Bias convention &amp; model values</summary><p id="equation-convention"></p><div class="insight-numbers" id="insight-numbers"></div></details>`;
+  document.body.append(toast);
+  const biasRail=$('.bias-rail'),toastDock=document.createElement('div');
+  toastDock.className='toast-dock';toastDock.hidden=true;biasRail.append(toastDock);
+  function releaseToastDock(){toastDock.hidden=true;biasRail.classList.remove('has-docked-popup');}
+  toast.querySelector('.toast-close').onclick=()=>{toast.hidden=true;toast.classList.remove('show');releaseToastDock();};
+  const dragHandle=toast.querySelector('.toast-drag-handle');
+  let toastPosition=null,toastDrag=null;
+  function clampToastPosition(){
+    if(toast.hidden)return;
+    if(!toastPosition){
+      biasRail.classList.add('has-docked-popup');toastDock.hidden=false;
+      toastDock.style.height=(toast.offsetHeight+12)+'px';
+      const inset=window.matchMedia('(max-width: 700px)').matches?16:24;
+      const maxX=Math.max(inset,document.documentElement.clientWidth-toast.offsetWidth-inset);
+      const x=window.matchMedia('(max-width: 920px)').matches?inset:biasRail.getBoundingClientRect().right-toast.offsetWidth;
+      toast.style.position='absolute';toast.style.bottom='auto';
+      toast.style.top=(toastDock.getBoundingClientRect().top+window.scrollY+12)+'px';
+      toast.style.left=Math.min(maxX,Math.max(inset,x))+'px';
+      return;
+    }
+    releaseToastDock();toast.style.position='fixed';
+    const inset=16,width=toast.offsetWidth,height=toast.offsetHeight;
+    const maxX=Math.max(inset,document.documentElement.clientWidth-width-inset);
+    const maxY=Math.max(inset,window.innerHeight-height-inset);
+    toastPosition.x=Math.min(maxX,Math.max(inset,toastPosition.x));
+    toastPosition.y=Math.min(maxY,Math.max(inset,toastPosition.y));
+    toast.style.left=toastPosition.x+'px';toast.style.top=toastPosition.y+'px';
+    toast.style.right='auto';toast.style.bottom='auto';
+  }
+  function moveToast(x,y){toastPosition={x,y};clampToastPosition();}
+  function stopToastDrag(event){
+    if(!toastDrag||event.pointerId!==toastDrag.id)return;
+    toastDrag=null;dragHandle.classList.remove('dragging');
+    if(dragHandle.hasPointerCapture(event.pointerId))dragHandle.releasePointerCapture(event.pointerId);
+  }
+  dragHandle.addEventListener('pointerdown',event=>{
+    if(event.button!==0||!event.isPrimary)return;
+    event.preventDefault();dragHandle.focus({preventScroll:true});
+    const rect=toast.getBoundingClientRect();moveToast(rect.left,rect.top);
+    toastDrag={id:event.pointerId,x:event.clientX,y:event.clientY,left:toastPosition.x,top:toastPosition.y};
+    dragHandle.classList.add('dragging');dragHandle.setPointerCapture(event.pointerId);
+  });
+  dragHandle.addEventListener('pointermove',event=>{
+    if(!toastDrag||event.pointerId!==toastDrag.id)return;
+    moveToast(toastDrag.left+event.clientX-toastDrag.x,toastDrag.top+event.clientY-toastDrag.y);
+  });
+  ['pointerup','pointercancel','lostpointercapture'].forEach(type=>dragHandle.addEventListener(type,stopToastDrag));
+  dragHandle.addEventListener('keydown',event=>{
+    const directions={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]};
+    if(event.key==='Home'){
+      event.preventDefault();toastPosition=null;
+      ['left','top','right','bottom'].forEach(key=>toast.style.removeProperty(key));clampToastPosition();return;
+    }
+    if(!directions[event.key])return;
+    event.preventDefault();const rect=toast.getBoundingClientRect(),step=event.shiftKey?40:10;
+    const [dx,dy]=directions[event.key];moveToast(rect.left+dx*step,rect.top+dy*step);
+  });
+  window.addEventListener('resize',clampToastPosition);
+  const toastLayoutObserver=new ResizeObserver(clampToastPosition);
+  toastLayoutObserver.observe(toast);toastLayoutObserver.observe(biasRail);
+  let q,phase=0,lastTime=0;
+  function updateTeachingPopup(reveal){
+    const [title,copy,equation]=insight(q);
+    $('#toast-context').textContent=deviceName()+' · '+(q.short?'Short channel':'Long channel')+' · '+names[q.region];
+    $('#toast-title').textContent=title;$('#toast-copy').textContent=copy;$('#toast-equation').innerHTML=equation;
+    $('#toast-role-note').hidden=!q.reverse;
+    $('#toast-role-note').textContent=q.reverse?'The labeled drain is now the electrical source. The body wire follows this '+(isP()?'higher':'lower')+'-potential terminal. Signed drain current is '+current(q.signedId)+'.':'';
+    $('#equation-convention').textContent='Equations use '+gateBias()+', '+drainBias()+', effective threshold VT*, and current magnitude |ID|. Readouts above retain signed VGS, VDS, and IDS.';
+    $('#insight-numbers').innerHTML=`Effective V<sub>T</sub>* <b>${fixed(q.vt,3)} V</b> &nbsp;·&nbsp; Local saturation bias <b>${fixed(q.sat,3)} V</b><br>μ<sub>eff</sub> <b>${fixed(q.mu,0)} cm²/(V·s)</b>${q.short?` &nbsp;·&nbsp; DIBL shift <b>${fixed(p().eta*q.d*1000,0)} mV</b><br>Weak current magnitude <b>${current(q.weak)}</b> &nbsp;·&nbsp; S <b>${fixed(Math.LN10*p().n*q.ut*1000,1)} mV/dec</b>`:''}`;
+    if(reveal){toast.hidden=false;toast.classList.add('show');}
+    clampToastPosition();
+  }
+  function syncProperties(){
+    MOS.fields.forEach(([key])=>{const el=$('#prop-'+key);el.value=p()[key];el.disabled=state.mode==='long'&&['vsat','eta','lambda','theta','n','temp','i0'].includes(key);});
+    $('#property-note').textContent=(state.mode==='long'?'Ideal model: only W, L, tₒₓ, μ₀ and |Vₜ₀| are active. ':'Short-channel parameters apply to this device; η, λ and θ do not automatically scale with L. ')+deviceName()+' threshold is entered as a positive magnitude. Each device/channel combination retains its own settings. Values outside the input limits are clamped when committed.';
+  }
+  function insight(a){
+    if(a.region==='equilibrium')return ['A channel without net current','The gate can form an inversion layer, but equal source and drain voltages produce no lateral bias. There is no net carrier drift; random thermal motion still exists.',eq.equilibrium];
+    if(a.region==='cutoff')return ['The channel has not formed',isP()?'The source–gate drive is below the threshold magnitude. Lower the gate relative to the higher-potential electrical source to form a hole channel. The ideal model sets drain current to zero.':'The gate–source drive is below threshold. Raise the gate relative to the lower-potential electrical source to form an electron channel. The ideal model sets drain current to zero.',eq.cutoff];
+    if(a.region==='weak')return ['A small current before turn-on','A weak population of '+carrier()+' crosses the source barrier by diffusion. DIBL lowers the normalized threshold VT* as effective drain bias rises. The drain current readout shows this small diffusion current.',eq.weak];
+    if(a.region==='linear')return ['A conducting channel connects both ends',a.short?'The channel carries '+carrier()+', but increasing field and gate drive reduce carrier mobility. '+'Increase '+drainBias()+' to approach the saturation knee.':'The gate forms '+(isP()?'a hole':'an electron')+' channel. Increasing '+drainBias()+' tapers it toward the electrical drain. At small drain bias the device behaves approximately like a resistor.',a.short?eq.short:eq.linear];
+    return a.short?['Speed becomes the limiting factor','High lateral fields limit '+(isP()?'hole':'electron')+' speed before ideal pinch-off. DIBL and channel-length modulation can still raise the current magnitude beyond the knee.',eq.velocity]:['Pinch-off, with current still flowing','Inversion charge reaches zero at the electrical drain end. Extra drain bias drops across the high-field region. '+(isP()?'Holes':'Electrons')+' cross it while ideal current magnitude stays fixed by the gate overdrive.',eq.saturation];
+  }
+  function update(notify=true){
+    q=MOS.terminal(state.vg,state.vd,state.vs,p(),state.mode,state.polarity);
+    ['vg','vd','vs'].forEach(key=>{$('#'+key).value=state[key];$('#'+key+'-out').textContent=fixed(state[key])+' V';$('#'+key).setAttribute('aria-valuetext',fixed(state[key])+' volts');});
+    $('#metric-vgs').textContent=fixed(q.vgs)+' V';$('#metric-vds').textContent=fixed(q.vds)+' V';$('#metric-id').textContent=current(q.signedId);$('#metric-region').textContent=names[q.region];$('#metric-overdrive').textContent='Effective overdrive '+fixed(q.ov)+' V';
+    $('#model-note').textContent=deviceName()+' · '+(q.short?'Nonideal transport':'Ideal square law')+' · L = '+p().L+' µm · W = '+p().W+' µm';
+    $('#bias-note').textContent=(q.reverse?'Roles reversed: the labeled drain is the electrical source. ':'')+'Body follows the '+(isP()?'higher':'lower')+'-potential terminal. '+(isP()?'Lower the gate to strengthen conduction. Forward PMOS drain current is negative.':'Raise the gate to strengthen conduction. Forward NMOS drain current is positive.');
+    updateTeachingPopup(notify);drawPlots();drawDevice();
+  }
+  function chart(svg,kind){
+    const transfer=kind==='transfer';
+    const x0=transfer?Math.min(-0.5,Math.floor(q.g*2)/2):0,x1=2.5, left=58,right=425,top=27,bottom=230;
+    const evalAt=x=>MOS.intrinsic(transfer?x:q.g,transfer?q.d:x,p(),state.mode).id;
+    let max=0;for(let i=0;i<=160;i++){const x=x0+(x1-x0)*i/160;max=Math.max(max,evalAt(x));}
+    if(!transfer&&state.family)for(const gate of [0.4,0.7,1,1.3,1.6,1.9,2.2])max=Math.max(max,MOS.intrinsic(gate,x1,p(),state.mode).id);
+    const ymax=Math.max(1e-9,max*1.12),unit=ymax>=1e-3?1e-3:1e-6,unitName=unit===1e-3?'mA':'µA';
+    const X=x=>left+(x-x0)/(x1-x0)*(right-left),Y=y=>bottom-y/ymax*(bottom-top);
+    let out=`<title>${transfer?'Transfer':'Output'} characteristics; current ${current(q.id)} at effective ${transfer?gateBias():drainBias()} bias ${fixed(transfer?q.g:q.d)} V</title><defs><clipPath id="clip-${kind}"><rect x="${left}" y="${top}" width="${right-left}" height="${bottom-top+1}"/></clipPath></defs>`;
+    for(let i=0;i<=5;i++){const x=x0+(x1-x0)*i/5,y=top+(bottom-top)*i/5;const val=fixed(ymax*(1-i/5)/unit,ymax/unit>=100?0:ymax/unit>=10?1:2);out+=`<line class="grid" x1="${X(x)}" y1="${top}" x2="${X(x)}" y2="${bottom}"/><line class="grid" x1="${left}" y1="${y}" x2="${right}" y2="${y}"/><text x="${X(x)}" y="${bottom+19}" text-anchor="middle">${fixed(x,1)}</text><text x="${left-9}" y="${y+3}" text-anchor="end">${val}</text>`;}
+    out+=`<text x="${left}" y="14">|Iᴅꜱ| (${unitName})</text><text x="${(left+right)/2}" y="270" text-anchor="middle">${transfer?gateBias():drainBias()} (V)</text><g clip-path="url(#clip-${kind})">`;
+    function path(fn,cls){let d='',pen=false;for(let i=0;i<=220;i++){const x=x0+(x1-x0)*i/220,y=fn(x);d+=(pen?'L':'M')+fixed(X(x),2)+','+fixed(Y(y),2);pen=true;}return `<path class="${cls}" d="${d}"/>`;}
+    if(!transfer&&state.family)[0.4,0.7,1,1.3,1.6,1.9,2.2].forEach(g=>{out+=path(x=>MOS.intrinsic(g,x,p(),state.mode).id,'family');});
+    out+=path(evalAt,'curve');
+    const dotX=X(transfer?q.g:q.d),dotY=Y(q.id);
+    out+=`<line class="cursor-line" x1="${dotX}" x2="${dotX}" y1="${top}" y2="${bottom}"/>`;
+    out+=`<line class="cursor-line" x1="${left}" x2="${right}" y1="${dotY}" y2="${dotY}"/><circle class="op-dot" cx="${dotX}" cy="${dotY}" r="5"/>`;
+    if(!transfer&&q.sat>0&&q.sat<2.5)out+=`<line x1="${X(q.sat)}" x2="${X(q.sat)}" y1="${top}" y2="${bottom}" stroke="var(--warm)" stroke-dasharray="3 4" opacity=".5"/>`;
+    if(transfer)out+=`<line x1="${X(q.vt)}" x2="${X(q.vt)}" y1="${top}" y2="${bottom}" stroke="var(--warm)" stroke-dasharray="3 4" opacity=".5"/>`;
+    out+='</g>';svg.innerHTML=out;
+  }
+  function drawPlots(){
+    chart($('#output-plot'),'output');chart($('#transfer-plot'),'transfer');
+    $('#output-foot').textContent=gateBias()+' = '+fixed(q.g)+' V. '+(state.family?'Family: 0.4–2.2 V. ':'Current gate curve. ')+(q.short?'Amber: local saturation estimate.':'Amber: saturation knee.');
+    $('#transfer-foot').textContent=drainBias()+' = '+fixed(q.d)+' V. Amber line: effective threshold VT*.';
+  }
+  function drawDevice(){
+    const on=q.ov>0, inversion=Math.min(1,q.u/1.2),depth=on?5+22*inversion:0;
+    const sat=q.region==='saturation', reverse=q.reverse;
+    const neck=q.short?Math.max(.08,1-q.v/Math.max(q.u,.0001)):Math.max(0,1-q.v/Math.max(q.u,.0001));
+    const gap=on&&sat&&!q.short?Math.min(65,16+22*(q.d-q.sat)):0;
+    const local=x=>reverse?900-x:x;
+    let pts=`M ${local(251)} 147 L ${local(649-gap)} 147`;
+    for(let i=40;i>=0;i--){const t=i/40,x=251+t*(398-gap),charge=q.short?1-(1-neck)*t:Math.sqrt(Math.max(0,1-(1-neck*neck)*t));pts+=` L ${local(x)} ${147+depth*charge}`;}
+    $('#channel').setAttribute('d',on?pts+' Z':'');
+    const dep=8+Math.min(1,Math.max(q.g,0)/1.3)*40;
+    $('#depletion').setAttribute('d',`M251 149 Q450 ${149+dep*2} 649 149 L649 ${164+dep} Q450 ${189+dep} 251 ${164+dep}Z`);
+    const hx=reverse?251:649;
+    $('#high-field').setAttribute('d',sat?`M${hx} 147 l${reverse?1:-1} 0 l${reverse?Math.max(gap,28):-Math.max(gap,28)} 5 l0 28 L${hx} 169Z`:'');
+    $('#gate-charges').innerHTML=Array.from({length:Math.round(Math.min(1,Math.max(q.g,0)/1.5)*13)},(_,i)=>`<text x="${268+i*28}" y="104" text-anchor="middle" style="fill:var(--warm);font-size:13px">${isP()?'−':'+'}</text>`).join('');
+    $('#svg-vg').textContent=fixed(state.vg)+' V';$('#svg-vd').textContent=fixed(state.vd)+' V';$('#svg-vs').textContent=fixed(state.vs)+' V';
+    $('#body-label').textContent=(isP()?'n⁺ well tap':'p⁺ substrate contact')+' → electrical source ('+(q.reverse?'D':'S')+') · '+fixed(q.se)+' V';
+    $('#tap-doping').textContent=isP()?'n⁺':'p⁺';
+    $('#body-wire').setAttribute('d',q.reverse?'M109 139 V85 H40 V-15 H850 V85 H728':'M109 139 V85 H170');
+    $('#body-junction').setAttribute('cx',q.reverse?'728':'170');
+    $('#length-label').textContent='L = '+p().L+' µm · W = '+p().W+' µm (into page)';
+    $('#cross-region').textContent=names[q.region];$('#cross-scale').textContent='Not to scale';
+    $('#channel-label').textContent=!on?(q.short?'weak inversion · sparse carriers':'depletion without strong inversion'):q.region==='equilibrium'?'inversion layer · zero net drift':sat?(q.short?'velocity-limited transport · residual inversion':'pinch-off near the electrical drain'):'inversion layer · channel tapers toward drain';
+    $('#source-doping').textContent=(isP()?'p⁺':'n⁺')+' source';$('#drain-doping').textContent=(isP()?'p⁺':'n⁺')+' drain';
+    const well=isP();
+    $('#body-doping').textContent=well?'n-well · PMOS body':'p-type silicon body';
+    $('#n-well-structure').setAttribute('display',well?'inline':'none');
+    $('#well-legend').hidden=!well;
+    ['substrate-fill','substrate-pattern'].forEach(id=>{const element=$('#'+id);element.setAttribute('x',well?'40':'68');element.setAttribute('width',well?'820':'764');element.setAttribute('height',well?'194':'138');});
+    $('#device').setAttribute('viewBox',well?'0 -30 900 430':'0 -30 900 370');
+    $('#device-annotations').setAttribute('transform',well?'translate(0 58)':'translate(0 0)');
+    $('#carrier-legend').textContent=(isP()?'Holes':'Electrons')+' / inversion';
+    const flow=q.id>1e-14&&q.d>1e-8;
+    const currentRight=isP()?!reverse:reverse;
+    $('#carrier-arrow').setAttribute('d',flow?(reverse?'M216 307 H82':'M82 307 H216'):'');
+    $('#current-arrow').setAttribute('d',flow?(currentRight?'M694 307 H818':'M818 307 H694'):'');
+    const drift=isP()?'hole drift':'electron drift';
+    $('#flow-label').textContent=flow?(reverse?'← '+drift:drift+' →'):'no net '+drift;
+    $('#current-label').textContent=flow?(currentRight?'conventional current →':'← conventional current'):'zero net current';
+    $('#cross-note').textContent=(q.reverse?'Electrical roles are reversed. ':'')+(on?'Channel thickness represents relative inversion charge, not physical depth. ':'The shaded region indicates depletion; there is no strong inversion channel. ')+(q.short?'Short-channel saturation can occur without complete pinch-off. ':'After pinch-off, '+carrier()+' still cross the high-field region. ')+(isP()?'The n-well is the PMOS body inside a p-type substrate; its n⁺ well tap is wired to the electrical source. The well–substrate junction is shown structurally, not simulated. Holes move with conventional current. ':'The p⁺ substrate contact is wired to the electrical source. Electrons move opposite to conventional current. ')+'The wire follows the electrical source automatically in this teaching model. Particle speed and spacing are illustrative.';
+    const count=on?Math.round(9+inversion*19):(q.short&&q.id>1e-14?5:0);
+    $('#carriers').innerHTML=Array.from({length:count},()=>`<circle class="carrier ${isP()?'hole':'electron'}" r="${on?2.6:1.8}" opacity="${on?.9:.5}"/>`).join('');positionCarriers();
+    $('#device').setAttribute('aria-label',`${deviceName()} ${isP()?'in an n-well within a p-type substrate':'in a p-type body'}, cross-section in ${names[q.region]}, ${q.reverse?'reversed':'forward'} electrical roles, ${current(q.id)} current magnitude. ${isP()?'An n+ well tap':'A p+ substrate contact'} is wired to the electrical source at the labeled ${q.reverse?'drain':'source'}, ${fixed(q.se)} volts. ${flow?(isP()?'Holes drift toward the lower-potential terminal.':'Electrons drift toward the higher-potential terminal.'):'No net carrier flow.'}`);
+    refreshDeviceDescriptions();
+  }
+  function positionCarriers(){if(!q)return;const nodes=$('#carriers').children,n=nodes.length;for(let i=0;i<n;i++){const t=(i/n+phase)%1,x=q.reverse?738-t*576:162+t*576;const row=(i%3-1)*3.4;nodes[i].setAttribute('cx',fixed(x,2));nodes[i].setAttribute('cy',fixed(153+row+Math.sin(t*Math.PI)*2,2));}}
+  document.querySelectorAll('[data-polarity]').forEach(b=>b.onclick=()=>{
+    if(state.polarity===b.dataset.polarity)return;
+    state.polarity=b.dataset.polarity;
+    ['vg','vd','vs'].forEach(key=>{state[key]=Number((2.5-state[key]).toFixed(2));});
+    document.querySelectorAll('[data-polarity]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',String(x===b));});
+    eq=makeEquations();renderGuide();syncProperties();update();
+  });
+  document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{state.mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',x===b?'true':'false');});syncProperties();update();});
+  ['vg','vd','vs'].forEach(key=>$('#'+key).oninput=e=>{state[key]=+e.target.value;update();});
+  const presets={off:[.2,1.2,0],linear:[1.2,.1,0],sat:[1.2,1.6,0]};
+  document.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>{[state.vg,state.vd,state.vs]=presets[b.dataset.preset].map(v=>isP()?Number((2.5-v).toFixed(2)):v);update();});
+  $('#family').onchange=e=>{state.family=e.target.checked;drawPlots();};
+  document.querySelectorAll('[data-property]').forEach(el=>{el.oninput=()=>{const v=+el.value;if(el.value!==''&&Number.isFinite(v)&&v>=+el.min&&v<=+el.max){p()[el.dataset.property]=v;update();}};el.onchange=()=>{const v=+el.value;if(el.value===''||!Number.isFinite(v)){el.value=p()[el.dataset.property];return;}const clamped=Math.min(+el.max,Math.max(+el.min,v));p()[el.dataset.property]=clamped;el.value=clamped;update();};});
+  $('#reset-properties').onclick=()=>{params[state.polarity][state.mode]=MOS.defaultsFor(state.polarity,state.mode);syncProperties();update();};
+  function frame(t){const dt=Math.min(.05,(t-lastTime)/1000||0);lastTime=t;if(!document.hidden&&!reducedMotion.matches&&q&&q.id>1e-14&&q.d>1e-8){const strength=Math.min(1,Math.max(0,(Math.log10(q.id)+12)/9));phase=(phase+dt*(.035+.24*strength))%1;positionCarriers();}requestAnimationFrame(frame);}
+  syncProperties();update();requestAnimationFrame(frame);
+  window.transistorSimulator={state,params,model:MOS,getOperatingPoint:()=>({...q}),refresh:()=>{syncProperties();update(false);}};
+})();
+</script>
+</body>
+</html>
