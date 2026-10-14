@@ -65,246 +65,188 @@ include-in-header:
   <div class="max-w-5xl mx-auto">
     <h2 class="text-2xl font-bold text-gray-800 mb-1">Interactive Tools</h2>
     <p class="text-gray-500 mb-8 text-sm">Browser-based tools — no installation needed</p>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
 
-      <!-- MOS Transistor Fabrication -->
-      <a href="transistor_fabrication.html"
-         class="block bg-white rounded-xl border border-gray-200 p-6
-                hover:shadow-md hover:border-red-300 transition-all group">
-        <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
-             style="background: #fee2e2;">
-          <svg class="w-5 h-5" style="color: #7B0D1E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M3 7l9-4 9 4-9 4-9-4zm0 5l9 4 9-4M3 17l9 4 9-4"/>
-          </svg>
-        </div>
-        <h3 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">
-          MOS Transistor Fabrication
-        </h3>
-        <p class="text-sm text-gray-500 leading-relaxed">
-          Explore MOS transistor fabrication step by step with a 3D model
-          and controls for material visibility and transparency.
-        </p>
-      </a>
+    <section class="tool-group" aria-labelledby="mos-transistor-fundamentals">
+      <h3 id="mos-transistor-fundamentals" class="text-xl font-bold text-gray-800 mb-5">MOS Transistor Fundamentals</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-      <!-- MOS Transistor Characterization -->
-      <a href="transistor_characterization.html"
-         class="block bg-white rounded-xl border border-gray-200 p-6
-                hover:shadow-md hover:border-red-300 transition-all group">
-        <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
-             style="background: #fee2e2;">
-          <svg class="w-5 h-5" style="color: #7B0D1E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4 4v16h16M7 16c3 0 3-8 7-8h6M7 18c3 0 4-5 7-5h6"/>
-          </svg>
-        </div>
-        <h3 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">
-          MOS Transistor Characterization
-        </h3>
-        <p class="text-sm text-gray-500 leading-relaxed">
-          Adjust transistor bias conditions and explore MOS transistor
-          output and transfer characteristics.
-        </p>
-      </a>
+        <a href="transistor_fabrication.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/transistor_fabrication.jpg" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">MOS Transistor Fabrication</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Explore MOS transistor fabrication step by step with a 3D model
+          and controls for material visibility and transparency.</p>
+          </div>
+        </a>
 
-      <!-- KMap Game -->
-      <a href="kmapgameee"
-         class="block bg-white rounded-xl border border-gray-200 p-6
-                hover:shadow-md hover:border-red-300 transition-all group">
-        <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
-             style="background: #fee2e2;">
-          <svg class="w-5 h-5" style="color: #7B0D1E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>
-          </svg>
-        </div>
-        <h3 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">
-          kmap-gamEEE
-        </h3>
-        <p class="text-sm text-gray-500 leading-relaxed">
-          Practice Karnaugh map simplification through interactive puzzles
-          with immediate feedback.
-        </p>
-      </a>
+        <a href="transistor_characterization.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/transistor_characterization.jpg" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">MOS Transistor Characterization</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Adjust transistor bias conditions and explore MOS transistor
+          output and transfer characteristics.</p>
+          </div>
+        </a>
+      </div>
+    </section>
 
-      <!-- FSM Simulator -->
-      <a href="FSM_simulatEEE.html"
-         class="block bg-white rounded-xl border border-gray-200 p-6
-                hover:shadow-md hover:border-red-300 transition-all group">
-        <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
-             style="background: #fee2e2;">
-          <svg class="w-5 h-5" style="color: #7B0D1E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-          </svg>
-        </div>
-        <h3 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">
-          FSMsimulatEEE
-        </h3>
-        <p class="text-sm text-gray-500 leading-relaxed">
-          Draw and simulate finite state machines directly in your browser.
-          Fully client-side — no server required.
-        </p>
-      </a>
+    <section class="tool-group" aria-labelledby="digital-design-fundamentals">
+      <h3 id="digital-design-fundamentals" class="text-xl font-bold text-gray-800 mb-5">Digital Design Fundamentals</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-      <!-- ASM Simulator -->
-      <a href="ASM_simulatEEE.html"
-         class="block bg-white rounded-xl border border-gray-200 p-6
-                hover:shadow-md hover:border-red-300 transition-all group">
-        <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
-             style="background: #fee2e2;">
-          <svg class="w-5 h-5" style="color: #7B0D1E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-          </svg>
-        </div>
-        <h3 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">
-          Algorithmic State Machine Simulator
-        </h3>
-        <p class="text-sm text-gray-500 leading-relaxed">
-          Simulate ASM charts with interactive execution and visualization of
-          state transitions, conditions, and outputs.
-        </p>
-      </a>
+        <a href="kmapgameee" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/kmapgameee.jpg" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">kmap-gamEEE</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Practice Karnaugh map simplification through interactive puzzles
+          with immediate feedback.</p>
+          </div>
+        </a>
 
-      <!-- Timing Simulator -->
-      <a href="timing_simulatEEE.html"
-         class="block bg-white rounded-xl border border-gray-200 p-6
-                hover:shadow-md hover:border-red-300 transition-all group">
-        <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
-             style="background: #fee2e2;">
-          <svg class="w-5 h-5" style="color: #7B0D1E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-          </svg>
-        </div>
-        <h3 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">
-          Timing Simulator
-        </h3>
-        <p class="text-sm text-gray-500 leading-relaxed">
-          Need to confirm what you know about sequential circuits and timing constraints? Visualize and simulate the definitions of sequential timing here.
-        </p>
-      </a>
+        <a href="FSM_simulatEEE.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/FSM_simulatEEE.jpg" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">FSMsimulatEEE</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Draw and simulate finite state machines directly in your browser.
+          Fully client-side — no server required.</p>
+          </div>
+        </a>
 
-      <!-- RIPES -->
-      <a href="ripes/"
-         class="block bg-white rounded-xl border border-gray-200 p-6
-                hover:shadow-md hover:border-red-300 transition-all group">
-        <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
-             style="background: #fee2e2;">
-          <svg class="w-5 h-5" style="color: #7B0D1E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M6 6h12v12H6zM9 9h6v6H9zM9 3v3m6-3v3M9 18v3m6-3v3M3 9h3m-3 6h3m12-6h3m-3 6h3"/>
-          </svg>
-        </div>
-        <h3 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">
-          RIPES
-        </h3>
-        <p class="text-sm text-gray-500 leading-relaxed">
-          Explore RISC-V processor architectures and visualize instruction execution.
-        </p>
-      </a>
+        <a href="ASM_simulatEEE.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/ASM_simulatEEE.jpg" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Algorithmic State Machine Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Simulate ASM charts with interactive execution and visualization of
+          state transitions, conditions, and outputs.</p>
+          </div>
+        </a>
 
-      <!-- RV32I Encoding Simulator -->
-      <a href="RV32I_encoding_simulator.html"
-         class="block bg-white rounded-xl border border-gray-200 p-6
-                hover:shadow-md hover:border-red-300 transition-all group">
-        <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
-             style="background: #fee2e2;">
-          <svg class="w-5 h-5" style="color: #7B0D1E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M8 9h8M8 15h8M5 6v12m14-12v12M3 9h4m10 0h4M3 15h4m10 0h4"/>
-          </svg>
-        </div>
-        <h3 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">
-          RV32I Encoding Simulator
-        </h3>
-        <p class="text-sm text-gray-500 leading-relaxed">
-          Assemble and inspect RISC-V RV32I instructions, including their
-          encoded fields, binary representation, and hexadecimal output.
-        </p>
-      </a>
+        <a href="timing_simulatEEE.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/timing_simulatEEE.jpg" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Timing Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Need to confirm what you know about sequential circuits and timing constraints? Visualize and simulate the definitions of sequential timing here.</p>
+          </div>
+        </a>
+      </div>
+    </section>
 
-      <!-- Cache Memory Simulator -->
-      <a href="cache_simulator.html"
-         class="block bg-white rounded-xl border border-gray-200 p-6
-                hover:shadow-md hover:border-red-300 transition-all group">
-        <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
-             style="background: #fee2e2;">
-          <svg class="w-5 h-5" style="color: #7B0D1E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M5 4h14v16H5zM5 8h14M5 12h14M5 16h14M9 4v16"/>
-          </svg>
-        </div>
-        <h3 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">
-          Cache Memory Simulator
-        </h3>
-        <p class="text-sm text-gray-500 leading-relaxed">
-          Configure a cache and simulate memory accesses to explore address
-          partitioning, cache contents, and access history.
-        </p>
-      </a>
+    <section class="tool-group" aria-labelledby="computer-architecture">
+      <h3 id="computer-architecture" class="text-xl font-bold text-gray-800 mb-5">Computer Architecture</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-      <!-- Virtual Memory Simulator -->
-      <a href="virtual_memory_simulator.html"
-         class="block bg-white rounded-xl border border-gray-200 p-6
-                hover:shadow-md hover:border-red-300 transition-all group">
-        <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
-             style="background: #fee2e2;">
-          <svg class="w-5 h-5" style="color: #7B0D1E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M3 4h6v16H3zM15 4h6v16h-6zM9 8h6m-3-3l3 3-3 3M9 16h6"/>
-          </svg>
-        </div>
-        <h3 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">
-          Virtual Memory Simulator
-        </h3>
-        <p class="text-sm text-gray-500 leading-relaxed">
-          Explore virtual-to-physical address translation, page tables, TLBs,
-          and page faults with interactive memory accesses.
-        </p>
-      </a>
+        <a href="ripes/" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/ripes.jpg" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">RIPES</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Explore RISC-V processor architectures and visualize instruction execution.</p>
+          </div>
+        </a>
 
-      <!-- Systolic Array Simulator -->
-      <a href="systolic_array_simulator.html"
-         class="block bg-white rounded-xl border border-gray-200 p-6
-                hover:shadow-md hover:border-red-300 transition-all group">
-        <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
-             style="background: #fee2e2;">
-          <svg class="w-5 h-5" style="color: #7B0D1E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6zM10 7h4M10 17h4M7 10v4M17 10v4"/>
-          </svg>
-        </div>
-        <h3 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">
-          Systolic Array Simulator
-        </h3>
-        <p class="text-sm text-gray-500 leading-relaxed">
-          Step through an output-stationary systolic array cycle by cycle
-          and visualize data flow and accumulation.
-        </p>
-      </a>
+        <a href="RV32I_encoding_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/RV32I_encoding_simulator.jpg" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">RV32I Encoding Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Assemble and inspect RISC-V RV32I instructions, including their
+          encoded fields, binary representation, and hexadecimal output.</p>
+          </div>
+        </a>
 
-      <!-- Convolution Simulator -->
-      <a href="convolution_simulator.html"
-         class="block bg-white rounded-xl border border-gray-200 p-6
-                hover:shadow-md hover:border-red-300 transition-all group">
-        <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4"
-             style="background: #fee2e2;">
-          <svg class="w-5 h-5" style="color: #7B0D1E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M3 4h6v6H3zM3 14h6v6H3zM15 7h6v10h-6zM9 7h6M9 17h6M12 7v10"/>
-          </svg>
-        </div>
-        <h3 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">
-          Convolution Simulator
-        </h3>
-        <p class="text-sm text-gray-500 leading-relaxed">
-          Follow inputs through an output-stationary systolic array,
-          compute each tile, and build a complete convolution layer.
-        </p>
-      </a>
+        <a href="cache_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/cache_simulator.jpg" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Cache Memory Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Configure a cache and simulate memory accesses to explore address
+          partitioning, cache contents, and access history.</p>
+          </div>
+        </a>
 
+        <a href="virtual_memory_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/virtual_memory_simulator.jpg" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Virtual Memory Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Explore virtual-to-physical address translation, page tables, TLBs,
+          and page faults with interactive memory accesses.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="tool-group" aria-labelledby="hardware-for-machine-learning">
+      <h3 id="hardware-for-machine-learning" class="text-xl font-bold text-gray-800 mb-5">Hardware for Machine Learning</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <a href="systolic_array_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/systolic_array_simulator.jpg" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Systolic Array Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Step through an output-stationary systolic array cycle by cycle
+          and visualize data flow and accumulation.</p>
+          </div>
+        </a>
+
+        <a href="convolution_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/convolution_simulator.jpg" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Convolution Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Follow inputs through an output-stationary systolic array,
+          compute each tile, and build a complete convolution layer.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="tool-group" aria-labelledby="lab-exercises">
+      <h3 id="lab-exercises" class="text-xl font-bold text-gray-800 mb-5">Lab Exercises</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
       <!-- Vercises -->
       <a href="exercises"
          class="block bg-white rounded-xl border border-gray-200 p-6
@@ -316,16 +258,16 @@ include-in-header:
                   d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
           </svg>
         </div>
-        <h3 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">
+        <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">
           Vercises
-        </h3>
+        </h4>
         <p class="text-sm text-gray-500 leading-relaxed">
           Verilog coding exercises with automated testbench checking and
           instant feedback.
         </p>
       </a>
-
-    </div>
+      </div>
+    </section>
   </div>
 </section>
 ```

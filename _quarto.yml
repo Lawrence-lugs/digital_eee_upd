@@ -17,6 +17,7 @@ project:
     - cp -r static_apps/ripes _site/
   resources:
     - "googleba81d2991a90411e.html"
+    - "static_apps/snapshots/*.jpg"
 
 website:
   title: "EEE Digital"

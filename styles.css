@@ -1,5 +1,29 @@
 /* css styles */
 
+/* Homepage simulator groups and screenshot previews. */
+#tw-root .tool-group + .tool-group {
+  margin-top: 3rem;
+}
+
+#tw-root .simulator-preview {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #f3f4f6;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+#tw-root .simulator-preview img {
+  display: block;
+  width: 100%;
+  height: 100% !important;
+  object-fit: cover;
+}
+
+#tw-root .simulator-card:focus-visible {
+  outline: 3px solid #6B0D1A;
+  outline-offset: 3px;
+}
+
 /* Expand simulator categories in place on desktop and mobile. */
 .navbar .simulator-categories {
   min-width: min(21rem, calc(100vw - 2rem));
