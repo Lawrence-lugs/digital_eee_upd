@@ -350,15 +350,16 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     .model-note { color: #ead7d8; font-size: 11px; line-height: 1.55; margin: 4px 0 0; text-align: right; }
     .readout-frame { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); overflow: hidden; box-shadow: var(--shadow); }
     .readout-cap { padding: 5px 22px 0; color: var(--muted); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; display: flex; justify-content: space-between; gap: 16px; }
-    .readout-cap span:last-child { font-weight: 500; text-transform: none; letter-spacing: 0; }
-    .metrics { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 0; padding: 4px 0 5px; }
+    .metrics { display: grid; grid-template-columns: repeat(var(--metric-count,4),minmax(0,1fr)); gap: 0; padding: 4px 0 5px; }
+    .metrics[data-expanded="true"] { grid-template-columns: repeat(calc(var(--metric-count) - 1),minmax(0,1fr)) minmax(210px,1.15fr); }
     .metric { min-width: 0; padding: 0 22px; border-right: 1px solid var(--line); text-align: center; }
+    .metrics[data-expanded="true"] .metric { padding-left: 8px; padding-right: 8px; }
     .metric:last-child { border-right: 0; }
     .metric label { color: var(--muted); font-size: 12px; margin-bottom: 2px; }
     .metric strong, .metric:last-child strong { color: var(--text); font-weight: 700; font-size: clamp(22px,2.1vw,31px); line-height: 1.3; letter-spacing: -.7px; margin: 1px 0; overflow-wrap: anywhere; }
     .metric small { color: var(--muted); font-size: 11px; line-height: 1.4; margin-top: 1px; }
-    .metric:nth-child(3) strong { color: var(--accent); }
-    .metric:nth-child(4) strong { color: var(--accent2); }
+    .metric-current strong, .metric-derived strong { color: var(--accent); }
+    .metric.metric-region strong { color: var(--accent2); }
     .workbench { display: grid; grid-template-columns: 300px minmax(0,1fr); column-gap: 18px; row-gap: 10px; margin-top: 8px; align-items: start; }
     .bias-rail { position: sticky; top: 12px; min-width: 0; }
     .bias-rail.has-docked-popup { position: static; }
@@ -389,15 +390,22 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     .properties-details > button { margin: 0 17px 17px; font-size: 11px; }
     .rail-footnote { color: var(--muted); font-size: 11px; line-height: 1.7; margin: 10px 9px 0; }
     .science-column { min-width: 0; }
-    .plot-view-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; margin-bottom: 7px; }
-    .plot-view-switch { display: flex; gap: 4px; padding: 3px; border: 1px solid var(--line); border-radius: 9px; background: var(--panel); }
-    .plot-view-switch button { padding: 5px 10px; border: 0; border-radius: 6px; font-size: 12px; }
-    #plot-view-note { color: var(--muted); font-size: 11px; }
+    .plot-view-toolbar { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 16px; margin-bottom: 5px; }
+    .plot-selectors { display: flex; flex-wrap: wrap; gap: 8px 12px; min-width: 0; }
+    .plot-selection-label { display: block; color: var(--muted); font-size: 10px; font-weight: 700; margin: 0 0 4px 3px; }
+    .plot-scale-controls { margin-left: auto; text-align: right; }
+    .plot-view-switch, .plot-choice-switch { display: flex; flex-wrap: wrap; gap: 4px; padding: 3px; border: 1px solid var(--line); border-radius: 9px; background: var(--panel); }
+    .plot-view-switch button, .plot-choice-switch button { padding: 5px 10px; border: 0; border-radius: 6px; font-size: 12px; }
+    .plot-choice-switch button { min-height: 30px; }
+    #plot-empty { padding: 18px; margin: 0; background: var(--panel); color: var(--muted); border: 1px solid var(--line); border-radius: var(--radius); font-size: 12px; text-align: center; }
     .plot-svg .subthreshold-band { fill: var(--accent2); opacity: .06; }
     .plot-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); column-gap: 16px; row-gap: 12px; }
     .plot-card { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); padding: 8px 16px 6px; box-shadow: var(--shadow); overflow: hidden; min-width: 0; }
     .plot-heading { color: var(--text); margin-bottom: 5px; }
     .plot-heading h3 { font-size: 13px; font-weight: 750; }
+    .derived-heading { flex-wrap: wrap; gap: 3px 8px; }
+    .plot-value { color: var(--accent); font-size: 12px; font-variant-numeric: tabular-nums; }
+    .plot-svg .plot-notice { fill: var(--accent); font-size: 11px; }
     .plot-svg { background: var(--plot-bg); border-radius: 7px; }
     .plot-svg text, .device-svg text { font-family: "MOS Inter", sans-serif; }
     .device-svg .terminal-value, .section-count { font-family: "MOS Mono", monospace; }
@@ -446,6 +454,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       .plot-grid { gap: 10px; }
       .plot-card { padding: 10px; }
     }
+    @media (max-width: 1200px) {
+      .metrics[data-expanded="true"] { grid-template-columns: repeat(var(--metric-compact-count),minmax(0,1fr)); row-gap: 8px; }
+      .metrics[data-compact-columns="3"] .metric:nth-child(3n), .metrics[data-compact-columns="4"] .metric:nth-child(4n) { border-right: 0; }
+    }
     @media (max-width: 1000px) {
       .banner-wrap { flex-direction: column; gap: 16px; }
       .banner-copy { flex-basis: auto; }
@@ -467,12 +479,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       .teaching-toast { left: 16px; }
       .banner-subtitle { font-size: .9rem; }
       .site-shell { padding: 10px 10px 0; }
-      .metrics { grid-template-columns: repeat(2,minmax(0,1fr)); padding: 8px 0 3px; row-gap: 8px; }
+      .metrics, .metrics[data-expanded="true"] { grid-template-columns: repeat(2,minmax(0,1fr)); padding: 8px 0 3px; row-gap: 8px; }
       .metric { padding: 0 12px 6px; }
-      .metric:nth-child(2) { border-right: 0; }
+      .metrics[data-compact-columns] .metric:nth-child(n) { border-right: 1px solid var(--line); }
+      .metrics[data-compact-columns] .metric:nth-child(2n), .metrics[data-compact-columns] .metric:last-child { border-right: 0; }
       .metric strong, .metric:last-child strong { font-size: 25px; }
       .readout-cap { padding: 8px 17px 0; }
-      .readout-cap span:last-child { display: none; }
       .bias-rail { display: block; }
       .bias-rail [data-mount="properties"] { margin-top: 10px; }
       .workbench { margin-top: 12px; gap: 12px; }
@@ -512,7 +524,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   <div class="site-shell">
     <main aria-labelledby="page-title">
       <section class="readout-frame" aria-label="Operating point readouts">
-        <div class="readout-cap"><span>Operating point</span><span>Terminal voltages → channel physics → current</span></div>
+        <div class="readout-cap"><span>Operating point</span></div>
         <div data-mount="metrics"></div>
       </section>
 
@@ -632,7 +644,67 @@ const MOS = (() => {
     const signedId=magnitude.id===0?0:sign*(reverse?-1:1)*magnitude.id;
     return {...magnitude,vg,vd,vs,se,reverse,polarity,vgs:vg-vs,vds:vd-vs,signedId};
   }
-  return {defaults,defaultsFor,fields,intrinsic,terminal};
+  function characteristics(g,d,p,mode='long',conduction='subthreshold') {
+    // Derivatives hold the normalized electrical source/body fixed. PMOS uses
+    // the same positive magnitudes with its mirrored electrical gate drive.
+    // Reuse the current engine verbatim so selecting a derived plot cannot
+    // alter the operating point or the existing current curves.
+    const q=intrinsic(g,d,p,mode,conduction);
+    let gm=0,gds=0,derivativeStatus='defined';
+    if(conduction==='square') {
+      if(q.ov>0) {
+        if(!q.short) {
+          gm=q.beta*q.v;
+          gds=q.d<q.sat?q.beta*(q.u-q.d):0;
+        } else {
+          const mobilitySlope=p.theta/(1+p.theta*q.u), denominator=1+q.v/q.vc;
+          const shape=q.u*q.v-q.v*q.v/2, kernel=q.beta*shape/denominator;
+          const kernelU=q.beta*(q.v-shape*mobilitySlope/denominator)/denominator;
+          // This factored expression is zero at the velocity-saturation knee.
+          const kernelV=q.beta*(q.u-q.v-q.v*q.v/(2*q.vc))/(denominator*denominator);
+          const satSlope=(1+q.sat*q.sat*mobilitySlope/(2*q.vc))/(1+q.sat/q.vc);
+          const atKnee=Math.abs(q.d-q.sat)<=32*Number.EPSILON*Math.max(q.d,q.sat,1e-12);
+          if(atKnee&&p.lambda>0) {
+            // The basic short-channel model switches its normalized CLM term
+            // here. Its one-sided slopes differ; an average would invent gm/ro.
+            gm=null;gds=null;derivativeStatus='knee';
+          } else if(q.d<q.sat&&!atKnee) {
+            gm=kernelU;
+            gds=p.eta*kernelU+kernelV;
+          } else {
+            gm=q.clm*(kernelU-kernel*p.lambda*satSlope/(1+p.lambda*q.sat));
+            gds=p.eta*gm+kernel*p.lambda/(1+p.lambda*q.sat);
+          }
+        }
+      }
+    } else {
+      const nut=p.n*q.ut,x=q.ov/(2*nut),h=q.d/(2*q.ut),y=x-h;
+      const forward=softplus(x),backward=softplus(y);
+      const sigmoid=z=>z>=0?1/(1+Math.exp(-z)):Math.exp(z)/(1+Math.exp(z));
+      const a=sigmoid(x),b=sigmoid(y);
+      const difference=q.d===0?0:softplus(x-backward+Math.log(-Math.expm1(-h)));
+      // F*a-R*b = (F-R)*a + R*(a-b). Both differences are evaluated
+      // without subtracting near-equal values, including arbitrarily low VDS.
+      const sigmoidDifference=a*sigmoid(-y)*(-Math.expm1(-h));
+      const chargeSlope=2*forward*a/Math.sqrt(1+4*forward*forward);
+      const betaLogSlope=q.short?-p.theta*chargeSlope/(1+p.theta*q.sourceCharge):0;
+      const baseG=q.currentScale/nut*(difference*a+backward*sigmoidDifference)+q.base*betaLogSlope;
+      const baseD=(q.short?p.eta*baseG:0)+q.currentScale*backward*b/q.ut;
+      if(q.short) {
+        const ratio=q.base/q.velocityLimit,limitLogSlope=a/(2*nut*forward);
+        const scale=q.clm*q.velocityFactor*q.velocityFactor;
+        gm=scale*(baseG+q.base*ratio*limitLogSlope);
+        gds=scale*(baseD+q.base*ratio*p.eta*limitLogSlope)+q.id*p.lambda/q.clm;
+      } else {
+        gm=baseG;gds=baseD;
+      }
+    }
+    const rds=q.d===0?null:q.id===0?Infinity:q.d/q.id;
+    const ro=gds===null?null:gds===0?Infinity:1/gds;
+    const gmId=q.id===0||gm===null?null:gm/q.id;
+    return {...q,gm,gds,rds,ro,gmId,derivativeStatus};
+  }
+  return {defaults,defaultsFor,fields,intrinsic,terminal,characteristics};
 })();
 if(typeof module!=='undefined') module.exports=MOS;
 
@@ -641,7 +713,7 @@ if(typeof module!=='undefined') module.exports=MOS;
   const $=s=>document.querySelector(s);
   const mount=(key,html)=>$(`[data-mount="${key}"]`).innerHTML=html;
   const params=Object.fromEntries(['n','p'].map(type=>[type,Object.fromEntries(['long','short'].map(mode=>[mode,MOS.defaultsFor(type,mode)]))]));
-  const state={polarity:'n',mode:'long',conduction:'square',view:'characteristics',vg:1.2,vd:1.2,vs:0,family:true};
+  const state={polarity:'n',mode:'long',conduction:'square',view:'characteristics',vg:1.2,vd:1.2,vs:0,family:true,plots:['output','transfer']};
   const plotViews={square:'characteristics',subthreshold:'subthreshold'};
   const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
   const names={cutoff:'Cutoff',weak:'Subthreshold',moderate:'Moderate inversion',equilibrium:'No net flow',linear:'Linear / triode',saturation:'Saturation'};
@@ -688,9 +760,16 @@ if(typeof module!=='undefined') module.exports=MOS;
   }
   let eq=makeEquations();
   mount('mode',`<div class="model-selectors"><div class="selector-group"><span class="selector-label">Device type</span><div class="mode-switch" role="group" aria-label="Device type"><button data-polarity="n" class="active" aria-pressed="true">NMOS</button><button data-polarity="p" aria-pressed="false">PMOS</button></div></div><div class="selector-group"><span class="selector-label">Channel model</span><div class="mode-switch" role="group" aria-label="Channel model"><button data-mode="long" class="active" aria-pressed="true">Long</button><button data-mode="short" aria-pressed="false">Short</button></div></div><div class="selector-group"><span class="selector-label">Current model</span><div class="mode-switch" role="group" aria-label="Current model"><button data-conduction="square" class="active" aria-pressed="true">Square law</button><button data-conduction="subthreshold" aria-pressed="false">Subthreshold</button></div></div></div><p class="model-note" id="model-note"></p>`);
-  mount('metrics',`<div class="metrics"><div class="metric"><label>Gate–source · V<sub>GS</sub></label><strong id="metric-vgs"></strong><small>V<sub>G</sub> − V<sub>S</sub></small></div><div class="metric"><label>Drain–source · V<sub>DS</sub></label><strong id="metric-vds"></strong><small>V<sub>D</sub> − V<sub>S</sub></small></div><div class="metric"><label>Drain current · I<sub>DS</sub></label><strong id="metric-id"></strong><small>Positive into labeled drain</small></div><div class="metric"><label>Operating region</label><strong id="metric-region"></strong><small id="metric-overdrive"></small></div></div>`);
   mount('controls',`<div class="voltage-controls">${[['vg','Gate','G'],['vd','Drain','D'],['vs','Source','S']].map(([id,label,sym])=>`<div class="voltage-control"><div class="control-top"><label for="${id}">${label} <span>V<sub>${sym}</sub></span></label><output for="${id}" id="${id}-out"></output></div><input id="${id}" type="range" min="0" max="2.5" step="0.01" value="${state[id]}" aria-label="${label} voltage"><div class="range-ends"><span>0 V</span><span>2.5 V</span></div></div>`).join('')}</div><div class="preset-row" aria-label="Bias presets"><button data-preset="off">Cutoff</button><button data-preset="linear">Linear</button><button data-preset="sat">Saturation</button></div><p class="bias-note" id="bias-note"></p>`);
-  mount('plots',`<div class="plot-view-toolbar" hidden><div class="plot-view-switch" role="group" aria-label="Plot view"><button data-view="characteristics" class="active" aria-pressed="true">Linear plot</button><button data-view="subthreshold" aria-pressed="false">Log plot</button></div><span id="plot-view-note">Linear current axes</span></div><div class="plot-grid"><div class="plot-card"><div class="plot-heading"><h3>Output characteristics</h3><label class="family-toggle"><input id="family" type="checkbox" checked> Show family curves</label></div><svg id="output-plot" class="plot-svg" viewBox="0 0 440 278" role="img" aria-label="Drain current magnitude versus effective drain bias"></svg><p class="plot-foot" id="output-foot"></p></div><div class="plot-card"><div class="plot-heading"><h3>Transfer characteristics</h3></div><svg id="transfer-plot" class="plot-svg" viewBox="0 0 440 278" role="img" aria-label="Drain current magnitude versus effective gate bias"></svg><p class="plot-foot" id="transfer-foot"></p></div></div>`);
+  const derivedPlots={
+    rds:{title:'Drain–source resistance',symbol:'R<sub>DS</sub>',axis:'RDS',unit:'Ω',key:'rds',sweep:'gate'},
+    gm:{title:'Transconductance',symbol:'g<sub>m</sub>',axis:'gm',unit:'S',key:'gm',sweep:'gate'},
+    ro:{title:'Output resistance',symbol:'r<sub>o</sub>',axis:'ro',unit:'Ω',key:'ro',sweep:'drain'},
+    gmId:{title:'Transconductance efficiency',symbol:'g<sub>m</sub> / |I<sub>D</sub>|',axis:'gm/|ID|',unit:'1/V',key:'gmId',sweep:'gate'}
+  };
+  const plotOrder=['output','transfer','rds','gm','ro','gmId'];
+  const plotButton=(key,label)=>`<button type="button" data-plot="${key}" aria-pressed="${state.plots.includes(key)}" aria-controls="${key}-card">${label}</button>`;
+  mount('plots',`<div class="plot-view-toolbar"><div class="plot-selectors"><div class="plot-selection-group"><span class="plot-selection-label">Large signal</span><div class="plot-choice-switch" role="group" aria-label="Large signal plots">${plotButton('output','I<sub>DS</sub>/V<sub>DS</sub>')}${plotButton('transfer','I<sub>DS</sub>/V<sub>GS</sub>')}${plotButton('rds','R<sub>DS</sub>')}</div></div><div class="plot-selection-group"><span class="plot-selection-label">Small signal</span><div class="plot-choice-switch" role="group" aria-label="Small signal plots">${plotButton('gm','g<sub>m</sub>')}${plotButton('ro','r<sub>o</sub>')}${plotButton('gmId','g<sub>m</sub>/I<sub>D</sub>')}</div></div></div><div class="plot-scale-controls"><span class="plot-selection-label">Vertical scale</span><div class="plot-view-switch" role="group" aria-label="Plot view"><button data-view="characteristics" class="active" aria-pressed="true">Linear plot</button><button data-view="subthreshold" aria-pressed="false">Log plot</button></div></div></div><p id="plot-empty" hidden>Select a plot above to show its curve.</p><div class="plot-grid"><div class="plot-card" id="output-card" data-plot-card="output"><div class="plot-heading"><h3>Output characteristics</h3><label class="family-toggle"><input id="family" type="checkbox" checked> Show family curves</label></div><svg id="output-plot" class="plot-svg" viewBox="0 0 440 278" role="img" aria-label="Drain current magnitude versus effective drain bias"></svg><p class="plot-foot" id="output-foot"></p></div><div class="plot-card" id="transfer-card" data-plot-card="transfer"><div class="plot-heading"><h3>Transfer characteristics</h3></div><svg id="transfer-plot" class="plot-svg" viewBox="0 0 440 278" role="img" aria-label="Drain current magnitude versus effective gate bias"></svg><p class="plot-foot" id="transfer-foot"></p></div>${Object.entries(derivedPlots).map(([key,def])=>`<div class="plot-card" id="${key}-card" data-plot-card="${key}" hidden><div class="plot-heading derived-heading"><h3>${def.symbol} · ${def.title}</h3><strong id="${key}-value" class="plot-value"></strong></div><svg id="${key}-plot" class="plot-svg" viewBox="0 0 440 278" role="img" aria-label="${def.title}"></svg><p class="plot-foot" id="${key}-foot"></p></div>`).join('')}</div>`);
   mount('cross',`<div class="cross-toolbar"><span class="region-pill" id="cross-region"></span><span id="cross-scale"></span></div><p class="diagram-hint">Swipe across the diagram to explore →</p><div class="device-viewport"><svg class="device-svg" id="device" viewBox="0 0 900 340" role="group" aria-label="Animated MOSFET cross-section with inversion channel and carrier flow"><defs><linearGradient id="bulk-grad" x1="0" y1="0" x2="0" y2="1"><stop stop-color="var(--substrate)"/><stop offset="1" stop-color="var(--panel)"/></linearGradient><linearGradient id="channel-grad"><stop stop-color="var(--accent)" stop-opacity=".8"/><stop offset="1" stop-color="var(--accent2)" stop-opacity=".4"/></linearGradient><pattern id="bulk-dots" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="13" cy="13" r="1" fill="var(--muted)" opacity=".18"/></pattern><marker id="arrow-a" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7Z" fill="var(--accent)"/></marker><marker id="arrow-b" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7Z" fill="var(--warm)"/></marker></defs><rect id="substrate-fill" x="68" y="144" width="764" height="138" rx="8" fill="url(#bulk-grad)" stroke="var(--line)"/><rect id="substrate-pattern" x="68" y="144" width="764" height="138" rx="8" fill="url(#bulk-dots)"/><g id="n-well-structure" display="none"><path id="n-well-fill" d="M80 144 H820 V250 Q820 282 788 282 H112 Q80 282 80 250 Z" fill="var(--well,#e8edf8)" stroke="var(--accent2)" stroke-width="1.4"/><text id="substrate-label" x="450" y="318" text-anchor="middle" class="device-name">p-type substrate</text></g><path id="depletion" fill="var(--accent2)" opacity=".09" stroke="var(--accent2)" stroke-dasharray="5 5"/><rect id="source-region" x="145" y="143" width="106" height="72" rx="14" fill="var(--junction)" stroke="var(--accent2)" stroke-opacity=".45"/><rect id="drain-region" x="649" y="143" width="157" height="72" rx="14" fill="var(--junction)" stroke="var(--accent2)" stroke-opacity=".45"/><text x="198" y="185" text-anchor="middle" class="device-name" id="source-doping">n⁺ source</text><text x="728" y="185" text-anchor="middle" class="device-name" id="drain-doping">n⁺ drain</text><rect id="gate-electrode" x="251" y="113" width="398" height="27" rx="3" fill="var(--gate)" stroke="var(--accent)" stroke-opacity=".4"/><rect id="gate-oxide" x="251" y="140" width="398" height="7" fill="var(--warm)" opacity=".75"/><path id="channel" fill="url(#channel-grad)"/><path id="high-field" fill="var(--warm)" opacity=".2"/><g id="gate-charges"></g><g id="carriers"></g><g id="body-contact"><rect id="body-tap" x="90" y="143" width="38" height="46" rx="6" fill="var(--gate)" stroke="var(--accent2)"/><text id="tap-doping" x="109" y="163" text-anchor="middle" class="device-name">p⁺</text><text id="tap-label" x="109" y="180" text-anchor="middle" style="font-size:10px">tap</text><rect id="tap-contact" x="102" y="139" width="14" height="8" rx="1" fill="var(--muted)"/><path id="body-wire" class="device-wire" d="M109 139 V85 H170"/><circle id="body-junction" cx="170" cy="85" r="3" fill="var(--muted)"/></g><path id="terminal-connections" class="device-wire" d="M170 143 V67 M728 143 V67 M450 113 V44"/><circle id="source-connection" cx="170" cy="66" r="3" fill="var(--accent)"/><circle id="drain-connection" cx="728" cy="66" r="3" fill="var(--accent)"/><circle id="gate-connection" cx="450" cy="44" r="3" fill="var(--accent)"/><text id="source-label" x="170" y="33" text-anchor="middle" class="device-name">SOURCE</text><text x="170" y="54" text-anchor="middle" class="terminal-value" id="svg-vs"></text><text id="drain-label" x="728" y="33" text-anchor="middle" class="device-name">DRAIN</text><text x="728" y="54" text-anchor="middle" class="terminal-value" id="svg-vd"></text><text id="gate-label" x="450" y="17" text-anchor="middle" class="device-name">GATE</text><text x="468" y="65" class="terminal-value" id="svg-vg"></text><text id="gate-electrode-label" x="450" y="132" text-anchor="middle" style="font-size:11px;fill:var(--text)">gate electrode</text><path id="oxide-leader" class="device-wire" d="M653 142 H678 L693 119"/><text id="oxide-label" x="696" y="116" style="font-size:11px">oxide · insulating</text><text x="450" y="244" text-anchor="middle" class="device-name" id="body-doping">p-type silicon body</text><text x="450" y="265" text-anchor="middle" style="font-size:10px" id="body-label"></text><g id="device-annotations"><line id="length-line" x1="254" y1="295" x2="646" y2="295" stroke="var(--line)"/><path id="length-ticks" d="M254 290 V300 M646 290 V300" stroke="var(--muted)"/><text x="450" y="313" text-anchor="middle" id="length-label"></text><path id="carrier-arrow" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arrow-a)"/><path id="current-arrow" stroke="var(--warm)" stroke-width="1.5" marker-end="url(#arrow-b)"/><text x="79" y="322" style="font-size:10px;fill:var(--accent)" id="flow-label">electron drift →</text><text x="694" y="322" style="font-size:10px;fill:var(--warm)" id="current-label">← conventional current</text></g><text id="channel-label" x="450" y="208" text-anchor="middle" style="font-size:11px;fill:var(--accent)"></text></svg></div><div class="cross-legend"><span><i style="background:var(--accent)"></i><span id="carrier-legend">Electrons / inversion</span></span><span><i style="background:var(--accent2);opacity:.5"></i>Depletion region</span><span id="well-legend" hidden><i style="background:var(--well,#e8edf8);border:1px solid var(--accent2)"></i>n-well / PMOS body</span><span><i style="background:var(--warm)"></i>Oxide / high-field region</span></div><p class="cross-note" id="cross-note"></p>`);
   const device=$('#device'),deviceTooltip=document.createElement('div');
   deviceTooltip.id='device-tooltip';deviceTooltip.className='device-tooltip';
@@ -823,6 +902,7 @@ if(typeof module!=='undefined') module.exports=MOS;
     <a href="https://ekvmodel.com/book/04.The%20Long-channel%20MOSFET%20Model/Long_channel_MOSFET_model.html" target="_blank" rel="noopener">Enz · smooth MOS model ↗</a>
     <a href="https://ekvmodel.com/notebooks/Saturation%20voltage/Saturation_voltage.html" target="_blank" rel="noopener">Enz · saturation across inversion levels ↗</a>
   </div>`;
+  const plotGuide=`<h4>Large- and small-signal plots</h4><p>Choose any combination of plots. Each selected panel tracks the same bias; Linear plot and Log plot change the vertical scale in either current model. R<sub>DS</sub> = V<sub>D</sub>*/|I<sub>DS</sub>| is a DC ratio, whereas r<sub>o</sub> = 1/g<sub>ds</sub> is a local incremental resistance. g<sub>m</sub> = ∂|I<sub>DS</sub>|/∂V<sub>G</sub>* at fixed V<sub>D</sub>*, and g<sub>ds</sub> = ∂|I<sub>DS</sub>|/∂V<sub>D</sub>* at fixed V<sub>G</sub>*. Here V<sub>G</sub>* and V<sub>D</sub>* mean the effective gate and drain drives shown on the axes; NMOS, PMOS and reversed-terminal operation use the electrical source as reference.</p><p>R<sub>DS</sub>, g<sub>m</sub>, and g<sub>m</sub>/|I<sub>D</sub>| sweep gate drive at the current drain bias; r<sub>o</sub> sweeps drain bias at the current gate drive. Derivatives include the selected model’s corrections. At zero drain bias, R<sub>DS</sub> and g<sub>m</sub>/|I<sub>D</sub>| are undefined 0/0 ratios. Ideal square-law saturation has zero output conductance and infinite r<sub>o</sub>. The basic Short model with channel-length modulation has an abrupt derivative change at its knee; derivatives exactly there are undefined. Infinite and undefined values are labeled and omitted from curves. Log plots also omit zero values, and the current plots retain their 1 fA display floor.</p>`;
   function renderGuide(){
     const expanded=$('.guide-details')?.open;
     if(!isAdvanced()){
@@ -840,8 +920,8 @@ if(typeof module!=='undefined') module.exports=MOS;
         <p>DIBL lowers the effective threshold. Mobility is μ = μ₀ / (1 + θu), and V<sub>c</sub> = v<sub>sat</sub>L/μ. The velocity-limited saturation bias is:</p><div class="equation">${eq.velocity}</div>
         <p>With v = min(${drainBias()}, V<sub>sat</sub>) and M = (1 + λ${drainBias()}) / (1 + λv), the complete basic Short current above threshold is:</p><div class="equation">${eq.short}</div>
         <p>These corrections limit carrier speed and allow current to rise after saturation. The Short option is therefore a corrected basic model, rather than the ideal Long square law. It still has exact cutoff below the effective threshold. Long omits mobility reduction, velocity saturation, DIBL, and channel-length modulation.</p>
-        <h3>04 / Scope and the advanced option</h3><p>Choose Subthreshold in the banner to enable smooth inversion and the Log plot view. That option retains a small channel diffusion current below threshold and enables n and temperature for both channel models. Each device/channel combination retains its own editable property values.</p>
-        <p>Body effect, gate current, junction leakage, gate-induced drain leakage, breakdown, self-heating, and transient capacitances are omitted. Animated particle sizes, spacing, and speeds are illustrative; the cross-section is not to scale. NMOS and PMOS mobility defaults are illustrative, uncalibrated choices. Short-channel correction parameters do not automatically scale with L.</p>${modelReferences}</div></div>
+        <h3>04 / Scope and the advanced option</h3><p>Choose Subthreshold in the banner to enable smooth inversion. That option retains a small channel diffusion current below threshold and enables n and temperature for both channel models. Each device/channel combination retains its own editable property values.</p>
+        <p>Body effect, gate current, junction leakage, gate-induced drain leakage, breakdown, self-heating, and transient capacitances are omitted. Animated particle sizes, spacing, and speeds are illustrative; the cross-section is not to scale. NMOS and PMOS mobility defaults are illustrative, uncalibrated choices. Short-channel correction parameters do not automatically scale with L.</p>${plotGuide}${modelReferences}</div></div>
       </div></details>`);
       return;
     }
@@ -866,8 +946,8 @@ if(typeof module!=='undefined') module.exports=MOS;
       <p>All corrections vary continuously. The limiter becomes small in weak inversion and limits strong-inversion transport; (1 + λ${drainBias()}) is an illustrative output-slope approximation, applied at all drain biases. Long-channel mode omits these mobility, velocity, DIBL, and output-slope corrections. The near-saturation estimate is where current reaches 1 − e⁻⁴ ≈ 98.2% of its fixed-threshold, fixed-mobility saturation value, excluding DIBL and the output-slope factor.</p>
       <h3>04 / Subthreshold operation</h3><div class="equation">${eq.weak}</div>
       <p>This weak-inversion approximation explains the full core: minority carriers diffuse along the surface even below threshold. S = ln(10)nU<sub>T</sub> is the gate-bias change for a decade of current in the weak-inversion limit. Short-channel corrections still apply. At zero drain bias, forward and reverse transport balance and net current is exactly zero.</p>
-      <p>The Log plot view uses a logarithmic current axis on both plots. Equal vertical steps represent factors of ten. Its 1 fA display floor does not add a physical leakage floor; zero and smaller currents are explicitly marked. The cross-section enlarges sparse carrier populations so they remain visible. Only channel conduction is modeled; junction leakage, gate tunneling, and gate-induced drain leakage are left for later.</p>
-      <p>n and temperature are active in both modes. Temperature changes U<sub>T</sub> in the current interpolation; threshold and low-field mobility are held fixed, so this is not a complete temperature model. The independent weak-current scale has been removed: β, n, and temperature set the current consistently. NMOS defaults use μ₀ = 350 cm²/(V·s), v<sub>sat</sub> = 10 × 10⁶ cm/s; PMOS uses 150 and 8. These are illustrative, uncalibrated choices. η, λ, and θ do not automatically scale with L.</p>${modelReferences}</div></div>
+      <p>The Log plot view uses logarithmic current axes on the output and transfer plots. Equal vertical steps represent factors of ten. Its 1 fA display floor does not add a physical leakage floor; zero and smaller currents are explicitly marked. The cross-section enlarges sparse carrier populations so they remain visible. Only channel conduction is modeled; junction leakage, gate tunneling, and gate-induced drain leakage are left for later.</p>
+      <p>n and temperature are active in both modes. Temperature changes U<sub>T</sub> in the current interpolation; threshold and low-field mobility are held fixed, so this is not a complete temperature model. The independent weak-current scale has been removed: β, n, and temperature set the current consistently. NMOS defaults use μ₀ = 350 cm²/(V·s), v<sub>sat</sub> = 10 × 10⁶ cm/s; PMOS uses 150 and 8. These are illustrative, uncalibrated choices. η, λ, and θ do not automatically scale with L.</p>${plotGuide}${modelReferences}</div></div>
     </div></details>`);
   }
   renderGuide();
@@ -933,7 +1013,7 @@ if(typeof module!=='undefined') module.exports=MOS;
   });
   window.addEventListener('resize',clampToastPosition);
   const toastLayoutObserver=new ResizeObserver(clampToastPosition);
-  toastLayoutObserver.observe(toast);toastLayoutObserver.observe(biasRail);
+  toastLayoutObserver.observe(toast);toastLayoutObserver.observe(biasRail);toastLayoutObserver.observe($('.readout-frame'));
   let q,phase=0,lastTime=0;
   function updateTeachingPopup(reveal){
     const [title,copy,equation]=insight(q);
@@ -966,7 +1046,6 @@ if(typeof module!=='undefined') module.exports=MOS;
   function update(notify=true){
     q=MOS.terminal(state.vg,state.vd,state.vs,p(),state.mode,state.polarity,state.conduction);
     ['vg','vd','vs'].forEach(key=>{$('#'+key).value=state[key];$('#'+key+'-out').textContent=fixed(state[key])+' V';$('#'+key).setAttribute('aria-valuetext',fixed(state[key])+' volts');});
-    $('#metric-vgs').textContent=fixed(q.vgs)+' V';$('#metric-vds').textContent=fixed(q.vds)+' V';$('#metric-id').textContent=current(q.signedId);$('#metric-region').textContent=names[q.region];$('#metric-overdrive').textContent='Effective overdrive '+fixed(q.ov)+' V';
     $('#model-note').textContent=deviceName()+' · '+(isAdvanced()?'Smooth subthreshold':q.short?'Square law + short-channel effects':'Ideal square law')+' · L = '+p().L+' µm · W = '+p().W+' µm';
     $('[data-preset="off"]').textContent=isAdvanced()?'Subthreshold':'Cutoff';
     $('#bias-note').textContent=(q.reverse?'Roles reversed: the labeled drain is the electrical source. ':'')+'Body follows the '+(isP()?'higher':'lower')+'-potential terminal. '+(isP()?'Lower the gate to strengthen conduction. Forward PMOS drain current is negative.':'Raise the gate to strengthen conduction. Forward NMOS drain current is positive.');
@@ -974,7 +1053,7 @@ if(typeof module!=='undefined') module.exports=MOS;
   }
   const LOG_FLOOR=1e-15;
   function chart(svg,kind){
-    const transfer=kind==='transfer',log=isAdvanced()&&state.view==='subthreshold';
+    const transfer=kind==='transfer',log=state.view==='subthreshold';
     const x0=transfer?Math.min(-0.5,Math.floor(q.g*2)/2):0,x1=2.5,left=62,right=425,top=27,bottom=230;
     const evalAt=x=>MOS.intrinsic(transfer?x:q.g,transfer?q.d:x,p(),state.mode,state.conduction).id;
     let max=0;for(let i=0;i<=220;i++){const x=x0+(x1-x0)*i/220;max=Math.max(max,evalAt(x));}
@@ -1004,15 +1083,106 @@ if(typeof module!=='undefined') module.exports=MOS;
     out+='</g>';svg.innerHTML=out;svg.dataset.currentScale=log?'log':'linear';
     svg.setAttribute('aria-label',`Drain current magnitude versus effective ${transfer?'gate':'drain'} bias, ${log?'logarithmic':'linear'} current axis`);
   }
+  function quantity(value,unit){
+    if(value===null||Number.isNaN(value))return 'Undefined';
+    if(!Number.isFinite(value))return (value<0?'−':'')+'∞ '+unit;
+    if(value===0)return '0 '+unit;
+    const magnitude=Math.abs(value);
+    if(unit==='1/V')return (magnitude<.001||magnitude>=10000?value.toExponential(2):Number(value.toPrecision(3)))+' '+unit;
+    for(const [scale,prefix] of [[1e-18,'a'],[1e-15,'f'],[1e-12,'p'],[1e-9,'n'],[1e-6,'µ'],[1e-3,'m'],[1,''],[1e3,'k'],[1e6,'M'],[1e9,'G'],[1e12,'T'],[1e15,'P'],[1e18,'E']]){
+      if(magnitude>=scale&&magnitude<scale*1000)return Number((value/scale).toPrecision(3))+' '+prefix+unit;
+    }
+    return value.toExponential(2)+' '+unit;
+  }
+  function drawMetrics(selected,point){
+    const extra=plotOrder.filter(key=>selected.has(key)&&derivedPlots[key]),count=4+extra.length;
+    const compactColumns=count>4?Math.ceil(count/2):4;
+    const derived=extra.map(key=>{
+      const def=derivedPlots[key];
+      return `<div class="metric metric-derived" data-metric="${key}"><label>${def.symbol}</label><strong id="metric-${key}">${quantity(point[def.key],def.unit)}</strong><small>${def.title}</small></div>`;
+    }).join('');
+    mount('metrics',`<div class="metrics" data-expanded="${extra.length>0}" data-compact-columns="${compactColumns}" style="--metric-count:${count};--metric-compact-count:${compactColumns}"><div class="metric" data-metric="vgs"><label>Gate–source · V<sub>GS</sub></label><strong id="metric-vgs">${fixed(q.vgs)} V</strong><small>V<sub>G</sub> − V<sub>S</sub></small></div><div class="metric" data-metric="vds"><label>Drain–source · V<sub>DS</sub></label><strong id="metric-vds">${fixed(q.vds)} V</strong><small>V<sub>D</sub> − V<sub>S</sub></small></div><div class="metric metric-current" data-metric="id"><label>Drain current · I<sub>DS</sub></label><strong id="metric-id">${current(q.signedId)}</strong><small>Positive into labeled drain</small></div>${derived}<div class="metric metric-region" data-metric="region"><label>Operating region</label><strong id="metric-region">${names[q.region]}</strong><small id="metric-overdrive">Effective overdrive ${fixed(q.ov)} V</small></div></div>`);
+  }
+  function derivedChart(kind,point){
+    const def=derivedPlots[kind],svg=$('#'+kind+'-plot'),gate=def.sweep==='gate',log=state.view==='subthreshold';
+    const x0=gate?Math.min(-.5,Math.floor(q.g*2)/2):0,x1=2.5,left=74,right=425,top=27,bottom=230;
+    const samples=Array.from({length:321},(_,i)=>{
+      const x=x0+(x1-x0)*i/320,data=MOS.characteristics(gate?x:q.g,gate?q.d:x,p(),state.mode,state.conduction);
+      return {x,y:data[def.key],region:data.region};
+    });
+    const actual=point[def.key],usable=value=>value!==null&&Number.isFinite(value)&&(!log||value>0);
+    const values=samples.map(sample=>sample.y).concat(actual).filter(usable),positive=values.filter(value=>value>0);
+    const max=Math.max(0,...values),ymax=max>0?max*1.12:def.unit==='S'?1e-3:1;
+    const logMin=positive.length?Math.floor(Math.log10(Math.min(...positive))):def.unit==='S'?-12:0;
+    const logMax=positive.length?Math.max(logMin+1,Math.ceil(Math.log10(Math.max(...positive)))):logMin+3;
+    const X=x=>left+(x-x0)/(x1-x0)*(right-left),Y=y=>log?bottom-(Math.log10(y)-logMin)/(logMax-logMin)*(bottom-top):bottom-y/ymax*(bottom-top);
+    const xLabel=(gate?gateBias():drainBias())+' (V)',scaleLabel=log?'logarithmic':'linear';
+    let out=`<title>${def.title} versus effective ${def.sweep} bias; ${scaleLabel} vertical axis; operating value ${quantity(actual,def.unit)}</title><defs><clipPath id="clip-${kind}"><rect x="${left}" y="${top}" width="${right-left}" height="${bottom-top+1}"/></clipPath></defs>`;
+    for(let i=0;i<=5;i++){const x=x0+(x1-x0)*i/5;out+=`<line class="grid" x1="${X(x)}" y1="${top}" x2="${X(x)}" y2="${bottom}"/><text x="${X(x)}" y="${bottom+19}" text-anchor="middle">${fixed(x,1)}</text>`;}
+    const tick=value=>`<line class="grid" x1="${left}" y1="${Y(value)}" x2="${right}" y2="${Y(value)}"/><text x="${left-8}" y="${Y(value)+3}" text-anchor="end">${quantity(value,def.unit)}</text>`;
+    if(log){
+      const step=Math.max(1,Math.ceil((logMax-logMin)/5)),exponents=[];
+      for(let exponent=logMin;exponent<logMax;exponent+=step)exponents.push(exponent);
+      if(exponents.length&&logMax-exponents.at(-1)<step*.6)exponents.pop();exponents.push(logMax);
+      exponents.forEach(exponent=>{out+=tick(10**exponent);});
+    }else for(let i=0;i<=5;i++)out+=tick(ymax*i/5);
+    out+=`<text x="${left}" y="14">${def.axis}${log?' · log scale':''}</text><text x="${(left+right)/2}" y="270" text-anchor="middle">${xLabel}</text><g clip-path="url(#clip-${kind})">`;
+    let path='',pen=false,previous=null;
+    for(const sample of samples){
+      if(!usable(sample.y)){pen=false;previous=sample;continue;}
+      // A short square-law CLM knee has unequal one-sided derivatives.
+      const crossesKnee=kind!=='rds'&&!isAdvanced()&&q.short&&p().lambda>0&&previous&&sample.region!==previous.region&&[sample.region,previous.region].every(region=>['linear','saturation'].includes(region));
+      if(crossesKnee)pen=false;
+      path+=(pen?'L':'M')+fixed(X(sample.x),2)+','+fixed(Y(sample.y),2);pen=true;previous=sample;
+    }
+    out+=`<path class="curve" d="${path}"/>`;
+    const dotX=X(gate?q.g:q.d);
+    out+=`<line class="cursor-line" x1="${dotX}" x2="${dotX}" y1="${top}" y2="${bottom}"/>`;
+    if(usable(actual)){
+      const dotY=Y(actual);out+=`<line class="cursor-line" x1="${left}" x2="${right}" y1="${dotY}" y2="${dotY}"/><circle class="op-dot" cx="${dotX}" cy="${dotY}" r="5"/>`;
+    }
+    if(gate&&q.vt>=x0&&q.vt<=x1)out+=`<line x1="${X(q.vt)}" x2="${X(q.vt)}" y1="${top}" y2="${bottom}" stroke="var(--warm)" stroke-dasharray="3 4" opacity=".5"/>`;
+    out+='</g>';
+    const drawn=samples.filter(sample=>usable(sample.y)).length;
+    if(!drawn){
+      const allInfinite=samples.every(sample=>sample.y===Infinity),allZero=samples.every(sample=>sample.y===0);
+      const message=allInfinite?'∞ throughout this sweep':log&&allZero?'Zero values have no logarithm':'Undefined throughout this sweep';
+      out+=`<text class="plot-notice" x="${(left+right)/2}" y="${(top+bottom)/2}" text-anchor="middle">${message}</text>`;
+    }
+    svg.innerHTML=out;svg.dataset.currentScale=log?'log':'linear';svg.dataset.quantity=kind;
+    svg.setAttribute('aria-label',`${def.title} versus effective ${def.sweep} bias, ${scaleLabel} vertical axis. Operating value ${quantity(actual,def.unit)}.`);
+    $('#'+kind+'-value').textContent=quantity(actual,def.unit);
+    const held=(gate?drainBias():gateBias())+' = '+fixed(gate?q.d:q.g)+' V. ';
+    const explanations={
+      rds:'RDS = '+drainBias()+' / |IDS|. DC resistance; on-resistance applies near the ohmic limit.',
+      gm:'gm = ∂|IDS| / ∂'+gateBias()+', holding '+drainBias()+' fixed.',
+      ro:'ro = 1/gds, where gds = ∂|IDS| / ∂'+drainBias()+'. '+(!isAdvanced()&&!q.short?'Ideal saturation has gds = 0 and ro = ∞.':''),
+      gmId:'gm / |IDS|: gate control per unit current.'+(isAdvanced()?' Weak-inversion long-channel limit ≈ '+fixed(1/(p().n*q.ut),1)+' 1/V.':'')
+    };
+    let note=held+explanations[kind];
+    if(actual===null)note+=point.derivativeStatus==='knee'&&kind!=='rds'?' The derivative is undefined at this model knee.':' Operating value is undefined (0/0).';
+    else if(actual===Infinity)note+=' Operating value is infinite; no finite point is drawn.';
+    else if(log&&actual<=0)note+=' The operating value has no logarithm; its point is omitted.';
+    if(samples.some(sample=>sample.y===null||!Number.isFinite(sample.y)))note+=' Infinite/undefined curve points are omitted.';
+    if(!log&&(kind==='rds'||kind==='ro'))note+=' Use Log plot to compare decades.';
+    $('#'+kind+'-foot').textContent=note;
+  }
   function drawPlots(){
-    const log=isAdvanced()&&state.view==='subthreshold';
-    $('.plot-view-toolbar').hidden=!isAdvanced();
+    const log=state.view==='subthreshold',selected=new Set(state.plots);
     document.querySelectorAll('[data-view]').forEach(button=>{const active=button.dataset.view===state.view;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});
-    $('#plot-view-note').textContent=log?'Log current axes · below 1 fA omitted':'Linear current axes';
-    chart($('#output-plot'),'output');chart($('#transfer-plot'),'transfer');
+    document.querySelectorAll('[data-plot]').forEach(button=>{const active=selected.has(button.dataset.plot);button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});
+    document.querySelectorAll('[data-plot-card]').forEach(card=>{card.hidden=!selected.has(card.dataset.plotCard);});
+    $('#plot-empty').hidden=selected.size>0;$('.plot-grid').hidden=selected.size===0;
+    const point=[...selected].some(key=>derivedPlots[key])?MOS.characteristics(q.g,q.d,p(),state.mode,state.conduction):null;
+    drawMetrics(selected,point);
+    if(selected.has('output'))chart($('#output-plot'),'output');
+    if(selected.has('transfer'))chart($('#transfer-plot'),'transfer');
+    if(point){
+      for(const key of plotOrder)if(selected.has(key)&&derivedPlots[key])derivedChart(key,point);
+    }
     const omitted=log&&q.id<LOG_FLOOR?(q.id===0?' Operating current is 0 A; zero has no logarithm.':' Operating current '+current(q.id)+' is below the 1 fA plot floor.'):'';
     $('#output-foot').textContent=gateBias()+' = '+fixed(q.g)+' V. '+(state.family?'Family: 0.4–2.2 V. ':'Current gate curve. ')+(isAdvanced()||q.short?'Amber: saturation estimate.':'Amber: saturation knee.')+omitted;
-    $('#transfer-foot').textContent=drainBias()+' = '+fixed(q.d)+' V. Amber: threshold reference.'+(log?' Weak-inversion swing S ≈ '+fixed(Math.LN10*p().n*q.ut*1000,1)+' mV/dec.':'')+omitted;
+    $('#transfer-foot').textContent=drainBias()+' = '+fixed(q.d)+' V. Amber: threshold reference.'+(log&&isAdvanced()?' Weak-inversion swing S ≈ '+fixed(Math.LN10*p().n*q.ut*1000,1)+' mV/dec.':'')+omitted;
   }
   function drawDevice(){
     const advanced=isAdvanced(),on=advanced||q.ov>0;
@@ -1098,6 +1268,11 @@ if(typeof module!=='undefined') module.exports=MOS;
     [state.vg,state.vd,state.vs]=bias.map(v=>Number((isP()?2.5-v:v).toFixed(2)));update();
   });
   document.querySelectorAll('[data-view]').forEach(button=>button.onclick=()=>{state.view=button.dataset.view;plotViews[state.conduction]=state.view;drawPlots();});
+  document.querySelectorAll('[data-plot]').forEach(button=>button.onclick=()=>{
+    const selected=new Set(state.plots),key=button.dataset.plot;
+    if(selected.has(key))selected.delete(key);else selected.add(key);
+    state.plots=plotOrder.filter(name=>selected.has(name));drawPlots();
+  });
   $('#family').onchange=e=>{state.family=e.target.checked;drawPlots();};
   document.querySelectorAll('[data-property]').forEach(el=>{el.oninput=()=>{const v=+el.value;if(el.value!==''&&Number.isFinite(v)&&v>=+el.min&&v<=+el.max){p()[el.dataset.property]=v;update();}};el.onchange=()=>{const v=+el.value;if(el.value===''||!Number.isFinite(v)){el.value=p()[el.dataset.property];return;}const clamped=Math.min(+el.max,Math.max(+el.min,v));p()[el.dataset.property]=clamped;el.value=clamped;update();};});
   $('#reset-properties').onclick=()=>{params[state.polarity][state.mode]=MOS.defaultsFor(state.polarity,state.mode);syncProperties();update();};
