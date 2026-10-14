@@ -358,6 +358,7 @@ input[type="checkbox"]{accent-color:var(--accent)}
 .inspector-footer{font:11px/1.8 var(--sans);color:var(--muted);margin:25px 0 0;padding-top:17px;border-top:1px solid #e7ebef}
 .inspector-footer strong{display:block;font-size:10px;font-weight:750;color:#475463;margin-bottom:5px;letter-spacing:.03em}
 .page-foot{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 4px 0;color:var(--muted);font:10px/1.6 var(--sans)}
+.footer-references{min-width:0;max-width:100%;overflow-x:auto;white-space:nowrap;padding:3px 0 5px;scrollbar-width:thin}.footer-references a{text-underline-offset:2px}.footer-references:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 @media(min-width:1500px){.workspace{--rail-default:210px;--inspector-default:370px}.spatial-wrap{height:470px}}
 @media(max-width:1180px){.workspace{--rail-default:176px;--inspector-default:304px;--divider-width:14px}.observation{padding:22px 17px}.inspector{padding:23px 17px}.process-rail{padding:23px 9px}.fab-step{gap:6px;padding:9px 7px}.spatial-wrap{height:405px}.material-panel{grid-template-columns:1fr;gap:11px}#legend{padding-left:0}.panel-heading{padding:10px 12px}.panel-note{font-size:8px}}
 @media(max-width:960px){.workspace{grid-template-columns:168px minmax(0,1fr);gap:14px}.panel-resizer{display:none}.inspector{grid-column:2}.process-rail{grid-row:1/3}.observation{padding:23px}.fab-lesson-grid{grid-template-columns:1fr 1fr;gap:22px}.fab-question{grid-column:1/-1}.inspector-intro{max-width:600px}.inspector-footer{margin-top:17px}.panel-note{display:none}.spatial-wrap{height:390px}.step-title{font-size:32px}}
@@ -490,7 +491,7 @@ input[type="checkbox"]{accent-color:var(--accent)}
       </aside>
     </main>
     <p class="fab-sr-only" id="panel-resize-help">Drag a divider to adjust the panels. Left and right arrow keys move it; hold Shift for larger adjustments. Home and End select the smallest and largest sidebar widths. Double-click a divider to restore its default width.</p>
-    <footer class="page-foot"><span>MOS Transistor Fabrication Visualization · Schematic teaching model</span><span>Process overview: <a href="https://www.youtube.com/watch?v=d9SWNLZvA8g" target="_blank" rel="noopener">Intel</a> · Wafer preparation: <a href="https://www.sumcosi.com/english/products/process/" target="_blank" rel="noopener">SUMCO</a></span></footer>
+    <footer class="page-foot"><nav class="footer-references" aria-label="References" tabindex="0">Process overview: <a href="https://www.youtube.com/watch?v=d9SWNLZvA8g" target="_blank" rel="noopener">Intel</a> · Wafer preparation: <a href="https://www.sumcosi.com/english/products/process/" target="_blank" rel="noopener">SUMCO</a> · MOS process: <a href="https://courses.grainger.illinois.edu/ece340/sp2020/Dallesasse_Slides/ECE340_L33_S18_Posted.pdf" target="_blank" rel="noopener">Illinois</a> · Oxidation: <a href="https://fabweb.ece.illinois.edu/recipe/gateox.aspx" target="_blank" rel="noopener">Illinois</a> · Lithography: <a href="https://www.asml.com/en/technology" target="_blank" rel="noopener">ASML</a> · Microfabrication: <a href="https://ocw.mit.edu/courses/6-774-physics-of-microfabrication-front-end-processing-fall-2004/" target="_blank" rel="noopener">MIT</a> · Gate-last: <a href="https://community.intel.com/t5/Blogs/Intel/We-Are-Intel/From-Sand-to-Silicon-The-Making-of-a-Chip/post/1334092" target="_blank" rel="noopener">Intel</a></nav></footer>
   </div>
   <script>(() => {
 'use strict';
@@ -1907,7 +1908,7 @@ const FabSolidRenderer=(()=>{
   }
   function clipRectangle(face,axis,low,high){
     const lo=face.lo.slice(),hi=face.hi.slice();lo[axis]=Math.max(lo[axis],low);hi[axis]=Math.min(hi[axis],high);
-    return rectangle(face.axis,face.n[face.axis],face.coordinate,lo,hi,face.m,face.k);
+    return {...face,...rectangle(face.axis,face.n[face.axis],face.coordinate,lo,hi,face.m,face.k)};
   }
   // Subtract a neighbor's footprint from a planar face. Keeping rectangles
   // makes both material-union extraction and subsequent BSP splits exact.
@@ -1983,15 +1984,82 @@ const FabSolidRenderer=(()=>{
     const tree=buildBSP(surfaces,stats);
     return {surfaces,tree,stats};
   }
+  // Journey geometry already contains its exterior and cavity surfaces. Keep
+  // their colors/alpha while giving axis-aligned faces the same exact BSP
+  // ordering used for the detailed transistor. Reject curved meshes explicitly.
+  function prepareFaces(faces){
+    const surfaces=[];
+    for(const face of faces){
+      const n=face.n;
+      if(!n||face.p.length!==4)return null;
+      const axis=n.findIndex(value=>Math.abs(Math.abs(value)-1)<EPS);
+      if(axis<0||n.some((value,i)=>i!==axis&&Math.abs(value)>EPS))return null;
+      const lo=[0,1,2].map(i=>Math.min(...face.p.map(p=>p[i]))),hi=[0,1,2].map(i=>Math.max(...face.p.map(p=>p[i])));
+      if(hi[axis]-lo[axis]>EPS||[0,1,2].some(i=>i!==axis&&hi[i]-lo[i]<=EPS))return null;
+      if(face.p.some(p=>p.some((value,i)=>Math.min(Math.abs(value-lo[i]),Math.abs(value-hi[i]))>EPS)))return null;
+      surfaces.push({...face,...rectangle(axis,Math.sign(n[axis]),lo[axis],lo,hi,face.m,face.k)});
+    }
+    const stats={surfaces:surfaces.length,splits:0,nodes:0};
+    return {surfaces,tree:buildBSP(surfaces,stats),stats};
+  }
+  // The circuit-to-wafer zoom combines the rectangular wiring with curved
+  // wafer facets. A polygon BSP keeps the same interface ordering in that
+  // mixed scene, rather than switching back to average-depth sorting mid-zoom.
+  function preparePolygons(faces){
+    const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+    const stats={surfaces:faces.length,splits:0,nodes:0};
+    const side=(face,plane)=>{
+      let front=false,back=false;
+      for(const p of face.p){const d=dot(plane.n,p)-plane.coordinate;front||=d>EPS;back||=d< -EPS;}
+      return front?(back?2:1):(back?-1:0);
+    };
+    const clip=(face,plane,sign)=>{
+      const p=[];
+      for(let i=0;i<face.p.length;i++){
+        const a=face.p[i],b=face.p[(i+1)%face.p.length],da=dot(plane.n,a)-plane.coordinate,db=dot(plane.n,b)-plane.coordinate;
+        if(sign*da>=-EPS)p.push(a);
+        if(da>EPS&&db< -EPS||da< -EPS&&db>EPS){const t=da/(da-db);p.push(a.map((v,k)=>v+(b[k]-v)*t));}
+      }
+      return {...face,p};
+    };
+    function build(polys){
+      if(!polys.length)return null;
+      const candidates=[],keys=new Set(),stride=Math.max(1,Math.floor(polys.length/48));
+      for(let i=0;i<polys.length;i+=stride){
+        const f=polys[i],sign=f.n.find(v=>Math.abs(v)>EPS)<0?-1:1,n=f.n.map(v=>v*sign),coordinate=dot(n,f.p[0]);
+        const key=[...n,coordinate].map(v=>Math.round(v/EPS)).join(',');
+        if(!keys.has(key)){keys.add(key);candidates.push({n,coordinate});}
+      }
+      let plane=candidates[0],best=Infinity;
+      for(const candidate of candidates){
+        let front=0,back=0,split=0,coplanar=0;
+        for(const face of polys){const s=side(face,candidate);if(s===1)front++;else if(s===-1)back++;else if(s===2){split++;front++;back++;}else coplanar++;}
+        const score=split*8+Math.abs(front-back)-coplanar*.25;
+        if(score<best){best=score;plane=candidate;}
+      }
+      const front=[],back=[],coplanar=[];
+      for(const face of polys){
+        const s=side(face,plane);
+        if(s===1)front.push(face);else if(s===-1)back.push(face);else if(s===0)coplanar.push(face);
+        else{front.push(clip(face,plane,1));back.push(clip(face,plane,-1));stats.splits++;}
+      }
+      coplanar.sort((a,b)=>String(a.m).localeCompare(String(b.m)));stats.nodes++;
+      return {...plane,coplanar,front:build(front),back:build(back)};
+    }
+    return {surfaces:faces,tree:build(faces),stats};
+  }
   // Orthographic BSP traversal: cameraToward is the world-space vector
   // whose dot product is projected depth, with larger values nearer.
   function orderedFaces(prepared,cameraToward){
     const result=[];
     function visit(node){
       if(!node)return;
-      const positive=cameraToward[node.axis]>=0;
+      const positive=node.n?node.n.reduce((s,n,i)=>s+n*cameraToward[i],0)>=0:cameraToward[node.axis]>=0;
       visit(positive?node.back:node.front);
-      for(const sign of positive?[1,-1]:[-1,1])for(const face of node.coplanar)if(face.n[node.axis]===sign)result.push(face);
+      for(const sign of positive?[1,-1]:[-1,1])for(const face of node.coplanar){
+        const facing=node.n?Math.sign(face.n.reduce((s,n,i)=>s+n*node.n[i],0)):face.n[node.axis];
+        if(facing===sign)result.push(face);
+      }
       visit(positive?node.front:node.back);
     }
     visit(prepared.tree);return result;
@@ -2020,11 +2088,11 @@ const FabSolidRenderer=(()=>{
   // Opaque faces can arrive in any order. Translucent faces must follow
   // orderedFaces; they composite behind-to-front against opaque depth.
   // Returned RGBA is straight alpha, as required by Canvas ImageData.
-  function rasterize(faces,width,height){
+  function rasterize(faces,width,height,{ordered=false}={}){
     width=Math.max(1,Math.ceil(width));height=Math.max(1,Math.ceil(height));
     const data=new Uint8ClampedArray(width*height*4),depth=new Float64Array(width*height);depth.fill(-Infinity);
     const opaque=[],transparent=[];
-    for(const face of faces){const a=alpha(face);if(a===1)opaque.push(face);else if(a>0)transparent.push(face);}
+    for(const face of faces){const a=alpha(face);if(a===1&&!ordered)opaque.push(face);else if(a>0)transparent.push(face);}
     for(const face of opaque)fragments(face,width,height,(i,z)=>{
       if(z<depth[i])return;depth[i]=z;const k=i*4;
       data[k]=face.color[0];data[k+1]=face.color[1];data[k+2]=face.color[2];data[k+3]=255;
@@ -2033,7 +2101,7 @@ const FabSolidRenderer=(()=>{
       const opaqueDepth=depth.slice(),accumulator=new Float64Array(data.length);
       for(let i=0;i<width*height;i++){const k=i*4;accumulator[k]=data[k];accumulator[k+1]=data[k+1];accumulator[k+2]=data[k+2];accumulator[k+3]=data[k+3]/255;}
       for(const face of transparent){const a=alpha(face),remain=1-a;fragments(face,width,height,(i,z)=>{
-        if(z<opaqueDepth[i]-1e-9)return;depth[i]=Math.max(depth[i],z);const k=i*4;
+        if(!ordered&&z<opaqueDepth[i]-1e-9)return;depth[i]=Math.max(depth[i],z);const k=i*4;
         accumulator[k]=face.color[0]*a+accumulator[k]*remain;
         accumulator[k+1]=face.color[1]*a+accumulator[k+1]*remain;
         accumulator[k+2]=face.color[2]*a+accumulator[k+2]*remain;
@@ -2068,7 +2136,7 @@ const FabSolidRenderer=(()=>{
         renderer.backend='webgl';
       }
     }catch(_){gl=null;renderer.backend='software';}
-    function render(ctx,faces,w,h){
+    function render(ctx,faces,w,h,{ordered=false}={}){
       if(gl&&!lost&&!gl.isContextLost()){
         const dpr=Math.min(typeof devicePixelRatio==='number'?devicePixelRatio:1,2);
         const width=Math.max(1,Math.round(w*dpr)),height=Math.max(1,Math.round(h*dpr));
@@ -2080,7 +2148,7 @@ const FabSolidRenderer=(()=>{
           const a=alpha(face);if(a<=0)continue;
           for(const p of face.p)extent=Math.max(extent,Math.abs(p[2])+1);
           const count=Math.max(0,face.p.length-2)*3;vertexCount+=count;
-          if(a===1){opaque.push(face);opaqueCount+=count;}else transparent.push(face);
+          if(a===1&&!ordered){opaque.push(face);opaqueCount+=count;}else transparent.push(face);
         }
         const vertices=new Float32Array(vertexCount*7);let offset=0;
         for(const face of [...opaque,...transparent])for(let t=1;t<face.p.length-1;t++)for(const id of [0,t,t+1]){
@@ -2088,7 +2156,12 @@ const FabSolidRenderer=(()=>{
           vertices[offset++]=face.color[0]/255;vertices[offset++]=face.color[1]/255;vertices[offset++]=face.color[2]/255;vertices[offset++]=alpha(face);
         }
         gl.viewport(0,0,width,height);gl.clearColor(0,0,0,0);gl.clearDepth(1);
-        gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.depthMask(true);
+        // An exact BSP order includes opaque faces and gives shared interfaces
+        // a deterministic exit/entry order. Bypass depth comparisons entirely:
+        // differently triangulated coplanar faces otherwise flicker as the
+        // interpolated depth rounds to opposite sides of the opaque surface.
+        if(ordered)gl.disable(gl.DEPTH_TEST);else gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LEQUAL);gl.depthMask(true);
         gl.disable(gl.CULL_FACE);gl.disable(gl.BLEND);
         gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);
         gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,vertices,gl.DYNAMIC_DRAW);
@@ -2103,7 +2176,7 @@ const FabSolidRenderer=(()=>{
         ctx.drawImage(surface,0,0,w,h);renderer.backend='webgl';
       }else{
         if(!software){software=document.createElement('canvas');softwareContext=software.getContext('2d');}
-        const result=rasterize(faces,w,h);
+        const result=rasterize(faces,w,h,{ordered});
         if(software.width!==result.width)software.width=result.width;
         if(software.height!==result.height)software.height=result.height;
         const image=softwareContext.createImageData(result.width,result.height);image.data.set(result.data);
@@ -2112,7 +2185,7 @@ const FabSolidRenderer=(()=>{
     }
     return renderer;
   }
-  return {boxFaces,surfaceUnion,prepare,orderedFaces,rasterize,create};
+  return {boxFaces,surfaceUnion,prepare,prepareFaces,preparePolygons,orderedFaces,rasterize,create};
 })();
 if(typeof module!=='undefined')module.exports=FabSolidRenderer;
 
@@ -4021,6 +4094,7 @@ const prefix=n=>String(n+1).padStart(2,'0');
 const journeyEndpoints=new Map();
 const scaleHistory=new Map();
 let journeySurfaceCache={key:'',surfaces:[]};
+let journeyOrderCache={token:null,progress:null,prepared:null,inputs:[]};
 const escapeMarkup=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function stageGeometry(id){
  const d=flow.find(entry=>entry.id===id);
@@ -4059,6 +4133,21 @@ function journeySurfaces(scene){
  if(key!==journeySurfaceCache.key)journeySurfaceCache={key,surfaces:FabSolidRenderer.surfaceUnion(boxes)};
  return [...scene.faces.filter(f=>f.m!=='j_dielectric'),...journeySurfaceCache.surfaces];
 }
+function orderedJourneyFaces(faces,token,progress,cameraToward){
+ const scaleScene=typeof token==='object';
+ // A scale transition moves the camera and fades fixed geometry. Reuse its
+ // tree while alpha changes, so orbiting and zooming only traverse the BSP.
+ const sameGeometry=token===journeyOrderCache.token&&(progress===journeyOrderCache.progress||scaleScene&&faces.length===journeyOrderCache.inputs.length&&faces.every((f,i)=>{const old=journeyOrderCache.inputs[i];return f.p===old.p&&f.m===old.m&&f.k===old.k;}));
+ if(!sameGeometry){
+  const inputs=scaleScene?faces.map((f,i)=>({...f,sourceIndex:i})):faces;
+  const prepared=FabSolidRenderer.prepareFaces(inputs)||(faces.some(f=>f.m==='j_dielectric')?FabSolidRenderer.preparePolygons(inputs):null);
+  journeyOrderCache={token,progress,prepared,inputs:faces};
+ }
+ const prepared=journeyOrderCache.prepared;
+ let ordered=prepared?FabSolidRenderer.orderedFaces(prepared,cameraToward):faces;
+ if(prepared&&scaleScene)ordered=ordered.map(f=>({...f,alpha:faces[f.sourceIndex].alpha}));
+ return {faces:ordered,ordered:!!prepared};
+}
 function scaleSceneFaces(id){
  const d=flow.find(item=>item.id===id);
  if(d.scene==='journey')return journeySurfaces(FabJourneyVisuals.scene(id,1,{cut:state.cut,slice:state.slice}));
@@ -4095,9 +4184,11 @@ function drawScale3D(){
  const s=setup(canvases.spatial);if(!s)return;const {ctx,w,h}=s;grid(ctx,w,h);
  const sample=FabScaleTransitions.sample(motion.scalePlan,motion.sampleProgress),co=Math.cos(state.yaw),si=Math.sin(state.yaw),ce=Math.cos(state.elev),se=Math.sin(state.elev),{cx,cy,scale}=projectionFrame(w,h);
  const proj=([x,y,z])=>[w/2+(co*x-si*y-cx)*scale,h*.51+(-(si*x+co*y)*se-z*ce-cy)*scale,-(si*x+co*y)*ce+z*se];
- const faces=sample.faces.filter(f=>state.visible.has(f.m)).map(f=>({p:f.p.map(proj),color:shade(materials[f.m]?.color||'#aab4bf',f.k||1).match(/\w\w/g).map(v=>parseInt(v,16)),alpha:(f.alpha??1)*(materials[f.m]?.opacity??1)*(1-(state.transparency[f.m]||0)/100)}));
- faces.sort((a,b)=>a.p.reduce((sum,p)=>sum+p[2],0)/a.p.length-b.p.reduce((sum,p)=>sum+p[2],0)/b.p.length);
- solidRenderer.render(ctx,faces,w,h);canvases.spatial.dataset.renderer=solidRenderer.backend;
+ const ordered=orderedJourneyFaces(sample.faces,motion.scalePlan,motion.sampleProgress,[-si*ce,-co*ce,se]);
+ const faces=ordered.faces.filter(f=>state.visible.has(f.m)).map(f=>({p:f.p.map(proj),color:shade(materials[f.m]?.color||'#aab4bf',f.k||1).match(/\w\w/g).map(v=>parseInt(v,16)),alpha:(f.alpha??1)*(materials[f.m]?.opacity??1)*(1-(state.transparency[f.m]||0)/100)}));
+ if(!ordered.ordered)faces.sort((a,b)=>a.p.reduce((sum,p)=>sum+p[2],0)/a.p.length-b.p.reduce((sum,p)=>sum+p[2],0)/b.p.length);
+ solidRenderer.render(ctx,faces,w,h,{ordered:ordered.ordered});canvases.spatial.dataset.renderer=solidRenderer.backend;
+ canvases.spatial.dataset.compositing=ordered.ordered?'exact-surfaces':'depth';
  canvases.spatial.dataset.materialLabels='';canvases.spatial.dataset.focusRegion='';
  const focusMaterial=sample.focus?.material||(motion.entry.id==='die_pick'?'j_die':'j_si');
  if(sample.focus&&sample.focus.opacity>.1&&state.labels&&state.visible.has(focusMaterial)&&state.transparency[focusMaterial]<100){
@@ -4138,9 +4229,11 @@ function drawJourney3D(){
  const proj=([x,y,z])=>[w/2+(co*x-si*y-cx)*scale,h*.51+(-(si*x+co*y)*se-z*ce-cy)*scale,-(si*x+co*y)*ce+z*se];
  canvases.spatial.dataset.frameCenterY=cy.toFixed(6);canvases.spatial.dataset.frameScale=scale.toFixed(6);
  const shadow=ctx.createRadialGradient(w*.5,h*.68,0,w*.5,h*.68,Math.min(w*.4,230));shadow.addColorStop(0,'#3b2c4320');shadow.addColorStop(1,'#3b2c4300');ctx.fillStyle=shadow;ctx.fillRect(0,0,w,h);
- const faces=journeySurfaces(scene).filter(f=>state.visible.has(f.m)).map(f=>({p:f.p.map(proj),color:shade(materials[f.m]?.color||'#aab4bf',f.k||1).match(/\w\w/g).map(v=>parseInt(v,16)),alpha:(f.alpha??1)*(materials[f.m]?.opacity??1)*(1-(state.transparency[f.m]||0)/100)}));
- faces.sort((a,b)=>a.p.reduce((sum,p)=>sum+p[2],0)/a.p.length-b.p.reduce((sum,p)=>sum+p[2],0)/b.p.length);
- solidRenderer.render(ctx,faces,w,h);canvases.spatial.dataset.renderer=solidRenderer.backend;
+ const ordered=orderedJourneyFaces(journeySurfaces(scene),[d.id,state.cut,state.slice].join(','),progress,[-si*ce,-co*ce,se]);
+ const faces=ordered.faces.filter(f=>state.visible.has(f.m)).map(f=>({p:f.p.map(proj),color:shade(materials[f.m]?.color||'#aab4bf',f.k||1).match(/\w\w/g).map(v=>parseInt(v,16)),alpha:(f.alpha??1)*(materials[f.m]?.opacity??1)*(1-(state.transparency[f.m]||0)/100)}));
+ if(!ordered.ordered)faces.sort((a,b)=>a.p.reduce((sum,p)=>sum+p[2],0)/a.p.length-b.p.reduce((sum,p)=>sum+p[2],0)/b.p.length);
+ solidRenderer.render(ctx,faces,w,h,{ordered:ordered.ordered});canvases.spatial.dataset.renderer=solidRenderer.backend;
+ canvases.spatial.dataset.compositing=ordered.ordered?'exact-surfaces':'depth';
  if(state.labels){
   if(w>430)for(const item of (scene.labels||[]).filter(item=>!item.m||state.visible.has(item.m)&&state.transparency[item.m]<100).slice(0,2)){const p=proj(item.at);if(p[1]>48&&p[1]<h-82)label(ctx,item.text,clamp(p[0],95,w-95),p[1],Math.min(220,w-40));}
  }
