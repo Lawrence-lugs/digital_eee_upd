@@ -86,7 +86,7 @@ include-in-header:
         <a href="transistor_characterization.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
                   hover:shadow-md hover:border-red-300 transition-all group">
           <div class="simulator-preview">
-            <img src="static_apps/snapshots/transistor_characterization.jpg" alt="" width="1280" height="720"
+            <img src="static_apps/snapshots/transistor_characterization.png" alt="" width="1280" height="720"
                  loading="lazy" decoding="async">
           </div>
           <div class="p-6">
@@ -118,7 +118,7 @@ include-in-header:
         <a href="FSM_simulatEEE.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
                   hover:shadow-md hover:border-red-300 transition-all group">
           <div class="simulator-preview">
-            <img src="static_apps/snapshots/FSM_simulatEEE.jpg" alt="" width="1280" height="720"
+            <img src="static_apps/snapshots/FSM_simulatEEE.png" alt="" width="1280" height="720"
                  loading="lazy" decoding="async">
           </div>
           <div class="p-6">
@@ -131,7 +131,7 @@ include-in-header:
         <a href="ASM_simulatEEE.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
                   hover:shadow-md hover:border-red-300 transition-all group">
           <div class="simulator-preview">
-            <img src="static_apps/snapshots/ASM_simulatEEE.jpg" alt="" width="1280" height="720"
+            <img src="static_apps/snapshots/ASM_simulatEEE.png" alt="" width="1280" height="720"
                  loading="lazy" decoding="async">
           </div>
           <div class="p-6">
@@ -162,7 +162,7 @@ include-in-header:
         <a href="ripes/" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
                   hover:shadow-md hover:border-red-300 transition-all group">
           <div class="simulator-preview">
-            <img src="static_apps/snapshots/ripes.jpg" alt="" width="1280" height="720"
+            <img src="static_apps/snapshots/ripes.png" alt="" width="1280" height="720"
                  loading="lazy" decoding="async">
           </div>
           <div class="p-6">
@@ -174,7 +174,7 @@ include-in-header:
         <a href="RV32I_encoding_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
                   hover:shadow-md hover:border-red-300 transition-all group">
           <div class="simulator-preview">
-            <img src="static_apps/snapshots/RV32I_encoding_simulator.jpg" alt="" width="1280" height="720"
+            <img src="static_apps/snapshots/RV32I_encoding_simulator.png" alt="" width="1280" height="720"
                  loading="lazy" decoding="async">
           </div>
           <div class="p-6">

@@ -18,6 +18,7 @@ project:
   resources:
     - "googleba81d2991a90411e.html"
     - "static_apps/snapshots/*.jpg"
+    - "static_apps/snapshots/*.png"
 
 website:
   title: "EEE Digital"
