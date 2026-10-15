@@ -59,12 +59,20 @@ Ripes is on [static WASM build taken from a PR artifact](https://github.com/mort
 
 We've placed it in `static_apps/ripes`. Around this, there's an `index.html` frontpage. This page's only jobs are to (1) call `qtloader.js` (2) print an error message if the `ripes/qt` entrypoint fails.
 
-Multithreaded WASM builds require special headers (same-origin, require-corp) to prove "good intention". This is due to the Spectre attack Shared Buffer Attack in 2018. Because of this, `nginx.conf` and the `docker-compose.yml` for Traefik work to add these special headers to `/ripes/`.
+Multithreaded WASM builds require special headers (same-origin, require-corp) to prove "good intention". This is due to the Spectre attack Shared Buffer Attack in 2018. Because of this, `nginx-site.conf` and the `docker-compose.yml` for Traefik work to add these special headers to `/ripes/`.
 
 >[!tip]
-> We might not have needed to add the headers to BOTH `nginx.conf` and the traefik config in `docker-compose.yml`.
+> We might not have needed to add the headers to BOTH `nginx-site.conf` and the traefik config in `docker-compose.yml`.
 >
 > It's just that Traefik might drop the headers given by nginx, so it's better to just do both.
+
+## Nginx configuration
+
+`nginx.conf` is the main configuration, installed at `/etc/nginx/nginx.conf`. Its top-level `events` block sets worker connections, and its `http` block sets HTTP defaults and includes `/etc/nginx/conf.d/*.conf`.
+
+`nginx-site.conf` contains the site's `server` block and is installed at `/etc/nginx/conf.d/default.conf`. Docker Compose overrides that site file with `~/workspace/nginx.conf` on the deployment host. Despite its name, the host file must remain a server-only include; do not replace it with this repository's main `nginx.conf` or add `events` or `http` wrappers to it.
+
+Rebuild the image to apply main-configuration changes. Validate the effective configuration with `docker compose run --rm --no-deps digital-eee-site nginx -t` before restarting the service. The proxy buffer settings apply to proxied responses, not directly served static files.
 
 ### Contact / Support
 
