@@ -413,6 +413,17 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     .plot-foot { font-size: 11px; line-height: 1.5; min-height: 0; margin-top: 4px; }
     .family-toggle { display: flex; align-items: center; gap: 4px; color: var(--muted); font-size: 11px; white-space: nowrap; }
     .device-section { margin-top: 8px; }
+    #cross-section-panel[data-position="above"] { margin-top: 0; margin-bottom: 8px; }
+    .cross-drag-handle { display: flex; align-items: center; gap: 9px; width: 100%; border: 1px solid var(--line); border-bottom: 0; border-radius: var(--radius) var(--radius) 0 0; padding: 9px 16px; background: var(--panel-alt); font-size: 11px; font-weight: 600; cursor: grab; touch-action: none; user-select: none; text-align: left; }
+    .cross-drag-handle:active { transform: none; cursor: grabbing; }
+    .cross-move-label { margin-left: auto; color: var(--muted); font-size: 10px; font-weight: 400; }
+    #cross-section-panel .device-panel { border-top-left-radius: 0; border-top-right-radius: 0; }
+    .cross-dragging { opacity: .45; }
+    .cross-drop-zone { display: none; border: 2px dashed var(--line); border-radius: 8px; padding: 10px 14px; margin: 6px 0; font-size: 11px; color: var(--muted); text-align: center; }
+    .science-column.cross-reordering > .cross-drop-zone { display: block; }
+    .cross-drop-zone.drop-target { border-color: var(--accent); background: var(--panel-alt); color: var(--accent); font-weight: 600; }
+    .cross-drag-preview { position: fixed; z-index: 50; pointer-events: none; max-width: calc(100vw - 16px); padding: 10px 14px; border: 1px solid var(--accent); border-radius: 8px; background: var(--panel); box-shadow: 0 6px 24px #0002; color: var(--accent); font-size: 12px; font-weight: 600; }
+    html.cross-reordering { scroll-behavior: auto !important; }
     .device-panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); overflow: hidden; box-shadow: var(--shadow); padding: 8px 20px; }
     .device-svg .hole { fill: var(--panel); stroke: var(--accent); stroke-width: 1.5; }
     .device-svg [data-device-part] { cursor: help; }
@@ -454,6 +465,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       .plot-grid { gap: 10px; }
       .plot-card { padding: 10px; }
     }
+    @media (max-width: 1400px) {
+      .metrics[data-metric-count="9"] { grid-template-columns: repeat(3,minmax(0,1fr)); row-gap: 8px; }
+      .metrics[data-metric-count="9"] .metric:nth-child(3n) { border-right: 0; }
+    }
     @media (max-width: 1200px) {
       .metrics[data-expanded="true"] { grid-template-columns: repeat(var(--metric-compact-count),minmax(0,1fr)); row-gap: 8px; }
       .metrics[data-compact-columns="3"] .metric:nth-child(3n), .metrics[data-compact-columns="4"] .metric:nth-child(4n) { border-right: 0; }
@@ -479,7 +494,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       .teaching-toast { left: 16px; }
       .banner-subtitle { font-size: .9rem; }
       .site-shell { padding: 10px 10px 0; }
-      .metrics, .metrics[data-expanded="true"] { grid-template-columns: repeat(2,minmax(0,1fr)); padding: 8px 0 3px; row-gap: 8px; }
+      .metrics, .metrics[data-expanded="true"], .metrics[data-metric-count="9"] { grid-template-columns: repeat(2,minmax(0,1fr)); padding: 8px 0 3px; row-gap: 8px; }
       .metric { padding: 0 12px 6px; }
       .metrics[data-compact-columns] .metric:nth-child(n) { border-right: 1px solid var(--line); }
       .metrics[data-compact-columns] .metric:nth-child(2n), .metrics[data-compact-columns] .metric:last-child { border-right: 0; }
@@ -541,11 +556,16 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         </aside>
 
         <div class="science-column">
-          <section aria-label="Transistor characteristic plots">
+          <div class="cross-drop-zone" data-cross-position="above" aria-hidden="true">Place cross-section above plots</div>
+          <section id="characteristic-plots" aria-label="Transistor characteristic plots">
             <div data-mount="plots"></div>
           </section>
 
-          <section class="device-section" aria-label="Transistor cross-section">
+          <div class="cross-drop-zone" data-cross-position="below" aria-hidden="true">Place cross-section below plots</div>
+          <section class="device-section" id="cross-section-panel" data-position="below" aria-label="Transistor cross-section">
+            <button type="button" class="cross-drag-handle" id="cross-drag-handle" aria-label="Move cross-section above plots" aria-describedby="cross-move-help"><span class="drag-grip" aria-hidden="true"></span><span>Cross-section</span><span class="cross-move-label">Drag · ↑ Above plots</span></button>
+            <span class="visually-hidden" id="cross-move-help">Drag above or below the plots. Click or press Enter to switch position. Arrow Up places the cross-section above the plots; Arrow Down places it below. Escape cancels a drag.</span>
+            <span class="visually-hidden" id="cross-move-status" role="status"></span>
             <div class="device-panel"><div data-mount="cross"></div></div>
           </section>
 
@@ -702,7 +722,13 @@ const MOS = (() => {
     const rds=q.d===0?null:q.id===0?Infinity:q.d/q.id;
     const ro=gds===null?null:gds===0?Infinity:1/gds;
     const gmId=q.id===0||gm===null?null:gm/q.id;
-    return {...q,gm,gds,rds,ro,gmId,derivativeStatus};
+    // Fixed geometric gate capacitance supplies a first-order charging
+    // estimate throughout the bias sweep. W and L enter in micrometres;
+    // cox is F/m², cgg is F, and ft is Hz. The gm derivative status also
+    // applies to ft at a basic short-channel CLM knee.
+    const cgg=q.cox*p.W*p.L*1e-12;
+    const ft=gm===null?null:gm/(2*Math.PI*cgg);
+    return {...q,gm,gds,rds,ro,gmId,cgg,ft,derivativeStatus};
   }
   return {defaults,defaultsFor,fields,intrinsic,terminal,characteristics};
 })();
@@ -765,11 +791,12 @@ if(typeof module!=='undefined') module.exports=MOS;
     rds:{title:'Drain–source resistance',symbol:'R<sub>DS</sub>',axis:'RDS',unit:'Ω',key:'rds',sweep:'gate'},
     gm:{title:'Transconductance',symbol:'g<sub>m</sub>',axis:'gm',unit:'S',key:'gm',sweep:'gate'},
     ro:{title:'Output resistance',symbol:'r<sub>o</sub>',axis:'ro',unit:'Ω',key:'ro',sweep:'drain'},
-    gmId:{title:'Transconductance efficiency',symbol:'g<sub>m</sub> / |I<sub>D</sub>|',axis:'gm/|ID|',unit:'1/V',key:'gmId',sweep:'gate'}
+    gmId:{title:'Transconductance efficiency',symbol:'g<sub>m</sub> / |I<sub>D</sub>|',axis:'gm/|ID|',unit:'1/V',key:'gmId',sweep:'gate'},
+    ft:{title:'Transition frequency estimate',symbol:'f<sub>T</sub>',axis:'fT',unit:'Hz',key:'ft',sweep:'gate'}
   };
-  const plotOrder=['output','transfer','rds','gm','ro','gmId'];
+  const plotOrder=['output','transfer','rds','gm','ro','gmId','ft'];
   const plotButton=(key,label)=>`<button type="button" data-plot="${key}" aria-pressed="${state.plots.includes(key)}" aria-controls="${key}-card">${label}</button>`;
-  mount('plots',`<div class="plot-view-toolbar"><div class="plot-selectors"><div class="plot-selection-group"><span class="plot-selection-label">Large signal</span><div class="plot-choice-switch" role="group" aria-label="Large signal plots">${plotButton('output','I<sub>DS</sub>/V<sub>DS</sub>')}${plotButton('transfer','I<sub>DS</sub>/V<sub>GS</sub>')}${plotButton('rds','R<sub>DS</sub>')}</div></div><div class="plot-selection-group"><span class="plot-selection-label">Small signal</span><div class="plot-choice-switch" role="group" aria-label="Small signal plots">${plotButton('gm','g<sub>m</sub>')}${plotButton('ro','r<sub>o</sub>')}${plotButton('gmId','g<sub>m</sub>/I<sub>D</sub>')}</div></div></div><div class="plot-scale-controls"><span class="plot-selection-label">Vertical scale</span><div class="plot-view-switch" role="group" aria-label="Plot view"><button data-view="characteristics" class="active" aria-pressed="true">Linear plot</button><button data-view="subthreshold" aria-pressed="false">Log plot</button></div></div></div><p id="plot-empty" hidden>Select a plot above to show its curve.</p><div class="plot-grid"><div class="plot-card" id="output-card" data-plot-card="output"><div class="plot-heading"><h3>Output characteristics</h3><label class="family-toggle"><input id="family" type="checkbox" checked> Show family curves</label></div><svg id="output-plot" class="plot-svg" viewBox="0 0 440 278" role="img" aria-label="Drain current magnitude versus effective drain bias"></svg><p class="plot-foot" id="output-foot"></p></div><div class="plot-card" id="transfer-card" data-plot-card="transfer"><div class="plot-heading"><h3>Transfer characteristics</h3></div><svg id="transfer-plot" class="plot-svg" viewBox="0 0 440 278" role="img" aria-label="Drain current magnitude versus effective gate bias"></svg><p class="plot-foot" id="transfer-foot"></p></div>${Object.entries(derivedPlots).map(([key,def])=>`<div class="plot-card" id="${key}-card" data-plot-card="${key}" hidden><div class="plot-heading derived-heading"><h3>${def.symbol} · ${def.title}</h3><strong id="${key}-value" class="plot-value"></strong></div><svg id="${key}-plot" class="plot-svg" viewBox="0 0 440 278" role="img" aria-label="${def.title}"></svg><p class="plot-foot" id="${key}-foot"></p></div>`).join('')}</div>`);
+  mount('plots',`<div class="plot-view-toolbar"><div class="plot-selectors"><div class="plot-selection-group"><span class="plot-selection-label">Large signal</span><div class="plot-choice-switch" role="group" aria-label="Large signal plots">${plotButton('output','I<sub>DS</sub>/V<sub>DS</sub>')}${plotButton('transfer','I<sub>DS</sub>/V<sub>GS</sub>')}${plotButton('rds','R<sub>DS</sub>')}</div></div><div class="plot-selection-group"><span class="plot-selection-label">Small signal</span><div class="plot-choice-switch" role="group" aria-label="Small signal plots">${plotButton('gm','g<sub>m</sub>')}${plotButton('ro','r<sub>o</sub>')}${plotButton('gmId','g<sub>m</sub>/I<sub>D</sub>')}${plotButton('ft','f<sub>T</sub>')}</div></div></div><div class="plot-scale-controls"><span class="plot-selection-label">Vertical scale</span><div class="plot-view-switch" role="group" aria-label="Plot view"><button data-view="characteristics" class="active" aria-pressed="true">Linear plot</button><button data-view="subthreshold" aria-pressed="false">Log plot</button></div></div></div><p id="plot-empty" hidden>Select a plot above to show its curve.</p><div class="plot-grid"><div class="plot-card" id="output-card" data-plot-card="output"><div class="plot-heading"><h3>Output characteristics</h3><label class="family-toggle"><input id="family" type="checkbox" checked> Show family curves</label></div><svg id="output-plot" class="plot-svg" viewBox="0 0 440 278" role="img" aria-label="Drain current magnitude versus effective drain bias"></svg><p class="plot-foot" id="output-foot"></p></div><div class="plot-card" id="transfer-card" data-plot-card="transfer"><div class="plot-heading"><h3>Transfer characteristics</h3></div><svg id="transfer-plot" class="plot-svg" viewBox="0 0 440 278" role="img" aria-label="Drain current magnitude versus effective gate bias"></svg><p class="plot-foot" id="transfer-foot"></p></div>${Object.entries(derivedPlots).map(([key,def])=>`<div class="plot-card" id="${key}-card" data-plot-card="${key}" hidden><div class="plot-heading derived-heading"><h3>${def.symbol} · ${def.title}</h3><strong id="${key}-value" class="plot-value"></strong></div><svg id="${key}-plot" class="plot-svg" viewBox="0 0 440 278" role="img" aria-label="${def.title}"></svg><p class="plot-foot" id="${key}-foot"></p></div>`).join('')}</div>`);
   mount('cross',`<div class="cross-toolbar"><span class="region-pill" id="cross-region"></span><span id="cross-scale"></span></div><p class="diagram-hint">Swipe across the diagram to explore →</p><div class="device-viewport"><svg class="device-svg" id="device" viewBox="0 0 900 340" role="group" aria-label="Animated MOSFET cross-section with inversion channel and carrier flow"><defs><linearGradient id="bulk-grad" x1="0" y1="0" x2="0" y2="1"><stop stop-color="var(--substrate)"/><stop offset="1" stop-color="var(--panel)"/></linearGradient><linearGradient id="channel-grad"><stop stop-color="var(--accent)" stop-opacity=".8"/><stop offset="1" stop-color="var(--accent2)" stop-opacity=".4"/></linearGradient><pattern id="bulk-dots" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="13" cy="13" r="1" fill="var(--muted)" opacity=".18"/></pattern><marker id="arrow-a" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7Z" fill="var(--accent)"/></marker><marker id="arrow-b" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7Z" fill="var(--warm)"/></marker></defs><rect id="substrate-fill" x="68" y="144" width="764" height="138" rx="8" fill="url(#bulk-grad)" stroke="var(--line)"/><rect id="substrate-pattern" x="68" y="144" width="764" height="138" rx="8" fill="url(#bulk-dots)"/><g id="n-well-structure" display="none"><path id="n-well-fill" d="M80 144 H820 V250 Q820 282 788 282 H112 Q80 282 80 250 Z" fill="var(--well,#e8edf8)" stroke="var(--accent2)" stroke-width="1.4"/><text id="substrate-label" x="450" y="318" text-anchor="middle" class="device-name">p-type substrate</text></g><path id="depletion" fill="var(--accent2)" opacity=".09" stroke="var(--accent2)" stroke-dasharray="5 5"/><rect id="source-region" x="145" y="143" width="106" height="72" rx="14" fill="var(--junction)" stroke="var(--accent2)" stroke-opacity=".45"/><rect id="drain-region" x="649" y="143" width="157" height="72" rx="14" fill="var(--junction)" stroke="var(--accent2)" stroke-opacity=".45"/><text x="198" y="185" text-anchor="middle" class="device-name" id="source-doping">n⁺ source</text><text x="728" y="185" text-anchor="middle" class="device-name" id="drain-doping">n⁺ drain</text><rect id="gate-electrode" x="251" y="113" width="398" height="27" rx="3" fill="var(--gate)" stroke="var(--accent)" stroke-opacity=".4"/><rect id="gate-oxide" x="251" y="140" width="398" height="7" fill="var(--warm)" opacity=".75"/><path id="channel" fill="url(#channel-grad)"/><path id="high-field" fill="var(--warm)" opacity=".2"/><g id="gate-charges"></g><g id="carriers"></g><g id="body-contact"><rect id="body-tap" x="90" y="143" width="38" height="46" rx="6" fill="var(--gate)" stroke="var(--accent2)"/><text id="tap-doping" x="109" y="163" text-anchor="middle" class="device-name">p⁺</text><text id="tap-label" x="109" y="180" text-anchor="middle" style="font-size:10px">tap</text><rect id="tap-contact" x="102" y="139" width="14" height="8" rx="1" fill="var(--muted)"/><path id="body-wire" class="device-wire" d="M109 139 V85 H170"/><circle id="body-junction" cx="170" cy="85" r="3" fill="var(--muted)"/></g><path id="terminal-connections" class="device-wire" d="M170 143 V67 M728 143 V67 M450 113 V44"/><circle id="source-connection" cx="170" cy="66" r="3" fill="var(--accent)"/><circle id="drain-connection" cx="728" cy="66" r="3" fill="var(--accent)"/><circle id="gate-connection" cx="450" cy="44" r="3" fill="var(--accent)"/><text id="source-label" x="170" y="33" text-anchor="middle" class="device-name">SOURCE</text><text x="170" y="54" text-anchor="middle" class="terminal-value" id="svg-vs"></text><text id="drain-label" x="728" y="33" text-anchor="middle" class="device-name">DRAIN</text><text x="728" y="54" text-anchor="middle" class="terminal-value" id="svg-vd"></text><text id="gate-label" x="450" y="17" text-anchor="middle" class="device-name">GATE</text><text x="468" y="65" class="terminal-value" id="svg-vg"></text><text id="gate-electrode-label" x="450" y="132" text-anchor="middle" style="font-size:11px;fill:var(--text)">gate electrode</text><path id="oxide-leader" class="device-wire" d="M653 142 H678 L693 119"/><text id="oxide-label" x="696" y="116" style="font-size:11px">oxide · insulating</text><text x="450" y="244" text-anchor="middle" class="device-name" id="body-doping">p-type silicon body</text><text x="450" y="265" text-anchor="middle" style="font-size:10px" id="body-label"></text><g id="device-annotations"><line id="length-line" x1="254" y1="295" x2="646" y2="295" stroke="var(--line)"/><path id="length-ticks" d="M254 290 V300 M646 290 V300" stroke="var(--muted)"/><text x="450" y="313" text-anchor="middle" id="length-label"></text><path id="carrier-arrow" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arrow-a)"/><path id="current-arrow" stroke="var(--warm)" stroke-width="1.5" marker-end="url(#arrow-b)"/><text x="79" y="322" style="font-size:10px;fill:var(--accent)" id="flow-label">electron drift →</text><text x="694" y="322" style="font-size:10px;fill:var(--warm)" id="current-label">← conventional current</text></g><text id="channel-label" x="450" y="208" text-anchor="middle" style="font-size:11px;fill:var(--accent)"></text></svg></div><div class="cross-legend"><span><i style="background:var(--accent)"></i><span id="carrier-legend">Electrons / inversion</span></span><span><i style="background:var(--accent2);opacity:.5"></i>Depletion region</span><span id="well-legend" hidden><i style="background:var(--well,#e8edf8);border:1px solid var(--accent2)"></i>n-well / PMOS body</span><span><i style="background:var(--warm)"></i>Oxide / high-field region</span></div><p class="cross-note" id="cross-note"></p>`);
   const device=$('#device'),deviceTooltip=document.createElement('div');
   deviceTooltip.id='device-tooltip';deviceTooltip.className='device-tooltip';
@@ -901,53 +928,59 @@ if(typeof module!=='undefined') module.exports=MOS;
     <a href="https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2009/585bb75af34ebaad61ffa16a3b972718_MIT6_012F09_lec15.pdf" target="_blank" rel="noopener">MIT · velocity saturation ↗</a>
     <a href="https://ekvmodel.com/book/04.The%20Long-channel%20MOSFET%20Model/Long_channel_MOSFET_model.html" target="_blank" rel="noopener">Enz · smooth MOS model ↗</a>
     <a href="https://ekvmodel.com/notebooks/Saturation%20voltage/Saturation_voltage.html" target="_blank" rel="noopener">Enz · saturation across inversion levels ↗</a>
+    <a href="https://web.mit.edu/6.012/SPR01/lecture23.pdf" target="_blank" rel="noopener">MIT · transition frequency ↗</a>
+    <a href="https://bmurmann.github.io/COCOA/contents/partI/partI.3.html" target="_blank" rel="noopener">Murmann · MOS capacitances ↗</a>
   </div>`;
-  const plotGuide=`<h4>Large- and small-signal plots</h4><p>Choose any combination of plots. Each selected panel tracks the same bias; Linear plot and Log plot change the vertical scale in either current model. R<sub>DS</sub> = V<sub>D</sub>*/|I<sub>DS</sub>| is a DC ratio, whereas r<sub>o</sub> = 1/g<sub>ds</sub> is a local incremental resistance. g<sub>m</sub> = ∂|I<sub>DS</sub>|/∂V<sub>G</sub>* at fixed V<sub>D</sub>*, and g<sub>ds</sub> = ∂|I<sub>DS</sub>|/∂V<sub>D</sub>* at fixed V<sub>G</sub>*. Here V<sub>G</sub>* and V<sub>D</sub>* mean the effective gate and drain drives shown on the axes; NMOS, PMOS and reversed-terminal operation use the electrical source as reference.</p><p>R<sub>DS</sub>, g<sub>m</sub>, and g<sub>m</sub>/|I<sub>D</sub>| sweep gate drive at the current drain bias; r<sub>o</sub> sweeps drain bias at the current gate drive. Derivatives include the selected model’s corrections. At zero drain bias, R<sub>DS</sub> and g<sub>m</sub>/|I<sub>D</sub>| are undefined 0/0 ratios. Ideal square-law saturation has zero output conductance and infinite r<sub>o</sub>. The basic Short model with channel-length modulation has an abrupt derivative change at its knee; derivatives exactly there are undefined. Infinite and undefined values are labeled and omitted from curves. Log plots also omit zero values, and the current plots retain their 1 fA display floor.</p>`;
+  const plotGuide=`<h4>Large- and small-signal plots</h4>
+    <p>R<sub>DS</sub> = V<sub>D</sub>*/|I<sub>DS</sub>| describes the DC resistance at the operating point. Small-signal quantities describe the local response to a voltage change: g<sub>m</sub> = ∂|I<sub>DS</sub>|/∂V<sub>G</sub>* at fixed V<sub>D</sub>*, g<sub>ds</sub> = ∂|I<sub>DS</sub>|/∂V<sub>D</sub>* at fixed V<sub>G</sub>*, and r<sub>o</sub> = 1/g<sub>ds</sub>. The ratio g<sub>m</sub>/|I<sub>D</sub>| expresses transconductance per unit current. V<sub>G</sub>* and V<sub>D</sub>* are the effective gate and drain drives shown on the axes, with the electrical source and body held fixed for each derivative.</p>
+    <p>The transition-frequency estimate is f<sub>T</sub> ≈ g<sub>m</sub>/(2πC<sub>gg</sub>), with fixed geometric gate capacitance C<sub>gg</sub> = C<sub>ox</sub>WL. It estimates the frequency where intrinsic short-circuit current gain reaches unity. The capacitance uses the full gate area at every bias, giving a first-order view of intrinsic gate charging.</p>
+    <p>R<sub>DS</sub>, g<sub>m</sub>, g<sub>m</sub>/|I<sub>D</sub>|, and f<sub>T</sub> sweep gate drive at the current drain bias. The r<sub>o</sub> plot sweeps drain bias at the current gate drive. All derivatives include the selected channel model’s corrections. Each panel marks the same operating point, and selected quantities also appear in the top readout.</p>
+    <p>R<sub>DS</sub> is undefined at zero drain bias, and g<sub>m</sub>/|I<sub>D</sub>| is undefined at zero current. A zero output conductance gives r<sub>o</sub> = ∞, as in ideal square-law saturation. The Square law Short model with channel-length modulation has an abrupt slope change at its saturation knee; quantities that depend on that derivative are undefined exactly there. Curve gaps mark infinite or undefined values. Log axes show positive finite values; the current plots mark values below their 1 fA display floor while readouts retain the calculated current.</p>`;
   function renderGuide(){
     const expanded=$('.guide-details')?.open;
     if(!isAdvanced()){
       mount('guide',`<details class="guide-details" ${expanded?'open':''}><summary>Inside the model · equations & assumptions</summary><div class="guide-content">
-        <p>This is an interactive <b>NMOS and PMOS teaching model</b>. Square law uses a basic piecewise current law with exact cutoff. Long uses the ideal square law; Short adds the nonideal corrections below. Choose Subthreshold in the banner for smooth weak, moderate, and strong inversion. These illustrative models are not calibrated process models or SPICE replacements.</p>
+        <p>Explore DC channel current and intrinsic small-signal trends with illustrative <b>NMOS and PMOS parameters</b>. Square law gives exact cutoff and piecewise linear-region and saturation expressions. Long uses the ideal square law; Short adds mobility, velocity, and drain-bias corrections. Subthreshold enables a smooth transition through weak, moderate, and strong inversion.</p>
         <div class="guide-columns"><div><h3>01 / Square law and exact cutoff</h3>
         <p>${isP()?'Lowering the gate relative to the higher-potential electrical source attracts holes to the n-well surface. PMOS uses effective source–gate drive VSG* and nonnegative source–drain bias VSD*.':'Raising the gate relative to the lower-potential electrical source attracts electrons to the p-type surface. NMOS uses effective gate–source drive VGS* and nonnegative drain–source bias VDS*.'} The threshold input is the positive zero-drain magnitude |V<sub>T0</sub>|. The asterisk denotes the effective electrical source, which can differ from the labeled source.</p>
         <div class="equation">${eq.body}</div><p>C<sub>ox</sub> = 3.9 ε₀ / t<sub>ox</sub>, β = μ C<sub>ox</sub> W/L, and u = max(${gateBias()} − V<sub>T</sub>*, 0). In both Long and Short, the basic model sets current to zero at and below threshold:</p><div class="equation">${eq.cutoff}</div>
         <p>For Long above threshold, the linear expression applies for ${drainBias()} &lt; u, and the saturation expression applies for ${drainBias()} ≥ u:</p><div class="equation">${eq.linear}</div><div class="equation">${eq.saturation}</div>
-        <p>There is no subthreshold current in Square law. Subthreshold factor n and temperature are inactive. Equal terminal voltages also produce exactly zero current, even with an inversion channel present.</p>
+        <p>Square law uses μ, C<sub>ox</sub>, geometry, and threshold to set current. Equal source and drain voltages give exactly zero net current, including when an inversion channel is present.</p>
         <h3>02 / Terminal signs and body connection</h3><p>Readouts retain signed V<sub>GS</sub> = V<sub>G</sub> − V<sub>S</sub>, V<sub>DS</sub> = V<sub>D</sub> − V<sub>S</sub>, and I<sub>DS</sub> positive into the labeled drain. ${isP()?'Forward PMOS has negative VGS, VDS, and IDS; holes move with conventional current.':'Forward NMOS has positive VGS, VDS, and IDS; electrons move opposite to conventional current.'}</p>
         <p>Electrical source V<sub>S,e</sub> = ${isP()?'max':'min'}(V<sub>S</sub>, V<sub>D</sub>). The plots use effective gate drive, nonnegative drain bias, and current magnitude. Swapping electrical roles reverses signed drain current. The ${isP()?'n⁺ well tap connects the n-well body':'p⁺ substrate contact connects the p-type body'} to this electrical source, so V<sub>BS</sub> = 0. The drawn connection follows the electrical source automatically.</p>
-        ${isP()?'<p>PMOS p⁺ source and drain sit inside an n-well formed in a p-type substrate. The surrounding well–substrate junction is structural only; its electrical behavior is not simulated.</p>':''}
-        </div><div><h3>03 / Short-channel corrections</h3><div class="equation">${eq.dibl}</div>
+        ${isP()?'<p>PMOS p⁺ source and drain sit inside an n-well formed in a p-type substrate. The n-well forms the body, and its surface supports the hole channel.</p>':''}
+        <h3>03 / Short-channel corrections</h3><div class="equation">${eq.dibl}</div>
         <p>DIBL lowers the effective threshold. Mobility is μ = μ₀ / (1 + θu), and V<sub>c</sub> = v<sub>sat</sub>L/μ. The velocity-limited saturation bias is:</p><div class="equation">${eq.velocity}</div>
         <p>With v = min(${drainBias()}, V<sub>sat</sub>) and M = (1 + λ${drainBias()}) / (1 + λv), the complete basic Short current above threshold is:</p><div class="equation">${eq.short}</div>
-        <p>These corrections limit carrier speed and allow current to rise after saturation. The Short option is therefore a corrected basic model, rather than the ideal Long square law. It still has exact cutoff below the effective threshold. Long omits mobility reduction, velocity saturation, DIBL, and channel-length modulation.</p>
-        <h3>04 / Scope and the advanced option</h3><p>Choose Subthreshold in the banner to enable smooth inversion. That option retains a small channel diffusion current below threshold and enables n and temperature for both channel models. Each device/channel combination retains its own editable property values.</p>
-        <p>Body effect, gate current, junction leakage, gate-induced drain leakage, breakdown, self-heating, and transient capacitances are omitted. Animated particle sizes, spacing, and speeds are illustrative; the cross-section is not to scale. NMOS and PMOS mobility defaults are illustrative, uncalibrated choices. Short-channel correction parameters do not automatically scale with L.</p>${plotGuide}${modelReferences}</div></div>
+        <p>Mobility reduction and the velocity limiter reduce strong-inversion current. DIBL and channel-length modulation give the saturated curve a drain-dependent slope. The Short model retains exact cutoff at and below its effective threshold. Long uses constant mobility and threshold, with a flat saturated output curve.</p>
+        </div><div><h3>04 / Interpreting the model</h3><p>The calculations describe channel conduction with a source-tied body. Device properties are illustrative teaching values, editable for each NMOS/PMOS and Long/Short combination. Geometry sets C<sub>ox</sub>, β, and V<sub>c</sub>; η, λ, and θ remain independent inputs. The cross-section and animated charges illustrate structure and transport qualitatively.</p>
+        <p>Choose Subthreshold to include channel diffusion below threshold. That option uses n and temperature to set the smooth current transition in both channel models.</p>${plotGuide}${modelReferences}</div></div>
       </div></details>`);
       return;
     }
     mount('guide',`<details class="guide-details" ${expanded?'open':''}><summary>Inside the model · equations & assumptions</summary><div class="guide-content">
-      <p>This is an interactive <b>NMOS and PMOS teaching model</b> with one smooth channel-current law across weak, moderate, and strong inversion. Animated particles illustrate ${isP()?'hole':'electron'} transport. It is not a calibrated process model, SPICE replacement, or a Poisson / drift–diffusion solver.</p>
+      <p>Explore DC channel current and intrinsic small-signal trends with illustrative <b>NMOS and PMOS parameters</b>. A single smooth current law connects weak, moderate, and strong inversion. Animated particles illustrate ${isP()?'hole':'electron'} transport.</p>
       <div class="guide-columns"><div><h3>01 / Smooth inversion in both channel models</h3>
       <p>${isP()?'A gate below the source attracts holes to the surface of an n-type body. PMOS uses effective source–gate drive VSG* and nonnegative source–drain bias VSD*. Its zero-drain enhancement threshold is negative.':'A gate above the source attracts electrons to the surface of a p-type body. NMOS uses effective gate–source drive VGS* and nonnegative drain–source bias VDS*. Its zero-drain enhancement threshold is positive.'} The threshold input is the positive zero-drain magnitude |V<sub>T0</sub>|. Equations use the normalized effective threshold V<sub>T</sub>*: signed V<sub>T</sub> = V<sub>T</sub>* for NMOS and −V<sub>T</sub>* for PMOS. The asterisk means the effective electrical source, which can differ from the labeled source.</p>
       <div class="equation">${eq.body}</div>
       <p>U<sub>T</sub> = kT/q, C<sub>ox</sub> = 3.9 ε₀ / t<sub>ox</sub>, and β = μ C<sub>ox</sub> W/L. The following EKV-inspired interpolation is the complete current core; forward and reverse terms cancel exactly at equal terminal voltages.</p>
       <div class="equation">${eq.charge}</div><div class="equation">${eq.reverseCharge}</div><div class="equation">${eq.smooth}</div>
-      <p>Long-channel current is |I<sub>D</sub>| = I<sub>base</sub>. No branch switches on at threshold and no separate weak current is added. F² is an inversion coefficient: the teaching labels use weak inversion below 0.1, moderate inversion from 0.1 to 10, and strong inversion above 10. These labels do not change the equations.</p>
+      <p>Long-channel current is |I<sub>D</sub>| = I<sub>base</sub> throughout the gate sweep. F² is an inversion coefficient: values below 0.1 are labeled weak inversion, 0.1 to 10 moderate inversion, and above 10 strong inversion. The same smooth equation spans these labels.</p>
       <p>Strong-inversion limits, shown as approximations:</p><div class="equation">${eq.linear}</div><div class="equation">${eq.saturation}</div>
-      <p>The linear limit applies at small drain bias; the saturation limit applies when the reverse term is negligible. Finite n changes the strong-inversion saturation scale; n = 1 recovers the familiar square-law limit. The reported near-saturation bias is a diagnostic estimate, not a hard current boundary.</p>
+      <p>The linear expression applies when both ends of the channel are in strong inversion; the saturation expression applies when the reverse term becomes negligible. The factor n also sets the strong-inversion saturation scale; n = 1 recovers the familiar square-law limit.</p>
       <h3>02 / Terminal signs and body connection</h3>
       <p>The top readouts always show signed V<sub>GS</sub> = V<sub>G</sub> − V<sub>S</sub>, V<sub>DS</sub> = V<sub>D</sub> − V<sub>S</sub>, and I<sub>DS</sub> positive <em>into the labeled drain</em>. ${isP()?'Forward PMOS operation therefore has negative VGS, VDS, and IDS. Holes and conventional current flow from source to drain.':'Forward NMOS operation has positive VGS, VDS, and IDS. Electrons move from source to drain, opposite to conventional current.'}</p>
       <p>Electrical source V<sub>S,e</sub> = ${isP()?'max':'min'}(V<sub>S</sub>, V<sub>D</sub>). The plots show ${gateBias()} = ${isP()?'max(VS, VD) − VG':'VG − min(VS, VD)'}, ${drainBias()} = |VD − VS|, and |I<sub>DS</sub>|. If source and drain swap electrical roles, current into the labeled drain reverses sign.</p>
-      ${isP()?'<p><b>PMOS well structure:</b> p⁺ source and drain lie inside an n-well formed in a p-type substrate. The n-well is the PMOS body; the hole channel forms at its surface under the gate. The drawing shows this well boundary, while the well–substrate junction and its capacitance are not modeled. The n⁺ well tap provides the body contact and is wired to the electrical source.</p>':''}
-      <p>${isP()?'The n⁺ well tap':'The p⁺ substrate contact'} is connected by the drawn wire to the ${isP()?'higher':'lower'}-potential electrical source, so V<sub>BS</sub> = 0. This automatic body connection is a teaching assumption, not a fixed-substrate circuit. Body effect, gate current, junction diodes, breakdown, self-heating, and transient capacitances are omitted.</p>
-      </div><div><h3>03 / Short-channel corrections</h3><div class="equation">${eq.dibl}</div>
-      <p>DIBL lowers V<sub>T</sub>* = |V<sub>T0</sub>| − η${drainBias()}. Extreme settings can move this normalized threshold below zero. With Q<sub>s</sub> = nU<sub>T</sub>(√(1 + 4F²) − 1), mobility is μ = μ₀ / (1 + θQ<sub>s</sub>). Q<sub>s</sub> is a smooth charge-voltage proxy; β uses this effective mobility.</p>
+      ${isP()?'<p>PMOS p⁺ source and drain lie inside an n-well formed in a p-type substrate. The n-well forms the body, and its surface supports the hole channel.</p>':''}
+      <p>${isP()?'The n⁺ well tap':'The p⁺ substrate contact'} connects to the ${isP()?'higher':'lower'}-potential electrical source, so V<sub>BS</sub> = 0. The drawn body connection follows the electrical source automatically as terminal roles change.</p>
+      <h3>03 / Short-channel corrections</h3><div class="equation">${eq.dibl}</div>
+      <p>DIBL lowers the effective threshold with increasing drain bias. With Q<sub>s</sub> = nU<sub>T</sub>(√(1 + 4F²) − 1), mobility is μ = μ₀ / (1 + θQ<sub>s</sub>). Q<sub>s</sub> is a smooth charge-voltage proxy; β uses this effective mobility.</p>
       <div class="equation">${eq.velocity}</div><p>V<sub>c</sub> = v<sub>sat</sub>L/μ. The complete short-channel teaching current applies a smooth velocity limiter and output-slope factor to the same inversion core:</p><div class="equation">${eq.short}</div>
-      <p>All corrections vary continuously. The limiter becomes small in weak inversion and limits strong-inversion transport; (1 + λ${drainBias()}) is an illustrative output-slope approximation, applied at all drain biases. Long-channel mode omits these mobility, velocity, DIBL, and output-slope corrections. The near-saturation estimate is where current reaches 1 − e⁻⁴ ≈ 98.2% of its fixed-threshold, fixed-mobility saturation value, excluding DIBL and the output-slope factor.</p>
-      <h3>04 / Subthreshold operation</h3><div class="equation">${eq.weak}</div>
+      <p>The velocity correction approaches unity in weak inversion and limits strong-inversion transport. The factor (1 + λ${drainBias()}) adds an output slope throughout the drain sweep. Long uses constant mobility and threshold with I<sub>base</sub> alone. The near-saturation marker identifies 1 − e⁻⁴ ≈ 98.2% of the fixed-threshold, fixed-mobility saturation current, including the velocity limiter and before the output-slope factor. It guides the operating-region label while the current curve remains smooth.</p>
+      </div><div><h3>04 / Subthreshold operation</h3><div class="equation">${eq.weak}</div>
       <p>This weak-inversion approximation explains the full core: minority carriers diffuse along the surface even below threshold. S = ln(10)nU<sub>T</sub> is the gate-bias change for a decade of current in the weak-inversion limit. Short-channel corrections still apply. At zero drain bias, forward and reverse transport balance and net current is exactly zero.</p>
-      <p>The Log plot view uses logarithmic current axes on the output and transfer plots. Equal vertical steps represent factors of ten. Its 1 fA display floor does not add a physical leakage floor; zero and smaller currents are explicitly marked. The cross-section enlarges sparse carrier populations so they remain visible. Only channel conduction is modeled; junction leakage, gate tunneling, and gate-induced drain leakage are left for later.</p>
-      <p>n and temperature are active in both modes. Temperature changes U<sub>T</sub> in the current interpolation; threshold and low-field mobility are held fixed, so this is not a complete temperature model. The independent weak-current scale has been removed: β, n, and temperature set the current consistently. NMOS defaults use μ₀ = 350 cm²/(V·s), v<sub>sat</sub> = 10 × 10⁶ cm/s; PMOS uses 150 and 8. These are illustrative, uncalibrated choices. η, λ, and θ do not automatically scale with L.</p>${plotGuide}${modelReferences}</div></div>
+      <p>Log axes make the weak-inversion range visible: equal decade intervals represent factors of ten. The cross-section enlarges sparse carrier populations to illustrate channel diffusion. Geometry and particle motion are qualitative.</p>
+      <p>The calculations describe channel conduction with a source-tied body. Device properties are illustrative teaching values, editable for each NMOS/PMOS and Long/Short combination. Temperature enters through U<sub>T</sub>; the chosen zero-drain threshold and low-field mobility stay fixed. Geometry sets C<sub>ox</sub>, β, and V<sub>c</sub>; η, λ, and θ remain independent inputs.</p>${plotGuide}${modelReferences}</div></div>
     </div></details>`);
   }
   renderGuide();
@@ -1096,12 +1129,12 @@ if(typeof module!=='undefined') module.exports=MOS;
   }
   function drawMetrics(selected,point){
     const extra=plotOrder.filter(key=>selected.has(key)&&derivedPlots[key]),count=4+extra.length;
-    const compactColumns=count>4?Math.ceil(count/2):4;
+    const compactColumns=count>8?3:count>4?Math.ceil(count/2):4;
     const derived=extra.map(key=>{
       const def=derivedPlots[key];
       return `<div class="metric metric-derived" data-metric="${key}"><label>${def.symbol}</label><strong id="metric-${key}">${quantity(point[def.key],def.unit)}</strong><small>${def.title}</small></div>`;
     }).join('');
-    mount('metrics',`<div class="metrics" data-expanded="${extra.length>0}" data-compact-columns="${compactColumns}" style="--metric-count:${count};--metric-compact-count:${compactColumns}"><div class="metric" data-metric="vgs"><label>Gate–source · V<sub>GS</sub></label><strong id="metric-vgs">${fixed(q.vgs)} V</strong><small>V<sub>G</sub> − V<sub>S</sub></small></div><div class="metric" data-metric="vds"><label>Drain–source · V<sub>DS</sub></label><strong id="metric-vds">${fixed(q.vds)} V</strong><small>V<sub>D</sub> − V<sub>S</sub></small></div><div class="metric metric-current" data-metric="id"><label>Drain current · I<sub>DS</sub></label><strong id="metric-id">${current(q.signedId)}</strong><small>Positive into labeled drain</small></div>${derived}<div class="metric metric-region" data-metric="region"><label>Operating region</label><strong id="metric-region">${names[q.region]}</strong><small id="metric-overdrive">Effective overdrive ${fixed(q.ov)} V</small></div></div>`);
+    mount('metrics',`<div class="metrics" data-metric-count="${count}" data-expanded="${extra.length>0}" data-compact-columns="${compactColumns}" style="--metric-count:${count};--metric-compact-count:${compactColumns}"><div class="metric" data-metric="vgs"><label>Gate–source · V<sub>GS</sub></label><strong id="metric-vgs">${fixed(q.vgs)} V</strong><small>V<sub>G</sub> − V<sub>S</sub></small></div><div class="metric" data-metric="vds"><label>Drain–source · V<sub>DS</sub></label><strong id="metric-vds">${fixed(q.vds)} V</strong><small>V<sub>D</sub> − V<sub>S</sub></small></div><div class="metric metric-current" data-metric="id"><label>Drain current · I<sub>DS</sub></label><strong id="metric-id">${current(q.signedId)}</strong><small>Positive into labeled drain</small></div>${derived}<div class="metric metric-region" data-metric="region"><label>Operating region</label><strong id="metric-region">${names[q.region]}</strong><small id="metric-overdrive">Effective overdrive ${fixed(q.ov)} V</small></div></div>`);
   }
   function derivedChart(kind,point){
     const def=derivedPlots[kind],svg=$('#'+kind+'-plot'),gate=def.sweep==='gate',log=state.view==='subthreshold';
@@ -1157,7 +1190,8 @@ if(typeof module!=='undefined') module.exports=MOS;
       rds:'RDS = '+drainBias()+' / |IDS|. DC resistance; on-resistance applies near the ohmic limit.',
       gm:'gm = ∂|IDS| / ∂'+gateBias()+', holding '+drainBias()+' fixed.',
       ro:'ro = 1/gds, where gds = ∂|IDS| / ∂'+drainBias()+'. '+(!isAdvanced()&&!q.short?'Ideal saturation has gds = 0 and ro = ∞.':''),
-      gmId:'gm / |IDS|: gate control per unit current.'+(isAdvanced()?' Weak-inversion long-channel limit ≈ '+fixed(1/(p().n*q.ut),1)+' 1/V.':'')
+      gmId:'gm / |IDS|: gate control per unit current.'+(isAdvanced()?' Weak-inversion long-channel limit ≈ '+fixed(1/(p().n*q.ut),1)+' 1/V.':''),
+      ft:'fT ≈ gm / (2πCgg). Fixed geometric gate capacitance Cgg = CoxWL = '+quantity(point.cgg,'F')+'. This estimate tracks intrinsic gate-charging speed.'
     };
     let note=held+explanations[kind];
     if(actual===null)note+=point.derivativeStatus==='knee'&&kind!=='rds'?' The derivative is undefined at this model knee.':' Operating value is undefined (0/0).';
@@ -1279,6 +1313,99 @@ if(typeof module!=='undefined') module.exports=MOS;
   function frame(t){const dt=Math.min(.05,(t-lastTime)/1000||0);lastTime=t;if(!document.hidden&&!reducedMotion.matches&&q){if(isAdvanced())thermalPhase+=dt*1.8;if(q.id>0&&q.d>0){const strength=Math.min(1,Math.max(0,(Math.log10(q.id)+15)/12));phase=(phase+dt*(.01+.24*strength))%1;}positionCarriers();}requestAnimationFrame(frame);}
   syncProperties();update();requestAnimationFrame(frame);
   window.transistorSimulator={state,params,model:MOS,getOperatingPoint:()=>({...q}),refresh:()=>{syncProperties();update(false);}};
+})();
+
+(() => {
+  'use strict';
+  // Move the mounted cross-section so its carrier animation and tooltips stay attached.
+  const panel=document.getElementById('cross-section-panel');
+  const handle=document.getElementById('cross-drag-handle');
+  const plots=document.getElementById('characteristic-plots');
+  const column=panel.closest('.science-column');
+  const zones=[...column.querySelectorAll('[data-cross-position]')];
+  const status=document.getElementById('cross-move-status');
+  const preview=document.createElement('div');
+  preview.className='cross-drag-preview';preview.hidden=true;
+  preview.setAttribute('aria-hidden','true');document.body.append(preview);
+  const clamp=(value,min,max)=>Math.min(max,Math.max(min,value));
+  let above=false,drag=null,suppressClick=false,dragFrame=0,lastFrame=0;
+
+  function placeCrossSection(nextAbove){
+    above=nextAbove;
+    if(above)plots.before(panel);
+    else zones.find(zone=>zone.dataset.crossPosition==='below').after(panel);
+    panel.dataset.position=above?'above':'below';
+    handle.setAttribute('aria-label','Move cross-section '+(above?'below':'above')+' plots');
+    handle.querySelector('.cross-move-label').textContent='Drag · '+(above?'↓ Below plots':'↑ Above plots');
+    status.textContent='Cross-section panel placed '+(above?'above':'below')+' the plots.';
+    handle.focus({preventScroll:true});
+    handle.scrollIntoView({block:'nearest',behavior:'instant'});
+  }
+
+  function updateTarget(){
+    if(!drag?.active)return;
+    const bounds=plots.getBoundingClientRect(),columnBounds=column.getBoundingClientRect();
+    const inside=drag.x>=columnBounds.left&&drag.x<=columnBounds.right;
+    drag.target=inside?(drag.y<bounds.top+bounds.height/2?'above':'below'):null;
+    zones.forEach(zone=>zone.classList.toggle('drop-target',zone.dataset.crossPosition===drag.target));
+    preview.textContent=drag.target?'Place cross-section '+drag.target+' plots':'Move over the plot column';
+    preview.style.left=clamp(drag.x+14,8,Math.max(8,innerWidth-preview.offsetWidth-8))+'px';
+    preview.style.top=clamp(drag.y+14,8,Math.max(8,innerHeight-preview.offsetHeight-8))+'px';
+  }
+
+  function animateDrag(time){
+    if(!drag?.active)return;
+    const frameScale=lastFrame?Math.min(3,(time-lastFrame)/(1000/60)):1;
+    lastFrame=time;
+    const edge=64,y=drag.y;
+    const speed=y<edge?-16*(1-clamp(y/edge,0,1)):y>innerHeight-edge?16*(1-clamp((innerHeight-y)/edge,0,1)):0;
+    if(speed)window.scrollBy(0,speed*frameScale);
+    updateTarget();dragFrame=requestAnimationFrame(animateDrag);
+  }
+
+  function finishDrag(commit){
+    if(!drag)return;
+    const finished=drag;drag=null;
+    if(!commit)suppressClick=true;
+    cancelAnimationFrame(dragFrame);dragFrame=0;lastFrame=0;
+    column.classList.remove('cross-reordering');document.documentElement.classList.remove('cross-reordering');
+    panel.classList.remove('cross-dragging');preview.hidden=true;
+    zones.forEach(zone=>zone.classList.remove('drop-target'));
+    if(handle.hasPointerCapture(finished.id))handle.releasePointerCapture(finished.id);
+    if(finished.active&&commit&&finished.target)placeCrossSection(finished.target==='above');
+    else if(finished.active){status.textContent='Cross-section move cancelled.';handle.focus({preventScroll:true});}
+  }
+
+  handle.addEventListener('pointerdown',event=>{
+    if(event.button!==0||!event.isPrimary)return;
+    suppressClick=false;handle.focus({preventScroll:true});
+    drag={id:event.pointerId,startX:event.clientX,startY:event.clientY,x:event.clientX,y:event.clientY,active:false,target:null};
+    handle.setPointerCapture(event.pointerId);
+  });
+  handle.addEventListener('pointermove',event=>{
+    if(!drag||event.pointerId!==drag.id)return;
+    drag.x=event.clientX;drag.y=event.clientY;
+    if(!drag.active&&Math.hypot(drag.x-drag.startX,drag.y-drag.startY)>6){
+      drag.active=true;suppressClick=true;
+      column.classList.add('cross-reordering');document.documentElement.classList.add('cross-reordering');
+      panel.classList.add('cross-dragging');preview.hidden=false;
+      dragFrame=requestAnimationFrame(animateDrag);
+    }
+    if(drag.active){event.preventDefault();updateTarget();}
+  });
+  handle.addEventListener('pointerup',event=>{if(event.pointerId===drag?.id){if(drag.active)updateTarget();finishDrag(true);}});
+  ['pointercancel','lostpointercapture'].forEach(type=>handle.addEventListener(type,event=>{if(event.pointerId===drag?.id)finishDrag(false);}));
+  handle.addEventListener('click',event=>{
+    if(drag?.active)return;
+    if(suppressClick&&event.detail!==0){suppressClick=false;return;}
+    placeCrossSection(!above);
+  });
+  handle.addEventListener('keydown',event=>{
+    if(drag?.active){if(['Enter',' ','ArrowUp','ArrowDown'].includes(event.key))event.preventDefault();return;}
+    if(event.key==='ArrowUp'||event.key==='ArrowDown'){event.preventDefault();placeCrossSection(event.key==='ArrowUp');}
+  });
+  window.addEventListener('keydown',event=>{if(event.key==='Escape'&&drag){event.preventDefault();finishDrag(false);}});
+  window.addEventListener('blur',()=>finishDrag(false));
 })();
 </script>
 </body>
