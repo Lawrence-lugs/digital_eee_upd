@@ -494,8 +494,464 @@ input[type="checkbox"]{accent-color:var(--accent)}
     <p class="fab-sr-only" id="panel-resize-help">Drag a divider to adjust the panels. Left and right arrow keys move it; hold Shift for larger adjustments. Home and End select the smallest and largest sidebar widths. Double-click a divider to restore its default width.</p>
     <footer class="page-foot"><nav class="footer-references" aria-label="References" tabindex="0">BJT process: <a href="https://assets.nexperia.com/documents/brochure/nexperia_BJT_Handbook_V2_240425_lowres.pdf#page=23" target="_blank" rel="noopener">Nexperia · §2.2</a> · Process overview: <a href="https://www.youtube.com/watch?v=d9SWNLZvA8g" target="_blank" rel="noopener">Intel</a> · Wafer preparation: <a href="https://www.sumcosi.com/english/products/process/" target="_blank" rel="noopener">SUMCO</a> · MOS process: <a href="https://courses.grainger.illinois.edu/ece340/sp2020/Dallesasse_Slides/ECE340_L33_S18_Posted.pdf" target="_blank" rel="noopener">Illinois</a> · Oxidation: <a href="https://fabweb.ece.illinois.edu/recipe/gateox.aspx" target="_blank" rel="noopener">Illinois</a> · Lithography: <a href="https://www.asml.com/en/technology" target="_blank" rel="noopener">ASML</a> · Microfabrication: <a href="https://ocw.mit.edu/courses/6-774-physics-of-microfabrication-front-end-processing-fall-2004/" target="_blank" rel="noopener">MIT</a> · Gate-last: <a href="https://community.intel.com/t5/Blogs/Intel/We-Are-Intel/From-Sand-to-Silicon-The-Making-of-a-Chip/post/1334092" target="_blank" rel="noopener">Intel</a></nav></footer>
   </div>
-  <script src="bjt-process.js"></script>
-  <script src="bjt-packaging.js"></script>
+  <script id="bjt-process">
+/* Vertical discrete planar epitaxial BJTs. Pure data/geometry companion to
+   transistor_fabrication.html; dimensions and abrupt dopant profiles are schematic.
+   Process reference: Nexperia BJT Application Handbook, section 2.2.1. */
+(function (global) {
+  'use strict';
+  const SOURCE = {title:'Nexperia · BJT Application Handbook, §2.2.1 (pp. 44–47)',url:'https://assets.nexperia.com/documents/brochure/nexperia_BJT_Handbook_V2_240425_lowres.pdf'};
+  const maskRegions = {
+    bjt_base:[[-1.55,1.55,-1.12,1.12]],
+    bjt_emitter:[[-.92,-.18,-.62,.62]],
+    bjt_contact:[[-.79,-.31,-.23,.23],[.71,1.19,-.23,.23]],
+    bjt_metal:[[-1.02,-.08,-2,.43],[.48,1.42,-2,.43]],
+    bjt_pad:[[-.94,-.16,-1.84,-1.04],[.56,1.34,-1.84,-1.04]]
+  };
+  const maskNames = {bjt_base:'Base diffusion-window mask',bjt_emitter:'Emitter diffusion-window mask',bjt_contact:'Emitter / base contact-opening mask',bjt_metal:'Separate emitter / base metal mask',bjt_pad:'Bond-pad opening mask'};
+  const openMasks = ['bjt_base','bjt_emitter','bjt_contact','bjt_pad'];
+  const box=(x0,x1,y0,y1,z0,z1,m)=>({x0,x1,y0,y1,z0,z1,m});
+  const valid=b=>['x','y','z'].every(a=>Number.isFinite(b[a+'0'])&&Number.isFinite(b[a+'1'])&&b[a+'1']-b[a+'0']>1e-8);
+  function subtract(a,b){
+    const x0=Math.max(a.x0,b.x0),x1=Math.min(a.x1,b.x1),y0=Math.max(a.y0,b.y0),y1=Math.min(a.y1,b.y1),z0=Math.max(a.z0,b.z0),z1=Math.min(a.z1,b.z1);
+    if(x0>=x1-1e-8||y0>=y1-1e-8||z0>=z1-1e-8)return [a];
+    return [box(a.x0,x0,a.y0,a.y1,a.z0,a.z1,a.m),box(x1,a.x1,a.y0,a.y1,a.z0,a.z1,a.m),box(x0,x1,a.y0,y0,a.z0,a.z1,a.m),box(x0,x1,y1,a.y1,a.z0,a.z1,a.m),box(x0,x1,y0,y1,a.z0,z0,a.m),box(x0,x1,y0,y1,z1,a.z1,a.m)].filter(valid);
+  }
+  const minus=(a,b)=>b.reduce((out,cut)=>out.flatMap(s=>subtract(s,cut)),a);
+  const footprints=(mask,z0,z1,m)=>maskRegions[mask].map(r=>box(...r,z0,z1,m));
+  function doping(polarity){
+    const p=polarity==='pnp';
+    return {p,name:p?'PNP':'NPN',collector:p?'p⁺':'n⁺',epi:p?'p⁻':'n⁻',base:p?'n':'p',emitter:p?'p⁺':'n⁺',baseDopant:p?'phosphorus donors':'boron acceptors',emitterDopant:p?'boron acceptors':'donor dopants such as arsenic',carrier:p?'holes':'electrons',opposite:p?'electrons':'holes'};
+  }
+  function materials(polarity='npn'){
+    const q=doping(polarity),n='#6dafbf',p='#c780a7',base=q.p?n:p,emit=q.p?'#c95283':'#28af8a';
+    return {
+      bjt_collector:{name:q.collector+' collector substrate',color:q.p?'#b36b91':'#4e879f',rank:0,detail:'Heavily doped '+q.collector+' single-crystal silicon provides a low-resistance path from the collector epitaxy to the back-side collector electrode.'},
+      bjt_epi:{name:q.epi+' collector epitaxy',color:q.p?'#e3afc7':'#91b8cc',rank:0,detail:'Lightly doped '+q.epi+' epitaxial silicon is part of the collector. It supports the collector–base depletion region. Base and emitter are formed inside its upper surface.'},
+      bjt_base_seed:{name:'As-implanted base dopant',color:q.p?'#b4d6e5':'#edbad1',rank:0,detail:'A shallow schematic '+q.baseDopant+' distribution before activation and drive-in. Implant damage and compensation are not shown; this is not yet the completed active base.'},
+      bjt_base:{name:q.base+' base',color:base,rank:0,detail:'The opposite-polarity '+q.base+' base lies inside the collector epitaxy. It remains between the shallow emitter and deeper collector; its exposed shoulder receives the separate base contact.'},
+      bjt_emitter_seed:{name:'As-implanted emitter dopant',color:q.p?'#e99cbb':'#8ae3bb',rank:0,detail:'A shallow high-dose '+q.emitterDopant+' region inside the base, before the activation / drive-in that forms the emitter.'},
+      bjt_emitter:{name:q.emitter+' emitter',color:emit,rank:0,detail:'Heavily doped '+q.emitter+' silicon nested inside the base. A continuous thickness of base separates it from the collector below.'},
+      bjt_oxide:{name:'Mask / surface oxide · SiO₂',color:'#e6d58f',rank:1,detail:'Thermally grown oxide defines the base and emitter implant windows, is regrown during the thermal cycles, and later insulates the two front metal routes from the silicon except at their contact openings.'},
+      bjt_metal_blanket:{name:'Unpatterned front metal',color:'#edb66d',rank:3,detail:'A blanket metal film initially joins the two contact landings. Lithography and subtractive etching separate the emitter and base conductors.'},
+      bjt_metal_e:{name:'Emitter contact / metal',color:'#edb66d',rank:3,detail:'A separate front metal route contacts only the shallow emitter through its oxide opening and runs to its exposed emitter bond pad.'},
+      bjt_metal_b:{name:'Base contact / metal',color:'#d5a05b',rank:3,detail:'A separate front metal route contacts the exposed base shoulder, outside the emitter, and runs to its own base bond pad.'},
+      bjt_cap:{name:'Protective passivation',color:'#9bb8cb',rank:4,detail:'A deposited protective dielectric covers the front surface and wiring. A dedicated lithography and etch cycle opens the two bond pads.'},
+      bjt_backmetal:{name:'Rear collector metal',color:'#aab4c4',rank:0,detail:'Back-side metallization contacts the thinned heavily doped collector substrate. The back surface becomes the collector terminal and die-attach face.'},
+      resist:{name:'Protected positive resist',color:'#ed96ac',rank:7,detail:'Unexposed positive photoresist remains after development. It protects oxide or metal during pattern transfer and is stripped before high-temperature dopant drive-in.'},
+      exposed:{name:'Exposed positive resist',color:'#f5cbbc',rank:7,detail:'Light changes the solubility of this positive resist. The exposed portions remain until developer removes them.'}
+    };
+  }
+  function lessons(polarity='npn'){
+    const q=doping(polarity),out=[];
+    const add=(id,chapter,operation,title,summary,extra={})=>out.push({
+      id,chapter,phase:chapter,operation,title,short:title,verb:title,summary,
+      change:summary,process:summary,why:'Each step prepares a defined surface or pattern for the next operation.',
+      look:'Compare the 3D model, top view, and section; colored doped regions are parts of one silicon crystal.',
+      watch:'Only the operation described at this step changes the device.',metric:q.name+' · vertical planar epitaxial BJT',
+      detail:'Schematic educational dimensions and abrupt dopant boundaries. Real profiles, thermal budgets, film thicknesses, and recipes are process dependent.',
+      question:'Which part of the device does this step prepare?',answer:summary,focus:[],sources:[{...SOURCE}],...extra
+    });
+    const substrate='Collector foundation',base='Base formation',emitter='Emitter formation',contacts='Front contacts',metal='Separate E / B wiring',finish='Passivation and collector';
+    add('wafer',substrate,'inspect','Start with the collector substrate','A polished, heavily doped '+q.collector+' silicon wafer will become the low-resistance collector foundation.',{
+      short:'Start with the collector wafer',process:'This discrete vertical '+q.name+' flow selects a '+q.collector+' substrate. The working surface is its top face; the collector electrode will eventually be on its underside.',
+      why:'A vertical BJT can send collector current through the wafer to a back-side electrode.',look:'The starting substrate is the lower, darker block. The lightly doped epitaxial collector has not yet been grown.',
+      watch:'The substrate is collector material, not an isolated MOS body.',metric:'Collector substrate: '+q.collector,focus:['bjt_collector'],
+      detail:q.p?'This is a conceptual polarity-mirrored PNP counterpart to the illustrated planar epitaxial NPN process. Practical PNP dopant species, diffusion rates, thermal schedules, and contacts require their own recipes. It is not a lateral CMOS PNP.':'This is a discrete vertical planar epitaxial NPN. Junction isolation and buried collectors used in some integrated bipolar processes are outside this particular architecture.',
+      question:'Where will the collector terminal be?',answer:'On the back of the wafer, beneath the heavily doped collector substrate.'});
+    add('bjt_clean',substrate,'clean','Prepare the epitaxial surface','Clean the wafer and prepare its crystalline surface for epitaxial silicon growth.',{short:'Prepare the epitaxial surface',why:'Contamination can disrupt single-crystal growth.',change:'Surface contamination is removed; the collector substrate keeps its shape.',focus:['bjt_collector']});
+    add('bjt_epi',substrate,'deposit','Grow the collector epitaxy','A lightly doped '+q.epi+' single-crystal layer grows on the heavily doped collector substrate.',{short:'Grow the collector epitaxy',process:'Epitaxial silicon grows in crystallographic alignment with the substrate. In-situ doping sets its lower '+(q.p?'acceptor':'donor')+' concentration.',why:'The lightly doped collector region can support a larger depletion region and reverse voltage than the heavily doped substrate alone.',change:'A lighter '+q.epi+' collector layer now extends above the '+q.collector+' substrate.',look:'Find the two same-polarity collector regions. Their boundary is a change in doping concentration, not a p–n junction.',question:'Is there a p–n junction between substrate and epitaxy?',answer:'No. Both are '+(q.p?'p':'n')+' type; their doping concentrations differ.',focus:['bjt_epi','bjt_collector']});
+    add('bjt_oxide',substrate,'oxidize','Grow the diffusion-mask oxide','Grow a continuous SiO₂ film over the epitaxial collector surface.',{short:'Grow the mask oxide',process:'Thermal oxidation forms a surface oxide. This robust film will carry the base and emitter windows through dopant introduction.',why:'Patterned oxide masks the dopant steps after temporary resist has been stripped.',detail:'Oxide thickness and implant energy must be chosen together so protected areas block the selected implant. Silicon consumption is omitted from the schematic geometry.',focus:['bjt_oxide','bjt_epi']});
+    function litho(prefix,chapter,target,windowText,{metalKeep=false,pad=false}={}){
+      const pattern=pad?'pad':target;
+      const key='bjt_'+prefix,mask=key,focus=pad?['bjt_cap']:metalKeep?['bjt_metal_blanket']:['bjt_oxide'];
+      add(key+'_resist',chapter,'coat','Coat positive resist for '+target,'Spin a continuous positive-resist film over the '+(pad?'passivation':metalKeep?'front metal':'oxide')+'.',{
+        short:'Coat the '+pattern+' resist',mask,change:'A temporary resist blanket covers the working surface.',process:'A uniform photosensitive resist film coats the surface. No pattern has been developed yet.',why:'Resist records the reticle image and protects selected areas during etching.',focus:['resist',...focus]});
+      add(key+'_softbake',chapter,'bake','Soft-bake the '+target+' resist','Remove solvent and stabilize the resist film before exposure.',{short:'Soft-bake the '+pattern+' resist',mask,change:'The resist chemistry is prepared; its geometry remains continuous.',process:'A controlled low-temperature soft bake reduces solvent. This is distinct from the later high-temperature dopant drive-in.',why:'Stable resist supports reproducible exposure and development.',focus:['resist']});
+      add(key+'_align',chapter,'align','Align the '+target+' reticle','Register the '+target+' optical pattern to the wafer.',{short:'Align the '+pattern+' reticle',mask,
+        process:'Align the optical reticle so '+windowText+'. The suspended reticle in the model is a teaching aid belonging to the exposure tool.',
+        change:'The reticle is registered; the continuous resist film is unchanged.',why:prefix==='emitter'?'The emitter window must stay inside the already formed base.':prefix==='contact'?'The emitter contact must land inside the emitter while the base contact lands outside it.':prefix==='pad'?'Each passivation opening must land fully inside its own metal pad.':'The optical pattern must be placed accurately before exposure.',focus:['resist',...focus]});
+      add(key+'_expose',chapter,'expose','Expose the '+target+' resist','Light changes the positive resist only under transparent reticle regions.',{short:'Expose the '+pattern+' resist',mask,
+        process:metalKeep?'Opaque reticle shapes protect the two wanted metal routes; light exposes the surrounding resist.':'Transparent reticle windows expose the resist over the future openings; the surrounding resist is shielded.',
+        change:'Exposed resist changes color, but all resist is still physically present.',why:'Exposure defines which resist will dissolve during development.',question:'Does exposure itself make a physical opening?',answer:'No. Exposed positive resist must be removed by the following development step.',focus:['exposed','resist']});
+      add(key+'_develop',chapter,'develop','Develop the '+target+' pattern','Dissolve the exposed positive resist and leave its protected regions.',{short:'Develop the '+pattern+' resist',mask,
+        change:metalKeep?'Only resist above the two wanted metal routes remains.':'The resist now has '+target+' openings; the underlying '+(pad?'passivation':'oxide')+' remains intact.',
+        process:metalKeep?'Developer removes the exposed resist around the protected emitter and base routes.':'Developer clears exposed resist at the windows, stopping on the underlying film.',why:'The patterned resist transfers the optical image into a physical etch mask.',focus:['resist',...focus]});
+      add(key+'_etch',chapter,'etch',metalKeep?'Separate the emitter and base metal':pad?'Etch the bond-pad openings':'Etch the '+target+' oxide windows',
+        metalKeep?'Etch unprotected front metal away, leaving two electrically separate routes.':pad?'Etch passivation over the two metal pads, stopping on their metal surfaces.':'Remove oxide through the '+target+' resist openings to expose the silicon beneath.',{
+        short:metalKeep?'Separate E and B metal':pad?'Open the bond pads':prefix==='contact'?'Open the contact windows':'Open the '+target+' window',mask,
+        process:metalKeep?'The resist-covered metal remains, including both contact landings. The exposed blanket between the routes is removed.':pad?'The selective dielectric etch removes cap material at the pad windows; metal remains at their bottoms.':'A selective oxide etch transfers the openings into SiO₂. It stops at silicon; the silicon is not carved into transistor-shaped trenches.',
+        why:metalKeep?'Emitter and base must be independent terminals.':pad?'Wire bonding requires exposed metal, while the remaining passivation protects the device.':prefix==='contact'?'The openings let metal contact emitter and base while oxide insulates the other silicon surfaces.':'The oxide will block dopants outside the windows after resist removal.',
+        look:prefix==='contact'?'The left opening reaches the emitter; the right opening reaches the base shoulder. Both are insulated from the collector.':pad?'Use the top view to see the two pad openings near the front edge of the model.':'Compare the openings with the reticle pattern from the preceding steps.',
+        focus:metalKeep?['bjt_metal_e','bjt_metal_b','resist']:focus});
+      add(key+'_strip',chapter,'strip','Strip the '+target+' resist','Remove all remaining temporary photoresist.',{short:'Strip the '+pattern+' resist',mask,
+        change:'The resist disappears; the etched '+(metalKeep?'metal routes':pad?'passivation openings':'oxide windows')+' remain.',
+        process:'Strip the resist with a compatible process, preserving the transferred pattern.',
+        why:prefix==='base'||prefix==='emitter'?'Organic photoresist must be removed before the later high-temperature dopant activation and drive-in. The oxide now provides the durable mask.':'Resist is a temporary patterning film and is not part of the finished transistor.',focus});
+      add(key+'_clean',chapter,'clean','Clean after '+target+' patterning','Remove strip and etch residues before the next process.',{short:metalKeep?'Clean the metal routes':pad?'Clean the bond pads':prefix==='contact'?'Clean the contact windows':'Clean the '+target+' window',mask,
+        change:'Residues are removed; the patterned geometry stays the same.',process:'A compatible surface preparation removes contamination while retaining the intended oxide, silicon, and metal pattern.',why:prefix==='contact'?'Clean silicon contact landings support low-resistance metal connections.':'A clean surface supports the next deposition or dopant step.',focus});
+    }
+    litho('base',base,'base','the broad base window defines the future active device');
+    add('bjt_base_implant',base,'implant','Introduce the base dopant','Implant '+q.baseDopant+' through the open oxide window into the collector epitaxy.',{short:'Implant the base dopant',mask:'bjt_base',change:'A shallow base-dopant distribution appears inside the existing epitaxial silicon.',process:'The resist has already been stripped. The patterned oxide blocks the selected implant outside the base window.',why:'The base must have the opposite conductivity type to the collector.',watch:'Doping modifies silicon; it does not deposit a separate solid slab.',metric:'Base dopant: '+q.baseDopant,focus:['bjt_base_seed','bjt_oxide'],question:'Which film masks this implant?',answer:'The patterned oxide. The photoresist has been removed.'});
+    add('bjt_base_drive',base,'anneal','Activate and drive in the base','Activate the dopant and diffuse it deeper and laterally to form the '+q.base+' base; regrow surface oxide.',{short:'Drive in the base dopant',change:'The shallow implant becomes a broader, deeper active base, and oxide closes the base window.',process:'A thermal cycle repairs implant damage and activates and redistributes dopants. An oxidizing portion regrows oxide at the opened surface.',why:'The base–collector junction is established inside the epitaxial layer.',look:'Collector silicon remains below and around the base. The base does not reach the heavily doped substrate.',detail:'Base depth and lateral spreading are schematic. The thermal cycle is chosen with the later emitter process in mind. Reoxidation is grouped with drive-in; no resist is present.',focus:['bjt_base','bjt_epi','bjt_oxide'],question:'Where is the base–collector junction?',answer:'Along the boundary of the '+q.base+' base and the surrounding '+q.epi+' collector epitaxy.'});
+    litho('emitter',emitter,'emitter','the small emitter window lies entirely inside the base');
+    add('bjt_emitter_implant',emitter,'implant','Introduce the emitter dopant','Introduce a high dose of '+q.emitterDopant+' through the smaller oxide window.',{short:'Implant the emitter dopant',mask:'bjt_emitter',change:'A shallow emitter-dopant distribution appears only inside the base.',process:'An oxide-masked implant introduces the emitter dopant into the base surface; the resist is already gone.',why:'The emitter must share the collector polarity and have high doping for efficient carrier injection.',look:'The implant window is smaller than the base. Base material remains beneath and beside it.',metric:'Emitter: '+q.emitter+' after activation',focus:['bjt_emitter_seed','bjt_base'],detail:'The displayed donor / acceptor choices illustrate polarity. Production emitter recipes may use implantation or diffusion sources and are not identical between NPN and PNP.'});
+    add('bjt_emitter_drive',emitter,'anneal','Form the shallow emitter junction','Activate and redistribute the emitter dopant, forming a shallow '+q.emitter+' emitter; regrow surface oxide.',{short:'Form the emitter junction',change:'A shallow active emitter is nested in the deeper base, with oxide again covering the top.',process:'A controlled thermal budget activates the emitter while retaining a base layer between emitter and collector.',why:'The completed vertical stack must be '+(q.p?'p⁺–n–p⁻':'n⁺–p–n⁻')+' beneath the emitter.',look:'Inspect the section: emitter at the top, a continuous base layer beneath it, and collector epitaxy below the base.',watch:'If the emitter reached the collector, the intended two-junction BJT structure would be lost.',focus:['bjt_emitter','bjt_base','bjt_epi'],question:'What prevents a direct emitter-to-collector short?',answer:'The intervening base layer remains between the shallow emitter and deeper collector.'});
+    litho('contact',contacts,'contact','one window lands on the emitter and the other on the exposed base shoulder');
+    add('bjt_metal_deposit',metal,'deposit','Deposit front contact metal','Deposit metal across the front surface and into the emitter and base contact windows.',{short:'Deposit the front metal',change:'The blanket metal touches the emitter and base through their separate oxide openings, temporarily joining them.',process:'A compatible contact / metallization stack is deposited. The thin contact stack is represented as one metal material, including the landings.',why:'Metal provides low-resistance access to the two silicon regions and will be patterned into separate wires.',watch:'The blanket is not the finished wiring: the next lithography and etch cycle separates emitter and base.',detail:'Contact interface preparation, stack composition, and any contact anneal are process dependent. A dedicated base-contact enhancement implant is omitted from this simplified flow.',focus:['bjt_metal_blanket','bjt_metal_e','bjt_metal_b']});
+    litho('metal',metal,'metal','the protected shapes retain separate emitter and base routes',{metalKeep:true});
+    add('bjt_contact_anneal',metal,'anneal','Condition the metal contacts','Use the metallization-compatible contact treatment to establish the intended electrical interfaces.',{short:'Treat the metal contacts',change:'Contact properties change; the two separate metal routes retain their geometry.',process:'A controlled low-temperature contact anneal or equivalent treatment is chosen for the actual metal / silicon stack.',why:'The emitter and base terminals require stable, low-resistance contact interfaces.',detail:'This treatment is not the earlier high-temperature dopant drive-in. Its temperature and chemistry depend on the selected metallization; the model does not specify a production recipe.',focus:['bjt_metal_e','bjt_metal_b']});
+    add('bjt_passivation',finish,'deposit','Protect the front surface','Deposit a protective dielectric over the surface and both metal routes.',{short:'Protect the front surface',change:'Passivation initially covers the emitter and base bond pads completely.',process:'A protective dielectric layer covers the device and interconnects. The next mask opens only the bond pads.',why:'The cap protects the surface and wiring from contamination and handling.',watch:'Covered metal cannot yet be wire bonded: the pad-opening steps still need to happen.',focus:['bjt_cap']});
+    litho('pad',finish,'bond pads','each opening lies inside its own emitter or base metal pad',{pad:true});
+    add('bjt_backgrind',finish,'cmp','Thin the collector substrate from the back','Support the protected front surface and remove part of the back-side collector substrate.',{short:'Thin the collector substrate',change:'The dark collector substrate becomes thinner from its underside. The active front junctions stay intact.',process:'Back grinding followed by an appropriate finishing process reduces wafer thickness. Temporary front protection and handling support are grouped into this operation.',why:'Thinning reduces the vertical path through the heavily doped collector and prepares the wafer for assembly.',look:'Compare the lower substrate face with the preceding step; it moves upward while the front layers stay fixed.',detail:'The schematic shows a modest reduction for readability. Grinding damage removal, support release, and mechanical limits are process dependent.',focus:['bjt_collector']});
+    add('bjt_backclean',finish,'clean','Prepare the back-side contact surface','Clean and prepare the newly thinned collector surface for metallization.',{short:'Prepare the rear contact',change:'The back surface is prepared; the completed front-side device is preserved.',process:'Back-side surface preparation removes grinding residues and unwanted surface films before contact deposition.',why:'The rear metal must contact the heavily doped collector substrate reliably.',focus:['bjt_collector']});
+    add('bjt_backmetal',finish,'deposit','Add the rear collector electrode','Deposit a back-side metal contact on the heavily doped collector substrate.',{short:'Add the collector electrode',change:'A continuous rear electrode provides the third terminal: collector.',process:'A suitable back-side metal stack is deposited and treated as required by the contact and die-attach process. The stack is grouped into one schematic layer.',why:'The vertical collector connects downward through the epitaxy and substrate to this back electrode.',look:'Emitter and base are separate pads on top; collector is the metal sheet underneath.',focus:['bjt_backmetal','bjt_collector']});
+    add('bjt_checkpoint',finish,'test','Inspect the completed '+q.name+' structure','The finished device has two separate front pads and one rear collector electrode, ready for wafer-level electrical screening.',{short:'Inspect the completed '+q.name,change:'The device structure is complete; inspection and the following wafer test do not add films.',process:'Trace E from its front pad into the shallow emitter; B from its other front pad to the base shoulder; and C from the rear electrode through the collector substrate and epitaxy.',why:'Correct junction nesting and separate contacts are prerequisites for transistor action.',look:'Use section and transparency to confirm the base remains below the emitter. Use top view to find the two passivation openings.',watch:q.p?'In forward-active PNP operation, the emitter–base junction is forward biased and the collector–base junction is reverse biased; holes are the main injected carriers.':'In forward-active NPN operation, the emitter–base junction is forward biased and the collector–base junction is reverse biased; electrons are the main injected carriers.',metric:'Three terminals · two p–n junctions',detail:'Wafer testing, dicing, die attach, wire bonding, encapsulation, and final screening follow. For this vertical discrete device, conductive die attach can connect the rear collector to its package lead.',focus:['bjt_emitter','bjt_base','bjt_epi','bjt_metal_e','bjt_metal_b','bjt_backmetal'],question:'Which terminal uses the back surface?',answer:'The collector. The emitter and base use separate front metal pads.'});
+    for(const lesson of out){
+      if(lesson.id==='bjt_base_implant')lesson.implantMaterial='bjt_base_seed';
+      if(lesson.id==='bjt_emitter_implant')lesson.implantMaterial='bjt_emitter_seed';
+      if(['bjt_backgrind','bjt_backclean','bjt_backmetal'].includes(lesson.id))lesson.side='back';
+    }
+    return out;
+  }
+  const stageIds=lessons('npn').map(d=>d.id);
+  function geometry(id,polarity='npn'){
+    const i=typeof id==='number'?Math.trunc(id):stageIds.indexOf(id);
+    if(!Number.isFinite(i)||i<0||i>=stageIds.length)return [];
+    const at=id=>i>=stageIds.indexOf(id),before=id=>i<stageIds.indexOf(id),g=[];
+    const append=vols=>vols.forEach(v=>g.push(...minus([v],g)));
+    const substrateBottom=at('bjt_backgrind')?-.95:-1.2;
+    g.push(box(-3,3,-2,2,substrateBottom,-.65,'bjt_collector'));
+    if(at('bjt_epi')){
+      let dopants=[];
+      if(at('bjt_base_implant')){
+        const b=at('bjt_base_drive')?box(-1.7,1.7,-1.27,1.27,-.38,0,'bjt_base'):box(...maskRegions.bjt_base[0],-.11,0,'bjt_base_seed');
+        dopants=[b];
+        if(at('bjt_emitter_implant')){
+          const e=at('bjt_emitter_drive')?box(-1.01,-.09,-.71,.71,-.13,0,'bjt_emitter'):box(...maskRegions.bjt_emitter[0],-.055,0,'bjt_emitter_seed');
+          dopants=[...minus([b],[e]),e];
+        }
+      }
+      g.push(...minus([box(-3,3,-2,2,-.65,0,'bjt_epi')],dopants),...dopants);
+    }
+    if(at('bjt_oxide')){
+      let holes=[];
+      if(at('bjt_base_etch')&&before('bjt_base_drive'))holes=footprints('bjt_base',0,.12,'bjt_oxide');
+      if(at('bjt_emitter_etch')&&before('bjt_emitter_drive'))holes=footprints('bjt_emitter',0,.12,'bjt_oxide');
+      if(at('bjt_contact_etch'))holes=footprints('bjt_contact',0,.12,'bjt_oxide');
+      g.push(...minus([box(-3,3,-2,2,0,.12,'bjt_oxide')],holes));
+    }
+    function photo(key,z0,z1){
+      if(before(key+'_resist')||at(key+'_strip'))return;
+      const blanket=box(-3,3,-2,2,z0,z1,'resist'),shapes=footprints(key,z0,z1,'resist');
+      const protectedFilm=openMasks.includes(key)?minus([blanket],shapes):shapes;
+      if(before(key+'_expose')){append([blanket]);return;}
+      append(protectedFilm);
+      if(before(key+'_develop'))append(minus([{...blanket,m:'exposed'}],protectedFilm));
+    }
+    ['bjt_base','bjt_emitter','bjt_contact'].forEach(key=>photo(key,.12,.30));
+    if(at('bjt_metal_deposit')){
+      const contacts=footprints('bjt_contact',0,.12,'bjt_metal_e').map((b,j)=>({...b,m:j?'bjt_metal_b':'bjt_metal_e'}));
+      g.push(...contacts);
+      if(before('bjt_metal_etch'))g.push(box(-3,3,-2,2,.12,.28,'bjt_metal_blanket'));
+      else g.push(...footprints('bjt_metal',.12,.28,'bjt_metal_e').map((b,j)=>({...b,m:j?'bjt_metal_b':'bjt_metal_e'})));
+    }
+    photo('bjt_metal',.28,.46);
+    if(at('bjt_passivation')){
+      let cap=minus([box(-3,3,-2,2,.12,.42,'bjt_cap')],g);
+      if(at('bjt_pad_etch'))cap=minus(cap,footprints('bjt_pad',.28,.42,'bjt_cap'));
+      g.push(...cap);
+    }
+    photo('bjt_pad',.42,.60);
+    if(at('bjt_backmetal'))g.push(box(-3,3,-2,2,substrateBottom-.06,substrateBottom,'bjt_backmetal'));
+    return g;
+  }
+  const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function guide(d,polarity='npn'){
+    const q=doping(polarity),m=materials(polarity),op=d.operation||'inspect',isPad=d.id.startsWith('bjt_pad_'),sectionY=isPad?-1.44:0;
+    const geom=geometry(d.id,polarity),section=geom.filter(b=>b.y0<=sectionY&&b.y1>sectionY).sort((a,b)=>a.z0-b.z0);
+    const px=x=>24+(x+3)*38.5,pz=z=>139-z*43;
+    let drawing=section.map(b=>`<rect x="${px(b.x0)}" y="${pz(b.z1)}" width="${(b.x1-b.x0)*38.5}" height="${(b.z1-b.z0)*43}" fill="${m[b.m].color}" stroke="${m[b.m].color}" stroke-width=".25"/>`).join('');
+    const currentTop=Math.max(...geom.map(b=>b.z1)),surface=pz(currentTop);
+    const line=(text,y=211)=>`<text x="140" y="${y}" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="9.5" fill="#525b67">${esc(text)}</text>`;
+    const arrow=(x,y0,y1,color='#7b1113')=>{const tail=y1+(y1>=y0?-5:5);return `<path d="M${x} ${y0}V${y1}M${x-3} ${tail}L${x} ${y1}L${x+3} ${tail}" fill="none" stroke="${color}" stroke-width="1.6"/>`;};
+    const arrows=(xs,y0,y1,color)=>`<g class="guide-wash">${xs.map(x=>arrow(x,y0,y1,color)).join('')}</g>`;
+    let desc=d.process,title=d.verb||d.title;
+    if(op==='align'||op==='expose'){
+      const mask=d.mask,regions=maskRegions[mask]||[],r=regions.filter(a=>a[2]<=sectionY&&a[3]>sectionY),whole=box(-3,3,-2,2,0,1,'mask');
+      const opaque=openMasks.includes(mask)?minus([whole],regions.map(a=>box(...a,0,1,'mask'))):regions.map(a=>box(...a,0,1,'mask'));
+      drawing+=`<g class="${op==='align'?'guide-align':'guide-pulse'}">${opaque.filter(b=>b.y0<=sectionY&&b.y1>sectionY).map(b=>`<rect x="${px(b.x0)}" y="63" width="${(b.x1-b.x0)*38.5}" height="7" fill="#4e4358"/>`).join('')}</g>`;
+      if(op==='expose'){
+        const clear=openMasks.includes(mask)?r.map(a=>box(...a,0,1,'mask')):minus([whole],regions.map(a=>box(...a,0,1,'mask'))).filter(b=>b.y0<=sectionY&&b.y1>sectionY);
+        drawing+=`<g class="guide-pulse">${clear.map(b=>`<rect x="${px(b.x0)}" y="70" width="${(b.x1-b.x0)*38.5}" height="${Math.max(1,surface-70)}" fill="#f4cf63" opacity=".3"/>`).join('')}</g>`;
+        drawing+=line('Light changes chemistry; developer opens resist',40);
+      }else drawing+=line('Reticle above wafer · optical alignment',40);
+    }else if(op==='implant'){
+      const region=maskRegions[d.mask][0],xs=[region[0]+.13,(region[0]+region[1])/2,region[1]-.13].map(px);
+      drawing+=arrows(xs,65,134,d.id==='bjt_base_implant'?m.bjt_base.color:m.bjt_emitter.color)+line('Oxide masks ions · resist already removed',43);
+    }else if(op==='anneal'||op==='bake'){
+      drawing+=`<g class="guide-heat" fill="none" stroke="#c68157" stroke-width="1.5">${[52,104,157,210].map(x=>`<path d="M${x} ${surface-6}q-6-7 0-14t0-14"/>`).join('')}</g>`;
+      drawing+=line(op==='bake'?'Soft bake removes resist solvent':d.id==='bjt_contact_anneal'?'Contact treatment · controlled thermal budget':'Activate / diffuse dopants; regrow oxide',45);
+    }else if(op==='clean'){
+      const back=d.id==='bjt_backclean';
+      drawing+=back?`<g class="guide-polish" stroke="#66b0c2" stroke-width="2"><path d="M35 188H245M45 195H235"/></g>`:arrows([42,80,118,156,194,232],68,surface-4,'#66b0c2');
+      drawing+=line(back?'Prepare the rear collector surface':'Clean surface · physical stack retained',43);
+    }else if(op==='cmp'){
+      drawing+=`<g class="guide-polish"><rect x="55" y="186" width="170" height="8" rx="3" fill="#92a0aa"/><path d="M140 203v-7m-3 5 3-5 3 5" fill="none" stroke="#7b1113" stroke-width="1.5"/></g>`+line('Remove substrate from its back face',43);
+    }else if(op==='strip'){
+      drawing+=`<g class="guide-lift"><rect x="45" y="${surface-17}" width="190" height="6" fill="#ed96ac" opacity=".6"/>${arrow(140,surface-20,surface-40)}</g>`+line('Temporary resist removed; etched pattern stays',43);
+    }else if(op==='etch'||op==='develop'){
+      const r=maskRegions[d.mask]||[],xs=(openMasks.includes(d.mask)?r.map(a=>px((a[0]+a[1])/2)):[47,134,237]);
+      drawing+=arrows(xs,66,surface-2,op==='develop'?'#66b0c2':'#7b1113')+line(op==='develop'?'Developer removes exposed positive resist':d.mask==='bjt_metal'?'Metal etch separates the two front terminals':isPad?'Cap etch stops on the metal pad':'Oxide etch opens silicon windows',42);
+    }else if(op==='deposit'||op==='coat'||op==='oxidize'){
+      if(d.id==='bjt_backmetal')drawing+=`<g class="guide-pulse" fill="#aab4c4">${[49,88,127,166,205,244].map(x=>`<circle cx="${x}" cy="194" r="2"/>`).join('')}</g>`+line('Rear metal touches the collector substrate',43);
+      else drawing+=arrows([48,88,128,168,208,244],68,surface-3,op==='coat'?'#c77a93':'#b59c65')+line(d.id==='bjt_epi'?'Single-crystal collector epitaxy grows upward':op==='oxidize'?'Grow oxide on the silicon surface':op==='coat'?'Continuous resist coating; no pattern yet':'Add the indicated surface film',43);
+    }else{
+      drawing+=`<g class="guide-pulse">${atLeast(d.id,'bjt_metal_etch')?`<path d="M${px(-.55)} 75V120m${px(.95)-px(-.55)}-45V120" fill="none" stroke="#7b1113" stroke-width="1.5"/>`:''}</g>`;
+      drawing+=line(d.id==='bjt_checkpoint'?q.name+' · front E and B / rear C':q.name+' · vertical collector foundation',43);
+    }
+    if(atLeast(d.id,'bjt_emitter_drive')&&!isPad){
+      drawing+=`<path d="M${px(-.55)} 136L86 101H56M${px(.97)} 143L208 101H232" fill="none" stroke="#5f6672" stroke-width=".8"/><text x="25" y="100" font-family="Inter,Arial,sans-serif" font-size="9" fill="#505762">${esc(q.emitter+' E')}</text><text x="235" y="100" font-family="Inter,Arial,sans-serif" font-size="9" fill="#505762">${esc(q.base+' B')}</text>`;
+    }
+    drawing+=line(isPad?'Section through pad openings (y = −1.44)':'Section through E / B contact sites (y = 0)',211);
+    return `<section class="fab-operation-guide" aria-label="${esc(title)}"><span class="fab-kicker">This operation, close up</span><h3>${esc(title)}</h3>${d.mask?`<span class="fab-mask-tag">${esc(maskNames[d.mask])}</span>`:''}<svg viewBox="0 0 280 224" role="img" aria-label="${esc(d.summary)}"><title>${esc(title)}</title>${drawing}</svg><p>${esc(desc)}</p><span class="fab-diagram-note">Geometry-matched section · dopant profiles and thicknesses exaggerated</span></section>`;
+  }
+  function atLeast(id,other){return stageIds.indexOf(id)>=stageIds.indexOf(other);}
+  function labels(id,polarity='npn'){
+    const q=doping(polarity),items=[];
+    if(atLeast(id,'bjt_emitter_drive'))items.push({material:'bjt_emitter',text:'Emitter · '+q.emitter,point:[-.55,0,-.065]});
+    if(atLeast(id,'bjt_base_drive'))items.push({material:'bjt_base',text:'Base · '+q.base,point:[.45,0,-.22]});
+    if(atLeast(id,'bjt_epi'))items.push({material:'bjt_epi',text:'Collector · '+q.epi,point:[1.9,0,-.48]});
+    else if(id==='wafer'||id==='bjt_clean')items.push({material:'bjt_collector',text:'Collector substrate · '+q.collector,point:[0,0,-.65]});
+    if(atLeast(id,'bjt_backmetal'))items.push({material:'bjt_backmetal',text:'C · rear electrode',point:[2.3,0,-.98]});
+    return items;
+  }
+  global.FabBJT={materials,lessons,geometry,guide,labels,maskRegions,maskNames,openMasks,stageIds};
+})(typeof window!=='undefined'?window:globalThis);
+</script>
+  <script id="bjt-packaging">
+/* Discrete vertical BJT assembly. All visible components are closed solids.
+   FabBJTPackage.scene is the polygon renderer API; geometry supplies bounds
+   boxes for the host's material controls and camera framing. */
+window.FabBJTPackage = (() => {
+  'use strict';
+  const EPS=1e-7, TAU=Math.PI*2;
+  const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+  const ease=v=>{v=clamp(v);return v*v*(3-2*v);};
+  const lerp=(a,b,t)=>a+(b-a)*t;
+  const phase=(p,a,b)=>ease((p-a)/(b-a));
+  const prefix='bjt_pkg_';
+  const materials={
+    bjt_pkg_si:{name:'BJT collector silicon',color:'#719ab5',rank:0,detail:'The silicon back side is the collector of this vertical discrete BJT. One small die contains one transistor.'},
+    bjt_pkg_n:{name:'n-type device region',color:'#38b793',rank:0,detail:'Schematic donor-doped silicon, enlarged in the selected die. The NPN emitter is n-type; the PNP base is n-type.'},
+    bjt_pkg_p:{name:'p-type device region',color:'#cf719b',rank:0,detail:'Schematic acceptor-doped silicon, enlarged in the selected die. The NPN base is p-type; the PNP emitter is p-type.'},
+    bjt_pkg_cap:{name:'Surface passivation',color:'#8eafc6',rank:1,detail:'Protects the die surface while separate emitter and base pad windows remain accessible.'},
+    bjt_pkg_pad:{name:'Emitter / base pad metal',color:'#edb66d',rank:2,detail:'Two separate pads on the front face receive the emitter and base bond wires. The collector contact is on the back.'},
+    bjt_pkg_back:{name:'Backside collector metal',color:'#c3c9d4',rank:0,detail:'A continuous conductive coating joins the back of the die to the collector attachment.'},
+    bjt_pkg_lead:{name:'Three isolated leadframe terminals',color:'#c4b390',rank:0,detail:'Two isolated outer leads receive E and B wire bonds; the center lead joins the collector paddle. This pin assignment is illustrative, not a package standard.'},
+    bjt_pkg_attach:{name:'Conductive die attachment',color:'#c7abb5',rank:0,detail:'Conductive die-attach material provides both an electrical collector connection and a thermal path to the paddle.'},
+    bjt_pkg_wire:{name:'Emitter / base bond wires',color:'#d9ba75',rank:2,detail:'Two separate wire loops join the front emitter and base pads to different external leads.'},
+    bjt_pkg_mold:{name:'Molded encapsulant',color:'#555a64',rank:4,detail:'Protects the die and wires. The drawing uses a hollow inspection shell; actual molding compound fills the space around the internal assembly. Use Cutaway or transparency to inspect it.'},
+    bjt_pkg_carrier:{name:'Dicing carrier',color:'#c7dce2',rank:0,detail:'A temporary carrier holds separated dies in position during singulation and pickup.'},
+    bjt_pkg_tool:{name:'Assembly equipment',color:'#8b96a7',rank:0,detail:'Simplified saw, pickup tip, or wire-bonding tool. Dimensions and motions are illustrative.'},
+    bjt_pkg_test:{name:'Electrical tester / probe',color:'#866078',rank:0,detail:'Probe needles or a package fixture make electrical contact for testing.'},
+    bjt_pkg_pass:{name:'Example passing test result',color:'#79a88e',rank:0,detail:'A visual test-map annotation, not a prediction of manufacturing yield.'},
+    bjt_pkg_fail:{name:'Example flagged test result',color:'#c77d87',rank:0,detail:'A flagged die in the example wafer test map is not chosen for assembly.'}
+  };
+  const sources={
+    bjt:{title:'Nexperia · BJT Handbook: production process and packages',url:'https://assets.nexperia.com/documents/brochure/nexperia_BJT_Handbook_V2_240425_lowres.pdf'},
+    assembly:{title:'Amkor · Leadframe packaging',url:'https://amkor.com/packaging/leadframe/'},
+    test:{title:'Amkor · Wafer probe and test services',url:'https://amkor.com/services/'},
+    dice:{title:'DISCO · Wafer thinning and dicing',url:'https://www.disco.co.jp/global_recruit/sgp/disco/business.html'}
+  };
+  const definitions=[
+    {id:'bjt_wafer_complete',chapter:'BJT wafer finishing',scope:'wafer',operation:'inspect',short:'Reveal the BJT wafer',title:'Many individual BJTs share one wafer',summary:'Zoom out from one vertical transistor to a wafer patterned with repeated BJT dies.',process:'Each tile has separate front emitter and base pads and a backside collector contact.',why:'Wafer processing makes many copies before they become separate components.',look:'Find the two enlarged front pads on every repeated die.',watch:'One tile represents one discrete transistor. Die count, pad size, and wafer dimensions are schematic.',metric:'One wafer → many discrete BJT dies',focus:['si','cap','pad','back'],closeup:{before:'One finished vertical BJT',action:'Expand to the wafer view',after:'Repeated BJT dies cover the wafer.'}},
+    {id:'bjt_wafer_probe',chapter:'BJT wafer finishing',scope:'wafer',operation:'test',short:'Probe the BJT dies',title:'Check electrical behavior before assembly',summary:'The front probe pair touches E and B; a conductive chuck reaches the backside collector.',process:'Electrical measurements produce a test map that identifies dies suitable for assembly.',why:'The map lets pickup equipment select dies that meet the intended specifications.',look:'Follow the moving front probes and the collector chuck below the wafer.',watch:'Green and rose marks illustrate test-map records. The selected center die passes in this example.',metric:'E / B probes + backside C contact → die map',focus:['test','pad','back','pass','fail'],closeup:{before:'Finished dies on a whole wafer',action:'Contact E, B, and C and measure',after:'A map records the individual die results.'}},
+    {id:'bjt_wafer_dice',chapter:'BJT die preparation',scope:'wafer',operation:'dice',short:'Separate the dies',title:'Cut the streets between the BJTs',summary:'The saw follows the streets while a carrier holds the wafer pieces in place.',process:'Crossing cuts separate the patterned wafer into individual silicon dies.',why:'Each selected transistor must become a separate unit for package assembly.',look:'The blade travels through the lanes; the carrier remains below the separated pieces.',watch:'Cuts and lane widths are enlarged for visibility. Backside metal was prepared in the preceding device flow.',metric:'Processed wafer → separated BJT dies',focus:['si','carrier','tool'],closeup:{before:'A patterned wafer',action:'Dice the separation streets',after:'Individual dies remain supported on the carrier.'}},
+    {id:'bjt_die_pick',chapter:'BJT die preparation',scope:'die',operation:'pick',short:'Pick one tested BJT',title:'Lift one die with its front pads upward',summary:'A selected transistor die leaves the carrier, preserving the front and back orientation.',process:'A pickup tip lifts a passing die for attachment to its package paddle.',why:'The backside collector must face the conductive attachment; emitter and base remain accessible above.',look:'Inspect the two separate front pads and the silver collector coating underneath.',watch:'The enlarged die shows a schematic device region. Its layer thicknesses are not to scale.',metric:'Front: E and B · back: C',focus:['si','n','p','pad','back','tool'],closeup:{before:'Tested dies on a carrier',action:'Lift a selected die',after:'One BJT is ready for collector attachment.'}},
+    {id:'bjt_package_attach',chapter:'BJT package & test',scope:'package',operation:'attach',short:'Attach the collector',title:'Join the die back to the collector paddle',summary:'The face-up die lowers onto a conductive attachment on the center paddle.',process:'The backside metal joins the paddle through conductive die-attach material.',why:'This connection carries collector current and heat from the silicon into the leadframe.',look:'Trace C from the die back through the attachment to the center lead.',watch:'E and B leads stay isolated from the paddle. The illustrated E–C–B pin order is not a standard pinout.',metric:'Backside C → conductive attach → C lead',focus:['back','attach','lead','pad'],closeup:{before:'Face-up die and three separate leads',action:'Attach the collector back to the paddle',after:'The die has mechanical support and a collector connection.'}},
+    {id:'bjt_wire_bond',chapter:'BJT package & test',scope:'package',operation:'bond',short:'Wire-bond E and B',title:'Connect the two front pads independently',summary:'A bonding tool makes one loop from E and a second loop from B to the outer leads.',process:'Two fine wires provide independent emitter and base connections above the face-up die.',why:'The three transistor terminals must reach three electrically separate package leads.',look:'Follow the E loop to the left lead and the B loop to the right; neither touches the collector paddle.',watch:'Wire thickness and loop height are enlarged. E–C–B is the teaching layout, not a universal lead assignment.',metric:'E pad → E lead · B pad → B lead',focus:['wire','pad','lead','attach'],closeup:{before:'Collector-attached die with open front pads',action:'Bond the emitter and base wire loops',after:'All three transistor terminals reach the leadframe.'}},
+    {id:'bjt_package_mold',chapter:'BJT package & test',scope:'package',operation:'mold',short:'Mold the package',title:'Protect the connected die and wire loops',summary:'A charcoal package body encloses the die while the three leads remain accessible.',process:'Encapsulation protects the internal assembly; package finishing leaves the external terminals exposed.',why:'The small die and fragile wire loops need mechanical and environmental protection.',look:'Use Cutaway or lower the encapsulant opacity to follow the enclosed connections.',watch:'The body is a hollow inspection shell in this drawing; real compound fills around the die and wires. Leadframe trimming and forming are condensed.',metric:'Connected BJT + encapsulant → three-lead component',focus:['mold','wire','lead'],closeup:{before:'Exposed die and wire bonds',action:'Encapsulate and finish the package',after:'The assembly is protected with E, B, and C accessible.'}},
+    {id:'bjt_package_test',chapter:'BJT package & test',scope:'package',operation:'test',short:'Test the packaged BJT',title:'Check the completed three-terminal component',summary:'The test fixture contacts the external E, C, and B leads after assembly.',process:'Final electrical checks can include junction behavior, gain, leakage, and specified voltage limits.',why:'The completed component must satisfy its specifications through the package connections.',look:'Trace the three fixture contacts to the three leads, then use transparency to inspect their internal paths.',watch:'This is a schematic test sequence, with no quantitative measurements or simulated yield. Actual pin assignment comes from the chosen device datasheet.',metric:'Silicon → vertical BJT → tested packaged component',focus:['test','mold','lead','pass'],closeup:{before:'Completed three-lead package',action:'Measure through E, B, and C',after:'A tested discrete transistor completes this journey.'}}
+  ];
+  const ids=definitions.map(d=>d.id);
+  function lessons(polarity='npn'){
+    return definitions.map(d=>({...d,scene:'journey',visual:d.id,verb:d.short,phase:d.scope==='wafer'?'Finish and select the transistor dies':d.scope==='die'?'Follow one discrete transistor':'Connect, protect, and test the BJT',scale:d.scope==='wafer'?'Whole wafer · schematic':d.scope==='die'?'One BJT die · enlarged':'Discrete package · millimeter scale',change:d.closeup.after,detail:`An illustrative ${polarity.toUpperCase()} vertical discrete BJT. ${d.watch}`,question:'Which connection or protection does this operation add?',answer:d.why,focus:d.focus.map(m=>prefix+m),sources:[sources[d.operation==='dice'?'dice':d.operation==='test'?'test':d.scope==='package'?'assembly':'bjt']],closeup:{...d.closeup}}));
+  }
+  function normal(p){
+    for(let i=1;i<p.length-1;i++){
+      const a=p[i].map((v,j)=>v-p[0][j]),b=p[i+1].map((v,j)=>v-p[0][j]);
+      const n=[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],length=Math.hypot(...n);
+      if(length>EPS)return n.map(v=>v/length);
+    }
+    return [0,0,0];
+  }
+  function clean(p){const q=p.filter((v,i)=>!i||v.some((x,k)=>Math.abs(x-p[i-1][k])>EPS));if(q.length>1&&q[0].every((x,k)=>Math.abs(x-q[q.length-1][k])<EPS))q.pop();return q.length>2&&Math.hypot(...normal(q))>EPS?q:null;}
+  function clip(polys,slice){
+    const output=[],cap=[];
+    for(const poly of polys){
+      const q=[];
+      for(let i=0;i<poly.length;i++){
+        const a=poly[i],b=poly[(i+1)%poly.length],ia=a[1]>=slice-EPS,ib=b[1]>=slice-EPS;
+        if(ia)q.push(a);
+        if(ia!==ib){const t=(slice-a[1])/(b[1]-a[1]),v=a.map((n,k)=>lerp(n,b[k],t));v[1]=slice;q.push(v);if(!cap.some(w=>w.every((x,k)=>Math.abs(x-v[k])<EPS)))cap.push(v);}
+      }
+      const face=clean(q);if(face)output.push(face);
+    }
+    if(cap.length>2){const x=cap.reduce((s,v)=>s+v[0],0)/cap.length,z=cap.reduce((s,v)=>s+v[2],0)/cap.length;cap.sort((a,b)=>Math.atan2(a[2]-z,a[0]-x)-Math.atan2(b[2]-z,b[0]-x));if(normal(cap)[1]>0)cap.reverse();const face=clean(cap);if(face)output.push(face);}
+    return output;
+  }
+  function builder(options){
+    const faces=[],boxes=[],labels=[],bounds={x0:Infinity,x1:-Infinity,y0:Infinity,y1:-Infinity,z0:Infinity,z1:-Infinity};let serial=0;
+    function solid(polys,m){
+      polys=polys.map(clean).filter(Boolean);if(!polys.length)return;
+      m=m.startsWith(prefix)?m:prefix+m;const pts=polys.flat(),b={m};
+      for(const [a,i]of [['x',0],['y',1],['z',2]]){b[a+'0']=Math.min(...pts.map(p=>p[i]));b[a+'1']=Math.max(...pts.map(p=>p[i]));bounds[a+'0']=Math.min(bounds[a+'0'],b[a+'0']);bounds[a+'1']=Math.max(bounds[a+'1'],b[a+'1']);}
+      if(!['x','y','z'].every(a=>Number.isFinite(b[a+'0'])&&b[a+'1']-b[a+'0']>EPS))return;
+      boxes.push(b);const id=serial++;
+      for(const p of options.cut?clip(polys,Number(options.slice)||0):polys){const n=normal(p);faces.push({p,m,n,k:clamp(.8+.17*n[2]+.08*n[0]-.055*n[1],.56,1.08),solid:id});}
+    }
+    function prism(lo,hi,m){solid([lo.slice().reverse(),hi,...lo.map((v,i)=>[v,lo[(i+1)%lo.length],hi[(i+1)%lo.length],hi[i]])],m);}
+    function box(x0,x1,y0,y1,z0,z1,m){if(Math.min(x1-x0,y1-y0,z1-z0)<=EPS)return;const p=[[x0,y0],[x1,y0],[x1,y1],[x0,y1]];prism(p.map(v=>[...v,z0]),p.map(v=>[...v,z1]),m);}
+    function cylinder(x,y,z0,z1,r,m,n=40){const p=Array.from({length:n},(_,i)=>[x+r*Math.cos(TAU*i/n),y+r*Math.sin(TAU*i/n)]);prism(p.map(v=>[...v,z0]),p.map(v=>[...v,z1]),m);}
+    function rod(a,b,r,m,n=8){
+      const delta=b.map((v,i)=>v-a[i]),len=Math.hypot(...delta);if(len<EPS)return;const d=delta.map(v=>v/len),up=Math.abs(d[2])<.9?[0,0,1]:[0,1,0],cross=(u,v)=>[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];let u=cross(d,up);const l=Math.hypot(...u);u=u.map(v=>v/l);const v=cross(d,u);const ring=c=>Array.from({length:n},(_,i)=>c.map((x,k)=>x+r*(u[k]*Math.cos(TAU*i/n)+v[k]*Math.sin(TAU*i/n))));prism(ring(a),ring(b),m);
+    }
+    const label=(text,at,m)=>labels.push({text,at,m:prefix+m});
+    return {faces,boxes,labels,bounds,solid,prism,box,cylinder,rod,label};
+  }
+  const sites=[];
+  for(let row=-3;row<=3;row++)for(let col=-3;col<=3;col++){const x=col*.67,y=row*.67;if(Math.hypot(Math.abs(x)+.31,Math.abs(y)+.31)<2.65)sites.push({x,y,row,col,index:sites.length});}
+  function die(b,x,y,z,s,polarity,detail=true){
+    const B=(x0,x1,y0,y1,z0,z1,m)=>b.box(x+x0*s,x+x1*s,y+y0*s,y+y1*s,z+z0*s,z+z1*s,m);
+    B(-.78,.78,-.59,.59,0,.04,'back');B(-.78,.78,-.59,.59,.04,.32,'si');
+    if(detail){
+      const base=polarity==='pnp'?'n':'p',emitter=polarity==='pnp'?'p':'n';
+      // Partition the crystal, so the nested regions never interpenetrate:
+      // collector below/surrounding base, emitter inside the base surface.
+      B(-.78,.78,-.59,-.42,.32,.40,'si');B(-.78,.78,.42,.59,.32,.40,'si');
+      B(-.78,-.65,-.42,.42,.32,.40,'si');B(.65,.78,-.42,.42,.32,.40,'si');
+      B(-.65,.65,-.42,.42,.32,.37,base);
+      B(-.65,.65,-.42,-.22,.37,.40,base);B(-.65,.65,.30,.42,.37,.40,base);
+      B(-.65,-.61,-.22,.30,.37,.40,base);B(-.21,.65,-.22,.30,.37,.40,base);
+      B(-.61,-.21,-.22,.30,.37,.40,emitter);
+    }else B(-.78,.78,-.59,.59,.32,.40,'si');
+    // Four strips and a central bridge leave two real passivation windows.
+    B(-.78,.78,-.59,-.22,.40,.425,'cap');B(-.78,.78,.30,.59,.40,.425,'cap');B(-.78,-.61,-.22,.30,.40,.425,'cap');B(.62,.78,-.22,.30,.40,.425,'cap');B(-.21,.22,-.22,.30,.40,.425,'cap');
+    B(-.61,-.21,-.22,.30,.40,.445,'pad');B(.22,.62,-.22,.30,.40,.445,'pad');
+  }
+  function wafer(b,p,{probe=false,dicing=false}={},polarity){
+    if(dicing)b.cylinder(0,0,-.37,-.27,2.9,'carrier');
+    if(probe)b.cylinder(0,0,-.53,-.27,2.82,'test');
+    if(!dicing){b.cylinder(0,0,-.27,-.23,2.72,'back');b.cylinder(0,0,-.23,0,2.72,'si');}
+    else {
+      // Clip every die/street cell to the original wafer circle. The moving
+      // blade opens successive horizontal then vertical streets.
+      const circle=Array.from({length:64},(_,i)=>[2.72*Math.cos(TAU*i/64),2.72*Math.sin(TAU*i/64)]);
+      const clip2=(poly,axis,value,above)=>{const out=[];for(let i=0;i<poly.length;i++){const a=poly[i],c=poly[(i+1)%poly.length],ia=above?a[axis]>=value:a[axis]<=value,ib=above?c[axis]>=value:c[axis]<=value;if(ia)out.push(a);if(ia!==ib){const t=(value-a[axis])/(c[axis]-a[axis]);out.push(a.map((v,k)=>lerp(v,c[k],t)));}}return out;};
+      for(let row=-4;row<=4;row++)for(let col=-4;col<=4;col++){
+        const gx=.035*phase(p,.5+(col+4)/18,.5+(col+5)/18),gy=.035*phase(p,(row+4)/18,(row+5)/18);let poly=circle;
+        for(const [axis,value,above]of [[0,(col-.5)*.67+gx,true],[0,(col+.5)*.67-gx,false],[1,(row-.5)*.67+gy,true],[1,(row+.5)*.67-gy,false]])poly=clip2(poly,axis,value,above);
+        if(poly.length>=3){b.prism(poly.map(v=>[...v,-.27]),poly.map(v=>[...v,-.23]),'back');b.prism(poly.map(v=>[...v,-.23]),poly.map(v=>[...v,0]),'si');}
+      }
+    }
+    for(const site of sites){
+      // Only the patterned front is repeated; the silicon wafer stays whole
+      // until the dicing stage cuts through its substrate and backside metal.
+      const {x,y,index}=site;b.box(x-.29,x+.29,y-.28,y+.28,0,.025,'cap');b.box(x-.23,x-.04,y-.17,y+.15,.025,.05,'pad');b.box(x+.07,x+.23,y-.17,y+.15,.025,.05,'pad');
+      if(probe&&index<Math.floor(p*sites.length))b.box(x+.16,x+.27,y+.18,y+.27,.027,.055,index%13===3?'fail':'pass');
+    }
+    if(probe){
+      const t=p*(sites.length-1),idx=Math.floor(t),a=sites[Math.max(0,idx-1)],c=sites[idx],q=phase(t-idx,0,.5),x=lerp(a.x,c.x,q),y=lerp(a.y,c.y,q),lift=.24*Math.sin(q*Math.PI)+(p===1?.3:0);b.box(x-.45,x+.45,y+.28,y+.57,.68+lift,.88+lift,'test');for(const dx of[-.14,.15])b.rod([x+dx,y+.37,.68+lift],[x+dx,y,.05+lift],.025,'test');
+      b.label('E + B probes',[x,y,.99+lift],'test');b.label('C contact beneath wafer',[0,-2.45,-.39],'back');
+    } else if(dicing&&p<1){
+      const n=Math.min(15,Math.floor(p*16)),t=(p*16)%1,vertical=n>=8,street=((n%8)-3.5)*.67,travel=lerp(-2.8,2.8,t),x=vertical?street:travel,y=vertical?travel:street;
+      // The wheel reaches through the wafer and backside metal. A short
+      // cylinder along x or y gives a correctly oriented closed saw blade.
+      b.rod(vertical?[x-.026,y,.10]:[x,y-.026,.10],vertical?[x+.026,y,.10]:[x,y+.026,.10],.40,'tool',24);
+      b.box(x-.1,x+.1,y-.1,y+.1,.38,.9,'tool');
+    }
+  }
+  function leadframe(b){
+    b.box(-.98,.98,-.72,.92,-.14,.04,'lead');
+    b.box(-.23,.23,-2.45,-.72,-.14,.04,'lead');
+    for(const x of[-1.62,1.62])b.box(x-.23,x+.23,-2.45,.62,-.14,.04,'lead');
+  }
+  const wirePoint=(side,t)=>[lerp(side*.41,side*1.62,t),.10+.24*Math.sin(t*Math.PI),lerp(.52,.07,t)+.69*Math.sin(t*Math.PI)];
+  function bond(b,side,amount){
+    if(amount<=EPS)return;const n=16,last=Math.ceil(amount*n);
+    for(let i=0;i<last;i++){const a=i/n,c=Math.min((i+1)/n,amount);if(c>a)b.rod(wirePoint(side,a),wirePoint(side,c),.035,'wire');}
+    const a=wirePoint(side,0);b.box(a[0]-.055,a[0]+.055,a[1]-.06,a[1]+.06,a[2]-.025,a[2]+.025,'wire');
+    if(amount>=1){const c=wirePoint(side,1);b.box(c[0]-.07,c[0]+.07,c[1]-.08,c[1]+.08,.04,.085,'wire');}
+  }
+  function mold(b,amount){
+    if(amount<=EPS)return;const z0=-.32,z1=lerp(-.32,1.32,amount),width=z=>2.14-.24*((z+.32)/1.64),front=z=>-1.25+.13*((z+.32)/1.64),back=z=>1.15-.13*((z+.32)/1.64),t=.13;
+    const w0=width(z0),w1=width(z1),f0=front(z0),f1=front(z1),r0=back(z0),r1=back(z1);
+    // Four closed tapered walls; the deliberate inspection cavity is called
+    // out in the lesson and material description.
+    for(const side of[-1,1]){const rect=(w,f,r,z)=>side<0?[[-w,f,z],[-w+t,f,z],[-w+t,r,z],[-w,r,z]]:[[w-t,f,z],[w,f,z],[w,r,z],[w-t,r,z]];b.prism(rect(w0,f0,r0,z0),rect(w1,f1,r1,z1),'mold');}
+    b.prism([[-w0+t,f0,z0],[w0-t,f0,z0],[w0-t,f0+t,z0],[-w0+t,f0+t,z0]],[[-w1+t,f1,z1],[w1-t,f1,z1],[w1-t,f1+t,z1],[-w1+t,f1+t,z1]],'mold');
+    b.prism([[-w0+t,r0-t,z0],[w0-t,r0-t,z0],[w0-t,r0,z0],[-w0+t,r0,z0]],[[-w1+t,r1-t,z1],[w1-t,r1-t,z1],[w1-t,r1,z1],[-w1+t,r1,z1]],'mold');
+    b.box(-w0+t,w0-t,f0+t,r0-t,z0,z0+.10,'mold');
+    if(amount>.85)b.box(-w1+t,w1-t,f1+t,r1-t,z1-.11*phase(amount,.85,1),z1,'mold');
+  }
+  function scene(id,progress=1,options={},polarity='npn'){
+    const p=ease(Number.isFinite(progress)?progress:1),b=builder(options);let operationLabel='';
+    if(id==='bjt_wafer_complete'||id==='bjt_wafer_probe'||id==='bjt_wafer_dice'){
+      wafer(b,p,{probe:id==='bjt_wafer_probe',dicing:id==='bjt_wafer_dice'},polarity);
+      if(id==='bjt_wafer_complete')b.label('One die = one '+polarity.toUpperCase()+' BJT',[0,0,.65],'cap');
+      if(id==='bjt_wafer_dice'){operationLabel=p===1?'Dicing complete':p<.5?'Cut the first set of streets':'Cut the crossing streets';b.label(p===1?'Separated BJT dies':'Saw the streets',[0,0,1.1],'tool');}
+    } else if(id==='bjt_die_pick'){
+      const lift=.65*p;b.box(-1.75,1.75,-1.05,1.05,-.34,-.22,'carrier');die(b,0,0,-.20+lift,1.3,polarity);
+      b.box(-.16,.16,.32,.53,.36+lift,1.15+lift,'tool');b.box(-.30,.30,.22,.62,.34+lift,.43+lift,'tool');
+      b.label('Front pads: E and B',[0,0,.64+lift],'pad');b.label('Backside collector C',[0,-.7,-.09+lift],'back');operationLabel=p<1?'Lift the passing die':'Selected BJT die';
+    } else if(ids.includes(id)){
+      leadframe(b);const attaching=id==='bjt_package_attach',lift=attaching?1.25*(1-phase(p,.15,.90)):0;
+      b.box(-.80,.80,-.61,.61,.04,.08,'attach');die(b,0,0,.08+lift,1,polarity);
+      if(!attaching){const q=id==='bjt_wire_bond'?p:1,a=clamp(q*2),c=clamp(q*2-1);bond(b,-1,a);bond(b,1,c);
+        if(id==='bjt_wire_bond'&&p<1){const side=p<.5?-1:1,t=p<.5?a:c,v=wirePoint(side,t);b.rod([v[0],v[1],v[2]+.08],[v[0],v[1],v[2]+.74],.07,'tool');operationLabel=p<.5?'Bond the emitter wire':'Bond the base wire';}
+      }
+      if(id==='bjt_package_mold'||id==='bjt_package_test')mold(b,id==='bjt_package_mold'?p:1);
+      if(id==='bjt_package_test'){
+        const rise=phase(p,0,.65);b.box(-2.45,2.45,-2.85,1.42,-.72,-.54,'test');for(const x of[-1.62,0,1.62])b.box(x-.17,x+.17,-2.38,-1.72,-.54,-.28+.14*rise,'test');if(p>.65)b.box(2.12,2.34,.89,1.11,-.53,-.42,'pass');operationLabel=p<.65?'Contact E, C, and B':'Check the packaged transistor';
+      }
+      const y=options.cut ? Math.max(0,Number(options.slice)||0) : -2.52,z=options.cut ? -.28 : .31;
+      if(!options.cut||y<.62){b.label('E',[-1.62,y,z],'lead');b.label('B',[1.62,y,z],'lead');}
+      if(!options.cut||y<.92)b.label('C',[0,y,z],'lead');
+      if(attaching)operationLabel=p<.9?'Lower collector back onto the paddle':'Collector die attachment complete';
+      if(id==='bjt_package_mold')operationLabel=p<1?'Encapsulate the die and bond wires':'Molded three-terminal package';
+    }
+    if(!Number.isFinite(b.bounds.x0))Object.assign(b.bounds,{x0:-3,x1:3,y0:-2,y1:2,z0:-.5,z1:1.5});
+    const d=definitions.find(d=>d.id===id);
+    return {faces:b.faces,boxes:b.boxes,bounds:b.bounds,labels:b.labels,caption:d?.summary||'',operationLabel,scale:d?.scope==='wafer'?'BJT wafer':d?.scope==='die'?'One BJT die':'Discrete BJT package'};
+  }
+  function geometry(id,progress=1,options={},polarity='npn'){return scene(id,progress,options,polarity).boxes;}
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function guide(d,polarity='npn'){
+    const C={si:'#719ab5',cap:'#8eafc6',pad:'#edb66d',lead:'#c4b390',wire:'#d9ba75',mold:'#555a64',tool:'#8b96a7',test:'#866078',ink:'#53606c',accent:'#7b1113'};
+    const rect=(x,y,w,h,c,extra='')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}" ${extra}/>`;
+    const text=(s,x,y,extra='')=>`<text x="${x}" y="${y}" text-anchor="middle" fill="${C.ink}" font-size="10" ${extra}>${esc(s)}</text>`;
+    const path=(s,color=C.accent,extra='')=>`<path d="${s}" fill="none" stroke="${color}" stroke-width="2" ${extra}/>`;
+    const arrow=(x,y,y1)=>path(`M${x} ${y}V${y1}m-4-6 4 6 4-6`,C.accent,'class="guide-flow"');
+    const dieSvg=(x=102,y=96,w=76)=>rect(x,y,w,24,C.si)+rect(x,y+24,w,4,'#c3c9d4')+rect(x,y-3,w,4,C.cap)+rect(x+8,y-5,22,5,C.pad)+rect(x+w-28,y-5,20,5,C.pad);
+    const packageSvg=(wires=false)=>rect(91,128,98,9,C.lead)+rect(131,137,18,28,C.lead)+rect(37,117,19,48,C.lead)+rect(224,117,19,48,C.lead)+rect(102,124,76,4,'#c7abb5')+dieSvg()+(wires?path('M121 91Q75 26 47 117M159 91Q205 26 234 117',C.wire,'stroke-width="3"'):'')+text('E',47,179)+text('C',140,179)+text('B',234,179);
+    const waferSvg=(marks=false)=>{let tiles='';for(let row=0;row<5;row++)for(let col=0;col<5;col++){if((row===0||row===4)&&(col===0||col===4))continue;const x=80+col*25,y=43+row*24;tiles+=rect(x,y,21,20,C.cap)+rect(x+3,y+4,6,9,C.pad)+rect(x+12,y+4,6,9,C.pad);if(marks&&row<3)tiles+=`<circle cx="${x+16}" cy="${y+16}" r="3" fill="${row===1&&col===3?'#c77d87':'#79a88e'}"/>`;}return `<circle cx="140" cy="103" r="69" fill="${C.si}"/>`+tiles;};
+    let drawing='';
+    switch(d.id){
+      case 'bjt_wafer_complete':drawing=waferSvg()+text('One tile = one '+polarity.toUpperCase()+' transistor',140,188);break;
+      case 'bjt_wafer_probe':drawing=waferSvg(true)+`<g class="guide-align">${rect(197,24,50,17,C.test)}${path('M204 41L166 83M224 41L181 83',C.test)}</g>`+text('Front: E + B',224,17)+text('Back chuck: C',140,188);break;
+      case 'bjt_wafer_dice':drawing=`<circle cx="140" cy="104" r="76" fill="#c7dce2"/>`+waferSvg()+path('M73 90H207M128 36V172',C.accent,'stroke-dasharray="3 3"')+`<g class="guide-polish"><circle cx="128" cy="48" r="18" fill="${C.tool}"/><circle cx="128" cy="48" r="5" fill="#eef1f4"/></g>`+text('Carrier holds each separated die',140,190);break;
+      case 'bjt_die_pick':drawing=rect(42,147,196,10,'#c7dce2')+`<g class="guide-lift">${dieSvg(102,91)}${rect(132,48,16,39,C.tool)}</g>`+arrow(198,137,78)+text('E and B on front · C on back',140,185);break;
+      case 'bjt_package_attach':drawing=packageSvg()+arrow(76,81,123)+arrow(203,81,123)+text('Conductive collector attachment',140,33)+text('Illustrative E–C–B lead order',140,195);break;
+      case 'bjt_wire_bond':drawing=packageSvg(true)+`<g class="guide-align">${rect(201,18,10,35,C.tool)}</g>`+text('E loop',78,48)+text('B loop',198,48)+text('Two separate front connections',140,195);break;
+      case 'bjt_package_mold':drawing=packageSvg(true)+`<path d="M27 142L37 47H243L253 142Z" fill="${C.mold}" opacity=".24" class="guide-pulse"/>`+text('Molded body · transparent view',140,25)+text('Three external leads remain accessible',140,195);break;
+      case 'bjt_package_test':drawing=rect(24,151,232,16,C.test)+packageSvg(true)+`<path d="M27 142L37 47H243L253 142Z" fill="${C.mold}" opacity=".46"/>`+rect(109,7,63,25,'#fff','rx="3" stroke="#866078"')+path('M113 22h8l5-9 7 14 7-9 7 4h21','#79a88e','class="guide-pulse"')+text('Gain · leakage · junction checks',140,195);break;
+    }
+    return `<section class="fab-operation-guide" aria-label="${esc(d.short)}"><span class="fab-kicker">This operation, close up</span><h3>${esc(d.short)}</h3><svg viewBox="0 0 280 205" role="img" aria-label="${esc(d.process)}"><title>${esc(d.title)}</title>${drawing}</svg><p>${esc(d.process)}</p><span class="fab-diagram-note">Operation sketch · dimensions and lead assignment are illustrative</span></section>`;
+  }
+  return {materials,lessons,ids,scene,geometry,guide,guides:guide,sources};
+})();
+</script>
   <script>(() => {
 'use strict';
 /* Conventional planar NMOS / PMOS teaching flow. Coordinates are illustrative, not process dimensions.
