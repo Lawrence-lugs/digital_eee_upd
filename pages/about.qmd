@@ -2,7 +2,7 @@
 title: "About"
 ---
 
-digital.eee began with the [Verilog Crash Course](https://digital.eee.upd.edu.ph/pages/verilogCrashCourse/index.html), which I originally wrote and distributed through UVLe, the university’s online learning management system. When we decided to expand the course with exercises and assessments, we needed a repository to bring those materials together. Then we imagined students writing and simulating Verilog directly on the course webpage. That idea called for a website, and digital.eee took shape. In late 2025, Lawrence Roman Quizon designed and implemented the hosting infrastructure that made it possible.
+**digital.eee** began with the [Verilog Crash Course](https://digital.eee.upd.edu.ph/pages/verilogCrashCourse/index.html), which I originally wrote and distributed through UVLe, the university’s online learning management system. When we decided to expand the course with exercises and assessments, we needed a repository to bring those materials together. Then we imagined students writing and simulating Verilog directly on the course webpage. That idea called for a website, and digital.eee took shape. In late 2025, Lawrence designed and implemented the hosting infrastructure that made it possible.
 
 By 2026, we had begun expanding the site with interactive simulators to accompany the digital design courses I care about. Much of that work grew out of frustration. I kept relying on slide animations and doodles to explain concepts that students could understand much more easily if they could see them in action. These were fundamental digital design concepts, yet I could not find online tools that visualized them in quite the way I wanted to teach them. So I started developing those tools and bringing them together here.
 
@@ -32,12 +32,12 @@ The people behind digital.eee are:
 
 I also want to recognize the people whose ideas, teaching materials, and technical work have helped shape this project:
 
-3. **Fred Angelo Galapon**
+3. **Fredrick Angelo Galapon**
 
    Fred helped me conceptualize the original Verilog Crash Course. Our discussions about what students most needed to learn, together with the materials he had already developed for the FPGA course, shaped the concepts we emphasized.
 
    <!--
-   ![Fred Angelo Galapon](images/team/fred-angelo-galapon.jpg){width=180px}
+   ![Fredrick Angelo Galapon](images/team/fred-angelo-galapon.jpg){width=180px}
    -->
 
 4. **Allen Jason Tan**
@@ -50,7 +50,7 @@ I also want to recognize the people whose ideas, teaching materials, and technic
 
 5. **Jose Francois Abedejos**
 
-   Jose pioneered the [KMAP game](https://digital.eee.upd.edu.ph/kmapgameee), our very first simulator, which he conceptualized and implemented in early 2025. He continues to help with course management and website maintenance.
+   Francois pioneered the [KMAP game](https://digital.eee.upd.edu.ph/kmapgameee), our very first simulator, which he initially prototyped and developed in early 2025. He continues to help with course management and website maintenance.
 
    <!--
    ![Jose Francois Abedejos](images/team/jose-francois-abedejos.jpg){width=180px}
@@ -58,7 +58,7 @@ I also want to recognize the people whose ideas, teaching materials, and technic
 
 6. **Carl Aries Oliva**
 
-   Carl designed the main laboratory exercises for the Hardware for AI graduate class. Those exercises later formed the basis of the [Systolic Array Simulator](https://digital.eee.upd.edu.ph/systolic_array_simulator.html) and [Convolution Simulator](https://digital.eee.upd.edu.ph/convolution_simulator.html), which help students follow the computations behind convolutional neural networks at the hardware level.
+   Aries designed the main laboratory exercises for the Hardware for AI graduate class. Those exercises later formed the basis of the [Systolic Array Simulator](https://digital.eee.upd.edu.ph/systolic_array_simulator.html) and [Convolution Simulator](https://digital.eee.upd.edu.ph/convolution_simulator.html), which help students follow the computations behind convolutional neural networks at the hardware level.
 
    <!--
    ![Carl Aries Oliva](images/team/carl-aries-oliva.jpg){width=180px}
