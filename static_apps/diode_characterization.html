@@ -509,14 +509,54 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
   
 </style>
-  <style>.metrics{--metric-count:5}.metric strong,.metric:last-child strong{font-size:clamp(19px,1.8vw,28px)}.metric.metric-region strong{font-size:20px}.readout-cap span:last-child{text-transform:none;letter-spacing:0;font-weight:500}.bias-rail{position:static}.properties-details,.teaching-card{margin-top:10px}.teaching-card h3{font-size:20px;line-height:1.3;letter-spacing:-.4px;margin:10px 0}.teaching-card p:not(.section-kicker){font-size:12px;line-height:1.8;color:var(--muted)}.teaching-card .equation{font-family:"MOS Math",serif;font-size:18px;padding:12px;line-height:1.8}.insight-numbers{font-size:11px}.fine-control{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:9px 0 12px;font-size:10px;color:var(--muted)}.fine-control input{width:90px;padding:6px;border:1px solid var(--line);background:var(--panel-alt);border-radius:6px;color:var(--accent);font-family:"MOS Mono",monospace;font-size:12px}.plot-options{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:10px 0;font-size:10px;color:var(--muted)}.plot-options label{display:flex;align-items:center;gap:4px}.plot-heading{flex-wrap:wrap}.plot-svg{cursor:crosshair}.plot-foot{min-height:34px}.plot-svg .family{stroke:var(--accent2);stroke-width:1.2;opacity:.4}.plot-svg .reference{stroke:var(--accent2);opacity:.75}.plot-svg .zero{stroke:var(--muted);stroke-width:1.2}.plot-svg .dot-guide{stroke:var(--accent);stroke-width:1;stroke-dasharray:3 5;opacity:.45}.plot-choice-switch button{padding:5px 8px;font-size:11px}.physics-header{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:8px 0 14px}.physics-header .section-kicker{margin:0}.device-panel{padding:10px 18px 16px}.lesson-panel{margin-top:12px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}.lesson-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:12px}.lesson-grid button{text-align:left;padding:12px;font-size:11px;line-height:1.55;background:var(--panel-alt)}.lesson-grid b{display:block;color:var(--accent);margin-bottom:6px;font-weight:700}.lesson-grid span{display:block;color:var(--muted);font-weight:400}.lesson-answer{font-size:12px;line-height:1.8;color:var(--muted);margin:14px 0 0}#model-limit{font-size:11px;line-height:1.65;padding:10px 12px;background:#fff8e8;border:1px solid #d8bf88;border-radius:8px;color:#725121}.property-grid small{line-height:1.5}.transport-row{gap:6px}.transport-row button{font-size:10px;padding:7px 9px}.model-equations{font-family:"MOS Math",serif}.guide-content table{width:100%;border-collapse:collapse;font-size:12px}.guide-content td,.guide-content th{text-align:left;border-bottom:1px solid var(--line);padding:8px 5px}.guide-content li{margin:6px 0}.control-top{flex-wrap:wrap}.voltage-controls{grid-template-columns:1fr}.property-grid{margin-top:8px}.device-svg .hole{stroke:var(--warm)}.bias-note{font-size:11px;line-height:1.65}
-@media(max-width:1120px){.lesson-grid{grid-template-columns:1fr 1fr}}
+  <style>.metrics{--metric-count:5}.metric strong,.metric:last-child strong{font-size:clamp(19px,1.8vw,28px)}.metric.metric-region strong{font-size:20px}.bias-rail{position:static}.properties-details,.teaching-card{margin-top:10px}.teaching-card h3{font-size:20px;line-height:1.3;letter-spacing:-.4px;margin:10px 0}.teaching-card p:not(.section-kicker){font-size:12px;line-height:1.8;color:var(--muted)}.teaching-card .equation{font-family:"MOS Math",serif;font-size:18px;padding:12px;line-height:1.8}.insight-numbers{font-size:11px}.fine-control{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:9px 0 12px;font-size:10px;color:var(--muted)}.fine-control input{width:90px;padding:6px;border:1px solid var(--line);background:var(--panel-alt);border-radius:6px;color:var(--accent);font-family:"MOS Mono",monospace;font-size:12px}.plot-options{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:10px 0;font-size:10px;color:var(--muted)}.plot-options label{display:flex;align-items:center;gap:4px}.plot-heading{flex-wrap:wrap}.plot-svg{cursor:crosshair}.plot-foot{min-height:34px}.plot-svg .family{stroke:var(--accent2);stroke-width:1.2;opacity:.4}.plot-svg .reference{stroke:var(--accent2);opacity:.75}.plot-svg .zero{stroke:var(--muted);stroke-width:1.2}.plot-svg .dot-guide{stroke:var(--accent);stroke-width:1;stroke-dasharray:3 5;opacity:.45}.plot-choice-switch button{padding:5px 8px;font-size:11px}.physics-header{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:8px 0 14px}.physics-header .section-kicker{margin:0}.device-panel{padding:10px 18px 16px}#model-limit{font-size:11px;line-height:1.65;padding:10px 12px;background:#fff8e8;border:1px solid #d8bf88;border-radius:8px;color:#725121}.property-grid small{line-height:1.5}.transport-row{gap:6px}.transport-row button{font-size:10px;padding:7px 9px}.model-equations{font-family:"MOS Math",serif}.guide-content table{width:100%;border-collapse:collapse;font-size:12px}.guide-content td,.guide-content th{text-align:left;border-bottom:1px solid var(--line);padding:8px 5px}.guide-content li{margin:6px 0}.control-top{flex-wrap:wrap}.voltage-controls{grid-template-columns:1fr}.property-grid{margin-top:8px}.device-svg .hole{stroke:var(--warm)}
+
 @media(min-width:701px) and (max-width:920px){.bias-rail{grid-template-columns:1fr 1fr}.teaching-card{grid-column:1/-1;margin-top:0}.properties-details{margin-top:0}.voltage-controls{grid-template-columns:1fr 1fr}}
-@media(max-width:700px){.readout-cap{flex-direction:column;gap:3px}.metric:nth-child(2n){border-right:0}.metric:last-child{grid-column:1/-1}.control-top{display:flex}.control-top label{margin-bottom:0}.metrics .metric strong{font-size:23px}.physics-header{align-items:flex-start}.device-panel{padding:12px}.device-svg{min-width:800px}.lesson-grid{grid-template-columns:1fr 1fr}.plot-scale-controls{margin-left:0}.model-note{text-align:left}}
-@media print{.page-banner{-webkit-print-color-adjust:exact;print-color-adjust:exact}.workbench{display:block}.bias-rail{display:none}.plot-options,.plot-view-toolbar,.transport-row,.lesson-panel{display:none}.device-section,.plot-card{break-inside:avoid}.site-shell{max-width:none}}
-.banner-wrap{flex-wrap:wrap}.banner-copy{flex:1 1 540px}.banner-controls{flex:0 1 auto}.model-selectors{justify-content:flex-end}.motion-control{display:grid;gap:7px;border-top:1px solid var(--line);margin-top:14px;padding-top:13px;font-size:11px}.motion-control label{font-weight:700}.motion-control select{width:100%;min-width:0;padding:7px;background:var(--panel-alt);border:1px solid var(--line);border-radius:6px;color:var(--text)}.motion-control output{font-family:"MOS Mono",monospace;color:var(--accent);line-height:1.6;overflow-wrap:anywhere}.motion-control p{color:var(--muted);line-height:1.65;margin:0;font-size:10px}.comparison-panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-top:12px;padding:15px 18px}.comparison-caption{font-size:11px;line-height:1.5;color:var(--muted);margin:6px 0 10px}.comparison-scroll{overflow-x:auto}.comparison-table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:11px;line-height:1.6}.comparison-table th,.comparison-table td{padding:8px 9px;text-align:left;border-bottom:1px solid var(--line)}.comparison-table thead{color:var(--muted)}.comparison-table tbody tr:last-child>*{border-bottom:0}.comparison-table .selected{background:var(--panel-alt)}.plot-svg .comparison-curve{fill:none;stroke-width:1.8;stroke-dasharray:7 4;opacity:.82}.plot-svg .reference{stroke:#9199a3;stroke-dasharray:2 4}.legend-line.ref{border-color:#9199a3}.legend-note,.alignment-note{color:var(--muted);font-size:10px;line-height:1.5}.lesson-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.diagram-explanations{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.diagram-explanations h4{font-size:12px;color:var(--text);margin:0 0 4px}.diagram-explanations .cross-note{margin:0}.guide-comparison{overflow-x:auto}.guide-content table{min-width:520px}.device-viewport{overscroll-behavior-x:contain}.physics-header{margin-bottom:8px}
+@media(max-width:700px){.readout-cap{flex-direction:column;gap:3px}.metric:nth-child(2n){border-right:0}.metric:last-child{grid-column:1/-1}.control-top{display:flex}.control-top label{margin-bottom:0}.metrics .metric strong{font-size:23px}.physics-header{align-items:flex-start}.device-panel{padding:12px}.device-svg{min-width:800px}.plot-scale-controls{margin-left:0}.model-note{text-align:left}}
+@media print{.page-banner{-webkit-print-color-adjust:exact;print-color-adjust:exact}.workbench{display:block}.bias-rail{display:none}.plot-options,.plot-view-toolbar,.transport-row{display:none}.device-section,.plot-card{break-inside:avoid}.site-shell{max-width:none}}
+.banner-wrap{flex-wrap:wrap}.banner-copy{flex:1 1 540px}.banner-controls{flex:0 1 auto}.model-selectors{justify-content:flex-end}.motion-control{display:grid;gap:7px;border-top:1px solid var(--line);margin-top:14px;padding-top:13px;font-size:11px}.motion-control label{font-weight:700}.motion-control select{width:100%;min-width:0;padding:7px;background:var(--panel-alt);border:1px solid var(--line);border-radius:6px;color:var(--text)}.motion-control output{font-family:"MOS Mono",monospace;color:var(--accent);line-height:1.6;overflow-wrap:anywhere}.motion-control p{color:var(--muted);line-height:1.65;margin:0;font-size:10px}.comparison-panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-top:12px;padding:15px 18px}.comparison-caption{font-size:11px;line-height:1.5;color:var(--muted);margin:6px 0 10px}.comparison-scroll{overflow-x:auto}.comparison-table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:11px;line-height:1.6}.comparison-table th,.comparison-table td{padding:8px 9px;text-align:left;border-bottom:1px solid var(--line)}.comparison-table thead{color:var(--muted)}.comparison-table tbody tr:last-child>*{border-bottom:0}.comparison-table .selected{background:var(--panel-alt)}.plot-svg .comparison-curve{fill:none;stroke-width:1.8;stroke-dasharray:7 4;opacity:.82}.plot-svg .reference{stroke:#9199a3;stroke-dasharray:2 4}.legend-line.ref{border-color:#9199a3}.legend-note,.alignment-note{color:var(--muted);font-size:10px;line-height:1.5}.diagram-explanations{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.diagram-explanations h4{font-size:12px;color:var(--text);margin:0 0 4px}.diagram-explanations .cross-note{margin:0}.guide-comparison{overflow-x:auto}.guide-content table{min-width:520px}.device-viewport{overscroll-behavior-x:contain}.physics-header{margin-bottom:8px}
 @media(max-width:1000px){.model-selectors{justify-content:flex-start}.banner-copy{flex-basis:auto}}
-@media(max-width:700px){.lesson-grid{grid-template-columns:1fr 1fr}.diagram-explanations{grid-template-columns:1fr}.comparison-panel{padding:12px}.comparison-table{font-size:10px}.model-selectors{display:flex}.banner-controls{width:100%}.guide-content{overflow:hidden}.guide-content table{display:block;overflow-x:auto;min-width:0}.device-svg{min-width:900px}}
+@media(max-width:700px){.diagram-explanations{grid-template-columns:1fr}.comparison-panel{padding:12px}.comparison-table{font-size:10px}.model-selectors{display:flex}.banner-controls{width:100%}.guide-content{overflow:hidden}.guide-content table{display:block;overflow-x:auto;min-width:0}.device-svg{min-width:900px}}
+.plot-selection-group{flex:1 1 640px;min-width:0}.plot-selection-row{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap}.plot-selection-row .plot-choice-switch{flex:0 1 auto}.plot-compare{display:flex;align-items:center;gap:6px;margin-left:auto;white-space:nowrap;font-size:11px;color:var(--muted);min-height:36px;cursor:pointer}.plot-compare input{accent-color:var(--accent)}#characteristic-plots{min-width:0}.plot-scale-controls{flex:0 0 auto}
+@media(max-width:700px){.plot-selection-group{flex-basis:100%}.plot-selection-row{gap:6px}.plot-compare{min-height:28px}.plot-scale-controls{margin-left:auto}}
+
+.equation math{font-family:"MOS Math",math}.equation math+math{margin-top:10px}.equation-set{display:grid;gap:12px;margin:16px 0}.equation-set math+math{margin-top:0}
+.junction-diagrams{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}.junction-diagrams>summary{font-size:12px;font-weight:600;line-height:1.6;color:var(--text);list-style-position:inside;padding:4px 0}.junction-diagrams[open]>summary{margin-bottom:12px}.device-viewport:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+
+.junction-diagrams .expansion-hint{font-weight:400;color:var(--muted)}.junction-diagrams[open] .expansion-hint{display:none}
+</style>
+  <style>/* Match the MOS companion's movable explanation and panel handles. */
+.diode-visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.diode-drag-grip{display:inline-block;width:12px;height:18px;flex:0 0 auto;background:radial-gradient(circle,currentColor 1.7px,transparent 2px) 0 0/6px 6px}
+.diode-popup-dock{grid-column:1/-1}
+.bias-rail.has-docked-popup{position:static}
+#teaching-popup.diode-teaching-popup{position:fixed;z-index:30;left:24px;right:auto;bottom:auto;width:min(420px,calc(100% - 32px));max-height:min(560px,calc(100dvh - 32px));margin:0;padding:20px;border:1px solid var(--accent);border-radius:var(--radius,12px);background:var(--panel);color:var(--text);box-shadow:0 14px 70px #0003;overflow-y:auto;overscroll-behavior:contain;transform:none;transition:opacity .2s}
+.diode-popup-handle{display:flex;align-items:center;gap:7px;width:100%;border:0;padding:0;background:transparent;color:var(--muted);cursor:grab;touch-action:none;user-select:none;text-align:left}
+.diode-popup-handle:hover{background:transparent}
+.diode-popup-handle:active{transform:none}
+.diode-popup-handle.dragging{cursor:grabbing}
+.diode-popup-handle .section-kicker{margin:0;flex:1;font-size:10px;line-height:1.5}
+#teaching-popup h3{font-size:16px;margin:8px 0;line-height:normal;letter-spacing:normal}
+#teaching-popup p:not(.section-kicker){font-size:12px;line-height:1.6;margin:8px 0}
+#teaching-popup .equation{font-size:18px;padding:8px 0;line-height:1.7}
+.diode-popup-details{border-top:1px solid var(--line);margin-top:12px;padding-top:10px}
+.diode-popup-details>summary{color:var(--accent);cursor:pointer;font-size:11px;font-weight:700;line-height:1.5}
+.diode-popup-details[open]>summary{margin-bottom:8px}
+#teaching-popup .diode-popup-details p,#teaching-popup .insight-numbers{font-size:11px;line-height:1.6}
+#teaching-popup .diode-popup-details .insight-numbers{margin-top:8px}
+#junction-panel[data-position="above"]{margin-top:0;margin-bottom:8px}
+#junction-drag-handle{display:flex;align-items:center;gap:9px;width:100%;border:1px solid var(--line);border-bottom:0;border-radius:var(--radius) var(--radius) 0 0;padding:9px 16px;background:var(--panel-alt);font-size:11px;font-weight:600;cursor:grab;touch-action:none;user-select:none;text-align:left}
+#junction-drag-handle:active{transform:none;cursor:grabbing}
+.junction-move-label{margin-left:auto;color:var(--muted);font-size:10px;font-weight:400;text-align:right}
+#junction-panel .device-panel{border-top-left-radius:0;border-top-right-radius:0}
+#junction-panel.junction-dragging{opacity:.45}
+.science-column>[data-junction-position]{display:none;border:2px dashed var(--line);border-radius:8px;padding:10px 14px;margin:6px 0;font-size:11px;color:var(--muted);text-align:center}
+.science-column.junction-reordering>[data-junction-position]{display:block}
+.science-column>[data-junction-position].drop-target{border-color:var(--accent);background:var(--panel-alt);color:var(--accent);font-weight:600}
+.junction-drag-preview{position:fixed;z-index:50;pointer-events:none;max-width:calc(100vw - 16px);padding:10px 14px;border:1px solid var(--accent);border-radius:8px;background:var(--panel);box-shadow:0 6px 24px #0002;color:var(--accent);font-size:12px;font-weight:600}
+html.junction-reordering{scroll-behavior:auto!important}
+@media(max-width:700px){#junction-drag-handle{padding:9px 12px;gap:7px}#teaching-popup.diode-teaching-popup{left:16px}}
+@media print{#teaching-popup.diode-teaching-popup,#junction-drag-handle,.junction-drag-preview{display:none!important}}
 </style>
 </head>
 <body>
@@ -525,7 +565,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     <div class="banner-controls"><div class="model-selectors"><div class="selector-group"><span class="selector-label">Device physics</span><div class="mode-switch" role="group" aria-label="Diode type"><button data-device="pn" aria-pressed="true">PN junction</button><button data-device="schottky" aria-pressed="false">Schottky</button><button data-device="zener" aria-pressed="false">Zener</button></div></div><div class="selector-group"><span class="selector-label">Current model</span><div class="mode-switch" role="group" aria-label="Current model"><button data-model="ideal" aria-pressed="false">Intrinsic</button><button data-model="practical" aria-pressed="true">+ Rₛ &amp; breakdown</button></div></div></div><p class="model-note" id="model-note"></p></div>
   </div></header>
   <div class="site-shell"><main aria-labelledby="page-title">
-    <section class="readout-frame" aria-label="Operating point readouts"><div class="readout-cap"><span>Operating point</span><span>V = V<sub>A</sub> − V<sub>K</sub> · positive current: anode → cathode</span></div><div class="metrics" id="metrics"></div></section>
+    <section class="readout-frame" aria-label="Operating point readouts"><div class="readout-cap"><span>Operating point</span></div><div class="metrics" id="metrics"></div></section>
     <div class="workbench">
       <aside class="bias-rail" aria-label="Bias and device controls">
         <section class="rail-panel"><p class="section-kicker"><span class="index">01</span> Bias console</p><h2 class="rail-heading">Set the conditions.</h2><p class="rail-intro">Move the bias, change the doping, and watch the electrical and physical views respond together.</p>
@@ -534,113 +574,101 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             <div class="voltage-control"><div class="control-top"><label for="temperature">Temperature</label><output id="temperature-out" for="temperature"></output></div><input id="temperature" aria-label="Temperature" type="range" min="-20" max="100" step="1" value="27"><div class="range-ends"><span>−20 °C</span><span>100 °C</span></div></div>
           </div>
           <div class="preset-row" aria-label="Bias presets"><button data-preset="equilibrium">Equilibrium</button><button data-preset="forward">Forward bias</button><button data-preset="reverse">Reverse bias</button><button data-preset="breakdown">Breakdown</button></div>
-          <div class="transport-row"><button id="sweep" aria-pressed="false">Start sweep</button><button id="motion" aria-pressed="false">Pause carriers</button><button id="reset">Reset all</button></div>
-          <div class="motion-control"><label for="motion-reference">Animation current scale</label><select id="motion-reference"><option value="0.000000001">1 nA → 80 px/s</option><option value="0.000001">1 µA → 80 px/s</option><option value="0.001" selected>1 mA → 80 px/s</option><option value="1">1 A → 80 px/s</option></select><output id="motion-speed" for="motion-reference"></output><p>Speed ∝ |I| at this fixed display scale. Zero net current gives stationary markers; microscopic thermal motion is not shown. Keep the same scale when comparing devices.</p></div>
-          <p class="bias-note" id="bias-note"></p>
         </section>
         <details class="properties-details"><summary>Device properties · editable</summary><div class="property-grid" id="properties"></div><p class="property-note" id="property-note">Each diode retains its own properties. Applied voltage and temperature are shared. Scientific notation is accepted; Enter or leaving a field commits its value within the shown range.</p><button id="defaults">Restore device defaults</button></details>
-        <section class="rail-panel teaching-card" aria-label="Operating point explanation"><p class="section-kicker" id="insight-region"></p><h3 id="insight-title"></h3><p id="insight-copy"></p><div class="equation" id="insight-eq"></div><div class="insight-numbers" id="insight-numbers"></div></section>
+        <section id="teaching-popup" class="rail-panel teaching-card" aria-label="Operating point explanation"><p class="section-kicker" id="insight-region"></p><h3 id="insight-title"></h3><p id="insight-copy"></p><div class="equation" id="insight-eq"></div><div class="insight-numbers" id="insight-numbers"></div></section>
       </aside>
       <div class="science-column">
-        <section aria-label="Diode characteristic plots">
-          <div class="plot-view-toolbar"><div><span class="plot-selection-label">Characteristic plots</span><div class="plot-choice-switch" role="group" aria-label="Select plots" id="plot-selectors"></div></div><div class="plot-scale-controls"><span class="plot-selection-label">Current scale</span><div class="plot-view-switch" role="group" aria-label="Current scale"><button data-scale="linear" aria-pressed="true">Linear</button><button data-scale="log" aria-pressed="false">Log |I|</button></div></div></div>
-          <div class="plot-options"><label><input id="compare" type="checkbox" checked> Compare diode types</label><label><input id="family" type="checkbox"> Selected device · 0, 27, 75 °C</label><span>Click a curve panel to set its horizontal value.</span></div>
+        <div class="junction-drop-zone" data-junction-position="above" aria-hidden="true">Place junction above plots</div>
+        <section id="characteristic-plots" aria-label="Diode characteristic plots">
+          <div class="plot-view-toolbar"><div class="plot-selection-group"><span class="plot-selection-label">Characteristic plots</span><div class="plot-selection-row"><div class="plot-choice-switch" role="group" aria-label="Select plots" id="plot-selectors"></div><label class="plot-compare"><input id="compare" type="checkbox" checked> Compare diode types</label></div></div><div class="plot-scale-controls"><span class="plot-selection-label">Current scale</span><div class="plot-view-switch" role="group" aria-label="Current scale"><button data-scale="linear" aria-pressed="true">Linear</button><button data-scale="log" aria-pressed="false">Log |I|</button></div></div></div>
           <p id="plot-empty" hidden>Select a characteristic above to display a plot.</p><div class="plot-grid" id="plots"></div>
           <div class="plot-toolbar"><div class="plot-legend"><span class="legend-item"><i class="legend-line" style="border-color:#7b1113"></i>PN</span><span class="legend-item"><i class="legend-line" style="border-color:#087f8c"></i>Schottky</span><span class="legend-item"><i class="legend-line" style="border-color:#756585"></i>Zener</span><span class="legend-item"><i class="legend-line ref"></i>Selected intrinsic I–V</span><span class="legend-item"><i class="legend-dot"></i>Operating point</span></div><span class="legend-note">Solid: selected device · dashed: comparisons</span></div>
         </section>
-        <section class="comparison-panel" aria-label="Diode comparison at shared bias"><p class="section-kicker">Compare at this bias</p><p class="comparison-caption">Same applied voltage, temperature and current-model setting. Each device uses its own saved properties.</p><div class="comparison-scroll"><table class="comparison-table"><thead><tr><th>Device</th><th>Current</th><th>Junction Vⱼ</th><th>Width W</th><th>Cⱼ</th><th>Transport</th></tr></thead><tbody id="comparison-values"></tbody></table></div></section>
-        <section class="device-section" aria-label="Diode device physics">
-          <div class="device-panel"><div class="physics-header"><p class="section-kicker"><span class="index">02</span> Look inside the junction</p><span class="alignment-note">One position axis · aligned depletion boundaries</span></div><div id="diagram"></div><p id="model-limit" role="status" hidden></p></div>
+        <section class="comparison-panel" aria-label="Diode comparison at shared bias"><p class="section-kicker">Compare at this bias</p><p class="comparison-caption">Same applied voltage, temperature and current-model setting. Each device uses its own saved properties.</p><div class="comparison-scroll"><table class="comparison-table"><thead><tr><th>Device</th><th>Current</th><th>Junction Vⱼ</th><th>Width W</th><th>Cⱼ</th></tr></thead><tbody id="comparison-values"></tbody></table></div></section>
+        <div class="junction-drop-zone" data-junction-position="below" aria-hidden="true">Place junction below plots</div>
+        <section id="junction-panel" class="device-section" data-position="below" aria-label="Diode device physics">
+          <div class="junction-panel-bar"><button id="junction-drag-handle" type="button" aria-label="Look inside the junction · Move above plots" title="Move above or below the plots"><span class="drag-grip" aria-hidden="true"></span><span>Look inside the junction</span><span class="junction-move-label">↑ Above plots</span></button></div>
+          <div class="device-panel"><div class="physics-header"><span class="alignment-note">One position axis · aligned depletion boundaries</span></div><div id="diagram"></div><p id="model-limit" role="status" hidden></p></div>
         </section>
-        <section class="lesson-panel" aria-label="Guided experiments"><p class="section-kicker"><span class="index">03</span> Try an experiment</p><div class="lesson-grid">
-          <button data-lesson="balance"><b>01 · Why no net current?</b><span>Start at equilibrium. Compare diffusion with drift.</span></button>
-          <button data-lesson="doping"><b>02 · Which side depletes?</b><span>Make the p side 100× more heavily doped.</span></button>
-          <button data-lesson="heat"><b>03 · What does heat change?</b><span>Compare I–V curves at three temperatures.</span></button>
-          <button data-lesson="storage"><b>04 · Where is charge stored?</b><span>Compare depletion and diffusion capacitance.</span></button>
-          <button data-lesson="schottky"><b>05 · A metal replaces p-type</b><span>Compare Schottky majority transport with PN injection.</span></button>
-          <button data-lesson="zener"><b>06 · Through the barrier</b><span>Explore a heavily doped Zener junction in reverse.</span></button>
-        </div><p class="lesson-answer" id="lesson-answer">Choose an experiment to load its conditions and a question to explore.</p></section>
+        <span id="junction-move-status" class="visually-hidden" role="status"></span>
         <section class="reference-section" aria-label="Model equations and learning guide"><details class="guide-details">
   <summary>Inside the model · equations &amp; learning guide</summary>
   <div class="guide-content">
-    <h3>Three devices, one set of questions</h3>
-    <p>The modes compare an abrupt silicon PN junction, a metal / n-silicon Schottky contact, and a heavily doped silicon Zener junction. Each retains its own device properties; applied voltage, temperature, and current-model selection are shared. Enable the device comparison curves to compare those saved parameter sets. These are teaching examples, not a ranking of every commercial diode.</p>
+    <h3>Compare diode characteristics</h3>
+    <p>The modes represent a silicon PN junction, a metal / n-silicon Schottky contact, and a heavily doped silicon Zener junction. Each mode retains its own device properties. Applied voltage, temperature, and current-model selection are shared. <b>Compare diode types</b> overlays the saved examples at the same voltage and temperature.</p>
     <table class="region-table">
       <thead><tr><th>Compare</th><th>PN junction</th><th>Schottky</th><th>Zener example</th></tr></thead>
       <tbody>
-        <tr><td>Transport</td><td>Electron and hole injection; minority diffusion</td><td>Majority thermionic electrons; avalanche generates pairs</td><td>PN forward transport; reverse band-to-band tunneling</td></tr>
-        <tr><td>Forward voltage</td><td>Depends on current and device properties</td><td>Often lower for low-voltage silicon devices at comparable current</td><td>PN-like; heavily doped defaults have different parameters</td></tr>
-        <tr><td>Reverse conduction</td><td>Small leakage before breakdown</td><td>Often greater leakage; strongly barrier- and temperature-dependent</td><td>Designed to conduct in a specified reverse-breakdown range</td></tr>
-        <tr><td>Stored charge</td><td>Depletion charge and forward minority storage</td><td>Depletion charge; no forward minority-injection storage</td><td>Depletion charge and forward minority storage</td></tr>
-        <tr><td>Useful behavior</td><td>Rectification and switching</td><td>Low forward drop and fast switching</td><td>Reverse voltage reference or clamp, with current limiting</td></tr>
+        <tr><td>Junction</td><td>p-type and n-type silicon</td><td>Metal and n-type silicon</td><td>Heavily doped p-type and n-type silicon</td></tr>
+        <tr><td>Forward I–V curve</td><td>Current rises smoothly with forward voltage</td><td>Lower forward voltage at a given current for these defaults</td><td>PN-like forward behavior</td></tr>
+        <tr><td>Reverse I–V curve</td><td>Small leakage before breakdown</td><td>Greater leakage for these defaults</td><td>Strong reverse current near the selected breakdown voltage</td></tr>
+        <tr><td>Depletion region</td><td>Extends into both semiconductor regions</td><td>Extends into n-type silicon</td><td>Narrower at a given junction voltage because of heavier doping</td></tr>
+        <tr><td>Capacitance plots</td><td>Depletion capacitance and forward stored-charge capacitance</td><td>Depletion capacitance; modeled diffusion capacitance is zero</td><td>Depletion capacitance and forward stored-charge capacitance</td></tr>
       </tbody>
     </table>
-    <p>There is <b>no fixed turn-on voltage</b> for any mode. Compare forward voltage at a stated current, area, and temperature. A Zener also needs a stated reverse test current: the knee is not an ideal constant-voltage source.</p>
+    <p>Compare forward voltage at a stated current and temperature. Area and the saved device properties also affect the result. In reverse breakdown, the voltage changes with current according to the shape of the modeled knee and the series resistance.</p>
     <div class="guide-columns">
       <div>
-        <h3>01 / Current, carriers, and equilibrium</h3>
-        <p>The voltage control sets V = V<sub>A</sub> − V<sub>K</sub>. Positive conventional current enters the anode A and leaves the cathode K. Electrons move opposite conventional current; holes move with it. A hole is a missing valence electron that behaves as a positive mobile carrier. In PN and Zener modes, A is the p side; in Schottky mode, A is the metal.</p>
-        <p>At equilibrium, the net current is zero even though microscopic thermal motion and opposing transport continue. The built-in potential V<sub>bi</sub> is an internal barrier, not a battery voltage available at the terminals. Net-transport animation markers therefore stop at V = 0; this does <b>not</b> mean real carriers stop moving.</p>
+        <h3>01 / Junction structure and bias</h3>
+        <p><b>PN junction.</b> Donors supply electrons to n-type silicon; acceptors make holes abundant in p-type silicon. When the regions meet, mobile charges spread across the boundary and recombine. Fixed negative acceptor ions remain on the p side and positive donor ions on the n side. These ions form the depletion region and its built-in electric field. Forward bias lowers the internal barrier and narrows this region; reverse bias raises the barrier and widens it.</p>
+        <div class="equation model-equations equation-set">
+  <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><msub><mi>V</mi><mi>T</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>k</mi><mi>B</mi></msub><mi>T</mi></mrow><mrow><mi>q</mi></mrow></mfrac></math>
+  <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><msub><mi>V</mi><mi>bi</mi></msub><mo>=</mo><msub><mi>V</mi><mi>T</mi></msub><mi>ln</mi><mo>(</mo><mfrac><mrow><msub><mi>N</mi><mi>A</mi></msub><msub><mi>N</mi><mi>D</mi></msub></mrow><mrow><msup><msub><mi>n</mi><mi>i</mi></msub><mn>2</mn></msup></mrow></mfrac><mo>)</mo><mspace width="1em"/><mtext>PN / Zener</mtext></math>
+</div>
+        <p>N<sub>A</sub> and N<sub>D</sub> are the acceptor and donor concentrations; n<sub>i</sub> is the intrinsic carrier concentration. The thermal voltage V<sub>T</sub> is approximately 25.9 mV at 27 °C. At equilibrium, the built-in field balances the tendency of charges to spread, giving zero net terminal current. <a href="https://engineering.purdue.edu/wcchew/ece255s18/ece%20255%20s18%20latex%20pdf%20files/ece255Lecture_3_Jan16_PN_Junction_Diode.pdf" target="_blank" rel="noopener">Purdue · PN junctions</a></p>
+        <p><b>Schottky contact.</b> A metal replaces the p-type region. Negative charge at the metal surface balances the positive donor ions in depleted n-type silicon. The selected metal barrier property affects the band bending and current. With the default properties, the Schottky example shows a lower forward drop and greater reverse leakage.</p>
+        <p><b>Zener junction.</b> Heavier doping produces a narrower depletion region and a stronger electric field. The selected breakdown voltage sets where the reverse I–V curve turns downward. Its forward curve follows the same form as the PN example.</p>
 
-        <h3>02 / PN: diffusion leaves fixed charge behind</h3>
-        <p>Donors supply electrons to n-type silicon; acceptors make holes the majority carriers in p-type silicon. When the regions meet, carriers diffuse and recombine. Exposed acceptor ions are negative on the p side; donor ions are positive on the n side. The resulting field points from n to p and opposes further majority diffusion. At equilibrium, drift and diffusion balance.</p>
-        <div class="equation model-equations">V<sub>T</sub> = k<sub>B</sub>T/q<br>V<sub>bi</sub> = V<sub>T</sub> ln(N<sub>A</sub>N<sub>D</sub>/n<sub>i</sub>²)<br>n<sub>p0</sub> = n<sub>i</sub>²/N<sub>A</sub>, &nbsp; p<sub>n0</sub> = n<sub>i</sub>²/N<sub>D</sub></div>
-        <p>Forward bias lowers the barrier and injects electrons into p material and holes into n material. These minority carriers diffuse and recombine in the neutral regions. Reverse bias suppresses injection while the field collects available minority carriers. <a href="https://engineering.purdue.edu/wcchew/ece255s18/ece%20255%20s18%20latex%20pdf%20files/ece255Lecture_3_Jan16_PN_Junction_Diode.pdf" target="_blank" rel="noopener">Purdue · PN transport</a></p>
+        <h3>02 / Connect charge, field, and depletion width</h3>
+        <p>All five diagrams share the <b>same horizontal position axis and depletion edges</b>. The junction is at x = 0. Follow an edge vertically to connect the depleted material with its energy bands, charge density, field, and potential. Each vertical axis uses its own scale.</p>
+        <div class="equation model-equations equation-set">
+  <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>Δψ</mi><mo>=</mo><msub><mi>V</mi><mi>bi</mi></msub><mo>−</mo><msub><mi>V</mi><mi>j</mi></msub></math>
+  <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>W</mi><mo>=</mo><msqrt><mfrac><mrow><mn>2</mn><msub><mi>ε</mi><mi>Si</mi></msub></mrow><mrow><mi>q</mi></mrow></mfrac><mo>(</mo><mfrac><mrow><mn>1</mn></mrow><mrow><msub><mi>N</mi><mi>A</mi></msub></mrow></mfrac><mo>+</mo><mfrac><mrow><mn>1</mn></mrow><mrow><msub><mi>N</mi><mi>D</mi></msub></mrow></mfrac><mo>)</mo><mi>Δψ</mi></msqrt><mspace width="1em"/><mtext>PN / Zener</mtext></math>
+  <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><msub><mi>x</mi><mi>p</mi></msub><mo>=</mo><mfrac><mrow><mi>W</mi><msub><mi>N</mi><mi>D</mi></msub></mrow><mrow><msub><mi>N</mi><mi>A</mi></msub><mo>+</mo><msub><mi>N</mi><mi>D</mi></msub></mrow></mfrac><mo>,</mo><mspace width="1em"/><msub><mi>x</mi><mi>n</mi></msub><mo>=</mo><mfrac><mrow><mi>W</mi><msub><mi>N</mi><mi>A</mi></msub></mrow><mrow><msub><mi>N</mi><mi>A</mi></msub><mo>+</mo><msub><mi>N</mi><mi>D</mi></msub></mrow></mfrac></math>
+  <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>W</mi><mo>=</mo><msub><mi>x</mi><mi>n</mi></msub><mo>=</mo><msqrt><mfrac><mrow><mn>2</mn><msub><mi>ε</mi><mi>Si</mi></msub><mi>Δψ</mi></mrow><mrow><mi>q</mi><msub><mi>N</mi><mi>D</mi></msub></mrow></mfrac></msqrt><mspace width="1em"/><mtext>Schottky</mtext></math>
+</div>
+        <p>V<sub>j</sub> is the internal junction voltage; Δψ is the potential rise across the depleted region. In PN and Zener modes, the depletion width extends farther into the more lightly doped side. In Schottky mode, the width lies in the semiconductor, and the metal charge appears as a sheet at the interface.</p>
+        <div class="equation model-equations equation-set">
+  <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mfrac><mrow><mi mathvariant="normal">d</mi><mi>E</mi></mrow><mrow><mi mathvariant="normal">d</mi><mi>x</mi></mrow></mfrac><mo>=</mo><mfrac><mrow><mi>ρ</mi></mrow><mrow><msub><mi>ε</mi><mi>Si</mi></msub></mrow></mfrac><mo>,</mo><mspace width="1em"/><mi>E</mi><mo>=</mo><mo>−</mo><mfrac><mrow><mi mathvariant="normal">d</mi><mi>ψ</mi></mrow><mrow><mi mathvariant="normal">d</mi><mi>x</mi></mrow></mfrac></math>
+  <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mo>|</mo><msub><mi>E</mi><mi>max</mi></msub><mo>|</mo><mo>=</mo><mfrac><mrow><mi>q</mi><msub><mi>N</mi><mi>D</mi></msub><msub><mi>x</mi><mi>n</mi></msub></mrow><mrow><msub><mi>ε</mi><mi>Si</mi></msub></mrow></mfrac></math>
+</div>
+        <p>Charge density ρ sets the slope of the electric field E. The field points left, from the positive donors toward the negative charge. The field plot therefore lies below zero; its peak readout gives the magnitude. Potential ψ rises toward the right, while electron band-edge energy falls. <a href="https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2009/c053714447998e522f02db0776987091_MIT6_012F09_lec04.pdf" target="_blank" rel="noopener">MIT · charge, field, and potential</a></p>
 
-        <h3>03 / Schottky: a metal barrier for electrons</h3>
-        <p>At a rectifying metal / n-silicon contact, depleted silicon contains positive donor ions; an opposing negative sheet charge resides at the metal surface. There is no depleted p-type region. Forward bias increases electron transport from silicon into the metal by thermionic emission: sufficiently energetic electrons pass <b>over</b> the interfacial barrier. Before breakdown, reverse transport is from metal into silicon in this idealized model.</p>
-        <div class="equation model-equations">N<sub>C</sub> = 2.8 × 10<sup>19</sup>(T/T<sub>0</sub>)<sup>3/2</sup> cm<sup>−3</sup><br>V<sub>bi</sub> = φ<sub>Bn</sub> − V<sub>T</sub> ln(N<sub>C</sub>/N<sub>D</sub>)<br>I<sub>S,TE</sub> = AA* T² exp(−φ<sub>Bn</sub>/V<sub>T</sub>)<br>A* = 112 A cm<sup>−2</sup> K<sup>−2</sup></div>
-        <p>Here A is junction area and A* is the chosen effective Richardson constant. φ<sub>Bn</sub> is expressed in volts; its barrier energy qφ<sub>Bn</sub> in eV has the same numerical value. It differs from the semiconductor band bending V<sub>bi</sub> − V<sub>j</sub>. In the ideal contact, the barrier relative to the metal Fermi level stays fixed while bias changes the silicon-to-metal injection barrier. The metal is drawn with a Fermi reference, not silicon conduction and valence bands. <a href="https://ocw.mit.edu/courses/6-720j-integrated-microelectronic-devices-spring-2007/089385b38dbf1f3a317ba24064aed26e_lecture18.pdf" target="_blank" rel="noopener">MIT · thermionic emission</a></p>
-
-        <p>In the optional Schottky avalanche branch, impact ionization generates electron–hole pairs inside depleted silicon. Electrons are collected toward the n-side cathode and holes toward the metal anode. These generated holes are different from forward minority-carrier injection in a PN diode. The illustrative avalanche current does not add a minority-storage or recovery model. <a href="https://ocw.mit.edu/courses/6-720j-integrated-microelectronic-devices-spring-2007/98a09bf3cce342df02e168bbcebbddb5_lecture19.pdf" target="_blank" rel="noopener">MIT · Schottky breakdown and dynamics</a></p>
-
-        <h3>04 / Zener: a thin barrier permits tunneling</h3>
-        <p>This mode represents a low-voltage Zener junction, with both sides heavily doped. At comparable reverse bias, its narrow depletion region produces a strong field. Electrons can tunnel from occupied valence-band states into available conduction-band states, leaving holes behind. The field collects electrons toward n and holes toward p. Tunneling passes <b>through</b> a classically forbidden barrier; it is not a slow classical flight over the band-gap energy barrier.</p>
-        <p>The band diagram marks the tunneling mechanism schematically; it does not compute a tunneling probability or a quantum trajectory. The charge and field still use abrupt-junction electrostatics. “Zener diode” is also the commercial name for devices whose reverse breakdown is dominated by avalanche, especially at higher breakdown voltages. Avalanche creates additional electron–hole pairs through impact ionization. Real junctions can exhibit both mechanisms. <a href="https://toshiba.semicon-storage.com/eu/semiconductor/knowledge/e-learning/basics-of-tvs-diodes/chap1/chap1-2.html" target="_blank" rel="noopener">Toshiba · tunneling and avalanche</a></p>
-
-        <h3>05 / Follow one position down the diagrams</h3>
-        <p>The transport animation, energy bands, charge, field, and potential share the <b>same horizontal position axis and depletion edges</b>. Follow a vertical guide through the stack to connect fixed charge with field and band bending. The physical depletion partition is retained; charge-marker count and size do not measure concentration.</p>
-        <div class="equation model-equations">ψ = V<sub>bi</sub> − V<sub>j</sub><br>PN / Zener: W = √[(2ε<sub>Si</sub>/q)(1/N<sub>A</sub> + 1/N<sub>D</sub>)ψ]<br>x<sub>p</sub> = WN<sub>D</sub>/(N<sub>A</sub> + N<sub>D</sub>)<br>x<sub>n</sub> = WN<sub>A</sub>/(N<sub>A</sub> + N<sub>D</sub>)<br>Schottky: x<sub>p</sub> = 0, &nbsp; x<sub>n</sub> = W = √[2ε<sub>Si</sub>ψ/(qN<sub>D</sub>)]</div>
-        <p>For PN and Zener junctions, N<sub>A</sub>x<sub>p</sub> = N<sub>D</sub>x<sub>n</sub>; depletion extends farther into the more lightly doped side. For Schottky, the metal surface charge per area is σ<sub>M</sub> = −qN<sub>D</sub>W, balancing the depleted donors. It is a sheet charge, not a finite volume of depleted metal.</p>
-        <div class="equation model-equations">dE/dx = ρ/ε<sub>Si</sub>, &nbsp; E = −dφ/dx<br>|E<sub>max</sub>| = qN<sub>D</sub>x<sub>n</sub>/ε<sub>Si</sub><br>E<sub>C</sub>(x), E<sub>V</sub>(x) bend as −qφ(x)</div>
-        <p>The field is negative in this left-to-right coordinate system; the displayed peak is its magnitude. Electron band edges fall as electrostatic potential rises. A flat common Fermi level describes equilibrium. Under bias, the drawn reference levels indicate the internal junction bias; they are not a full spatial quasi-Fermi solution. <a href="https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2009/c053714447998e522f02db0776987091_MIT6_012F09_lec04.pdf" target="_blank" rel="noopener">MIT · charge, field, and potential</a></p>
+        <h3>03 / Read the energy bands</h3>
+        <p>E<sub>C</sub> and E<sub>V</sub> mark the conduction- and valence-band edges. They bend together and remain separated by the model's silicon band gap of 1.12 eV. The purple dotted <b>E<sub>fi</sub></b> curve is the intrinsic Fermi level, a reference associated with undoped semiconductor. It lies near the middle of the gap and follows the band bending.</p>
+        <p>The dashed Fermi references describe the two sides of the junction. They coincide at equilibrium and separate by the energy associated with V<sub>j</sub> under bias. These side references show the contact conditions. Forward bias reduces band bending; reverse bias increases it. In Schottky mode, the semiconductor bands occupy the right-hand region, and the shaded metal states appear on the left.</p>
       </div>
       <div>
-        <h3>06 / Similar I–V shapes, different mechanisms</h3>
-        <div class="equation model-equations">I<sub>base</sub> = I<sub>S</sub>[exp(V<sub>j</sub>/(nV<sub>T</sub>)) − 1]<br>PN / Zener: L<sub>n,p</sub> = √(D<sub>n,p</sub>τ)<br>I<sub>S</sub> = qAn<sub>i</sub>²[D<sub>n</sub>/(L<sub>n</sub>N<sub>A</sub>) + D<sub>p</sub>/(L<sub>p</sub>N<sub>D</sub>)]<br>Schottky: I<sub>S</sub> = I<sub>S,TE</sub></div>
-        <p>The PN and Zener forward model assumes uniform doping, low-level injection, and neutral regions much longer than their diffusion lengths. The Schottky exponential instead describes thermionic emission. A similar terminal equation does not imply identical carrier physics. The adjustable ideality n is an empirical electrical parameter, not a complete recombination or interface model.</p>
-        <p>For I ≫ I<sub>S</sub> before resistance dominates, each current decade takes ΔV<sub>j</sub> = nV<sub>T</sub> ln(10), approximately 59.6n mV at 27 °C. Logarithmic plots show |I|; use the signed readout to distinguish forward from reverse current. Real leakage can exceed this model because surface leakage, depletion generation, and Schottky barrier lowering are omitted.</p>
+        <h3>04 / Read the current–voltage curves</h3>
+        <div class="equation model-equations equation-set">
+  <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><msub><mi>I</mi><mi>base</mi></msub><mo>=</mo><msub><mi>I</mi><mi>S</mi></msub><mo>[</mo><mi>exp</mi><mo>(</mo><mfrac><mrow><msub><mi>V</mi><mi>j</mi></msub></mrow><mrow><mi>n</mi><msub><mi>V</mi><mi>T</mi></msub></mrow></mfrac><mo>)</mo><mo>−</mo><mn>1</mn><mo>]</mo></math>
+  <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>I</mi><mo>=</mo><msub><mi>I</mi><mi>base</mi></msub><mo>+</mo><msub><mi>I</mi><mi>breakdown</mi></msub></math>
+  <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mi>V</mi><mo>=</mo><msub><mi>V</mi><mi>j</mi></msub><mo>+</mo><mi>I</mi><msub><mi>R</mi><mi>s</mi></msub></math>
+</div>
+        <p>Forward current rises approximately exponentially at first. I<sub>S</sub> sets the current scale for the selected diode, and n is the ideality factor. At higher current, the voltage drop across R<sub>s</sub> makes the terminal I–V curve less steep. The <b>Intrinsic</b> selection uses the base current law with V<sub>j</sub> equal to V. <b>+ R<sub>s</sub> &amp; breakdown</b> adds series resistance and the reverse-breakdown branch.</p>
+        <p>On a logarithmic current axis, equal vertical intervals represent equal current ratios. The plot uses the magnitude |I|, while the operating-point readout retains the sign. Positive current corresponds to forward operation; negative current corresponds to reverse operation.</p>
+        <p>The <b>BV</b> property sets the onset of the illustrative reverse knee. In the Zener example, the added reverse branch reaches −1 mA when the internal reverse voltage exceeds BV by 0.10 V. BV is a separate adjustable property: doping controls the depicted depletion width and field, while BV controls the electrical knee. The breakdown property stays fixed as temperature changes.</p>
 
-        <h3>07 / What the two current models include</h3>
-        <div class="equation model-equations">I = I<sub>base</sub> + I<sub>breakdown</sub><br>V = V<sub>j</sub> + IR<sub>s</sub></div>
-        <p><b>Intrinsic</b> removes series resistance and all reverse-breakdown branches. <b>+ R<sub>s</sub> &amp; breakdown</b> solves the terminal-voltage equation, so the internal V<sub>j</sub> can differ substantially from V. Both use the selected device's parameters.</p>
-        <div class="equation model-equations">PN / Schottky illustrative avalanche branch:<br>z = max[0, (−V<sub>j</sub> − BV)/(0.12 V)]<br>I<sub>av</sub> = −I<sub>BV</sub>(e<sup>z</sup> − 1 − z)<br><br>Zener empirical reverse branch:<br>u = max[0, (−V<sub>j</sub> − BV)/(0.10 V)]<br>I<sub>Z</sub> = −2I<sub>BV</sub>u²/(1 + u)</div>
-        <p>Both added branches have continuous current and slope at their onset. I<sub>BV</sub> = 1 mA is a scale parameter. For the Zener branch, I<sub>Z</sub> = −1 mA at V<sub>j</sub> = −(BV + 0.10 V); BV itself is the onset, not a datasheet voltage at a specified test current. Its curved knee is a teaching approximation to reverse conduction, <b>not a microscopic tunneling calculation</b>.</p>
-        <p>BV is independently editable and does not follow doping or temperature. Changing doping therefore changes the depicted width and field but does not automatically shift the electrical knee. Real devices couple those quantities. The model does not calculate breakdown multiplication, breakdown temperature coefficients, power ratings, or thermal damage.</p>
+        <h3>05 / Read resistance and capacitance</h3>
+        <div class="equation model-equations equation-set">
+  <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><msub><mi>r</mi><mi mathvariant="normal">d</mi></msub><mo>=</mo><mfrac><mrow><mo>∂</mo><mi>V</mi></mrow><mrow><mo>∂</mo><mi>I</mi></mrow></mfrac><mo>,</mo><mspace width="1em"/><msub><mi>C</mi><mi>j</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>ε</mi><mi>Si</mi></msub><mi>A</mi></mrow><mrow><mi>W</mi></mrow></mfrac></math>
+  <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><msub><mi>C</mi><mi>diff</mi></msub><mo>≈</mo><mi>τ</mi><mfrac><mrow><mo>∂</mo><msub><mi>I</mi><mi>base</mi></msub></mrow><mrow><mo>∂</mo><msub><mi>V</mi><mi>j</mi></msub></mrow></mfrac><mspace width="1em"/><mtext>PN / Zener, forward bias</mtext></math>
+  <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><msub><mi>C</mi><mi>diff</mi></msub><mo>=</mo><mn>0</mn><mspace width="1em"/><mtext>Schottky model</mtext></math>
+</div>
+        <p>Small-signal resistance r<sub>d</sub> is the local slope of voltage against current at the operating point. In the <b>+ R<sub>s</sub> &amp; breakdown</b> model, it includes the series resistance. Junction capacitance C<sub>j</sub> describes the change in depletion charge: a wider depleted region gives a smaller capacitance, and a larger junction area A gives a larger capacitance.</p>
+        <p>The diffusion-capacitance plot represents additional stored charge in forward-biased PN and Zener junctions. The lifetime τ controls how much charge accumulates at a given base-current slope. Both capacitance plots describe the internal junction under slowly varying conditions. The Schottky example stores depletion charge through C<sub>j</sub>.</p>
 
-        <h3>08 / Resistance, capacitance, and switching</h3>
-        <div class="equation model-equations">g<sub>j</sub> = ∂I/∂V<sub>j</sub><br>r<sub>d</sub> = R<sub>s</sub> + 1/g<sub>j</sub><br>C<sub>j</sub> = ε<sub>Si</sub>A/W<br>PN / Zener: C<sub>diff</sub> ≈ τ ∂I<sub>base</sub>/∂V<sub>j</sub> &nbsp; (forward bias)<br>Schottky: C<sub>diff</sub> = 0</div>
-        <p>Small-signal resistance is the local slope ∂V/∂I, not V/I. Junction capacitance represents changing depletion charge; a wider region gives smaller C<sub>j</sub>. Forward diffusion capacitance represents changing minority charge in the neutral regions. These are internal, quasi-static estimates, not terminal capacitance at a specified frequency. <a href="https://www.ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2005/3488c8393dbc748da85fa7737a5b433b_lecture16annotat.pdf" target="_blank" rel="noopener">MIT · incremental resistance and charge storage</a></p>
-        <p>A PN junction can briefly conduct reverse current while stored minority charge is removed or recombines: reverse recovery. Schottky thermionic conduction has no forward minority-injection storage in this model, but it still has junction capacitance and resistance, so switching is not instantaneous. Displacement current can flow as its depletion charge changes. The animation samples DC operating points and does not solve either device's switching transient. <a href="https://ocw.mit.edu/courses/6-720j-integrated-microelectronic-devices-spring-2007/98a09bf3cce342df02e168bbcebbddb5_lecture19.pdf" target="_blank" rel="noopener">MIT · Schottky switching</a></p>
+        <h3>06 / Read temperature and animation</h3>
+        <p>The current-versus-temperature plot holds the selected terminal voltage fixed. Temperature changes V<sub>T</sub>, the intrinsic carrier concentration, the current scale, and the built-in potential. The saved ideality factor, series resistance, lifetime, Schottky barrier, breakdown property, and silicon band gap remain fixed.</p>
+        <div class="equation model-equations equation-set">
+  <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><msub><mi>v</mi><mi>marker</mi></msub><mo>=</mo><mn>80</mn><mfrac><mrow><mtext>px</mtext></mrow><mrow><mtext>s</mtext></mrow></mfrac><mo>×</mo><mfrac><mrow><mo>|</mo><mi>I</mi><mo>|</mo></mrow><mrow><mn>1</mn><mspace width="0.2em"/><mtext>mA</mtext></mrow></mfrac></math>
+</div>
+        <p>Moving markers represent net terminal current at the fixed scale <b>1 mA → 80 pixels/s</b>. Doubling the current doubles their speed. Electrons move opposite conventional current; holes move with it. At equilibrium the markers stop as the opposing microscopic motions balance. Tiny leakage can look stationary, and large currents can produce jumps between frames. Marker counts and sizes are illustrative.</p>
 
-        <h3>09 / Read the motion as a current meter</h3>
-        <div class="equation model-equations">marker speed = 80 × |I|/I<sub>ref</sub> &nbsp; SVG pixels/s</div>
-        <p>I<sub>ref</sub> is the adjustable display current scale. At a fixed scale, doubling the model's net current doubles marker speed in every device mode. The same scale is retained when switching devices. Direction follows the current sign and carrier charge. The animation has no minimum speed or logarithmic speed compression: tiny leakage can appear stationary, while large current can move too far between frames and appear to jump or alias. Adjust the display scale to inspect that operating range.</p>
-        <p>Marker speed is a visualization of <b>net terminal current</b>, not carrier mobility, microscopic drift velocity, or a physical transit time. Marker number, ion number, fading, and tunneling paths are schematic. Pausing motion preserves the operating point.</p>
-        <ol class="lesson-list">
-          <li><b>Start at V = 0.</b> Follow the aligned depletion edges. Explain why a field exists with zero net current and stationary net-transport markers.</li>
-          <li><b>Compare equal forward current.</b> Adjust V separately for each mode, keeping temperature fixed. How do the required V, V<sub>j</sub>, and diffusion capacitance differ?</li>
-          <li><b>Compare at −1 V.</b> Use the same animation scale. Relate leakage, depletion width, peak field, and junction capacitance; then raise temperature.</li>
-          <li><b>Make PN doping asymmetric.</b> Predict which edge moves farther. Switch to Schottky and identify the surface charge that replaces the p-side space charge.</li>
-          <li><b>Explore the Zener knee.</b> Use the extended model near the selected BV. Compare terminal V with V<sub>j</sub> and explain how R<sub>s</sub> changes the slope.</li>
-          <li><b>Test proportional motion.</b> Find two points with a 2:1 current ratio, leave the display scale fixed, and compare marker speeds.</li>
-        </ol>
-
-        <h3>10 / Temperature, defaults, and limits</h3>
-        <div class="equation model-equations">n<sub>i</sub>(T) = 10<sup>10</sup>(T/T<sub>0</sub>)<sup>3/2</sup><br>× exp[(1.12 eV/(2k<sub>eV</sub>))(1/T<sub>0</sub> − 1/T)] cm<sup>−3</sup><br>T<sub>0</sub> = 300.15 K, &nbsp; k<sub>eV</sub> = 8.61733 × 10<sup>−5</sup> eV/K</div>
-        <p>PN defaults use N<sub>A</sub> = N<sub>D</sub> = 10<sup>16</sup> cm<sup>−3</sup> and τ = 10<sup>−7</sup> s. Schottky defaults use N<sub>D</sub> = 10<sup>16</sup> cm<sup>−3</sup>, qφ<sub>Bn</sub> = 0.65 eV, and n = 1.05. Zener defaults use N<sub>A</sub> = N<sub>D</sub> = 10<sup>18</sup> cm<sup>−3</sup>, τ = 10<sup>−8</sup> s, and BV = 3.3 V. All start at area A = 10<sup>−4</sup> cm². These values define illustrative devices.</p>
-        <p>Temperature changes V<sub>T</sub>, n<sub>i</sub>, N<sub>C</sub>, I<sub>S</sub>, and V<sub>bi</sub> where applicable. The chosen n, R<sub>s</sub>, τ, φ<sub>Bn</sub>, BV, D<sub>n</sub> = 35 cm²/s, D<sub>p</sub> = 12 cm²/s, and silicon gap 1.12 eV stay fixed. Uniform fully ionized doping and nondegenerate statistics are assumed. Heavy-doping corrections, band-gap narrowing, Schottky image-force lowering and field emission, self-heating, illumination, and graded junctions are omitted. In particular, the Zener bands and depletion values remain an approximate classical picture at high doping.</p>
-        <p><b>Watch the validity notice.</b> Depletion results are withheld when ψ ≤ 50 mV. In PN and Zener modes, they are also withheld when the ideal minority boundary law predicts excess minority concentration at least 10% of the majority concentration; this also invalidates C<sub>diff</sub>. These are teaching cutoffs, not abrupt physical transitions. The Schottky mode does not apply a minority-injection test. Current curves can continue as labeled extrapolations without validating the omitted physics.</p>
+        <h3>07 / Supported model range</h3>
+        <p>The diagrams use uniformly doped silicon, a fixed 1.12 eV band gap, and the depletion approximation. They show steady operating points at the selected temperature. The current curves and reverse knees illustrate the chosen device properties; quantitative comparison with a physical diode requires its measured parameters.</p>
+        <p><b>Watch the validity notice.</b> Depletion width, junction capacitance, and the spatial profiles are shown where the remaining barrier exceeds 50 mV and, for PN and Zener junctions, the estimated excess carrier density stays below 10% of the majority density. The diffusion-capacitance curve also ends at this density limit. Outside the depletion range, the diagram reports that the approximation is unavailable, and the selected current curve continues as an amber extrapolation. These thresholds indicate where the teaching approximation is used; a physical diode changes continuously through these conditions.</p>
       </div>
     </div>
   </div>
@@ -903,9 +931,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports=DiodeModel;
     return (v/s[0]).toPrecision(3)+' '+s[1]+unit;
   }
   const volts=v=>finite(v).toFixed(3)+' V';
-  function motionRate(q,reference=1e-3) {
-    if(!(reference>0)||!Number.isFinite(reference))reference=1e-3;
-    return 80*Math.abs(finite(q.I))/reference;
+  function motionRate(q) {
+    return 80*Math.abs(finite(q.I))/1e-3;
   }
   function geometry(q) {
     const schottky=device(q)==='schottky',valid=q.validDepletion!==false&&q.barrier>0&&q.W>0;
@@ -945,8 +972,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports=DiodeModel;
     root.innerHTML=`
       <div class="cross-toolbar"><span class="region-pill" id="dd-region"></span><span id="dd-view-caption"></span></div>
       <p class="diagram-hint">Swipe across all aligned diagrams together →</p>
-      <div class="device-viewport"><svg class="device-svg" id="dd-aligned-svg" viewBox="0 0 900 1160" role="img" aria-labelledby="dd-title dd-description">
-      <title id="dd-title">Diode transport, energy bands, charge, field, and potential on one position axis</title><desc id="dd-description"></desc>
+      <div class="device-viewport" id="dd-animation-viewport" tabindex="0" role="region" aria-label="Carrier animation"><svg class="device-svg" id="dd-aligned-svg" viewBox="0 0 900 354" role="img" aria-labelledby="dd-title dd-description">
+      <title id="dd-title">Moving charges in the diode cross section</title><desc id="dd-description"></desc>
       <defs>
         <linearGradient id="dd-silicon" x1="0" x2="0" y1="0" y2="1"><stop stop-color="var(--substrate,var(--panel-alt))"/><stop offset="1" stop-color="var(--panel)"/></linearGradient>
         <pattern id="dd-lattice" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="11" cy="11" r="1" fill="var(--muted)" opacity=".15"/></pattern>
@@ -956,10 +983,10 @@ if (typeof module !== 'undefined' && module.exports) module.exports=DiodeModel;
         <marker id="dd-electron-head" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7Z" fill="var(--accent)"/></marker>
         <clipPath id="dd-carrier-clip"><rect x="100" y="106" width="600" height="145" rx="5"/></clipPath>
       </defs>
-      <rect id="dd-all-depletion" y="106" height="987" fill="var(--accent2)" opacity=".045"/>
-      <path id="dd-alignment-guides" stroke="var(--accent2)" stroke-width="1" stroke-opacity=".45" stroke-dasharray="4 5" fill="none"/>
-      <path d="M400 106V1093" stroke="var(--muted)" stroke-opacity=".3" stroke-dasharray="2 6"/>
-      <text x="100" y="21" class="device-name">01 · Carrier transport</text>
+      <rect id="dd-carrier-depletion" y="106" height="240" fill="var(--accent2)" opacity=".045"/>
+      <path id="dd-carrier-guides" stroke="var(--accent2)" stroke-width="1" stroke-opacity=".45" stroke-dasharray="4 5" fill="none"/>
+      <path d="M400 106V346" stroke="var(--muted)" stroke-opacity=".3" stroke-dasharray="2 6"/>
+      <text x="100" y="21" class="device-name">01 · Moving charges</text>
       <text x="235" y="50" text-anchor="middle" class="device-name">ANODE · A</text><text x="565" y="50" text-anchor="middle" class="device-name">CATHODE · K</text>
       <text id="dd-terminal-v" x="235" y="72" text-anchor="middle" class="terminal-value"></text><text x="565" y="72" text-anchor="middle" class="terminal-value">0 V reference</text>
       <path d="M235 82V106 M565 82V106" class="device-wire"/>
@@ -986,25 +1013,37 @@ if (typeof module !== 'undefined' && module.exports) module.exports=DiodeModel;
       <text x="735" y="195">Conventional current</text><text id="dd-current-value" x="735" y="218" class="terminal-value"></text>
       <text x="735" y="244">I &gt; 0: A → K</text><text id="dd-carrier-kind" x="735" y="271"></text>
       <text x="735" y="306">Field points ←</text><text id="dd-event-label" x="735" y="331"></text>
-      <path d="M100 354H890" stroke="var(--line)"/>
+      </svg></div>
+      <div class="cross-legend"><span><i style="background:var(--accent);border-radius:50%"></i>Electron · filled</span><span id="dd-hole-legend"><i style="background:var(--panel);border:1.6px solid var(--warm,#99724b);border-radius:50%"></i>Hole · outlined</span><span><i style="background:var(--accent2);opacity:.4"></i>Depletion · aligned across all rows</span><span id="dd-ion-legend"></span></div>
+      <p class="cross-note" id="dd-motion-note"></p>
+      <details class="junction-diagrams" id="dd-diagrams">
+      <summary>Energy bands, charge density, electric field &amp; electrostatic potential <span class="expansion-hint">(Expand for more info)</span></summary>
+      <div class="device-viewport" id="dd-profiles-viewport" tabindex="0" role="region" aria-label="Junction diagrams"><svg class="device-svg" id="dd-profiles-svg" viewBox="0 354 900 806" role="img" aria-labelledby="dd-profiles-title dd-profiles-description">
+      <title id="dd-profiles-title">Energy bands, charge density, electric field, and electrostatic potential</title><desc id="dd-profiles-description">The four diagrams share the cross section's horizontal position scale and depletion boundaries.</desc>
+      <rect id="dd-all-depletion" y="354" height="739" fill="var(--accent2)" opacity=".045"/>
+      <path id="dd-alignment-guides" stroke="var(--accent2)" stroke-width="1" stroke-opacity=".45" stroke-dasharray="4 5" fill="none"/>
+      <path d="M400 354V1093" stroke="var(--muted)" stroke-opacity=".3" stroke-dasharray="2 6"/>
       <text x="100" y="379" class="device-name">02 · Energy bands</text><text x="700" y="379" text-anchor="end">Electron energy ↑ · eV</text>
       <g id="dd-band-plots">
         <rect id="dd-metal-occupied" x="100" width="300" fill="var(--muted)" opacity=".10"/>
         <path id="dd-ec" fill="none" stroke="var(--accent)" stroke-width="2.2"/><path id="dd-ev" fill="none" stroke="var(--accent)" stroke-width="2.2"/>
+        <path id="dd-efi" fill="none" stroke="#756585" stroke-width="1.8" stroke-dasharray="2 4"/>
         <path id="dd-ef-p" fill="none" stroke="var(--warm,#99724b)" stroke-width="1.6" stroke-dasharray="6 4"/>
         <path id="dd-ef-n" fill="none" stroke="var(--accent2)" stroke-width="1.6" stroke-dasharray="6 4"/>
         <text id="dd-metal-occupancy" x="120">Occupied metal states</text>
         <text id="dd-ec-label" x="708" style="fill:var(--accent)">E꜀</text><text id="dd-ev-label" x="708" style="fill:var(--accent)">Eᵥ</text>
+        <text id="dd-efi-label" x="708" style="fill:#756585">Eꜰᵢ</text>
         <path id="dd-barrier-bracket" fill="none" stroke="var(--warm,#99724b)"/><text id="dd-barrier-label" x="385" text-anchor="end" style="fill:var(--warm,#99724b)"></text>
         <path id="dd-band-transport" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#dd-electron-head)"/>
         <circle id="dd-band-electron" r="4" fill="var(--accent)" stroke="var(--panel)" stroke-width="1"/>
         <text id="dd-band-event-label" x="400" y="637" text-anchor="middle" style="fill:var(--accent)"></text>
       </g>
       <text id="dd-band-unavailable" x="400" y="503" text-anchor="middle">Depletion / low-injection band profile unavailable at this bias.</text>
-      <text x="747" y="420" class="device-name">Dashed levels</text><text id="dd-fermi-left" x="747" y="448" style="fill:var(--warm,#99724b)"></text>
+      <text x="747" y="420" class="device-name">Energy references</text><text id="dd-fermi-left" x="747" y="448" style="fill:var(--warm,#99724b)"></text>
       <text x="747" y="474" style="fill:var(--accent2)">Eꜰₙ · n side</text>
-      <text id="dd-fermi-relation" x="747" y="512"></text><text id="dd-fermi-value" x="747" y="536"></text>
-      <text id="dd-band-barrier" x="747" y="576"></text><text id="dd-band-barrier-value" x="747" y="600"></text><text x="747" y="634">Rₛ drop excluded</text>
+      <text x="747" y="500" style="fill:#756585">Eꜰᵢ · intrinsic</text>
+      <text id="dd-fermi-relation" x="747" y="539"></text><text id="dd-fermi-value" x="747" y="561"></text>
+      <text id="dd-band-barrier" x="747" y="589"></text><text id="dd-band-barrier-value" x="747" y="611"></text><text x="747" y="641">Rₛ drop excluded</text>
       <path d="M100 659H890" stroke="var(--line)"/>
       <text x="100" y="685" class="device-name">03 · Charge density ρ(x)</text><text x="700" y="685" text-anchor="end">C / cm³</text>
       <path d="M100 748H700" stroke="var(--muted)" stroke-width=".8"/><text x="87" y="752" text-anchor="end">0</text>
@@ -1024,10 +1063,21 @@ if (typeof module !== 'undefined' && module.exports) module.exports=DiodeModel;
       <text id="dd-position-left" x="100" y="1116"></text><text x="400" y="1116" text-anchor="middle">x = 0</text><text id="dd-position-right" x="700" y="1116" text-anchor="end"></text>
       <text id="dd-position-scale" x="100" y="1142"></text>
       </svg></div>
-      <div class="cross-legend"><span><i style="background:var(--accent);border-radius:50%"></i>Electron · filled</span><span id="dd-hole-legend"><i style="background:var(--panel);border:1.6px solid var(--warm,#99724b);border-radius:50%"></i>Hole · outlined</span><span><i style="background:var(--accent2);opacity:.4"></i>Depletion · aligned across all rows</span><span id="dd-ion-legend"></span></div>
-      <p class="cross-note" id="dd-motion-note"></p>
-      <div class="diagram-explanations"><p class="cross-note"><b>Transport. </b><span id="dd-junction-note"></span></p><p class="cross-note"><b>Energy bands. </b><span id="dd-bands-note"></span></p><p class="cross-note"><b>Charge, field, and potential. </b><span id="dd-field-note"></span></p></div>`;
+      <div class="diagram-explanations"><p class="cross-note"><b>Energy bands. </b><span id="dd-bands-note"></span></p><p class="cross-note"><b>Charge, field, and potential. </b><span id="dd-field-note"></span></p></div>
+      </details>`;
     nodes={};root.querySelectorAll('[id]').forEach(el=>{nodes[el.id.replace(/^dd-/,'')]=el;});
+    // Keep both position axes aligned when either narrow-screen view is scrolled.
+    const viewports=[nodes['animation-viewport'],nodes['profiles-viewport']];
+    let scrollLeft=0;
+    function syncScroll(source){
+      if(!source.clientWidth)return;
+      scrollLeft=source.scrollLeft;
+      viewports.forEach(view=>{if(view!==source&&view.clientWidth&&Math.abs(view.scrollLeft-scrollLeft)>.5)view.scrollLeft=scrollLeft;});
+    }
+    viewports.forEach(view=>view.addEventListener('scroll',()=>syncScroll(view),{passive:true}));
+    nodes.diagrams.addEventListener('toggle',()=>{
+      if(nodes.diagrams.open)nodes['profiles-viewport'].scrollLeft=scrollLeft;
+    });
     for(let side=0;side<2;side++)for(let i=0;i<12;i++) {
       const ion=document.createElementNS(NS,'text');ion.setAttribute('text-anchor','middle');
       ion.setAttribute('style','fill:var(--accent2);font-size:15px;opacity:.5');ion.textContent=side?'+':'−';ion.dataset.side=side;nodes.ions.appendChild(ion);
@@ -1044,19 +1094,20 @@ if (typeof module !== 'undefined' && module.exports) module.exports=DiodeModel;
     const d=device(q),schottky=d==='schottky',zener=d==='zener',g=geometry(q);
     const equilibrium=q.I===0,forward=q.I>0,breakdown=q.region==='breakdown';
     const schottkyAvalanche=schottky&&breakdown&&q.mechanism==='avalanche';
-    const reference=state.motionReference||1e-3,rate=motionRate(q,reference);
+    const rate=motionRate(q);
     text('region',regions[q.region]||q.region);text('view-caption',schottky?'Metal / n-silicon · Schottky contact':zener?'Heavily doped p–n junction · Zener diode':'Silicon p–n junction');
     set('aligned-svg','data-device',d);set('aligned-svg','data-x-zero',XZERO);set('aligned-svg','data-x-left',g.left);set('aligned-svg','data-x-right',g.right);
-    set('aligned-svg','data-half-span-cm',g.halfSpan);set('aligned-svg','data-motion-rate',rate);set('aligned-svg','data-motion-reference',reference);
-    for(const id of ['all-depletion','transport-depletion']){set(id,'x',g.left);set(id,'width',g.right-g.left);show(id,g.valid);}
-    set('alignment-guides','d',`M${g.left} 106V1093 M${g.right} 106V1093`);show('alignment-guides',g.valid);
+    set('aligned-svg','data-half-span-cm',g.halfSpan);set('aligned-svg','data-motion-rate',rate);set('aligned-svg','data-motion-reference',1e-3);
+    for(const id of ['all-depletion','carrier-depletion','transport-depletion']){set(id,'x',g.left);set(id,'width',g.right-g.left);show(id,g.valid);}
+    set('carrier-guides','d',`M${g.left} 106V346 M${g.right} 106V346`);show('carrier-guides',g.valid);
+    set('alignment-guides','d',`M${g.left} 354V1093 M${g.right} 354V1093`);show('alignment-guides',g.valid);
     for(const id of ['band-plots','charge-plots','electric','potential']){set(id,'data-x-left',g.left);set(id,'data-x-right',g.right);set(id,'data-x-zero',XZERO);show(id,g.valid);}
     set('lattice-left','fill',schottky?'url(#dd-metal)':'url(#dd-lattice)');set('left-material','fill',schottky?'var(--panel-alt)':'var(--gate,var(--panel-alt))');
     text('left-label',schottky?'Metal':zener?'p⁺-type semiconductor':'p-type semiconductor');text('terminal-v','Vₐ = '+volts(q.v));
     text('na',schottky?'Metal barrier φBn = '+finite(q.phiBn,q.p.phiBn).toFixed(2)+' eV':'Nₐ = '+q.p.NA.toExponential(1)+' cm⁻³');text('nd','Nᴅ = '+q.p.ND.toExponential(1)+' cm⁻³');
     set('cathode-symbol','d',schottky?'M800 79V73H807V115H814V109':zener?'M801 73H807V115H813':'M807 73V115');
     text('current-value','I = '+quantity(q.I,'A'));show('current-arrow',!equilibrium);set('current-arrow','d',forward?'M751 165H856':'M856 165H751');
-    text('carrier-kind',schottky&&!schottkyAvalanche?'Electrons only':'Electrons and holes');text('event-label',breakdown?(q.mechanism==='tunneling'?'Tunneling → pairs':'Impact ionization'):'Net-current markers');
+    text('carrier-kind',schottky&&!schottkyAvalanche?'Electrons only':'Electrons and holes');text('event-label',breakdown?'Extra charge pairs':'Net-current markers');
     show('metal-sheet',schottky&&g.valid&&state.showIons!==false);show('ions',g.valid&&state.showIons!==false);
     Array.from(nodes.ions.children).forEach((ion,i)=>{
       const nSide=Number(ion.dataset.side),j=i%12,a=nSide?XZERO:g.left,b=nSide?g.right:XZERO;
@@ -1068,39 +1119,35 @@ if (typeof module !== 'undefined' && module.exports) module.exports=DiodeModel;
     show('field-line',g.valid&&state.showField!==false);set('field-line','d',`M${g.right} 191H${g.left}`);
     show('width-bracket',g.valid);set('width-bracket','d',`M${g.left} 255V265H${g.right}V255`);
     text('width-label',g.valid?'W = '+quantity(q.W*.01,'m')+'   ·   xₚ = '+quantity(q.xp*.01,'m')+'   ·   xₙ = '+quantity(q.xn*.01,'m'):'Depletion approximation unavailable');
-    text('transport-heading',equilibrium?'Zero net current · net-current markers are stationary':breakdown?(q.mechanism==='tunneling'?'Band-to-band tunneling · reverse electron–hole collection':schottkyAvalanche?'Impact ionization · holes → metal, electrons → n contact':'Impact ionization · reverse electron–hole collection'):schottky?(forward?'Thermionic emission · n semiconductor → metal':'Reverse collection · metal → n semiconductor'):forward?'Minority-carrier injection · electrons n → p, holes p → n':'Minority-carrier collection · electrons p → n, holes n → p');
-    show('hole-legend',!schottky||schottkyAvalanche);text('ion-legend',schottky?'Metal surface charge − · fixed donors +':'Fixed acceptors − · fixed donors +');
-    const speedLabel=rate===0?'0':rate<.001||rate>1e4?rate.toExponential(2):rate.toPrecision(3);
-    let motion='Marker speed = 80 × |I| / '+quantity(reference,'A')+' = '+speedLabel+' SVG px/s. The same scale applies to every device, with 12 markers per active carrier species. Thermal motion continues at equilibrium but is not represented by these net-current markers. This is a teaching animation, not carrier drift velocity.';
-    if(rate>1000)motion+=' At this rate, frame sampling may make motion appear to jump or reverse; choose a larger current reference to slow the display. The computed speed is not capped.';
+    text('transport-heading',equilibrium?'Zero net current · markers are stationary':breakdown?(schottkyAvalanche?'Reverse current · electrons → n, holes → metal':'Reverse current · electrons → n, holes → p'):schottky?(forward?'Forward current · electrons move from silicon into metal':'Reverse current · electrons move from metal into silicon'):forward?'Forward current · electrons n → p, holes p → n':'Reverse current · electrons p → n, holes n → p');
+    nodes['hole-legend'].hidden=schottky&&!schottkyAvalanche;text('ion-legend',schottky?'Metal surface charge − · fixed donors +':'Fixed acceptors − · fixed donors +');
+    let motion='Moving charges show the direction and amount of net current: twice the current gives twice the speed. Very small currents may look still. At equilibrium, real charges still move randomly even though these markers stop.';
+    if(rate>1000)motion+=' At high current, screen refresh can make motion appear to jump or reverse.';
     text('motion-note',motion);const span=quantity(g.halfSpan*.01,'m');text('position-left','−'+span);text('position-right','+'+span);
     text('position-scale','Shared linear position scale · x = 0 at the '+(schottky?'metal interface':'metallurgical junction')+(g.expanded?' · expanded to fit depletion':' · fixed zero-bias span'));
     updateBands(q,g);updateField(q,g);
-    let transport;
-    if(schottkyAvalanche)transport='In reverse avalanche, energetic carriers create electron–hole pairs by impact ionization within the depleted n-type semiconductor. The star marks an illustrative pair-generation position halfway through depletion. Electrons move toward the n contact; generated holes move toward the metal interface and are collected there. Both contribute to reverse current. This is distinct from ordinary majority-electron Schottky transport; the empirical breakdown law does not simulate individual collisions.';
-    else if(schottky)transport=equilibrium?'Electrons exchange between the metal and n-type semiconductor at equal rates, so net current is zero. The metal holds a negative surface charge balanced by positive ionized donors in the semiconductor.':forward?'Positive metal bias lowers semiconductor band bending. Majority electrons with enough thermal energy cross from n silicon into the metal, producing positive conventional current. This majority-carrier mode does not inject holes into a p region.':'Reverse bias increases the semiconductor barrier. A small metal-to-semiconductor electron flux gives negative conventional current before breakdown. This ordinary transport mode is represented by majority electrons.';
-    else if(equilibrium)transport='Majority carriers diffuse across the junction and expose fixed dopant ions. The built-in field drives an opposing drift flux. The two balance at equilibrium; individual thermal motion persists even though the net-current markers are stationary.';
-    else if(forward)transport='Lower band bending allows electrons from n material and holes from p material to enter the opposite side as minority carriers. Both carrier contributions give positive conventional current. Recombination and stored minority charge distinguish these PN devices from the Schottky mode.';
-    else if(breakdown&&q.mechanism==='tunneling')transport='The strongly doped junction has a narrow depletion region. The strong field permits electrons to tunnel from occupied valence-band states into available conduction-band states. The remaining holes move toward p; electrons move toward n, creating reverse current.';
-    else if(breakdown)transport='Carriers accelerated by the junction field can create additional electron–hole pairs through impact ionization. The star marks an illustrative ionization event; electrons are collected toward n and holes toward p. The current law represents the avalanche knee, not a microscopic collision simulation.';
-    else transport='Reverse bias raises band bending and widens depletion. The field collects minority electrons toward n and holes toward p, giving negative conventional current. The low leakage rate may look stationary on a milliampere animation scale.';
-    if(zener&&!breakdown)transport+=' The Zener preset uses much heavier doping, giving a much thinner junction than the PN preset; reverse tunneling becomes the selected mechanism beyond the breakdown knee.';
-    text('junction-note',transport);text('description',transport+' All diagrams share exactly the same linear horizontal transform and depletion boundaries.');drawParticles();
+    text('description',nodes['view-caption'].textContent+'. '+nodes['transport-heading'].textContent+'. All diagrams share the same horizontal position scale and depletion boundaries.');drawParticles();
   }
   function updateBands(q,g) {
     const schottky=device(q)==='schottky',gap=finite(q.Eg,1.12),barrier=Math.max(0,finite(q.barrier));
     const efN=schottky?-q.VT*Math.log(finite(q.Nc,2.8e19)/q.p.ND):-gap/2+q.VT*Math.log(q.p.ND/Math.max(q.ni,1)),efP=efN-q.Vj;
+    // Match each mode's existing energy convention. In Schottky mode,
+    // ni = Nc exp((Efi-Ec)/VT); PN/Zener use the symmetric midgap reference.
+    // Thus EFn-Efi = VT ln(ND/ni) in the neutral n semiconductor in every mode.
+    const intrinsicOffset=schottky?q.VT*Math.log(finite(q.Nc,2.8e19)/Math.max(q.ni,1)):gap/2;
     set('band-plots','data-ef-left-ev',efP);set('band-plots','data-ef-n-ev',efN);set('band-plots','data-ec-interface-ev',schottky?barrier:barrier*(1-g.xp/(g.xp+g.xn||1)));
+    set('band-plots','data-efi-offset-ev',intrinsicOffset);set('band-plots','data-efi-n-ev',-intrinsicOffset);set('band-plots','data-efi-left-ev',barrier-intrinsicOffset);
     const maxE=Math.max(barrier,efN,efP)+.10,minE=Math.min(-gap,efN,efP)-.10,y=e=>407+(maxE-e)*202/(maxE-minE);
-    const conduction=[],valence=[];
+    const conduction=[],valence=[],intrinsic=[];
     if(g.valid){
       // Sample each physical region separately, preserving narrow-region endpoints.
       const positions=[schottky?XZERO:XMIN];
       if(!schottky)for(let i=0;i<=40;i++)positions.push(g.left+(XZERO-g.left)*i/40);
       for(let i=0;i<=64;i++)positions.push(XZERO+(g.right-XZERO)*i/64);positions.push(XMAX);
-      for(const px of positions){const e=barrier*(1-spatialPotential((px-XZERO)/g.scale,q,g));conduction.push([px,y(e)]);valence.push([px,y(e-gap)]);}
+      for(const px of positions){const e=barrier*(1-spatialPotential((px-XZERO)/g.scale,q,g));conduction.push([px,y(e)]);valence.push([px,y(e-gap)]);intrinsic.push([px,y(e-intrinsicOffset)]);}
     }
     set('ec','d',path(conduction));set('ev','d',path(valence));set('ec-label','y',y(0)+4);set('ev-label','y',y(-gap)+4);
+    set('efi','d',path(intrinsic));set('efi-label','y',y(-intrinsicOffset)+4);
     set('ef-p','d',schottky?`M100 ${y(efP)}H400`:q.I===0?`M100 ${y(efP)}H700`:`M100 ${y(efP)}H${g.left}`);
     set('ef-n','d',`M${g.right} ${y(efN)}H700`);show('ef-n',schottky||q.I!==0);show('metal-occupied',schottky);show('metal-occupancy',schottky);
     set('metal-occupied','y',y(efP));set('metal-occupied','height',Math.max(0,615-y(efP)));set('metal-occupancy','y',Math.min(604,y(efP)+24));
@@ -1114,15 +1161,15 @@ if (typeof module !== 'undefined' && module.exports) module.exports=DiodeModel;
     if(tunnel){
       const e=(barrier-gap)/2,a=pixelAtEnergy(e+gap,q,g),b=pixelAtEnergy(e,q,g),y0=y(e);set('band-transport','d',`M${a} ${y0}H${b}`);bandMotion=motionPath([[a,y0],[b,y0]],'tunnel');
       set('band-transport','data-energy-ev',e);set('band-transport','data-start-x',a);set('band-transport','data-end-x',b);
-      text('band-event-label','Valence → conduction · tunneling conserves electron energy');
+      text('band-event-label','An electron crosses the narrow barrier without changing energy');
     }else if(thermionic){
       const a=Math.min(XMAX-15,g.right+30),b=XZERO-65,y0=y(barrier+.045),ym=y0-13,reverse=q.I<0;
       const points=Array.from({length:81},(_,i)=>{const u=i/80;return [(1-u)**2*a+2*(1-u)*u*XZERO+u*u*b,(1-u)**2*y0+2*(1-u)*u*ym+u*u*y0];});
       set('band-transport','d',path(reverse?[...points].reverse():points));bandMotion=motionPath(points,'thermionic');
-      text('band-event-label','Thermionic electrons pass above the barrier · no band gap in metal');
+      text('band-event-label','Electrons with enough energy pass above the barrier');
     }else text('band-event-label',q.region==='breakdown'?'Strong field sweeps generated carriers toward their contacts':'Band edges bend continuously through the depleted region');
-    let note=schottky?'Only the semiconductor has conduction and valence band edges. The shaded metal contains occupied states below its Fermi level. At the interface, Ec − EFm = qφBn; φBn is distinct from the semiconductor band bending Vbi − Vj. '+(q.region==='breakdown'?'During avalanche, the strong semiconductor field separates impact-ionization pairs: holes move toward the metal interface and electrons toward the n contact.':'The dotted path illustrates electrons with sufficient thermal energy to pass above the barrier.'):tunnel?'The arrow connects an occupied valence-band state to an available conduction-band state at equal electron energy, through the forbidden region. The field collects electrons toward n and holes toward p. Band overlap alone does not set a tunneling rate: strong field and a sufficiently narrow barrier are also needed. The empirical Zener current law does not calculate a quantum transmission probability.':'Electron band-edge energy is −qψ. Both band edges follow the same electrostatic potential and remain separated by the silicon band gap. Forward bias reduces band bending and reverse bias increases it.';
-    note+=' Dashed segments are contact-side Fermi or quasi-Fermi references, not a solved transport profile; their separation is qVj. The vertical energy range rescales with bias. Horizontal positions and depletion edges use the same physical scale as every other row.';
+    let note=schottky?'The shaded metal region shows filled electron states below its Fermi level. The semiconductor bands bend through the depletion region; the metal barrier φBn and this band bending are different quantities.':tunnel?'The arrow shows an electron crossing the narrow junction from the valence band to the conduction band at the same energy. This illustrates Zener breakdown.':'Ec and Ev mark the conduction and valence band edges. Forward bias reduces their bending; reverse bias increases it.';
+    note+=' The purple dotted Efi curve is the intrinsic Fermi level: a reference for undoped semiconductor, close to midgap, that bends with the bands. It is distinct from the actual Fermi level. The dashed contact levels coincide at equilibrium and separate by qVj under bias. Energy rescales vertically; depletion edges remain aligned with the other diagrams.';
     if(!g.valid)note+=' This low-injection depletion band shape is withheld because its assumptions fail at the selected operating point.';text('bands-note',note);
   }
   function updateField(q,g) {
@@ -1136,8 +1183,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports=DiodeModel;
     }
     set('potential','d',path(potential));text('charge-left',schottky?'Metal: surface sheet':'p: −qNₐ');text('charge-balance',schottky?'σm = −qNᴅW':'Nₐxₚ = Nᴅxₙ');
     text('sheet-value',schottky&&g.valid?quantity(q.sheetCharge,'C/cm²'):'');text('field-peak','Peak field magnitude');text('field-peak-value',g.valid?quantity(q.Emax,'V/cm'):'Unavailable');text('potential-rise',g.valid?'Δψ = '+volts(q.barrier):'Profile unavailable');
-    let note=schottky?'The metal screens its field within an unresolved surface layer, represented as a negative sheet charge (the arrow is a sheet, not a finite bulk density). Positive donors remain in the n-side depletion region. Equal integrated charge requires σm = −qNDW. The electric field jumps at the metal interface, then rises linearly to zero at the depletion edge.':'The depleted p region contains fixed negative acceptors and the n region fixed positive donors. Charge neutrality gives NAxp = NDxn, so the lighter-doped side depletes farther. The charge plot keeps the true density ratio, including very narrow highly doped regions.';
-    note+=' From dE/dx = ρ/ε and E = −dψ/dx, the field points left and potential rises right. All five rows share one linear position transform and exact xp/xn partition; no narrow side is enlarged. The horizontal span is based on zero-bias depletion and expands only when needed. Each vertical profile rescales independently. Ion counts are illustrative; mobile charge, neutral-region voltage drop, and breakdown-generated space charge are omitted.';
+    let note=schottky?'The metal screens its field within a thin surface layer, represented by the negative sheet-charge arrow. Positive donors remain in the n-side depletion region. Equal integrated charge requires σm = −qNDW. The electric field jumps at the metal interface, then rises linearly to zero at the depletion edge.':'The depleted p region contains fixed negative acceptors and the n region fixed positive donors. Charge neutrality gives NAxp = NDxn, so the lighter-doped side depletes farther. The charge plot keeps the true density ratio, including very narrow highly doped regions.';
+    note+=' From dE/dx = ρ/ε and E = −dψ/dx, the field points left and potential rises right. All five rows share one linear position axis and preserve the relative widths xp and xn. The horizontal span is based on zero-bias depletion and expands only when needed. Each vertical profile rescales independently. Ion counts are illustrative; mobile charge, neutral-region voltage drop, and breakdown-generated space charge are omitted.';
     if(!g.valid)note+=' The charge, field, and potential profiles are withheld while the depletion approximation is invalid.';text('field-note',note);
   }
   function drawParticles() {
@@ -1165,7 +1212,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports=DiodeModel;
   function animate(seconds,paused=false) {
     if(!Number.isFinite(seconds))return;
     const dt=lastTime===null?0:Math.max(0,seconds-lastTime);lastTime=seconds;
-    if(!paused&&point){displacement+=dt*motionRate(point,state.motionReference)*(point.I<0?-1:1);drawParticles();}
+    if(!paused&&point){displacement+=dt*motionRate(point)*(point.I<0?-1:1);drawParticles();}
   }
   global.DiodeDiagram={mount,update,animate,motionRate,geometry};
 })(typeof window==='undefined'?globalThis:window);
@@ -1174,13 +1221,29 @@ if (typeof module !== 'undefined' && module.exports) module.exports=DiodeModel;
   'use strict';
   const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
   const clamp = (x,a,b) => Math.max(a,Math.min(b,x));
+  const sub = (base,index) => `<msub><mi>${base}</mi><mi>${index}</mi></msub>`;
+  const frac = (top,bottom) => `<mfrac><mrow>${top}</mrow><mrow>${bottom}</mrow></mfrac>`;
+  const math = content => `<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">${content}</math>`;
+  const Vj=sub('V','j'), VT=sub('V','T'), Vbi=sub('V','bi'), Is=sub('I','S');
+  const zeroCurrent=math('<mi>I</mi><mo>=</mo><mn>0</mn>');
+  const capacitanceEquation=math(`${sub('C','j')}<mo>=</mo>${frac('<mi>ε</mi><mi>A</mi>','<mi>W</mi>')}`);
+  const seriesEquation=math(`<mi>V</mi><mo>=</mo>${Vj}<mo>+</mo><mi>I</mi>${sub('R','s')}`);
+  const insightEquations={
+    pnEquilibrium:zeroCurrent+math(`${Vbi}<mo>=</mo>${VT}<mi mathvariant="normal">ln</mi><mo>(</mo>${frac(sub('N','A')+sub('N','D'),`<msup>${sub('n','i')}<mn>2</mn></msup>`)}<mo>)</mo>`),
+    forward:math(`<mi>I</mi><mo>=</mo>${Is}<mo>(</mo><msup><mi>e</mi><mrow>${frac(Vj,`<mi>n</mi>${VT}`)}</mrow></msup><mo>−</mo><mn>1</mn><mo>)</mo>`),
+    pnReverse:math(`<mi>I</mi><mo>≈</mo><mo>−</mo>${Is}`)+math(`<mi>W</mi><mo>∝</mo><msqrt>${Vbi}<mo>−</mo>${Vj}</msqrt>`),
+    schottkyEquilibrium:zeroCurrent+math(`${sub('x','p')}<mo>=</mo><mn>0</mn><mo>,</mo><mspace width="1em"/><mi>W</mi><mo>=</mo>${sub('x','n')}`),
+    schottkyReverse:math(`<mi>I</mi><mo>≈</mo><mo>−</mo>${Is}`)+capacitanceEquation,
+    zenerEquilibrium:zeroCurrent+math(`${sub('N','A')}${sub('x','p')}<mo>=</mo>${sub('N','D')}${sub('x','n')}`),
+    zenerBreakdown:math('<mi>I</mi><mo>&lt;</mo><mn>0</mn>')+seriesEquation
+  };
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const devices=['pn','schottky','zener'];
   const deviceNames={pn:'PN junction',schottky:'Schottky',zener:'Zener'};
   const deviceColors={pn:'#7b1113',schottky:'#087f8c',zener:'#756585'};
   const saved=Object.fromEntries(devices.map(d=>[d,DiodeModel.defaults(d)]));
-  const state = {v:0,device:'pn',p:saved.pn,practical:true,scale:'linear',plots:new Set(['forward','reverse']),family:false,compare:true,motionReference:1e-3,paused:reduced.matches,sweep:false};
-  let q,elapsed=0,last=0,plotClock=0,sweepPhase=0;
+  const state = {v:0,device:'pn',p:saved.pn,practical:true,scale:'linear',plots:new Set(['forward','reverse']),compare:true};
+  let q,elapsed=0,last=0;
   function fmt(x,unit='',digits=2) {
     if(x===null || x===undefined || Number.isNaN(x)) return '—';
     if(!Number.isFinite(x)) return '∞'+(unit?' '+unit:'');
@@ -1201,20 +1264,19 @@ if (typeof module !== 'undefined' && module.exports) module.exports=DiodeModel;
   const boundLabel=x=>x<.001||x>=1e6?x.toExponential(0):String(x);
   $('#properties').innerHTML=Object.entries(props).map(([key,[label,unit,min,max,step]])=>`<label for="prop-${key}">${label}<small>${boundLabel(min)}–${boundLabel(max)} ${unit}</small><input id="prop-${key}" data-property="${key}" type="number" min="${min}" max="${max}" step="${step}" aria-label="${label}"></label>`).join('');
   const defs={
-    forward:{title:'Forward I–V',label:'Forward I–V',unit:'A',get:r=>r.I,domain:()=>[0,Math.min(1,Math.max(.8,state.v+.04))],foot:'Exponential transport bends toward resistive behavior as I Rₛ grows. There is no fixed turn-on voltage.'},
-    reverse:{title:'Reverse I–V',label:'Reverse I–V',unit:'A',get:r=>r.I,domain:()=>[Math.max(-10,Math.min(-(state.compare?Math.max(...devices.map(d=>saved[d].BV)):state.p.BV)-1,state.v-.15)),0],foot:'Reverse current is negative. Use Log |I| to resolve leakage and breakdown on the same plot.'},
-    capacitance:{title:'Junction capacitance',label:'Cⱼ',unit:'F',get:r=>r.Cj,domain:()=>[-5,.75],foot:'Cⱼ = εA/W. Reverse bias widens depletion and lowers capacitance. Gaps mark the depletion-model limit.'},
-    diffusion:{title:'Diffusion capacitance',label:'Cdiff',unit:'F',get:r=>r.highInjection?null:r.Cdiff,domain:()=>[0,.75],foot:'Cdiff ≈ τ dIinjection/dVⱼ: low-frequency stored minority charge, intrinsic to the junction. High-injection values are omitted.'},
-    width:{title:'Depletion width',label:'W',unit:'m',get:r=>r.W===null?null:r.W*.01,domain:()=>[-5,.75],foot:'W = xₚ + xₙ. Charge neutrality requires Nₐxₚ = Nᴅxₙ, so the lighter-doped side depletes farther.'},
-    resistance:{title:'Differential resistance',label:'r_d',unit:'Ω',get:r=>r.rd,domain:()=>[-1,.8],log:true,foot:'Terminal r_d = dV/dI includes Rₛ in the extended model. Always logarithmic; it is not V/I.'},
-    temperature:{title:'Temperature response',label:'I / T',unit:'A',get:r=>r.I,domain:()=>[-20,100],temperature:true,foot:'Voltage is held fixed while temperature changes. Iₛ rises strongly with temperature in this silicon model.'}
+    forward:{title:'Forward I–V',label:'Forward I–V',unit:'A',get:r=>r.I,domain:()=>[0,Math.min(1,Math.max(.8,state.v+.04))],foot:'Current rises with forward voltage.'},
+    reverse:{title:'Reverse I–V',label:'Reverse I–V',unit:'A',get:r=>r.I,domain:()=>[Math.max(-10,Math.min(-(state.compare?Math.max(...devices.map(d=>saved[d].BV)):state.p.BV)-1,state.v-.15)),0],foot:'Reverse current grows sharply near breakdown.'},
+    capacitance:{title:'Junction capacitance',label:'Cⱼ',readout:'Cⱼ',unit:'F',get:r=>r.Cj,domain:()=>[-5,.75],foot:'Wider depletion lowers Cⱼ. Gaps mark the model limit.'},
+    diffusion:{title:'Diffusion capacitance',label:'Cdiff',readout:'Cdiff',unit:'F',get:r=>r.highInjection?null:r.Cdiff,domain:()=>[0,.75],foot:'Stored minority charge adds capacitance. Gaps mark high injection.'},
+    width:{title:'Depletion width',label:'W',unit:'m',get:r=>r.W===null?null:r.W*.01,domain:()=>[-5,.75],foot:'The lighter-doped side depletes farther. Gaps mark the model limit.'},
+    resistance:{title:'Differential resistance',label:'r_d',readout:'r_d',unit:'Ω',get:r=>r.rd,domain:()=>[-1,.8],log:true,foot:'Local I–V slope: r_d = dV/dI. Log scale; includes Rₛ in the extended model.'},
+    temperature:{title:'Temperature response',label:'I / T',readout:'I(T)',unit:'A',get:r=>r.I,domain:()=>[-20,100],temperature:true,foot:'Current versus temperature at the selected voltage.'}
   };
   $('#plot-selectors').innerHTML=Object.entries(defs).map(([k,d])=>`<button data-plot="${k}" aria-pressed="${state.plots.has(k)}">${d.label}</button>`).join('');
   $('#plots').innerHTML=Object.entries(defs).map(([k,d])=>`<div class="plot-card" id="${k}-card"><div class="plot-heading"><h3>${d.title}</h3><strong class="plot-value" id="${k}-value"></strong></div><svg id="${k}-plot" class="plot-svg" viewBox="0 0 440 266" role="img" tabindex="0" aria-label="${d.title}. Click or use arrow keys to change the horizontal value."></svg><p class="plot-foot" id="${k}-foot">${d.foot}</p></div>`).join('');
   DiodeDiagram.mount($('#diagram'));
   function syncProps(){ for(const key in props){const el=$('#prop-'+key);el.value=state.p[key]===undefined?'':['NA','ND'].includes(key)?state.p[key].toExponential():String(state.p[key]);const unused=state.device==='schottky'?['NA','tau'].includes(key):key==='phiBn';el.parentElement.hidden=unused;el.disabled=unused||!state.practical&&['Rs','BV'].includes(key);} }
-  function changeDevice(device){stopSweep();const tempC=state.p.tempC;saved[state.device]=state.p;state.device=device;state.p=saved[device];state.p.tempC=tempC;syncProps();update();}
-  function stopSweep(){state.sweep=false;$('#sweep').textContent='Start sweep';$('#sweep').setAttribute('aria-pressed','false');}
+  function changeDevice(device){const tempC=state.p.tempC;saved[state.device]=state.p;state.device=device;state.p=saved[device];state.p.tempC=tempC;syncProps();update();}
   function sync(){
     $('#voltage').value=state.v;if(document.activeElement!==$('#voltage-exact'))$('#voltage-exact').value=state.v.toFixed(3);$('#voltage-out').textContent=state.v.toFixed(3)+' V';
     $('#temperature').value=state.p.tempC;$('#temperature-out').textContent=state.p.tempC.toFixed(0)+' °C';
@@ -1222,43 +1284,54 @@ if (typeof module !== 'undefined' && module.exports) module.exports=DiodeModel;
     $$('[data-scale]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.scale===state.scale)));
     $$('button[data-device]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.device===state.device)));
     $$('[data-plot]').forEach(b=>b.setAttribute('aria-pressed',String(state.plots.has(b.dataset.plot))));
-    $('#family').checked=state.family;$('#compare').checked=state.compare;$('#motion-reference').value=String(state.motionReference);$('#motion').textContent=state.paused?'Resume carriers':'Pause carriers';$('#motion').setAttribute('aria-pressed',String(state.paused));
-    $('#model-note').textContent=`${deviceNames[state.device]} · ${state.practical?'series resistance + reverse breakdown':'intrinsic transport only'} · ${state.p.tempC.toFixed(0)} °C`;
-    $('#property-note').textContent='Each diode retains its own properties; voltage and temperature are shared. Valid entries update immediately. Enter or leaving a field commits its value within the shown range. '+(state.device==='schottky'?'The metal barrier φBn controls thermionic emission; no minority lifetime or p-side doping applies.':state.device==='zener'?'BV is an empirical tunneling knee: changing doping changes W and the field, but does not predict a new BV.':'Doping, area and lifetime determine the diffusion saturation current.');
-    const speed=80*Math.abs(q.I)/state.motionReference;
-    $('#motion-speed').textContent=(speed===0?'0':speed<.01||speed>=1e5?speed.toExponential(2):speed.toFixed(2))+' SVG px/s'+(state.paused?' · paused':'')+(speed>2000?' · motion may alias; choose a larger current scale':'');
+    $('#compare').checked=state.compare;
+    $('#model-note').textContent=`${deviceNames[state.device]} · ${state.practical?'series resistance + reverse breakdown':'intrinsic current model'}`;
+    $('#property-note').textContent='Each diode retains its own properties; voltage and temperature are shared. Valid entries update immediately. Enter or leaving a field commits its value within the shown range. '+(state.device==='schottky'?'The metal barrier φBn changes the current. Depletion forms in the n-type silicon.':state.device==='zener'?'BV sets the reverse-breakdown knee independently of doping in this teaching model.':'Doping and area change the current and depletion width.');
   }
   function update(){
     q=at();sync();
-    const metrics=[['Applied voltage · V',fmt(q.v,'V'),'Vₐ − Vₖ',''],['Diode current · I',fmt(q.I,'A'),'Positive from A to K','metric-current'],['Junction voltage · Vⱼ',fmt(q.Vj,'V'),state.practical?'V − I Rₛ':'Rₛ omitted',''],['Depletion width · W',fmt(q.W===null?null:q.W*.01,'m'),q.validDepletion?state.device==='schottky'?'n-side depletion':'xₚ + xₙ':'Outside model range','metric-derived'],['Operating region',names[q.region],q.region==='equilibrium'?'No net current':q.region==='breakdown'?q.mechanism==='tunneling'?'Illustrative tunneling':'Illustrative avalanche':q.v>0?'Forward transport':'Reverse transport','metric-region']];
-    $('#metrics').innerHTML=metrics.map(([label,value,note,cls])=>`<div class="metric ${cls}"><label>${label}</label><strong>${value}</strong><small>${note}</small></div>`).join('');
-    $('#bias-note').textContent=`Cathode is the 0 V reference. ${state.practical?'Applied voltage includes the drop across Rₛ.':'Intrinsic mode omits resistance and reverse breakdown.'} Switching devices preserves applied voltage and temperature.`;
+    // Current and width already have permanent columns; other selected plots add readouts.
+    const extra=[...state.plots].filter(key=>defs[key].readout);
+    const metrics=[
+      ['voltage','Applied voltage · V',fmt(q.v,'V'),'Vₐ − Vₖ',''],
+      ['current','Diode current · I',fmt(q.I,'A'),'Positive from A to K','metric-current'],
+      ['junction','Junction voltage · Vⱼ',fmt(q.Vj,'V'),state.practical?'V − I Rₛ':'Rₛ omitted',''],
+      ['width','Depletion width · W',fmt(q.W===null?null:q.W*.01,'m'),q.validDepletion?state.device==='schottky'?'n-side depletion':'xₚ + xₙ':'Outside model range','metric-derived'],
+      ...extra.map(key=>{const d=defs[key];return [key,d.readout,fmt(d.get(q),d.unit),d.temperature?`Current at ${state.p.tempC.toFixed(0)} °C`:d.title,'metric-derived'];}),
+      ['region','Operating region',names[q.region],q.region==='equilibrium'?'No net current':q.region==='breakdown'?'Reverse current rises':q.v>0?'Forward current':'Reverse current','metric-region']
+    ];
+    const readouts=$('#metrics'),compactColumns=metrics.length>8?3:Math.ceil(metrics.length/2);
+    readouts.style.setProperty('--metric-count',metrics.length);
+    readouts.style.setProperty('--metric-compact-count',compactColumns);
+    readouts.dataset.expanded=String(extra.length>0);
+    readouts.dataset.compactColumns=compactColumns;
+    readouts.innerHTML=metrics.map(([key,label,value,note,cls])=>`<div class="metric ${cls}" data-metric="${key}"><label>${label}</label><strong>${value}</strong><small>${note}</small></div>`).join('');
     drawInsight();drawPlots();drawComparison();DiodeDiagram.update(q,state);
     $('#model-limit').hidden=q.validDepletion;
-    $('#model-limit').textContent=state.device==='schottky'?'The semiconductor band bending is ≤ 50 mV: the depletion approximation is withheld. The metal/semiconductor barrier φBn remains a distinct quantity. Current continues as a thermionic-model extrapolation.':'Depletion approximation outside its teaching range: the remaining barrier is ≤ 50 mV or minority injection reaches 10% of the majority density. W, Cⱼ and field profiles are withheld; current continues as a model extrapolation.';
+    $('#model-limit').textContent='The simple depletion approximation is outside its range at this bias. Width, junction capacitance and the band/field profiles are withheld; the current law continues as an estimate.';
+    window.DiodePanels?.refresh();
   }
   function drawComparison(){
-    const mechanism={diffusion:'Minority diffusion',thermionic:'Thermionic emission',tunneling:'Zener tunneling',avalanche:'Avalanche'};
-    $('#comparison-values').innerHTML=devices.map(device=>{const r=at(state.v,{...saved[device],tempC:state.p.tempC});return `<tr class="${device===state.device?'selected':''}"><th style="color:${deviceColors[device]}">${deviceNames[device]}</th><td>${fmt(r.I,'A')}</td><td>${fmt(r.Vj,'V')}</td><td>${fmt(r.W===null?null:r.W*.01,'m')}</td><td>${fmt(r.Cj,'F')}</td><td>${r.region==='equilibrium'?'Balanced exchange':mechanism[r.mechanism]}</td></tr>`;}).join('');
+    $('#comparison-values').innerHTML=devices.map(device=>{const r=at(state.v,{...saved[device],tempC:state.p.tempC});return `<tr class="${device===state.device?'selected':''}"><th style="color:${deviceColors[device]}">${deviceNames[device]}</th><td>${fmt(r.I,'A')}</td><td>${fmt(r.Vj,'V')}</td><td>${fmt(r.W===null?null:r.W*.01,'m')}</td><td>${fmt(r.Cj,'F')}</td></tr>`;}).join('');
   }
   function drawInsight(){
     let info={
-      equilibrium:['A built-in field, but no net current','Electrons diffuse from n to p; holes diffuse from p to n. Ionized donors and acceptors left behind establish an electric field from n to p. At equilibrium, drift and diffusion balance for each carrier. The built-in potential is internal: the terminal voltage is zero.','I = 0<br>V<sub>bi</sub> = V<sub>T</sub> ln(N<sub>A</sub>N<sub>D</sub>/n<sub>i</sub>²)'],
-      forward:['Lower the barrier. Inject carriers.','Positive anode bias lowers the junction barrier. Electrons enter the p side and holes enter the n side, becoming minority carriers that diffuse and recombine. Both processes contribute conventional current from anode to cathode. Current increases continuously with voltage.','I<sub>inj</sub> = I<sub>S</sub>(e<sup>Vⱼ/(nVₜ)</sup> − 1)'],
-      reverse:['A wider barrier, a small leakage','Negative anode bias raises the barrier and widens depletion. Thermally supplied minority electrons in p are swept into n; minority holes in n are swept into p. Conventional current points from cathode to anode. The simple model approaches −Iₛ before breakdown.','I ≈ −I<sub>S</sub><br>W ∝ √(V<sub>bi</sub> − V<sub>j</sub>)'],
-      breakdown:['Strong field, rapidly growing reverse current','Beyond the selected reverse knee, an illustrative avalanche term represents carrier multiplication. Real junction breakdown may involve avalanche, tunneling, or both. Series resistance limits the modeled current; this is not a thermal or device-rating simulation.','V = V<sub>j</sub> + IR<sub>s</sub><br>I = I<sub>inj</sub> + I<sub>av</sub>']
+      equilibrium:['The junction at equilibrium','When p-type and n-type silicon meet, some mobile charges spread across the boundary. The fixed charges left behind create the depletion region and its electric field. At equilibrium, opposing charge flows balance and the net current is zero.',insightEquations.pnEquilibrium],
+      forward:['A lower barrier, a rising current','Positive anode voltage lowers the barrier and narrows the depletion region. More charges can cross the junction. Conventional current flows from anode to cathode and rises steeply with voltage.',insightEquations.forward],
+      reverse:['A wider barrier, a small leakage','Negative anode voltage widens the depletion region. A small reverse current flows before breakdown. Follow the wider region down the diagrams: a larger width also means a smaller junction capacitance.',insightEquations.pnReverse],
+      breakdown:['Reverse current rises sharply','Beyond the selected breakdown voltage, reverse current increases rapidly. The series resistance limits its rise and creates a growing difference between terminal voltage and junction voltage.',seriesEquation]
     }[q.region];
     if(state.device==='schottky')info={
-      equilibrium:['A metal–semiconductor barrier','Electrons exchange between the metal and n-type silicon at equal rates. Positive donor ions remain in the depleted silicon, balanced by negative charge at the metal surface. Net current is zero even though the semiconductor bands bend.','V<sub>bi</sub> = φ<sub>Bn</sub> − V<sub>T</sub> ln(N<sub>C</sub>/N<sub>D</sub>)'],
-      forward:['Majority electrons cross the barrier','Forward bias reduces semiconductor band bending. Majority electrons travel from n-type silicon into the metal by thermionic emission; conventional current points from metal to silicon. There is no injected-hole population or minority storage in this model.','I<sub>S</sub> = AA*T²e<sup>−φBn/Vₜ</sup><br>I = I<sub>S</sub>(e<sup>Vⱼ/(nVₜ)</sup> − 1)'],
-      reverse:['Reverse thermionic leakage','Reverse bias increases the depleted width in silicon. Net electrons travel from metal to silicon, opposite the negative conventional current. The thermionic saturation current is generally larger than the PN diffusion leakage for these example parameters.','I ≈ −I<sub>S</sub><br>W = √(2ε(V<sub>bi</sub>−V<sub>j</sub>)/(qN<sub>D</sub>))'],
-      breakdown:['Schottky reverse breakdown','This extended model adds an illustrative avalanche branch to the thermionic current. Real Schottky reverse behavior also depends on barrier lowering, edge fields and fabrication. The branch is not a calibrated device rating.','V = V<sub>j</sub> + IR<sub>s</sub><br>C<sub>diff</sub> = 0 in this model']
+      equilibrium:['A metal contact with silicon','The Schottky diode joins metal to n-type silicon. Its depletion region lies in the silicon; the opposite charge sits at the metal surface. At equilibrium, the net current is zero.',insightEquations.schottkyEquilibrium],
+      forward:['Electrons cross the metal contact','Positive metal voltage lowers the barrier seen by electrons in the silicon. They move toward the metal, giving conventional current from anode to cathode. Forward voltage varies with current and the saved device properties.',insightEquations.forward],
+      reverse:['More depletion in the silicon','Reverse voltage widens the depleted silicon. The example Schottky settings produce greater reverse leakage than the PN settings. Watch how the width and junction capacitance change together.',insightEquations.schottkyReverse],
+      breakdown:['Schottky reverse breakdown','Reverse current rises sharply beyond the selected breakdown knee. BV sets this knee, while series resistance limits the current rise in this teaching example.',seriesEquation]
     }[q.region];
     if(state.device==='zener')info={
-      equilibrium:['Heavy doping, a narrow junction','A Zener diode is still a PN junction. Here both sides are heavily doped, so the depletion region is narrow and its field can become large at modest reverse voltage. At equilibrium there is no net current.','N<sub>A</sub>x<sub>p</sub> = N<sub>D</sub>x<sub>n</sub>'],
-      forward:['A Zener also conducts forward','Forward operation uses the PN minority-injection law. The distinguishing Zener behavior occurs in reverse bias. Heavy doping changes the junction width and capacitance; forward voltage still depends on current and device properties.','I = I<sub>S</sub>(e<sup>Vⱼ/(nVₜ)</sup> − 1)'],
-      reverse:['A thin barrier under reverse bias','The narrow depletion layer supports a strong electric field. Below the selected tunneling knee the model retains PN diffusion leakage. Increase reverse voltage toward the knee to see the reverse current grow.','W ∝ √((1/N<sub>A</sub> + 1/N<sub>D</sub>)(V<sub>bi</sub> − V<sub>j</sub>))'],
-      breakdown:['Electrons tunnel through the barrier','In this low-voltage Zener example, electrons tunnel from occupied valence states into available conduction states. The field collects electrons toward n and holes toward p. The empirical branch illustrates this reverse conduction; higher-voltage devices sold as Zeners often rely on avalanche instead.','u = max((−V<sub>j</sub>−BV)/0.1 V, 0)<br>I<sub>Z</sub> = −2I<sub>BV</sub>u²/(1+u)']
+      equilibrium:['Heavy doping, a narrow junction','A Zener diode is a PN junction. Both sides have more dopant atoms in this example, so its depletion region is much thinner. Compare its width and capacitance with the ordinary PN junction.',insightEquations.zenerEquilibrium],
+      forward:['A Zener also conducts forward','In forward bias a Zener behaves like a PN diode: the barrier becomes lower and current increases. Its distinctive behavior occurs in reverse bias.',insightEquations.forward],
+      reverse:['A thin junction under reverse bias','Reverse voltage widens this heavily doped junction. Its narrow depletion region sustains a strong electric field. Increase reverse voltage toward the selected breakdown knee and follow the current.',capacitanceEquation],
+      breakdown:['A large reverse current','The strong field across this thin junction allows electrons to cross the barrier, producing a large reverse current. Follow the steep reverse I–V curve and the growing voltage drop across the series resistance.',insightEquations.zenerBreakdown]
     }[q.region];
     $('#insight-region').textContent=deviceNames[state.device]+' · '+names[q.region];$('#insight-title').textContent=info[0];$('#insight-copy').textContent=info[1];$('#insight-eq').innerHTML=info[2];
     $('#insight-numbers').innerHTML=`<b>Thermal voltage Vₜ:</b> ${fmt(q.VT,'V')}<br><b>Built-in potential Vbi:</b> ${fmt(q.Vbi,'V')}<br><b>Iₛ at this temperature:</b> ${fmt(q.Is,'A')}<br><b>Band bending Vbi − Vⱼ:</b> ${fmt(q.barrier,'V')}<br>`+(state.device==='schottky'?`<b>Metal barrier φBn:</b> ${state.p.phiBn.toFixed(2)} eV<br>`:'')+`<b>Cⱼ:</b> ${fmt(q.Cj,'F')} · <b>r_d:</b> ${fmt(q.rd,'Ω')}<br><b>Terminal power VI:</b> ${fmt(q.power,'W')}`;
@@ -1276,9 +1349,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports=DiodeModel;
     const make=(p,practical)=>samples.map(x=>[x,d.get(evaluate(x,p,practical))]);
     const main=make(state.p,state.practical),reference=state.practical && ['forward','reverse'].includes(key)?make(state.p,false):null;
     const comparisons=state.compare?devices.filter(device=>device!==state.device).map(device=>({device,data:make({...saved[device],tempC:state.p.tempC},state.practical)})):[];
-    const family=state.family && ['forward','reverse'].includes(key)?[0,27,75].map(tempC=>make({...state.p,tempC},state.practical)):[];
     const transform=y=>y===null||!Number.isFinite(y)?null:log?(Math.abs(y)>=1e-15?Math.log10(Math.abs(y)):null):y;
-    const values=[...main,...family.flat(),...comparisons.flatMap(c=>c.data)].map(p=>transform(p[1])).filter(x=>x!==null);
+    const values=[...main,...comparisons.flatMap(c=>c.data)].map(p=>transform(p[1])).filter(x=>x!==null);
     let ymin,ymax;
     if(log){ymin=values.length?Math.max(-15,Math.floor(Math.min(...values))):-15;ymax=values.length?Math.ceil(Math.max(...values)):-9;if(ymax<=ymin)ymax=ymin+1;}
     else {ymin=Math.min(0,...values);ymax=Math.max(0,...values);if(ymin===ymax){ymax=1e-12;}const pad=(ymax-ymin)*.08;if(ymin<0)ymin-=pad;if(ymax>0)ymax+=pad;}
@@ -1297,7 +1369,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports=DiodeModel;
     const extrapolated=d.unit==='A'?samples.filter(x=>!evaluate(x).validDepletion):[];
     if(extrapolated.length){const start=X(extrapolated[0]);h+=`<rect x="${start}" y="${T}" width="${R-start}" height="${B-T}" fill="var(--warm)" opacity=".065"/>`;}
     for(const c of comparisons)h+=path(c.data,'comparison-curve',deviceColors[c.device]);
-    for(const f of family)h+=path(f,'family');if(reference)h+=path(reference,'reference');h+=path(main,'curve',deviceColors[state.device]);
+    if(reference)h+=path(reference,'reference');h+=path(main,'curve',deviceColors[state.device]);
     const currentX=d.temperature?state.p.tempC:state.v,currentRaw=d.get(q),currentY=transform(currentRaw),inRange=currentX>=xmin && currentX<=xmax;
     if(inRange && currentY!==null && currentY>=ymin && currentY<=ymax){h+=`<path class="dot-guide" d="M${X(currentX)},${B}V${Y(currentY)}H${L}" fill="none"/><circle class="op-dot" style="fill:${deviceColors[state.device]}" cx="${X(currentX)}" cy="${Y(currentY)}" r="4.4"/>`;}
     h+='</g>';
@@ -1307,60 +1379,242 @@ if (typeof module !== 'undefined' && module.exports) module.exports=DiodeModel;
     svg.innerHTML=h;svg.setAttribute('aria-label',`${d.title}. ${ylabel}. Operating value ${fmt(currentRaw,d.unit)}. ${note} Click to set ${d.temperature?'temperature':'voltage'}; arrow keys also adjust it.`);
     $('#'+key+'-value').textContent=fmt(currentRaw,d.unit);
     let foot=d.foot;
-    if(state.device==='schottky'&&key==='diffusion')foot='Schottky Cdiff = 0 in this majority-carrier model. Junction capacitance still stores charge and affects switching.';
-    if(state.device==='schottky'&&key==='width')foot='Depletion lies only in n-type silicon. The negative metal surface charge balances qNᴅW in the semiconductor.';
-    $('#'+key+'-foot').textContent=foot+(log && d.unit==='A'?' Log magnitude omits zero and |I| < 1 fA; reverse current remains negative.':'')+(extrapolated.length?' Amber: selected current law continues beyond the depletion-model range.':'')+(!q.validDepletion?' Operating point is outside that range.':'')+(state.compare?' Dashed comparisons use each device’s saved properties.':'');
+    if(state.practical&&key==='forward')foot='Rₛ limits the forward current rise.';
+    if(state.device==='schottky'&&key==='diffusion')foot='Schottky Cdiff = 0; depletion charge contributes Cⱼ.';
+    if(state.device==='schottky'&&key==='width')foot='Depletion forms in n-type silicon. Gaps mark the model limit.';
+    if(!state.practical&&key==='reverse')foot='Reverse current approaches the saturation current −Iₛ.';
+    if(!state.practical&&key==='resistance')foot='Local I–V slope: r_d = dV/dI, shown on a log scale.';
+    if(log&&d.unit==='A')foot='Log |I| shows current magnitude above the 1 fA display floor.';
+    if(extrapolated.length)foot+=' Amber: model extrapolation.';
+    $('#'+key+'-foot').textContent=foot;
   }
-  function setVoltage(v){stopSweep();state.v=clamp(v,-10,1);update();}
+  function setVoltage(v){state.v=clamp(v,-10,1);update();}
   $('#voltage').addEventListener('input',e=>setVoltage(Number(e.target.value)));
   function exactVoltage(commit){const el=$('#voltage-exact'),n=Number(el.value);if(el.value!==''&&Number.isFinite(n)&&(commit||n>=-10&&n<=1))setVoltage(n);if(commit)el.value=state.v.toFixed(3);}
   $('#voltage-exact').addEventListener('input',()=>exactVoltage(false));
   for(const event of ['change','blur'])$('#voltage-exact').addEventListener(event,()=>exactVoltage(true));
   $('#voltage-exact').addEventListener('keydown',e=>{if(e.key==='Enter')exactVoltage(true);});
-  $('#temperature').addEventListener('input',e=>{stopSweep();state.p.tempC=Number(e.target.value);update();});
+  $('#temperature').addEventListener('input',e=>{state.p.tempC=Number(e.target.value);update();});
   $$('[data-property]').forEach(el=>{
-    const apply=commit=>{stopSweep();const key=el.dataset.property,val=Number(el.value),min=props[key][2],max=props[key][3];if(el.value!==''&&Number.isFinite(val)&&(commit||val>=min&&val<=max)){state.p[key]=clamp(val,min,max);update();}if(commit){syncProps();update();}};
+    const apply=commit=>{const key=el.dataset.property,val=Number(el.value),min=props[key][2],max=props[key][3];if(el.value!==''&&Number.isFinite(val)&&(commit||val>=min&&val<=max)){state.p[key]=clamp(val,min,max);update();}if(commit){syncProps();update();}};
     el.addEventListener('input',()=>apply(false));for(const event of ['change','blur'])el.addEventListener(event,()=>apply(true));el.addEventListener('keydown',e=>{if(e.key==='Enter')apply(true);});
   });
-  $$('[data-model]').forEach(b=>b.addEventListener('click',()=>{stopSweep();state.practical=b.dataset.model==='practical';syncProps();update();}));
+  $$('[data-model]').forEach(b=>b.addEventListener('click',()=>{state.practical=b.dataset.model==='practical';syncProps();update();}));
   $$('button[data-device]').forEach(b=>b.addEventListener('click',()=>changeDevice(b.dataset.device)));
   $$('[data-scale]').forEach(b=>b.addEventListener('click',()=>{state.scale=b.dataset.scale;update();}));
   $$('[data-plot]').forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.plot;state.plots.has(k)?state.plots.delete(k):state.plots.add(k);update();}));
   $$('[data-preset]').forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.preset;if(k==='breakdown'){state.practical=true;state.scale='log';state.plots.add('reverse');syncProps();}setVoltage({equilibrium:0,forward:state.device==='schottky'?.3:.6,reverse:-Math.min(2,state.p.BV*.6),breakdown:-state.p.BV-.6}[k]);}));
-  $('#family').addEventListener('change',e=>{state.family=e.target.checked;drawPlots();});
   $('#compare').addEventListener('change',e=>{state.compare=e.target.checked;drawPlots();});
-  $('#motion-reference').addEventListener('change',e=>{state.motionReference=Number(e.target.value);sync();DiodeDiagram.update(q,state);});
-  $('#motion').addEventListener('click',()=>{state.paused=!state.paused;sync();});
-  $('#sweep').addEventListener('click',()=>{if(state.sweep){stopSweep();return;}state.sweep=true;sweepPhase=0;$('#sweep').textContent='Stop sweep';$('#sweep').setAttribute('aria-pressed','true');});
-  function reset(){stopSweep();for(const device of devices)saved[device]=DiodeModel.defaults(device);state.device='pn';state.v=0;state.p=saved.pn;state.practical=true;state.scale='linear';state.family=false;state.compare=true;state.motionReference=1e-3;state.plots=new Set(['forward','reverse']);state.paused=reduced.matches;$('#lesson-answer').textContent='Choose an experiment to load its conditions and a question to explore.';syncProps();update();}
-  $('#reset').addEventListener('click',reset);$('#defaults').addEventListener('click',()=>{stopSweep();state.p=DiodeModel.defaults(state.device);saved[state.device]=state.p;syncProps();update();});
+  $('#defaults').addEventListener('click',()=>{state.p=DiodeModel.defaults(state.device);saved[state.device]=state.p;syncProps();update();});
   for(const [key,d] of Object.entries(defs)){
     const svg=$('#'+key+'-plot');
-    const setX=x=>{stopSweep();if(d.temperature)state.p.tempC=clamp(Math.round(x),-20,100);else state.v=clamp(Math.round(x*1000)/1000,-10,1);update();};
+    const setX=x=>{if(d.temperature)state.p.tempC=clamp(Math.round(x),-20,100);else state.v=clamp(Math.round(x*1000)/1000,-10,1);update();};
     svg.addEventListener('click',e=>{const point=svg.createSVGPoint();point.x=e.clientX;point.y=e.clientY;const pos=point.matrixTransform(svg.getScreenCTM().inverse());if(pos.x<62||pos.x>425||pos.y<29||pos.y>220)return;const [a,b]=d.domain();setX(a+(pos.x-62)/363*(b-a));});
     svg.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const [a,b]=d.domain();let x=d.temperature?state.p.tempC:state.v;if(e.key==='Home')x=a;else if(e.key==='End')x=b;else x+=(e.key==='ArrowRight'?1:-1)*(d.temperature?1:.005)*(e.shiftKey?10:1);setX(clamp(x,a,b));});
   }
-  $$('[data-lesson]').forEach(b=>b.addEventListener('click',()=>{
-    reset();let text='';
-    if(b.dataset.lesson==='balance'){text='At V = 0, I = 0 even though the junction has a built-in field. Net-current markers are stationary; microscopic thermal exchanges still occur. Follow the shared depletion boundaries downward: the equilibrium Fermi level is flat, while space charge creates a field.';}
-    if(b.dataset.lesson==='doping'){state.p.NA=1e18;state.p.ND=1e16;state.v=-1;state.compare=false;state.plots=new Set(['width','capacitance']);text='Nₐ is now 100 times Nᴅ. Predict which side depletes farther. Equal uncovered charge means xₙ/xₚ = Nₐ/Nᴅ = 100. Every stacked row uses the same physical position scale; the very narrow p-side region is not artificially enlarged.';}
-    if(b.dataset.lesson==='heat'){state.v=.55;state.family=true;state.compare=false;state.scale='log';state.plots=new Set(['forward','temperature']);text='Hold V at 0.55 V. Compare 0, 27 and 75 °C. Higher temperature raises intrinsic carrier density and Iₛ in PN silicon. Switch to Schottky to compare thermionic emission: its temperature dependence follows T² exp(−φBn/Vₜ).';}
-    if(b.dataset.lesson==='storage'){state.v=.5;state.plots=new Set(['capacitance','diffusion']);text='Compare all three types at the same voltage. PN and Zener forward injection stores minority charge; the ideal Schottky model has Cdiff = 0, but nonzero junction capacitance. This distinction helps explain switching behavior; the simulation does not solve recovery transients.';}
-    if(b.dataset.lesson==='schottky'){state.device='schottky';state.p=saved.schottky;state.v=.3;state.scale='log';text='At 0.30 V compare the forward currents, then follow the metal/silicon interface through the stacked views. Only silicon has a depletion width. Majority electrons cross the metal barrier; there is no hole injection. Keep the animation scale fixed to compare current-dependent speeds.';}
-    if(b.dataset.lesson==='zener'){state.device='zener';state.p=saved.zener;state.v=-3.9;state.scale='log';text='A heavily doped Zener junction has a narrow depletion region and strong field. At −3.90 V the example enters its tunneling branch: electrons transfer from p-valence to n-conduction states. Compare PN and Schottky at exactly the same applied voltage using the table and dashed curves.';}
-    $('#lesson-answer').textContent=text;syncProps();update();
-  }));
-  reduced.addEventListener('change',e=>{if(e.matches){state.paused=true;stopSweep();sync();}});
+  reduced.addEventListener('change',()=>{last=0;});
   document.addEventListener('visibilitychange',()=>{last=0;});
   function frame(t){
     const dt=last?Math.max(0,(t-last)/1000):0;last=t;
     if(!document.hidden){
-      if(!state.paused)elapsed+=dt;DiodeDiagram.animate(elapsed,state.paused);
-      if(state.sweep){sweepPhase+=dt;plotClock+=dt;if(plotClock>.09){plotClock=0;const low=-Math.min(10,state.p.BV+1);const f=(1-Math.cos(sweepPhase*.55))/2;state.v=low+(.8-low)*f;update();}}
+      if(!reduced.matches)elapsed+=dt;DiodeDiagram.animate(elapsed,reduced.matches);
     }
     requestAnimationFrame(frame);
   }
   syncProps();update();requestAnimationFrame(frame);
+})();
+</script><script>(() => {
+  'use strict';
+
+  const clamp=(value,min,max)=>Math.min(max,Math.max(min,value));
+
+  // Keep the original explanation nodes so mode changes continue to update them.
+  function installTeachingPopup(){
+    const popup=document.getElementById('teaching-popup');
+    if(!popup)return ()=>{};
+    const rail=document.querySelector('.bias-rail'),dock=document.createElement('div');
+    dock.className='diode-popup-dock';dock.hidden=true;rail.append(dock);
+    document.body.append(popup);
+    popup.classList.add('diode-teaching-popup');popup.dataset.docked='true';
+    popup.setAttribute('aria-label','Operating point explanation');
+    popup.setAttribute('aria-live','polite');
+    const oldRegion=document.getElementById('insight-region');
+    const region=document.createElement('span');
+    region.id='insight-region';region.className='section-kicker';region.textContent=oldRegion?.textContent||'';
+    oldRegion?.remove();
+    const handle=document.createElement('button');
+    handle.type='button';handle.id='teaching-drag-handle';handle.className='diode-popup-handle';
+    handle.setAttribute('aria-label','Move operating point explanation');
+    handle.setAttribute('aria-describedby','diode-popup-move-help');
+    handle.title='Drag to move · Arrow keys to move · Home to reset';
+    handle.innerHTML='<span class="diode-drag-grip" aria-hidden="true"></span>';
+    handle.append(region);
+    const help=document.createElement('span');help.id='diode-popup-move-help';help.className='diode-visually-hidden';
+    help.textContent='Drag to move. Arrow keys move 10 pixels; hold Shift to move 40 pixels. Home restores the default position.';
+    popup.prepend(handle,help);
+    const numbers=document.getElementById('insight-numbers');
+    if(numbers){
+      const details=document.createElement('details');details.className='diode-popup-details';
+      const summary=document.createElement('summary');summary.textContent='Model values';
+      details.append(summary,numbers);popup.append(details);
+    }
+
+    // Use the companion MOS popup's body-mounted dock and viewport positioning.
+    let position=null,drag=null;
+    function releaseDock(){dock.hidden=true;rail.classList.remove('has-docked-popup');}
+    function place(){
+      if(popup.hidden)return;
+      if(!position){
+        popup.dataset.docked='true';rail.classList.add('has-docked-popup');dock.hidden=false;
+        dock.style.height=(popup.offsetHeight+12)+'px';
+        const inset=window.matchMedia('(max-width: 700px)').matches?16:24;
+        const maxX=Math.max(inset,document.documentElement.clientWidth-popup.offsetWidth-inset);
+        const x=window.matchMedia('(max-width: 920px)').matches?inset:rail.getBoundingClientRect().right-popup.offsetWidth;
+        popup.style.position='absolute';popup.style.bottom='auto';
+        popup.style.top=(dock.getBoundingClientRect().top+window.scrollY+12)+'px';
+        popup.style.left=clamp(x,inset,maxX)+'px';
+        return;
+      }
+      popup.dataset.docked='false';releaseDock();popup.style.position='fixed';
+      const inset=16,width=popup.offsetWidth,height=popup.offsetHeight;
+      position.x=clamp(position.x,inset,Math.max(inset,document.documentElement.clientWidth-width-inset));
+      position.y=clamp(position.y,inset,Math.max(inset,window.innerHeight-height-inset));
+      popup.style.left=position.x+'px';popup.style.top=position.y+'px';
+      popup.style.right='auto';popup.style.bottom='auto';
+    }
+    function move(x,y){position={x,y};place();}
+    function finishDrag(event){
+      if(!drag||event.pointerId!==drag.id)return;
+      drag=null;handle.classList.remove('dragging');
+      if(handle.hasPointerCapture(event.pointerId))handle.releasePointerCapture(event.pointerId);
+    }
+    handle.addEventListener('pointerdown',event=>{
+      if(event.button!==0||!event.isPrimary)return;
+      event.preventDefault();handle.focus({preventScroll:true});
+      const rect=popup.getBoundingClientRect();
+      move(rect.left,rect.top);
+      drag={id:event.pointerId,x:event.clientX,y:event.clientY,left:position.x,top:position.y};
+      handle.classList.add('dragging');handle.setPointerCapture(event.pointerId);
+    });
+    handle.addEventListener('pointermove',event=>{
+      if(!drag||event.pointerId!==drag.id)return;
+      move(drag.left+event.clientX-drag.x,drag.top+event.clientY-drag.y);
+    });
+    ['pointerup','pointercancel','lostpointercapture'].forEach(type=>handle.addEventListener(type,finishDrag));
+    handle.addEventListener('keydown',event=>{
+      const directions={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]};
+      if(event.key==='Home'){
+        event.preventDefault();position=null;
+        ['left','top','right','bottom'].forEach(key=>popup.style.removeProperty(key));place();return;
+      }
+      if(!directions[event.key])return;
+      event.preventDefault();
+      const rect=popup.getBoundingClientRect(),step=event.shiftKey?40:10,[dx,dy]=directions[event.key];
+      move(rect.left+dx*step,rect.top+dy*step);
+    });
+    window.addEventListener('resize',place);
+    const observer=new ResizeObserver(place);
+    observer.observe(popup);observer.observe(rail);observer.observe(document.querySelector('.readout-frame'));
+    place();
+    return place;
+  }
+
+  function installJunctionReordering(){
+    const panel=document.getElementById('junction-panel');
+    const handle=document.getElementById('junction-drag-handle');
+    const plots=document.getElementById('characteristic-plots');
+    if(!panel||!handle||!plots)return;
+    const column=panel.closest('.science-column');
+    const zones=[...column.querySelectorAll('[data-junction-position]')];
+    const belowZone=zones.find(zone=>zone.dataset.junctionPosition==='below');
+    const status=document.getElementById('junction-move-status');
+    if(!belowZone)return;
+    const help=document.createElement('span');help.id='junction-move-help';help.className='diode-visually-hidden';
+    help.textContent='Drag to place this panel above or below the plots. Click or press Enter to switch positions. Arrow Up moves above; Arrow Down moves below. Escape cancels a drag.';
+    if(!document.getElementById(help.id))handle.after(help);
+    handle.setAttribute('aria-describedby',help.id);
+    handle.title='Drag to reorder · Click to switch · Arrow Up / Down to position';
+    const preview=document.createElement('div');preview.className='junction-drag-preview';preview.hidden=true;
+    preview.setAttribute('aria-hidden','true');document.body.append(preview);
+    let above=panel.dataset.position==='above',drag=null,suppressClick=false,dragFrame=0,lastFrame=0;
+    function syncHandle(){
+      panel.dataset.position=above?'above':'below';
+      handle.setAttribute('aria-label','Move Look inside the junction '+(above?'below':'above')+' plots');
+      const label=handle.querySelector('.junction-move-label');
+      if(label)label.textContent=above?'↓ Below plots':'↑ Above plots';
+    }
+    function place(nextAbove){
+      above=nextAbove;
+      if(above)plots.before(panel);else belowZone.after(panel);
+      syncHandle();
+      if(status)status.textContent='Look inside the junction panel placed '+(above?'above':'below')+' the plots.';
+      handle.focus({preventScroll:true});handle.scrollIntoView({block:'nearest',behavior:'instant'});
+    }
+    function updateTarget(){
+      if(!drag?.active)return;
+      const bounds=plots.getBoundingClientRect(),columnBounds=column.getBoundingClientRect();
+      const inside=drag.x>=columnBounds.left&&drag.x<=columnBounds.right;
+      drag.target=inside?(drag.y<bounds.top+bounds.height/2?'above':'below'):null;
+      zones.forEach(zone=>zone.classList.toggle('drop-target',zone.dataset.junctionPosition===drag.target));
+      preview.textContent=drag.target?'Place junction '+drag.target+' plots':'Move over the plot column';
+      preview.style.left=clamp(drag.x+14,8,Math.max(8,window.innerWidth-preview.offsetWidth-8))+'px';
+      preview.style.top=clamp(drag.y+14,8,Math.max(8,window.innerHeight-preview.offsetHeight-8))+'px';
+    }
+    function animateDrag(time){
+      if(!drag?.active)return;
+      const frameScale=lastFrame?Math.min(3,(time-lastFrame)/(1000/60)):1;lastFrame=time;
+      const edge=64,y=drag.y;
+      const speed=y<edge?-16*(1-clamp(y/edge,0,1)):y>window.innerHeight-edge?16*(1-clamp((window.innerHeight-y)/edge,0,1)):0;
+      if(speed)window.scrollBy(0,speed*frameScale);
+      updateTarget();dragFrame=requestAnimationFrame(animateDrag);
+    }
+    function finishDrag(commit){
+      if(!drag)return;
+      const finished=drag;drag=null;
+      if(!commit)suppressClick=true;
+      cancelAnimationFrame(dragFrame);dragFrame=0;lastFrame=0;
+      column.classList.remove('junction-reordering');document.documentElement.classList.remove('junction-reordering');
+      panel.classList.remove('junction-dragging');preview.hidden=true;
+      zones.forEach(zone=>zone.classList.remove('drop-target'));
+      if(handle.hasPointerCapture(finished.id))handle.releasePointerCapture(finished.id);
+      if(finished.active&&commit&&finished.target)place(finished.target==='above');
+      else if(finished.active){if(status)status.textContent='Junction panel move cancelled.';handle.focus({preventScroll:true});}
+    }
+    handle.addEventListener('pointerdown',event=>{
+      if(event.button!==0||!event.isPrimary)return;
+      suppressClick=false;handle.focus({preventScroll:true});
+      drag={id:event.pointerId,startX:event.clientX,startY:event.clientY,x:event.clientX,y:event.clientY,active:false,target:null};
+      handle.setPointerCapture(event.pointerId);
+    });
+    handle.addEventListener('pointermove',event=>{
+      if(!drag||event.pointerId!==drag.id)return;
+      drag.x=event.clientX;drag.y=event.clientY;
+      if(!drag.active&&Math.hypot(drag.x-drag.startX,drag.y-drag.startY)>6){
+        drag.active=true;suppressClick=true;
+        column.classList.add('junction-reordering');document.documentElement.classList.add('junction-reordering');
+        panel.classList.add('junction-dragging');preview.hidden=false;
+        dragFrame=requestAnimationFrame(animateDrag);
+      }
+      if(drag.active){event.preventDefault();updateTarget();}
+    });
+    handle.addEventListener('pointerup',event=>{if(event.pointerId===drag?.id){if(drag.active)updateTarget();finishDrag(true);}});
+    ['pointercancel','lostpointercapture'].forEach(type=>handle.addEventListener(type,event=>{if(event.pointerId===drag?.id)finishDrag(false);}));
+    handle.addEventListener('click',event=>{
+      if(drag?.active)return;
+      if(suppressClick&&event.detail!==0){suppressClick=false;return;}
+      place(!above);
+    });
+    handle.addEventListener('keydown',event=>{
+      if(drag?.active){if(['Enter',' ','ArrowUp','ArrowDown'].includes(event.key))event.preventDefault();return;}
+      if(event.key==='ArrowUp'||event.key==='ArrowDown'){event.preventDefault();place(event.key==='ArrowUp');}
+    });
+    window.addEventListener('keydown',event=>{if(event.key==='Escape'&&drag){event.preventDefault();finishDrag(false);}});
+    window.addEventListener('blur',()=>finishDrag(false));
+    syncHandle();
+  }
+
+  window.DiodePanels={refresh:installTeachingPopup()};
+  installJunctionReordering();
 })();
 </script>
 </body>
