@@ -2,4 +2,80 @@
 title: "About"
 ---
 
-About this site
+digital.eee began with the [Verilog Crash Course](https://digital.eee.upd.edu.ph/pages/verilogCrashCourse/index.html), which I originally wrote and distributed through UVLe, the university’s online learning management system. When we decided to expand the course with exercises and assessments, we needed a repository to bring those materials together. Then we imagined students writing and simulating Verilog directly on the course webpage. That idea called for a website, and digital.eee took shape. In late 2025, Lawrence Roman Quizon designed and implemented the hosting infrastructure that made it possible.
+
+By 2026, we had begun expanding the site with interactive simulators to accompany the digital design courses I care about. Much of that work grew out of frustration. I kept relying on slide animations and doodles to explain concepts that students could understand much more easily if they could see them in action. These were fundamental digital design concepts, yet I could not find online tools that visualized them in quite the way I wanted to teach them. So I started developing those tools and bringing them together here.
+
+I currently create most of the site’s content. The materials and simulators reflect my taste in teaching: intuitive, highly visual, and deliberately generous with guidance. I want students to follow what happens, explore why it happens, and work through the details at their own pace.
+
+The site continues to evolve rapidly as we—and, much of the time, I—develop more content. Behind that work is a dream of democratizing digital design education: making the explanations and tools I wish I had more accessible to anyone who wants to learn.
+
+The people behind digital.eee are:
+
+<!-- To add a portrait, save the photo under pages/images/team/ and uncomment the matching image below. -->
+
+1. **Adelson Chua — Main content contributor**
+
+   I develop most of the site’s learning materials and simulators, shape its educational direction, and spend a considerable amount of time thinking about how to make digital design easier to see and understand.
+
+   <!--
+   ![Adelson Chua](images/team/adelson-chua.jpg){width=180px}
+   -->
+
+2. **Lawrence Roman Quizon — Website back-end architect**
+
+   digital.eee would not exist without Lawrence. He initiated the website’s construction, built its technical foundation, and enabled many of the features that shape how it looks and works today. He also hosts the website’s [main repository](https://github.com/Lawrence-lugs/digital_eee_upd) under his GitHub account.
+
+   <!--
+   ![Lawrence Roman Quizon](images/team/lawrence-roman-quizon.jpg){width=180px}
+   -->
+
+I also want to recognize the people whose ideas, teaching materials, and technical work have helped shape this project:
+
+3. **Fred Angelo Galapon**
+
+   Fred helped me conceptualize the original Verilog Crash Course. Our discussions about what students most needed to learn, together with the materials he had already developed for the FPGA course, shaped the concepts we emphasized.
+
+   <!--
+   ![Fred Angelo Galapon](images/team/fred-angelo-galapon.jpg){width=180px}
+   -->
+
+4. **Allen Jason Tan**
+
+   Allen is our local expert in making FPGA exercises work in practice. Beyond this website, he has developed FPGA exercises and the setups that support them. We plan to bring that work to digital.eee soon.
+
+   <!--
+   ![Allen Jason Tan](images/team/allen-jason-tan.jpg){width=180px}
+   -->
+
+5. **Jose Francois Abedejos**
+
+   Jose pioneered the [KMAP game](https://digital.eee.upd.edu.ph/kmapgameee), our very first simulator, which he conceptualized and implemented in early 2025. He continues to help with course management and website maintenance.
+
+   <!--
+   ![Jose Francois Abedejos](images/team/jose-francois-abedejos.jpg){width=180px}
+   -->
+
+6. **Carl Aries Oliva**
+
+   Carl designed the main laboratory exercises for the Hardware for AI graduate class. Those exercises later formed the basis of the [Systolic Array Simulator](https://digital.eee.upd.edu.ph/systolic_array_simulator.html) and [Convolution Simulator](https://digital.eee.upd.edu.ph/convolution_simulator.html), which help students follow the computations behind convolutional neural networks at the hardware level.
+
+   <!--
+   ![Carl Aries Oliva](images/team/carl-aries-oliva.jpg){width=180px}
+   -->
+
+7. **Isaac Sy**
+
+   Isaac developed [FSM_simulatEEE](https://digital.eee.upd.edu.ph/FSM_simulatEEE.html), [ASM_simulatEEE](https://digital.eee.upd.edu.ph/ASM_simulatEEE.html), and [timing_simulatEEE](https://digital.eee.upd.edu.ph/timing_simulatEEE.html). His designs inspired me to keep developing simulators that teach fundamental digital design concepts visually.
+
+   <!--
+   ![Isaac Sy](images/team/isaac-sy.jpg){width=180px}
+   -->
+
+8. **Shaira Mae Rodriguez**
+
+   Shaira contributed to the KMAP game. Beyond this website, she led the development of fully automated checking in UVLe for digital design laboratory exercises using Logisim and Venus.
+
+   <!--
+   ![Shaira Mae Rodriguez](images/team/shaira-mae-rodriguez.jpg){width=180px}
+   -->

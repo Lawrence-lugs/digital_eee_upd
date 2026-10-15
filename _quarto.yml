@@ -73,6 +73,8 @@ website:
             text: Convolution Simulator
       - href: contributing.qmd
         text: Contribute
+      - href: pages/about.qmd
+        text: About
 
   sidebar:
     - id: intro-computing
