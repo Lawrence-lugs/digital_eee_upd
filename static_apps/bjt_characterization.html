@@ -509,12 +509,22 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
   
 </style>
-  <style>.metrics{--metric-count:5}.metric strong,.metric:last-child strong{font-size:clamp(19px,1.9vw,28px)}.metric.metric-region strong{font-size:20px}.bias-rail{position:static}.properties-details{margin-top:10px}.sweep-controls{display:flex;flex-wrap:wrap;gap:7px;align-items:center;border-top:1px solid var(--line);margin-top:12px;padding-top:12px;font-size:11px;color:var(--muted)}select{min-width:0;border:1px solid var(--line);border-radius:6px;background:var(--panel);padding:6px;color:var(--text)}.sweep-controls button{padding:6px 8px;font-size:11px}.bjt-plot-options{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;font-size:10px;color:var(--muted);margin:7px 2px 9px}.plot-svg{cursor:crosshair}.axis-convention{font-size:10px;color:var(--muted)}.plot-foot{min-height:34px}.plot-value{white-space:nowrap}.plot-heading{flex-wrap:wrap}.region-table{border-collapse:collapse;width:100%;font-size:11px}.region-table th,.region-table td{padding:7px 5px;text-align:left;border-bottom:1px solid var(--line)}.model-equations{font-family:"MOS Math",serif;font-size:18px;line-height:1.9}.plot-svg .junction-boundary{stroke:var(--warm);stroke-dasharray:4 4;opacity:.6}.plot-svg .zone{fill:var(--warm);opacity:.055}.device-panel{padding-top:12px;padding-bottom:14px}.region-pill{letter-spacing:.07em}.control-detail{font-size:10px;line-height:1.5;color:var(--muted);margin:5px 0 0}.property-grid small{line-height:1.45}.readout-cap span:last-child{text-transform:none;letter-spacing:0;font-weight:500}.transport-row{gap:6px;margin-top:10px}.transport-row button{padding:7px 9px}#insight-region{line-height:1.6}.plot-legend{gap:12px}.voltage-controls{gap:15px}.plot-choice-switch button{padding:5px 9px}.property-grid{margin-top:4px}
+  <style>.metric strong,.metric:last-child strong{font-size:clamp(19px,1.9vw,28px)}.metric.metric-region strong{font-size:20px}.bias-rail{position:static}.properties-details{margin-top:10px}select{min-width:0;border:1px solid var(--line);border-radius:6px;background:var(--panel);padding:6px;color:var(--text)}.plot-svg{cursor:crosshair}.plot-foot{min-height:34px}.plot-value{white-space:nowrap}.plot-heading{flex-wrap:wrap;gap:6px 10px}#output-card .family-toggle{margin-left:auto}.region-table{border-collapse:collapse;width:100%;font-size:11px}.region-table th,.region-table td{padding:7px 5px;text-align:left;border-bottom:1px solid var(--line)}.model-equations{font-family:"MOS Math",serif;font-size:18px;line-height:1.9}.plot-svg .junction-boundary{stroke:var(--warm);stroke-dasharray:4 4;opacity:.6}.plot-svg .zone{fill:var(--warm);opacity:.055}.device-panel{padding-top:12px;padding-bottom:14px}.region-pill{letter-spacing:.07em}.property-grid small{line-height:1.45}#insight-region{line-height:1.6}.voltage-controls{gap:15px}.plot-choice-switch button{padding:5px 9px}.property-grid{margin-top:4px}
 @media(max-width:1120px){.metric{padding:0 12px}.metric.metric-region strong{font-size:17px}}
-@media(max-width:920px){.bias-rail{display:grid;grid-template-columns:minmax(0,1fr) 250px}.properties-details{margin:0}.metrics{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:8px}.metric:nth-child(3){border-right:0}.voltage-controls{grid-template-columns:1fr}.control-top{display:flex}.control-top label{margin:0}.plot-foot{min-height:0}}
-@media(max-width:700px){.bias-rail{display:block}.properties-details{margin-top:10px}.voltage-controls{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.metric:nth-child(n){border-right:1px solid var(--line)}.metric:nth-child(2n),.metric:last-child{border-right:0}.metric:last-child{grid-column:1/-1}.metric.metric-region strong{font-size:22px}.readout-cap{flex-wrap:wrap;gap:3px}.banner-wrap{gap:12px}.model-selectors{display:flex}.model-selectors .selector-group{flex:1}.plot-toolbar{gap:8px}.device-panel{padding:12px}.plot-view-toolbar{align-items:flex-start}.bjt-plot-options{gap:6px}}
+@media(max-width:920px){.bias-rail{display:grid;grid-template-columns:minmax(0,1fr) 250px}.properties-details{margin:0}.voltage-controls{grid-template-columns:1fr}.control-top{display:flex}.control-top label{margin:0}.plot-foot{min-height:0}}
+@media(max-width:700px){.bias-rail{display:block}.properties-details{margin-top:10px}.voltage-controls{grid-template-columns:1fr}.metric:last-child:nth-child(odd){grid-column:1/-1}.metric.metric-region strong{font-size:22px}.readout-cap{flex-wrap:wrap;gap:3px}.banner-wrap{gap:12px}.model-selectors{display:flex}.model-selectors .selector-group{flex:1}.device-panel{padding:12px}.plot-view-toolbar{align-items:flex-start}}
 @media(max-width:480px){.model-selectors{display:grid;grid-template-columns:minmax(0,1fr)}}
-.drive-selector{margin:14px 0 18px}.drive-selector .plot-choice-switch{display:flex;margin-top:7px}.drive-selector button{flex:1}.derived-control{background:var(--panel-alt);border:1px solid var(--line);border-radius:7px;padding:10px}.derived-control input{opacity:.45;cursor:default}.derived-control .control-detail{font-style:italic}.control-top{gap:6px;flex-wrap:wrap}.control-top output{white-space:nowrap}.control-detail{min-height:15px}
+.drive-selector{margin:14px 0 18px}.drive-selector .plot-choice-switch{display:flex;margin-top:7px}.drive-selector button{flex:1}.derived-control{background:var(--panel-alt);border:1px solid var(--line);border-radius:7px;padding:10px}.derived-control input{opacity:.45;cursor:default}.control-top{gap:6px;flex-wrap:wrap}.control-top output{white-space:nowrap}
+
+.parameter-controls{border-top:1px solid var(--line);padding-top:16px;margin-top:16px}.plot-selectors{display:flex;flex-wrap:wrap;gap:10px 18px}.plot-choice-switch sub{font-size:.75em}.teaching-toast .equation math+math{margin-top:14px}.guide-content math{font-size:17px}.guide-content .equation{padding:12px;overflow-x:auto}.parameter-controls input{accent-color:var(--accent)}
+
+.junction-drag-handle{display:flex;align-items:center;gap:9px;width:100%;border:1px solid var(--line);border-bottom:0;border-radius:var(--radius,12px) var(--radius,12px) 0 0;padding:9px 16px;background:var(--panel-alt);font-size:11px;font-weight:600;cursor:grab;touch-action:none;user-select:none;text-align:left}
+.junction-drag-handle:active{transform:none;cursor:grabbing}.junction-drag-handle .drag-grip{flex-shrink:0}.junction-move-label{margin-left:auto;color:var(--muted);font-size:10px;font-weight:400}
+#junction-panel .device-panel{border-top-left-radius:0;border-top-right-radius:0}.junction-dragging{opacity:.45}
+.junction-drop-zone{display:none;border:2px dashed var(--line);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--muted);text-align:center}
+.science-column.junction-reordering>.junction-drop-zone{display:block}.junction-drop-zone.drop-target{border-color:var(--accent);background:var(--panel-alt);color:var(--accent);font-weight:600}
+.junction-drag-preview{position:fixed;z-index:50;pointer-events:none;max-width:calc(100vw - 16px);padding:10px 14px;border:1px solid var(--accent);border-radius:8px;background:var(--panel);box-shadow:0 6px 24px #0002;color:var(--accent);font-size:12px;font-weight:600}
+html.junction-reordering{scroll-behavior:auto!important}
 </style>
 </head>
 <body>
@@ -529,47 +539,44 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       <div class="banner-controls">
         <div class="model-selectors">
           <div class="selector-group"><span class="selector-label">Device type</span><div class="mode-switch" role="group" aria-label="Device type"><button data-polarity="npn" aria-pressed="true">NPN</button><button data-polarity="pnp" aria-pressed="false">PNP</button></div></div>
-          <div class="selector-group"><span class="selector-label">Current model</span><div class="mode-switch" role="group" aria-label="Current model"><button data-early="false" aria-pressed="false">Ebers–Moll</button><button data-early="true" aria-pressed="true">+ Early effect</button></div></div>
-        </div><p class="model-note" id="model-note"></p>
+        </div>
       </div>
     </div>
   </header>
   <div class="site-shell">
     <main aria-labelledby="page-title">
-      <section class="readout-frame" aria-label="Operating point readouts"><div class="readout-cap"><span>Operating point</span><span>Terminal currents: positive into the device</span></div><div class="metrics" id="metrics"></div></section>
+      <section class="readout-frame" aria-label="Operating point readouts"><div class="readout-cap"><span>Operating point</span></div><div class="metrics" id="metrics"></div></section>
       <div class="workbench">
         <aside class="bias-rail" aria-label="Bias and device controls">
           <section class="rail-panel">
             <p class="section-kicker"><span class="index">01</span> Bias console</p><h2 class="rail-heading">Set the conditions.</h2>
-            <p class="rail-intro">Choose base current or base voltage as the drive, then explore the collector response.</p>
+            <p class="rail-intro">Choose a base drive, then vary collector voltage, Early voltage, and forward gain.</p>
             <div class="drive-selector"><span class="plot-selection-label">Base drive</span><div class="plot-choice-switch" role="group" aria-label="Base drive mode"><button data-drive="ib" aria-pressed="true">IB drive</button><button data-drive="vbe" aria-pressed="false">VBE drive</button></div></div>
             <div class="voltage-controls" id="controls"></div>
-            <div class="preset-row" aria-label="Bias presets"><button data-preset="cut">Cutoff</button><button data-preset="active">Forward active</button><button data-preset="saturation">Saturation</button><button data-preset="reverse">Reverse active</button></div>
+            <div class="parameter-controls voltage-controls" id="parameter-controls" aria-label="Device parameter controls"></div>
+            <div class="preset-row" aria-label="Bias presets"><button data-preset="active">Forward active</button><button data-preset="saturation">Saturation</button></div>
             <p class="bias-note" id="bias-note"></p>
-            <div class="sweep-controls"><label for="sweep-axis">Auto sweep</label><select id="sweep-axis"><option value="uCE">VCE</option><option value="drive">IB</option></select><button id="sweep" aria-pressed="false">Start sweep</button></div>
-            <div class="transport-row"><button id="motion" aria-pressed="false">Pause carriers</button><button id="reset">Reset bias</button></div>
           </section>
           <details class="properties-details"><summary>Device properties · editable</summary><div class="property-grid" id="properties"></div><p class="property-note">Illustrative silicon device. Values are clamped to the displayed ranges when committed. NPN and PNP retain separate settings.</p><button id="defaults">Restore device defaults</button></details>
         </aside>
         <div class="science-column">
-          <section aria-label="Transistor characteristic plots">
-            <div class="plot-view-toolbar"><div><span class="plot-selection-label">Characteristic plots</span><div class="plot-choice-switch" role="group" aria-label="Select plots" id="plot-selectors"></div></div><div class="plot-scale-controls"><span class="plot-selection-label">Current scale</span><div class="plot-view-switch" role="group" aria-label="Current scale"><button data-scale="linear" aria-pressed="true">Linear plot</button><button data-scale="log" aria-pressed="false">Log plot</button></div></div></div>
-            <div class="bjt-plot-options"><label class="family-toggle"><input id="family" type="checkbox" checked> Show output family</label><span>Click to set horizontal bias. Base-voltage plots select voltage drive.</span></div>
+          <div class="junction-drop-zone" data-junction-position="above" aria-hidden="true">Place junction above plots</div>
+          <section id="characteristic-plots" aria-label="Transistor characteristic plots">
+            <div class="plot-view-toolbar"><div class="plot-selectors" id="plot-selectors"></div><div class="plot-scale-controls"><span class="plot-selection-label">Current scale</span><div class="plot-view-switch" role="group" aria-label="Current scale"><button data-scale="linear" aria-pressed="true">Linear plot</button><button data-scale="log" aria-pressed="false">Log plot</button></div></div></div>
             <p id="plot-empty" hidden>Select a plot above to show its curve.</p><div class="plot-grid" id="plots"></div>
-            <div class="plot-toolbar"><div class="plot-legend"><span class="legend-item"><i class="legend-line"></i>Selected bias</span><span class="legend-item"><i class="legend-line ref"></i>Ideal Ebers–Moll</span><span class="legend-item"><i class="legend-dot"></i>Operating point</span></div><span class="axis-convention" id="axis-convention"></span></div>
           </section>
-          <section class="device-section" aria-label="BJT cross-section"><div class="device-panel" id="diagram"></div></section>
+          <div class="junction-drop-zone" data-junction-position="below" aria-hidden="true">Place junction below plots</div>
+          <section class="device-section" id="junction-panel" aria-label="BJT cross-section"><button type="button" class="junction-drag-handle" id="junction-drag-handle" aria-label="Move junction above plots" aria-describedby="junction-move-help"><span class="drag-grip" aria-hidden="true"></span><span>Junction</span><span class="junction-move-label">Drag · ↑ Above plots</span></button><span class="visually-hidden" id="junction-move-help">Drag above or below the plots. Click or press Enter to switch position. Arrow Up places the junction above the plots; Arrow Down places it below. Escape cancels a drag.</span><span class="visually-hidden" id="junction-move-status" role="status"></span><div class="device-panel" id="diagram"></div></section>
           <section class="reference-section" aria-label="Model equations and learning guide">
             <details class="guide-details"><summary>Inside the model · equations &amp; learning guide</summary><div class="guide-content">
               <div class="guide-columns">
-                <div><h3>01 / Two junctions, one thin base</h3><p>A BJT has a heavily doped emitter, a thin base of the opposite type, and a collector. Forward bias of the emitter–base junction injects minority carriers into the base. Most cross the thin base and are collected by the reverse-biased collector junction; a smaller fraction recombines and contributes to base current.</p><p>NPN transports electrons; PNP transports holes. The emitter arrow on the circuit symbol indicates conventional current: out for NPN, in for PNP. The cross-section is a conceptual slice, not a fabrication layout.</p>
-                <h3>02 / Choose what the source holds fixed</h3><p>In <b>IB drive</b>, set base current and collector–emitter voltage; the model solves the required base–emitter voltage. In <b>VBE drive</b>, set the two voltages and read the resulting base current. The calculated slider is disabled because I<sub>B</sub> and V<sub>BE</sub> cannot be independently prescribed at a fixed V<sub>CE</sub>. Switching modes preserves the operating point within the 0–100 µA base-current control range. When selecting IB drive outside that range, the command changes to the nearest limit with a note.</p><p>The emitter is fixed at 0 V. Let s = +1 for NPN and −1 for PNP. Controls and plots use u<sub>BE</sub> = s(V<sub>B</sub> − V<sub>E</sub>), u<sub>CE</sub> = s(V<sub>C</sub> − V<sub>E</sub>), and i<sub>B</sub> = sI<sub>B</sub>. PNP labels become V<sub>EB</sub>, V<sub>EC</sub>, and −I<sub>B</sub>; positive base drive flows out of a PNP base. The other junction bias is u<sub>BC</sub> = u<sub>BE</sub> − u<sub>CE</sub>. Positive u forward-biases that junction. Changing polarity retains the selected drive and collector bias, using that device’s saved parameters.</p><p>Output curves hold the selected base drive fixed. Their families compare 5, 10, 50, and 100 µA in current drive, or 0.55, 0.60, 0.65, and 0.70 V in voltage drive. Base-voltage plots hold collector voltage fixed; clicking one selects voltage drive. Auto sweep moves collector voltage or the selected base drive. Presets use 20 µA (zero for cutoff) at 2 V, 0.08 V, or −1 V, then retain your selected drive mode. Zero base current still allows leakage. Current drive stays within 0–100 µA. The voltage range starts at −0.20–0.85 V and expands as needed within −1 to +1 V to include the calculated bias. The disabled current slider also spans its calculated value. Reset bias restores the standard ranges before solving the active preset.</p><p>All three readout currents are positive <b>into</b> the transistor, so I<sub>C</sub> + I<sub>B</sub> + I<sub>E</sub> = 0. The cross-section shows physical terminal voltages and current signs. Linear current plots show sI; log plots show |I| with a 1 fA display floor. Zero and smaller magnitudes are omitted, not replaced with leakage.</p>
-                <h3>03 / Recognizing the operating region</h3><table class="region-table"><thead><tr><th>Region</th><th>E–B</th><th>C–B</th></tr></thead><tbody><tr><td>Cutoff</td><td>Negligible injection</td><td>Negligible injection</td></tr><tr><td>Forward active</td><td>Forward</td><td>Reverse / zero</td></tr><tr><td>Saturation</td><td>Forward</td><td>Forward</td></tr><tr><td>Reverse active</td><td>Reverse / zero</td><td>Forward</td></tr></tbody></table><p>“Cutoff” is a display classification when all three terminal-current magnitudes are below 1 nA (or neither junction is forward biased); leakage is still evaluated. There is no fixed 0.7 V turn-on switch. Saturation means both junctions inject; I<sub>C</sub> ≈ βI<sub>B</sub> no longer holds. Reverse operation has the smaller gain β<sub>R</sub>.</p></div>
-                <div><h3>04 / A continuous Ebers–Moll core</h3><div class="equation model-equations">F = I<sub>S</sub>(e<sup>uBE / V<sub>T</sub></sup> − 1)<br>R = I<sub>S</sub>(e<sup>uBC / V<sub>T</sub></sup> − 1)<br>i<sub>C</sub> = M(F − R) − R / β<sub>R</sub><br>i<sub>B</sub> = F / β<sub>F</sub> + R / β<sub>R</sub><br>i<sub>E</sub> = −(i<sub>C</sub> + i<sub>B</sub>)</div><p>Lowercase i is polarity-normalized current; I = si. V<sub>T</sub> = kT/q. M = 1 for ideal Ebers–Moll. The same equations apply across all regions, so currents do not jump when a region label changes.</p>
-                <p>Current drive inverts the same base-current equation: u<sub>BE</sub> = V<sub>T</sub> ln[(i<sub>B</sub>/I<sub>S</sub> + 1/β<sub>F</sub> + 1/β<sub>R</sub>) / (1/β<sub>F</sub> + e<sup>−uCE / V<sub>T</sub></sup>/β<sub>R</sub>)]. Logarithmic evaluation keeps the solve stable through saturation and reverse operation; it does not assume I<sub>C</sub> = βI<sub>B</sub> in those regions.</p>
-                <h3>05 / Early effect and small signals</h3><p>Reverse junction bias widens depletion and narrows the neutral base. The optional teaching correction is M = 1 + [P(−u<sub>BC</sub>) + P(−u<sub>BE</sub>)] / V<sub>A</sub>, with P(x) = [x + √(x² + (0.01 V)²)]/2. It smoothly increases transport in either direction. In forward active operation this is approximately 1 − u<sub>BC</sub>/V<sub>A</sub>.</p><p>g<sub>m</sub> = ∂i<sub>C</sub>/∂u<sub>BE</sub> at fixed u<sub>CE</sub>, r<sub>π</sub> = 1/(∂i<sub>B</sub>/∂u<sub>BE</sub>) at fixed u<sub>CE</sub>, and r<sub>o</sub> = 1/(∂i<sub>C</sub>/∂u<sub>CE</sub>) at fixed u<sub>BE</sub>. These definitions stay the same in either drive mode; r<sub>o</sub> is not the reciprocal slope of a constant-I<sub>B</sub> output curve. Its plot holds V<sub>BE</sub> (V<sub>EB</sub> for PNP) fixed. The small-signal plots and gain ratio are shown only in forward active operation. Gain and transconductance use a linear scale; output resistance always uses a logarithmic scale. Ideal Ebers–Moll retains a tiny reverse-junction slope, so its output resistance grows toward infinity as reverse bias increases. In that region, g<sub>m</sub> ≈ |I<sub>C</sub>|/V<sub>T</sub>, r<sub>π</sub> ≈ β/g<sub>m</sub>, and r<sub>o</sub> ≈ V<sub>A</sub>/|I<sub>C</sub>|.</p>
-                <h3>06 / Temperature and model limits</h3><p>I<sub>S</sub> is specified at 27 °C and scales as (T/T₀)³ exp[(1.11 eV/k)(1/T₀ − 1/T)]. β and V<sub>A</sub> remain fixed. This is an illustrative temperature dependence, not a calibrated part model.</p><p>An ideal current source or voltage source drives the base, with an ideal voltage source at the collector. There are no resistors or load line. Voltage drive can produce exponential current growth, especially with a forward-biased collector junction. Biases above 0.80 V are identified as ideal-model extrapolations. Series resistance, high-level injection, gain rolloff, breakdown, self-heating, junction capacitance, transit time and switching storage are omitted. Carrier speed increases with the square root of current and is capped for readability. The two main streams follow their respective junction injections; the curved base branch follows |I<sub>B</sub>|. Carrier count and depletion width remain qualitative; animation time is not physical transit time.</p>
-                <h3>References</h3><div class="source-links"><a href="https://www.mathworks.com/help/simscape-electrical/ref/npnbipolartransistor.html" target="_blank" rel="noopener">MathWorks · Ebers–Moll equations</a><a href="https://ngspice.sourceforge.io/docs/ngspice-manual.pdf" target="_blank" rel="noopener">ngspice · BJT model reference</a></div></div>
+                <div><h3>01 / Carrier flow through the base</h3><p>During forward active operation, the emitter–base junction injects minority carriers into the thin base. Most reach the collector, while a smaller fraction recombines with majority carriers supplied by the base contact. NPN uses electrons in a p-type base; PNP uses holes in an n-type base.</p><p>Recombining pairs converge and disappear in a brief ring. Lower β increases the illustrated recombining share. Charge counts and depletion widths are amplified to make these changes visible. Higher current speeds up the carriers on a capped square-root scale.</p>
+                <h3>02 / Set the drive and device parameters</h3><p><b>IB drive</b> sets 0–100 µA and calculates V<sub>BE</sub>. <b>VBE drive</b> sets 0.50–0.80 V and calculates I<sub>B</sub>. Both modes use V<sub>CE</sub> from 0 to 5 V with the emitter at 0 V. V<sub>A</sub> spans 10–300 V and β = β<sub>F</sub> spans 10–800. NPN and PNP retain their own device settings.</p><p>The shaded slider displays the calculated quantity. Switching drive mode retains the operating point within the destination range and uses the closest limit when needed. Clicking a plot sets its horizontal bias; base-voltage plots select VBE drive. Drag or click the Junction header to place the animation above or below the plots.</p><p>Equations use s = +1 for NPN and −1 for PNP, u<sub>BE</sub> = s(V<sub>B</sub> − V<sub>E</sub>), u<sub>CE</sub> = s(V<sub>C</sub> − V<sub>E</sub>), u<sub>BC</sub> = u<sub>BE</sub> − u<sub>CE</sub>, and i = sI. PNP controls read V<sub>EB</sub>, V<sub>EC</sub>, and −I<sub>B</sub>. Terminal readouts retain their physical signs, with positive current directed into the device.</p>
+                <h3>03 / Junction currents and Early effect</h3><p>F and R describe injection at the emitter–base and collector–base junctions. Their exponential voltage dependence shapes the current curves. V<sub>T</sub> = kT/q and I<sub>S</sub> follows the selected temperature. β<sub>F</sub> and β<sub>R</sub> weight the two base-current contributions.</p><div class="equation" id="guide-core"></div><p>The Early multiplier M strengthens transport as reverse junction bias widens the depletion region:</p><div class="equation" id="guide-early"></div><p>P(x) = [x + √(x² + (0.01 V)²)]/2 gives a smooth positive part. Lower V<sub>A</sub> increases the slope of the forward-active output curves and the illustrated depletion encroachment into the base. In forward active operation, M ≈ 1 + (u<sub>CE</sub> − u<sub>BE</sub>)/V<sub>A</sub> and i<sub>C</sub>/i<sub>B</sub> ≈ β<sub>F</sub>M.</p><p>Forward active operation combines forward emitter–base bias with reverse collector–base bias. In saturation, both junctions inject carriers. Current drive solves the displayed base-current equation across these regions. The cutoff label marks very small currents using a 1 nA threshold.</p></div>
+                <div><h3>04 / Read the characteristic plots</h3><p><b>Large signal:</b> I<sub>C</sub>/V<sub>CE</sub> sweeps collector voltage at fixed base drive. Its <b>Show output family</b> checkbox adds curves at I<sub>B</sub> = 5, 10, 50, and 100 µA, or V<sub>BE</sub> = 0.55, 0.60, 0.65, and 0.70 V. I<sub>C</sub>/V<sub>BE</sub> and I<sub>B</sub>/V<sub>BE</sub> sweep base voltage at fixed V<sub>CE</sub>. The amber line marks zero collector–base bias.</p><p><b>Small signal:</b> g<sub>m</sub>, r<sub>o</sub>, f<sub>T</sub>, and C<sub>diff</sub> show forward-active values. Selecting a plot adds its value to the operating-point row. g<sub>m</sub>, f<sub>T</sub>, and C<sub>diff</sub> sweep base voltage; r<sub>o</sub> sweeps collector voltage at fixed V<sub>BE</sub>. The g<sub>m</sub> derivative holds V<sub>CE</sub> fixed, and the r<sub>o</sub> derivative holds V<sub>BE</sub> fixed in either drive mode:</p><div class="equation" id="guide-small"></div><p>Current plots use linear normalized current or logarithmic magnitude with a 1 fA display floor. r<sub>o</sub> uses a logarithmic axis. The remaining small-signal plots use linear axes. A dash identifies a small-signal operating point outside the forward-active range.</p>
+                <h3>05 / Diffusion capacitance and transition frequency</h3><div class="equation" id="guide-frequency"></div><p>C<sub>diff</sub> measures the change in stored minority-carrier charge with base voltage. It rises with g<sub>m</sub> using the fixed forward transit time τ<sub>F</sub> = <b>1 ns</b>. f<sub>T</sub> estimates the frequency where short-circuit current gain reaches unity. Its capacitance includes C<sub>diff</sub> and the emitter and collector junction terms C<sub>JE</sub> and C<sub>JC</sub>. As current rises, the estimate approaches 1/(2πτ<sub>F</sub>) ≈ <b>159 MHz</b>.</p><p>Junction capacitance uses C<sub>J</sub>(u) = C<sub>J0</sub>/(1 − u/φ)<sup>m</sup>, with C<sub>JE0</sub> = <b>2 pF</b>, C<sub>JC0</sub> = <b>1 pF</b>, φ = <b>0.75 V</b>, and m = <b>0.33</b>. Here u is the corresponding normalized junction voltage. Above u = φ/2, a tangent continuation keeps the capacitance and its slope continuous.</p>
+                <h3>06 / Model assumptions</h3><p>The curves represent an illustrative silicon device driven by ideal voltage or current sources. Temperature changes V<sub>T</sub> and I<sub>S</sub>; β and V<sub>A</sub> retain their slider settings. Frequency and capacitance values use a forward-active small-signal approximation with fixed transit-time and junction parameters.</p><p>The drawing shows carrier paths, recombination, and base-width modulation at a visual scale. Its animation speed communicates current magnitude. Reduced-motion preferences freeze the carriers.</p>
+                <h3>References</h3><div class="source-links"><a href="https://www.mathworks.com/help/simscape-electrical/ref/npnbipolartransistor.html" target="_blank" rel="noopener">MathWorks · Junction current model</a><a href="https://analog-electronics.tudelft.nl/webbook/SED/_build/html/ModelingActiveDevices/ActiveDevices_Bipolar_transistors.html" target="_blank" rel="noopener">TU Delft · BJT charge and frequency</a><a href="https://ngspice.sourceforge.io/docs/ngspice-46-manual.pdf" target="_blank" rel="noopener">ngspice · BJT capacitances</a></div></div>
               </div>
             </div></details>
           </section>
@@ -578,7 +585,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     </main><footer class="footer"><span class="footer-mark"></span>BJT Transistor Characteristics Visualization · A visual study of bipolar junction behavior.</footer>
   </div>
   <noscript><p>This simulator requires JavaScript to calculate currents and draw the device.</p></noscript>
-  <script>/* Reciprocal Ebers–Moll teaching model; volts, amperes, siemens, ohms.
+  <script>/* BJT + Early effect teaching model; volts, amperes, siemens, ohms, farads, hertz.
  * All signed terminal currents point INTO the device, so ic + ib + ie = 0.
  * Is is specified at 27 °C. Silicon temperature law: Eg = 1.11 eV, XTI = 3.
  *
@@ -588,13 +595,21 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
  * teaching approximation follows reverse-junction base-width modulation;
  * forward active M ≈ 1 + VCB/VA. Base recombination currents stay unchanged.
  * It is not a complete Gummel–Poon or calibrated device model. No breakdown,
- * high-injection gain rolloff, series resistance, capacitance or self-heating.
+ * high-injection gain rolloff, series resistance or self-heating.
+ * Forward-active high-frequency estimates use Cdiff = tauF*gm and
+ * fT ≈ gm / [2*pi*(Cdiff + CJE + CJC)], with fixed tauF = 1 ns.
+ * Junction capacitance uses a SPICE-style depletion power law, continued
+ * tangentially beyond half the built-in potential. These teaching estimates
+ * do not model saturation storage, transient switching, or high-current fT
+ * rolloff. The DC transport core remains reciprocal Ebers–Moll with Early
+ * modulation always enabled; there is no selectable ideal-only model.
  * Carrier animations driven by this model represent DC behavior, not time.
  *
  * References (equations, temperature law, and physical Early mechanism):
  * https://www.mathworks.com/help/simscape-electrical/ref/npnbipolartransistor.html
  * https://ngspice.sourceforge.io/docs/ngspice-manual.pdf
  * https://lampz.tugraz.at/~hadley/psd/problems/bipolar/s.pdf
+ * https://analog-electronics.tudelft.nl/webbook/SED/_build/html/ModelingActiveDevices/ActiveDevices_Bipolar_transistors.html
  */
 const BJTModel = (() => {
   'use strict';
@@ -602,8 +617,12 @@ const BJTModel = (() => {
   const T_REFERENCE = 300.15;
   const CUTOFF_CURRENT = 1e-9;
   const EARLY_SMOOTHING = 0.01;
-  // Keep the overflow guard beyond the UI voltage-drive domain, including
-  // its reverse VCE sweep, and retain headroom for current/voltage handoff.
+  const TAU_F = 1e-9;
+  const CJE0 = 2e-12, CJC0 = 1e-12;
+  const JUNCTION_POTENTIAL = 0.75, JUNCTION_GRADING = 0.33;
+  const DEPLETION_FORWARD_COEFFICIENT = 0.5;
+  // Keep the overflow guard beyond the UI voltage-drive domain and retain
+  // headroom for current/voltage handoff and external model callers.
   // The current-drive inverse rejects targets that would invoke this guard.
   const EXP_LIMIT = 128;
   const baseParameters = Object.freeze({Is:1e-14, betaF:100, betaR:2, VA:80, tempC:27});
@@ -642,14 +661,24 @@ const BJTModel = (() => {
     return {temperature, VT, IsT};
   }
 
-  function intrinsic(uBE, uCE, p, thermal, early) {
+  function depletionCapacitance(voltage, zeroBiasCapacitance) {
+    const boundary = DEPLETION_FORWARD_COEFFICIENT*JUNCTION_POTENTIAL;
+    if (voltage <= boundary) return zeroBiasCapacitance/(1-voltage/JUNCTION_POTENTIAL)**JUNCTION_GRADING;
+    // First-order continuation matches both C and dC/dV at the boundary,
+    // avoiding a singularity as forward bias passes the built-in potential.
+    const atBoundary = zeroBiasCapacitance/(1-DEPLETION_FORWARD_COEFFICIENT)**JUNCTION_GRADING;
+    const slope = atBoundary*JUNCTION_GRADING/(JUNCTION_POTENTIAL-boundary);
+    return atBoundary+slope*(voltage-boundary);
+  }
+
+  function intrinsic(uBE, uCE, p, thermal) {
     const uBC = uBE - uCE;
     const xBE = uBE / thermal.VT, xBC = uBC / thermal.VT;
     // This guard is inactive throughout the documented UI bias/temperature
     // range. It only prevents exponential overflow for out-of-range callers.
     const F = thermal.IsT * Math.expm1(Math.min(xBE, EXP_LIMIT));
     const R = thermal.IsT * Math.expm1(Math.min(xBC, EXP_LIMIT));
-    const earlyFactor = early ? 1 + (positive(-uBC) + positive(-uBE)) / p.VA : 1;
+    const earlyFactor = 1 + (positive(-uBC) + positive(-uBE)) / p.VA;
     const transport = (F - R) * earlyFactor;
     const baseForward = F / p.betaF, baseReverse = R / p.betaR;
     const icN = transport - baseReverse;
@@ -668,37 +697,40 @@ const BJTModel = (() => {
     return 'cut';
   }
 
-  function evaluate(vb, vc, ve, overrides = {}, polarity = 'npn', early = true) {
+  function evaluate(vb, vc, ve, overrides = {}, polarity = 'npn') {
     if (![vb,vc,ve].every(Number.isFinite)) throw new RangeError('Terminal voltages must be finite');
     if (polarity !== 'npn' && polarity !== 'pnp') throw new RangeError('Polarity must be npn or pnp');
     const p = parameters(overrides), thermal = prepare(p), s = polarity === 'pnp' ? -1 : 1;
     const uBE = s * (vb - ve), uCE = s * (vc - ve);
-    const q = intrinsic(uBE, uCE, p, thermal, early);
+    const q = intrinsic(uBE, uCE, p, thermal);
     // gm and gpi: move B with C/E fixed. gds: move C with B/E fixed.
     // Polarity factors cancel in physical dIC/dVB and dIC/dVC; the normalized
     // derivatives therefore apply to both NPN and PNP at mirrored biases.
     // Differentiate the same smooth model analytically. Subtracting total
     // currents numerically would erase the reverse diode's tiny output slope
-    // and cause spurious finite/infinite ro islands in ideal Ebers–Moll.
+    // and cause spurious finite/infinite ro islands.
     const xBE=q.uBE/thermal.VT, xBC=q.uBC/thermal.VT;
     const fSlope=xBE > EXP_LIMIT ? 0 : thermal.IsT*Math.exp(xBE)/thermal.VT;
     const rSlope=xBC > EXP_LIMIT ? 0 : thermal.IsT*Math.exp(xBC)/thermal.VT;
-    const mBase=early ? -(positiveSlope(-q.uBC)+positiveSlope(-q.uBE))/p.VA : 0;
-    const mCollector=early ? positiveSlope(-q.uBC)/p.VA : 0;
+    const mBase=-(positiveSlope(-q.uBC)+positiveSlope(-q.uBE))/p.VA;
+    const mCollector=positiveSlope(-q.uBC)/p.VA;
     const gm=q.earlyFactor*(fSlope-rSlope)+(q.F-q.R)*mBase-rSlope/p.betaR;
     const gpi=fSlope/p.betaF+rSlope/p.betaR;
     const gds=(q.earlyFactor+1/p.betaR)*rSlope+(q.F-q.R)*mCollector;
-    // With Early disabled, gds = (1 + 1/betaR) Is(T) exp(uBC/VT)/VT.
-    // It becomes exponentially tiny as the collector junction is reversed;
-    // ideal active-region ro approaches infinity, but is not exactly infinite
-    // while this reverse-junction diode derivative remains representable.
     const region = classify(q);
+    const cJE = depletionCapacitance(q.uBE,CJE0), cJC = depletionCapacitance(q.uBC,CJC0);
+    // The charge-control approximation is only meaningful in forward active
+    // operation. Returning null leaves an explicit gap in unsupported plots.
+    const highFrequencyValid = region === 'active' && gm > 0 && !q.exponentLimited;
+    const cDiff = highFrequencyValid ? TAU_F*gm : null;
+    const cPi = highFrequencyValid ? cDiff+cJE : null;
+    const ft = highFrequencyValid ? gm/(2*Math.PI*(cPi+cJC)) : null;
     const beta = region !== 'cut' && q.icN > CUTOFF_CURRENT && q.ibN > 0 ? q.icN/q.ibN : null;
     const betaReverse = region !== 'cut' && q.ieN > CUTOFF_CURRENT && q.ibN > 0 ? q.ieN/q.ibN : null;
     const ic = s*q.icN || 0, ib = s*q.ibN || 0;
-    return {...q,...thermal,vb,vc,ve,polarity,sign:s,params:p,early:Boolean(early),region,
+    return {...q,...thermal,vb,vc,ve,polarity,sign:s,params:p,early:true,region,
       vbe:vb-ve,vbc:vb-vc,vce:vc-ve,
-      ic,ib,ie:-(ic+ib) || 0,gm,gpi,gds,
+      ic,ib,ie:-(ic+ib) || 0,gm,gpi,gds,cDiff,cJE,cJC,cPi,ft,highFrequencyValid,
       rpi:gpi === 0 ? Infinity : 1/gpi,ro:gds === 0 ? Infinity : 1/gds,
       beta,betaEff:beta,betaReverse,alphaF:p.betaF/(p.betaF+1),alphaR:p.betaR/(p.betaR+1),
       junctionBE:q.uBE > 0 ? 'forward' : q.uBE < 0 ? 'reverse' : 'zero',
@@ -706,7 +738,7 @@ const BJTModel = (() => {
       cutoffCurrent:CUTOFF_CURRENT};
   }
 
-  function solveBaseCurrent(ibN, uCE, overrides = {}, polarity = 'npn', early = true) {
+  function solveBaseCurrent(ibN, uCE, overrides = {}, polarity = 'npn') {
     if (![ibN,uCE].every(Number.isFinite)) throw new RangeError('Base current and collector–emitter voltage must be finite');
     if (polarity !== 'npn' && polarity !== 'pnp') throw new RangeError('Polarity must be npn or pnp');
     const p = parameters(overrides), thermal = prepare(p);
@@ -729,7 +761,7 @@ const BJTModel = (() => {
       throw new RangeError('Requested base current exceeds the model exponential range');
     }
     const s = polarity === 'pnp' ? -1 : 1;
-    const q = evaluate(s*thermal.VT*xBE,s*uCE,0,p,polarity,early);
+    const q = evaluate(s*thermal.VT*xBE,s*uCE,0,p,polarity);
     const tolerance = Math.max(1e-11*Math.max(Math.abs(ibN),leakage),Number.MIN_VALUE);
     if (q.exponentLimited || ![q.ic,q.ib,q.ie,q.gm,q.gpi,q.gds].every(Number.isFinite) ||
         Math.abs(q.ibN-ibN) > tolerance) {
@@ -746,7 +778,7 @@ const BJTModel = (() => {
     return {...q,ibN:ibN || 0,ib,ieN,ie:-(q.ic+ib) || 0,beta,betaEff:beta,betaReverse};
   }
 
-  return Object.freeze({defaults,evaluate,solveBaseCurrent,constants:Object.freeze({K_OVER_Q,T_REFERENCE,CUTOFF_CURRENT,EARLY_SMOOTHING,EXP_LIMIT})});
+  return Object.freeze({defaults,evaluate,solveBaseCurrent,constants:Object.freeze({K_OVER_Q,T_REFERENCE,CUTOFF_CURRENT,EARLY_SMOOTHING,EXP_LIMIT,TAU_F,CJE0,CJC0,JUNCTION_POTENTIAL,JUNCTION_GRADING,DEPLETION_FORWARD_COEFFICIENT})});
 })();
 if (typeof globalThis !== 'undefined') globalThis.BJTModel = BJTModel;
 if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
@@ -759,7 +791,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
   const regionNames = { cut: 'Cutoff', active: 'Forward active', saturation: 'Saturation', reverse: 'Reverse active' };
   let root, svg, nodes = {}, point = null, state = null, lastAnimationTime = null;
   let phases = { forward: 0, reverse: 0, base: 0 };
-  let particles = { forward: [], reverse: [], base: [] };
+  let particles = { forward: [], reverse: [], base: [], majority: [], flash: [] };
+  const PAIR_COUNT = 5, MEETING_PHASE = 0.72;
 
   function set(id, attr, value) { nodes[id].setAttribute(attr, String(value)); }
   function label(id, value) { nodes[id].textContent = value; }
@@ -826,13 +859,18 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
         <g clip-path="url(#diag-device-clip)">
           <path id="diag-forward-trail" d="M100 195 H650" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity=".15"/>
           <path id="diag-reverse-trail" d="M650 222 H100" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity=".15"/>
-          <path id="diag-base-trail" d="M285 202 Q354 202 354 175" fill="none" stroke="var(--accent2)" stroke-width="1.2" stroke-dasharray="3 4" opacity=".55"/>
-          <g id="diag-forward-particles"></g><g id="diag-reverse-particles"></g><g id="diag-base-particles"></g>
-          <circle id="diag-recombination-site" cx="354" cy="176" r="4.5" fill="var(--panel)" stroke="var(--accent2)" stroke-width="1.2"/>
+          <path id="diag-base-trail" d="M285 207 Q350 207 350 229" fill="none" stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="3 4" opacity=".4"/>
+          <path id="diag-replenishment-trail" d="M354 124 C314 169 337 210 350 229" fill="none" stroke="var(--warm)" stroke-width="1.2" stroke-dasharray="3 4" opacity=".45"/>
+          <g id="diag-forward-particles"></g><g id="diag-reverse-particles"></g><g id="diag-base-particles"></g><g id="diag-majority-particles"></g><g id="diag-flash-particles"></g>
+        </g>
+        <g id="diag-neutral-base-part" tabindex="0" data-device-part="neutral-base" role="img">
+          <title id="diag-neutral-base-title">Collector depletion encroachment reduces the neutral base width. The drawn width is qualitative.</title>
+          <path id="diag-neutral-base-width" d="M328 245 V250 H379 V245" stroke="var(--accent2)" stroke-width="1.5" fill="none"/>
+          <text id="diag-neutral-base-label" x="354" y="263" text-anchor="middle" style="font-size:9px;fill:var(--accent2)">neutral base</text>
         </g>
 
         <g tabindex="0" role="img" id="diag-contacts-part">
-          <title>Metal contacts connect the emitter, base and collector to the swept terminal voltages. Brown arrows indicate signed conventional current: positive is into the device.</title>
+          <title>Metal contacts connect the emitter, base and collector. The base contact replenishes majority carriers lost to recombination. Brown arrows indicate signed conventional current: positive is into the device.</title>
           <path class="device-wire" d="M174 80 V116 M354 80 V116 M547 80 V116"/>
           <rect x="162" y="114" width="24" height="8" rx="1.5" fill="var(--muted)"/>
           <rect x="342" y="114" width="24" height="8" rx="1.5" fill="var(--muted)"/>
@@ -881,19 +919,19 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
           <text id="diag-current-direction" x="415" y="339" style="font-size:11px;fill:var(--warm)"></text>
         </g>
       </svg></div>
-      <div class="cross-legend"><span><i id="diag-carrier-key" style="background:var(--accent);border-radius:50%"></i><span id="diag-carrier-legend">Electrons</span></span><span><i style="background:var(--accent2);opacity:.5"></i>Depletion region</span><span><i style="background:var(--gate);border:1px solid var(--accent2)"></i>Thin base</span><span><i style="background:var(--warm)"></i>Conventional current</span></div>
+      <div class="cross-legend"><span><i id="diag-carrier-key" style="background:var(--accent);border-radius:50%"></i><span id="diag-carrier-legend">Electrons</span></span><span><i style="background:var(--accent2);opacity:.5"></i>Depletion region</span><span><i style="background:var(--gate);border:1px solid var(--accent2)"></i>Thin base</span><span><i id="diag-majority-key" style="border:1.5px solid var(--warm);border-radius:50%"></i><span id="diag-majority-legend">Base holes · replenished</span></span><span><i style="border:1.5px solid var(--accent2);border-radius:50%"></i>Pair flash · recombination</span><span><i style="background:var(--warm)"></i>Conventional current</span></div>
       <p class="cross-note" id="diag-description"></p>`;
     svg = root.querySelector('#diag-device');
     nodes = {};
     root.querySelectorAll('[id]').forEach(el => { nodes[el.id.replace(/^diag-/, '')] = el; });
-    particles = { forward: [], reverse: [], base: [] };
+    particles = { forward: [], reverse: [], base: [], majority: [], flash: [] };
     phases = { forward: 0, reverse: 0, base: 0 };
     lastAnimationTime = null;
-    for (const group of ['forward', 'reverse', 'base']) {
-      const count = group === 'base' ? 5 : 26;
+    for (const group of Object.keys(particles)) {
+      const count = ['base', 'majority', 'flash'].includes(group) ? PAIR_COUNT : 26;
       for (let i = 0; i < count; i++) {
         const dot = document.createElementNS(NS, 'circle');
-        dot.setAttribute('r', group === 'base' ? '2.6' : '3.3');
+        dot.setAttribute('r', '3.3');
         dot.setAttribute('stroke-width', '1.35');
         nodes[group + '-particles'].appendChild(dot);
         particles[group].push(dot);
@@ -933,6 +971,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
     label('base-doping', (pnp ? 'n' : 'p') + ' base');
     label('collector-doping', (pnp ? 'p' : 'n') + ' collector');
     label('carrier-legend', carrier + (pnp ? ' · outlined' : ' · filled'));
+    label('majority-legend', 'Base ' + (pnp ? 'electrons · filled' : 'holes · outlined') + ' · replenished');
+    nodes['majority-key'].style.background = pnp ? 'var(--warm)' : 'var(--panel)';
     nodes['carrier-key'].style.background = pnp ? 'var(--panel)' : 'var(--accent)';
     nodes['carrier-key'].style.border = '1.5px solid var(--accent)';
     label('symbol-heading', type + ' symbol');
@@ -941,19 +981,28 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
     set('symbol-arrow', 'd', pnp ? 'M820 188 L800 176' : 'M800 176 L820 188');
     label('emitter-title', 'The heavily doped ' + (pnp ? 'p-type' : 'n-type') + ' emitter injects ' + carrier.toLowerCase() + ' into the thin base when its junction is forward biased. The emitter and collector retain their physical labels in reverse operation.');
     label('collector-title', 'The more lightly doped ' + (pnp ? 'p-type' : 'n-type') + ' collector collects ' + carrier.toLowerCase() + ' in forward active operation. It can inject them into the base when its own junction is forward biased.');
-    label('base-title', 'The thin ' + (pnp ? 'n-type' : 'p-type') + ' base allows most injected ' + carrier.toLowerCase() + ' to reach the other junction. A small fraction recombines; the base terminal replenishes majority carriers. The curved, fading dots indicate this recombination qualitatively.');
+    label('base-title', 'The thin ' + (pnp ? 'n-type' : 'p-type') + ' base allows most injected ' + carrier.toLowerCase() + ' to reach the other junction. Some meet opposite majority carriers supplied by the base contact; each pair disappears in a flash. Lower beta increases the illustrated recombining share. Pair counts are visually amplified, not literal carrier fractions.');
 
     // Depletion broadens under reverse bias; emitter doping keeps most E–B depletion in the base.
     const widthBE = bounded(7 + 20 * Math.sqrt(Math.max(0, 0.78 - q.uBE) / 0.78), 7, 48);
     const widthBC = bounded(9 + 28 * Math.sqrt(Math.max(0, 0.78 - q.uBC) / 0.78), 9, 105);
+    // VA describes base-width modulation, not a unique physical depletion width.
+    // Amplify its collector-side effect to make the mechanism visible at this scale.
+    const collectorModulation = Math.max(0, -q.uBC) / q.params.VA;
+    const earlyEncroachment = 26 * -Math.expm1(-6 * collectorModulation);
+    const neutralLeft = 315 + 0.82 * widthBE;
+    const neutralRight = 393 - 0.18 * widthBC - earlyEncroachment;
     set('be-depletion', 'x', 315 - 0.18 * widthBE);
     set('be-depletion', 'width', widthBE);
-    set('bc-depletion', 'x', 393 - 0.18 * widthBC);
-    set('bc-depletion', 'width', widthBC);
+    set('bc-depletion', 'x', neutralRight);
+    set('bc-depletion', 'width', widthBC + earlyEncroachment);
+    set('neutral-base-width', 'd', `M${neutralLeft.toFixed(2)} 245 V250 H${neutralRight.toFixed(2)} V245`);
+    set('neutral-base-label', 'x', (neutralLeft + neutralRight) / 2);
+    label('neutral-base-title', 'Neutral base between the depletion regions. Lower Early voltage VA means stronger base-width modulation: a reverse-biased collector junction encroaches farther into the base in this amplified, qualitative drawing. VA alone does not determine physical depletion width.');
     label('be-bias', (pnp ? 'E–B: ' : 'B–E: ') + junctionBias(q.uBE) + ' · ' + voltage(q.uBE));
     label('bc-bias', (pnp ? 'C–B: ' : 'B–C: ') + junctionBias(q.uBC) + ' · ' + voltage(q.uBC));
     label('be-title', 'Emitter–base junction: ' + junctionBias(q.uBE) + ' bias. The polarity-normalized forward voltage is ' + voltage(q.uBE) + '. Forward bias narrows the barrier; reverse bias widens it. Depletion width is a qualitative illustration, not a solved capacitance model.');
-    label('bc-title', 'Base–collector junction: ' + junctionBias(q.uBC) + ' bias. The polarity-normalized forward voltage is ' + voltage(q.uBC) + '. Depletion extends mainly into the collector and grows under reverse bias. Width is illustrative.');
+    label('bc-title', 'Base–collector junction: ' + junctionBias(q.uBC) + ' bias. The polarity-normalized forward voltage is ' + voltage(q.uBC) + '. Reverse bias widens depletion. VA = ' + q.params.VA + ' V sets the illustrated base-side encroachment: lower VA narrows the neutral base more strongly. Geometry is qualitative and visually amplified.');
     terminalArrow('ie-arrow', 194, q.ie);
     terminalArrow('ib-arrow', 374, q.ib);
     terminalArrow('ic-arrow', 567, q.ic);
@@ -962,8 +1011,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
     set('forward-trail', 'd', saturation ? 'M100 195 H650' : 'M100 207 H650');
     set('reverse-trail', 'd', saturation ? 'M650 222 H100' : 'M650 207 H100');
     visible('base-trail', !cut);
-    visible('recombination-site', !cut);
-    set('base-trail', 'd', reversed ? 'M430 207 Q354 207 354 176' : 'M285 207 Q354 207 354 176');
+    visible('replenishment-trail', !cut);
+    set('base-trail', 'd', reversed ? 'M430 207 Q350 207 350 229' : 'M285 207 Q350 207 350 229');
     label('carrier-label', pnp ? 'Hole motion' : 'Electron motion');
     visible('carrier-arrow', !cut);
     visible('carrier-arrow-2', saturation);
@@ -986,20 +1035,20 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
     }
 
     let explanation = cut
-      ? 'Neither junction has forward injection large enough to show in this drawing; model leakage can remain. '
+      ? 'Carrier injection is below the drawing threshold; leakage may remain. '
       : saturation
-        ? 'Both junctions are forward biased: ' + carrier.toLowerCase() + ' enter the base from the emitter and collector. The opposing streams show injection, not two independent terminal currents. '
+        ? carrier + ' enter the base from both emitter and collector; recombining pairs disappear in flashes. '
         : reversed
-          ? 'The collector injects ' + carrier.toLowerCase() + ' into the base and the emitter collects them. The physical emitter and collector are asymmetric, so reverse gain is lower. '
-          : 'The emitter injects ' + carrier.toLowerCase() + ' into the thin base; most cross it and are swept into the collector. The curved, fading dots represent a small recombining fraction. ';
-    explanation += (pnp ? 'Holes move with conventional current. ' : 'Electrons move opposite to conventional current. ');
-    explanation += 'Brown terminal arrows follow the calculated current signs; positive means into the device. Higher current moves the dots faster: each main stream follows its junction injection, and the curved base branch follows |IB|. Speed uses a square-root scale with a readability cap. Geometry, depletion widths and particle counts are qualitative; animation time is not physical transit time.';
+          ? carrier + ' travel from collector to emitter; recombining pairs disappear in flashes. '
+          : carrier + ' cross the thin base toward the collector; recombining pairs disappear in flashes. Lower VA narrows the illustrated neutral base. ';
+    explanation += 'Motion, counts and dimensions are qualitative.';
     label('description', explanation);
     svg.setAttribute('aria-label', type + ' cross-section in ' + (regionNames[q.region] || q.region) + '. ' + explanation);
     for (const group of Object.keys(particles)) {
       for (const dot of particles[group]) {
-        dot.setAttribute('fill', pnp ? 'var(--panel)' : 'var(--accent)');
-        dot.setAttribute('stroke', pnp ? 'var(--accent)' : 'var(--panel)');
+        const majority = group === 'majority', flash = group === 'flash';
+        dot.setAttribute('fill', flash ? 'none' : majority ? (pnp ? 'var(--warm)' : 'var(--panel)') : pnp ? 'var(--panel)' : 'var(--accent)');
+        dot.setAttribute('stroke', flash ? 'var(--accent2)' : majority ? 'var(--warm)' : pnp ? 'var(--accent)' : 'var(--panel)');
       }
     }
     drawParticles();
@@ -1031,16 +1080,38 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
         dot.setAttribute('opacity', '.9');
       });
     }
+    // Use a bounded, exaggerated share so low-beta recombination is visible.
+    // All pairs retain fixed phase offsets when beta changes; no phase resets.
+    const beta = reversed ? q.params.betaR : q.params.betaF;
+    const count = bounded(Math.round(1 + 4 * Math.sqrt(10 / beta)), 1, PAIR_COUNT);
+    const hasBaseCurrent = Math.abs(q.ib) > 1e-15;
     particles.base.forEach((dot, i) => {
-      dot.setAttribute('visibility', cut || i > 2 ? 'hidden' : 'visible');
-      if (cut || i > 2) return;
-      const t = (phases.base + i / 3) % 1;
+      const majority = particles.majority[i], flash = particles.flash[i];
+      const t = (phases.base + i * 0.618033988749895) % 1;
+      const approach = Math.min(1, t / MEETING_PHASE);
       const start = reversed ? 430 : 285;
-      const x = (1 - t) * (1 - t) * start + 2 * (1 - t) * t * 354 + t * t * 354;
-      const y = (1 - t) * (1 - t) * 207 + 2 * (1 - t) * t * 207 + t * t * 176;
+      const x = (1 - approach) ** 2 * start + 2 * (1 - approach) * approach * 350 + approach ** 2 * 350;
+      const y = 207 + 22 * approach ** 2;
+      // The opposite majority carrier comes from the base contact. A curved
+      // route separates the two charges until they meet in the neutral base.
+      const a = approach, b = 1 - a;
+      const majorityX = b ** 3 * 354 + 3 * b ** 2 * a * 314 + 3 * b * a ** 2 * 337 + a ** 3 * 350;
+      const majorityY = b ** 3 * 124 + 3 * b ** 2 * a * 169 + 3 * b * a ** 2 * 210 + a ** 3 * 229;
+      const enabled = !cut && hasBaseCurrent && i < count;
+      const approaching = t < MEETING_PHASE;
+      dot.setAttribute('visibility', enabled && approaching ? 'visible' : 'hidden');
+      majority.setAttribute('visibility', enabled && approaching ? 'visible' : 'hidden');
       dot.setAttribute('cx', x.toFixed(2));
       dot.setAttribute('cy', y.toFixed(2));
-      dot.setAttribute('opacity', (0.7 * (1 - t)).toFixed(2));
+      dot.setAttribute('opacity', '.95');
+      majority.setAttribute('cx', majorityX.toFixed(2));
+      majority.setAttribute('cy', majorityY.toFixed(2));
+      majority.setAttribute('opacity', '.95');
+      const flashProgress = bounded((t - MEETING_PHASE) / (1 - MEETING_PHASE), 0, 1);
+      flash.setAttribute('visibility', enabled && !approaching ? 'visible' : 'hidden');
+      flash.setAttribute('cx', '350');flash.setAttribute('cy', '229');
+      flash.setAttribute('r', (3 + 8 * flashProgress).toFixed(2));
+      flash.setAttribute('opacity', (1 - flashProgress).toFixed(2));
     });
   }
 
@@ -1082,8 +1153,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
   const clamp = (n,a,b) => Math.max(a,Math.min(b,n));
   const fixed = (n,k=2) => (Math.abs(n)<0.5*10**-k?0:n).toFixed(k);
   const names = {cut:'Cutoff',active:'Forward active',saturation:'Saturation',reverse:'Reverse active'};
-  const state = {polarity:'npn',early:true,drive:'ib',ib:20e-6,uBE:.68,uCE:2,vb:0,vc:2,ve:0,scale:'linear',family:true,plots:new Set(['output','transfer']),paused:false,sweep:false};
-  const limits={ib:[0,100e-6],uBE:[-.2,.85],uCE:[-1,5]};
+  const state = {polarity:'npn',drive:'ib',ib:20e-6,uBE:.68,uCE:2,vb:0,vc:2,ve:0,scale:'linear',family:true,plots:new Set(['output','transfer'])};
+  const limits={ib:[0,100e-6],uBE:[.5,.8],uCE:[0,5],VA:[10,300],betaF:[10,800]};
   let handoffNote='';
   const devices = {npn:BJTModel.defaults(),pnp:BJTModel.defaults()};
   const p = () => devices[state.polarity];
@@ -1092,7 +1163,25 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
   const collectorLabel = () => state.polarity==='pnp'?'VEC':'VCE';
   const currentLabel = () => state.polarity==='pnp'?'−IB':'IB';
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  let q, clock=0, last=0, sweepDirection=1, lastPaint=0;
+  let q, clock=0, last=0;
+  const math=s=>`<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">${s}</math>`;
+  const sub=(v,s)=>`<msub><mi>${v}</mi><mi mathvariant="normal">${s}</mi></msub>`;
+  const frac=(a,b)=>`<mfrac><mrow>${a}</mrow><mrow>${b}</mrow></mfrac>`;
+  const rows=(...lines)=>math('<mtable columnalign="left" rowspacing=".5em">'+lines.map(s=>'<mtr><mtd>'+s+'</mtd></mtr>').join('')+'</mtable>');
+  const exponential=u=>`<msup><mi>e</mi><mrow>${frac(sub('u',u),sub('V','T'))}</mrow></msup>`;
+  $('#guide-core').innerHTML=rows(
+    `<mi>F</mi><mo>=</mo>${sub('I','S')}<mo>(</mo>${exponential('BE')}<mo>−</mo><mn>1</mn><mo>)</mo>`,
+    `<mi>R</mi><mo>=</mo>${sub('I','S')}<mo>(</mo>${exponential('BC')}<mo>−</mo><mn>1</mn><mo>)</mo>`,
+    `${sub('i','C')}<mo>=</mo><mi>M</mi><mo>(</mo><mi>F</mi><mo>−</mo><mi>R</mi><mo>)</mo><mo>−</mo>${frac('<mi>R</mi>',sub('β','R'))}`,
+    `${sub('i','B')}<mo>=</mo>${frac('<mi>F</mi>',sub('β','F'))}<mo>+</mo>${frac('<mi>R</mi>',sub('β','R'))}`,
+    `${sub('i','E')}<mo>=</mo><mo>−</mo><mo>(</mo>${sub('i','C')}<mo>+</mo>${sub('i','B')}<mo>)</mo>`);
+  $('#guide-early').innerHTML=math(`<mi>M</mi><mo>=</mo><mn>1</mn><mo>+</mo>${frac('<mi>P</mi><mo>(</mo><mo>−</mo>'+sub('u','BC')+'<mo>)</mo><mo>+</mo><mi>P</mi><mo>(</mo><mo>−</mo>'+sub('u','BE')+'<mo>)</mo>',sub('V','A'))}`);
+  $('#guide-small').innerHTML=rows(
+    `${sub('g','m')}<mo>=</mo>${frac('<mo>∂</mo>'+sub('i','C'),'<mo>∂</mo>'+sub('u','BE'))}`,
+    `${sub('r','o')}<mo>=</mo>${frac('<mn>1</mn>',frac('<mo>∂</mo>'+sub('i','C'),'<mo>∂</mo>'+sub('u','CE')))}`);
+  $('#guide-frequency').innerHTML=rows(
+    `${sub('C','diff')}<mo>=</mo>${sub('τ','F')}${sub('g','m')}`,
+    `${sub('f','T')}<mo>≈</mo>${frac(sub('g','m'),'<mn>2</mn><mi>π</mi><mo>(</mo>'+sub('C','diff')+'<mo>+</mo>'+sub('C','JE')+'<mo>+</mo>'+sub('C','JC')+'<mo>)</mo>')}`);
 
   function quantity(n,unit='A',digits=2) {
     if(n===null || Number.isNaN(n)) return '—';
@@ -1105,33 +1194,104 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
     }
     return n.toExponential(2)+' '+unit;
   }
-  function evalAt(b=state.uBE,c=state.uCE,early=state.early) {
-    return BJTModel.evaluate(sign()*b,sign()*c,0,p(),state.polarity,early);
+  function evalAt(b=state.uBE,c=state.uCE) {
+    return BJTModel.evaluate(sign()*b,sign()*c,0,p(),state.polarity);
   }
-  function currentAt(c=state.uCE,ib=state.ib,early=state.early) {
-    return BJTModel.solveBaseCurrent(ib,c,p(),state.polarity,early);
+  function currentAt(c=state.uCE,ib=state.ib) {
+    return BJTModel.solveBaseCurrent(ib,c,p(),state.polarity);
   }
   const fields = [
     ['Is','Transport current IS','A at 27 °C',1e-16,1e-12,'any'],
-    ['betaF','Forward gain βF','10–500',10,500,1],
     ['betaR','Reverse gain βR','0.5–20',.5,20,.5],
-    ['VA','Early voltage VA','10–300 V',10,300,1],
     ['tempC','Temperature','−20–100 °C',-20,100,1]
   ];
   $('#properties').innerHTML=fields.map(([key,label,help,min,max,step])=>`<label for="prop-${key}">${label}<small>${help}</small><input type="number" id="prop-${key}" min="${min}" max="${max}" step="${step}" value="${p()[key]}"></label>`).join('');
   const controls=[['ib','Base current',1e6,'µA'],['uCE','Collector–emitter',1,'V'],['uBE','Base–emitter',1,'V']];
-  $('#controls').innerHTML=controls.map(([id,label])=>`<div class="voltage-control" id="${id}-control"><div class="control-top"><label for="${id}" id="${id}-label">${label}</label><output for="${id}" id="${id}-out"></output></div><input id="${id}" type="range" aria-describedby="${id}-detail" step="any"><div class="range-ends"><span id="${id}-min"></span><span id="${id}-max"></span></div><p class="control-detail" id="${id}-detail"></p></div>`).join('');
+  $('#controls').innerHTML=controls.map(([id,label])=>`<div class="voltage-control" id="${id}-control"><div class="control-top"><label for="${id}" id="${id}-label">${label}</label><output for="${id}" id="${id}-out"></output></div><input id="${id}" type="range" step="any"><div class="range-ends"><span id="${id}-min"></span><span id="${id}-max"></span></div></div>`).join('');
+  const knobs=[['VA','Early voltage · VA','V'],['betaF','Forward gain · β','']];
+  $('#parameter-controls').innerHTML=knobs.map(([id,label,unit])=>`<div class="voltage-control"><div class="control-top"><label for="${id}">${label}</label><output for="${id}" id="${id}-out"></output></div><input type="range" id="${id}" min="${limits[id][0]}" max="${limits[id][1]}" step="1"><div class="range-ends"><span>${limits[id][0]}${unit?' '+unit:''}</span><span>${limits[id][1]}${unit?' '+unit:''}</span></div></div>`).join('');
   const defs = {
     output:{title:'Output characteristics',button:'IC / VCE',x:'uCE',key:'icN',unit:'A',current:true},
     transfer:{title:'Transfer characteristics',button:'IC / VBE',x:'uBE',key:'icN',unit:'A',current:true},
     input:{title:'Base input characteristics',button:'IB / VBE',x:'uBE',key:'ibN',unit:'A',current:true},
-    gain:{title:'DC current gain',button:'β = IC / IB',x:'uBE',key:'beta',unit:'',active:true},
     gm:{title:'Transconductance',button:'gm',x:'uBE',key:'gm',unit:'S',active:true},
-    ro:{title:'Output resistance',button:'ro',x:'uCE',key:'ro',unit:'Ω',active:true}
+    ro:{title:'Output resistance',button:'ro',x:'uCE',key:'ro',unit:'Ω',active:true},
+    ft:{title:'Transition frequency',button:'fT',x:'uBE',key:'ft',unit:'Hz',active:true},
+    cDiff:{title:'Diffusion capacitance',button:'Cdiff',x:'uBE',key:'cDiff',unit:'F',active:true}
   };
-  $('#plot-selectors').innerHTML=Object.entries(defs).map(([key,d])=>`<button data-plot="${key}" aria-pressed="${state.plots.has(key)}" aria-controls="${key}-card">${d.button}</button>`).join('');
-  $('#plots').innerHTML=Object.entries(defs).map(([key,d])=>`<div class="plot-card" id="${key}-card" ${state.plots.has(key)?'':'hidden'}><div class="plot-heading"><h3>${d.title}</h3><strong class="plot-value" id="${key}-value"></strong></div><svg class="plot-svg" id="${key}-plot" viewBox="0 0 440 278" role="img" aria-label="${d.title}"></svg><p class="plot-foot" id="${key}-foot"></p></div>`).join('');
+  const plotValue=(d,point)=>d.active&&point.region!=='active'?null:point[d.key];
+  $('#plot-selectors').innerHTML=['Large signal','Small signal'].map((label,i)=>`<div class="plot-selection-group"><span class="plot-selection-label">${label}</span><div class="plot-choice-switch" role="group" aria-label="${label} plots">${Object.entries(defs).filter(([,d])=>Boolean(d.active)===Boolean(i)).map(([key,d])=>`<button data-plot="${key}" aria-pressed="${state.plots.has(key)}" aria-controls="${key}-card">${d.button}</button>`).join('')}</div></div>`).join('');
+  $('#plots').innerHTML=Object.entries(defs).map(([key,d])=>`<div class="plot-card" id="${key}-card" ${state.plots.has(key)?'':'hidden'}><div class="plot-heading"><h3>${d.title}</h3><strong class="plot-value" id="${key}-value"></strong>${key==='output'?'<label class="family-toggle"><input id="family" type="checkbox" aria-controls="output-plot" checked> Show output family</label>':''}</div><svg class="plot-svg" id="${key}-plot" viewBox="0 0 440 278" role="img" aria-label="${d.title}"></svg><p class="plot-foot" id="${key}-foot"></p></div>`).join('');
   BJTDiagram.mount($('#diagram'));
+
+  // Reorder the existing panel without remounting its animated SVG.
+  const junctionPanel=$('#junction-panel'),junctionHandle=$('#junction-drag-handle');
+  const plotSection=$('#characteristic-plots'),scienceColumn=$('.science-column');
+  const dropZones=all('[data-junction-position]');
+  const junctionPreview=document.createElement('div');
+  junctionPreview.className='junction-drag-preview';junctionPreview.hidden=true;
+  junctionPreview.setAttribute('aria-hidden','true');document.body.append(junctionPreview);
+  let junctionAbove=false,junctionDrag=null,suppressJunctionClick=false;
+  function placeJunction(above){
+    junctionAbove=above;
+    if(above)plotSection.before(junctionPanel);
+    else $('[data-junction-position="below"]').after(junctionPanel);
+    junctionHandle.setAttribute('aria-label','Move junction '+(above?'below':'above')+' plots');
+    junctionHandle.querySelector('.junction-move-label').textContent='Drag · '+(above?'↓ Below plots':'↑ Above plots');
+    $('#junction-move-status').textContent='Junction panel placed '+(above?'above':'below')+' the plots.';
+    junctionHandle.focus({preventScroll:true});
+    junctionHandle.scrollIntoView({block:'nearest',behavior:'instant'});
+    clampToastPosition();
+  }
+  function updateJunctionTarget(){
+    if(!junctionDrag?.active)return;
+    const rect=plotSection.getBoundingClientRect(),column=scienceColumn.getBoundingClientRect();
+    const inside=junctionDrag.x>=column.left&&junctionDrag.x<=column.right;
+    junctionDrag.target=inside?(junctionDrag.y<rect.top+rect.height/2?'above':'below'):null;
+    dropZones.forEach(zone=>zone.classList.toggle('drop-target',zone.dataset.junctionPosition===junctionDrag.target));
+    junctionPreview.textContent=junctionDrag.target?'Place junction '+junctionDrag.target+' plots':'Move over the plot column';
+    junctionPreview.style.left=clamp(junctionDrag.x+14,8,Math.max(8,innerWidth-junctionPreview.offsetWidth-8))+'px';
+    junctionPreview.style.top=clamp(junctionDrag.y+14,8,Math.max(8,innerHeight-junctionPreview.offsetHeight-8))+'px';
+  }
+  function finishJunctionDrag(commit){
+    if(!junctionDrag)return;
+    const drag=junctionDrag;junctionDrag=null;
+    if(!commit)suppressJunctionClick=true;
+    scienceColumn.classList.remove('junction-reordering');document.documentElement.classList.remove('junction-reordering');
+    junctionPanel.classList.remove('junction-dragging');junctionPreview.hidden=true;
+    dropZones.forEach(zone=>zone.classList.remove('drop-target'));
+    if(junctionHandle.hasPointerCapture(drag.id))junctionHandle.releasePointerCapture(drag.id);
+    if(drag.active&&commit&&drag.target)placeJunction(drag.target==='above');
+    else if(drag.active)$('#junction-move-status').textContent='Junction move cancelled.';
+  }
+  junctionHandle.addEventListener('pointerdown',event=>{
+    if(event.button!==0||!event.isPrimary)return;
+    suppressJunctionClick=false;junctionHandle.focus({preventScroll:true});
+    junctionDrag={id:event.pointerId,startX:event.clientX,startY:event.clientY,x:event.clientX,y:event.clientY,active:false,target:null};
+    junctionHandle.setPointerCapture(event.pointerId);
+  });
+  junctionHandle.addEventListener('pointermove',event=>{
+    if(!junctionDrag||event.pointerId!==junctionDrag.id)return;
+    junctionDrag.x=event.clientX;junctionDrag.y=event.clientY;
+    if(!junctionDrag.active&&Math.hypot(event.clientX-junctionDrag.startX,event.clientY-junctionDrag.startY)>6){
+      junctionDrag.active=true;suppressJunctionClick=true;
+      scienceColumn.classList.add('junction-reordering');document.documentElement.classList.add('junction-reordering');
+      junctionPanel.classList.add('junction-dragging');junctionPreview.hidden=false;
+    }
+    if(junctionDrag.active){event.preventDefault();updateJunctionTarget();}
+  });
+  junctionHandle.addEventListener('pointerup',event=>{if(event.pointerId===junctionDrag?.id)finishJunctionDrag(true);});
+  ['pointercancel','lostpointercapture'].forEach(type=>junctionHandle.addEventListener(type,event=>{if(event.pointerId===junctionDrag?.id)finishJunctionDrag(false);}));
+  junctionHandle.addEventListener('click',event=>{
+    if(suppressJunctionClick&&event.detail!==0){suppressJunctionClick=false;return;}
+    placeJunction(!junctionAbove);
+  });
+  junctionHandle.addEventListener('keydown',event=>{
+    if(junctionDrag?.active)return;
+    if(event.key==='ArrowUp'||event.key==='ArrowDown'){event.preventDefault();placeJunction(event.key==='ArrowUp');}
+  });
+  window.addEventListener('keydown',event=>{if(event.key==='Escape'&&junctionDrag){event.preventDefault();finishJunctionDrag(false);}});
+  window.addEventListener('blur',()=>finishJunctionDrag(false));
 
   // Use the MOS simulator's teaching popup, docking and movement behavior.
   const toast=document.createElement('aside');
@@ -1200,9 +1360,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
 
   function syncProperties() {
     for(const [key] of fields) $('#prop-'+key).value=p()[key];
-    $('#prop-VA').disabled=!state.early;
   }
-  function stopSweep() {state.sweep=false;$('#sweep').textContent='Start sweep';$('#sweep').setAttribute('aria-pressed','false');}
   function changeDrive(drive) {
     if(drive===state.drive)return;
     handoffNote='';
@@ -1211,35 +1369,29 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
       const roundoff=1e-11*q.IsT*(1/p().betaF+1/p().betaR);
       if(q.ibN < -roundoff)handoffNote='The previous base current was negative leakage; current drive starts at 0 A. ';
       else if(q.ibN>limits.ib[1]*(1+1e-12))handoffNote='The calculated base current exceeds 100 µA; current drive starts at 100 µA. ';
-    } else state.uBE=q.uBE;
+    } else {
+      state.uBE=clamp(q.uBE,...limits.uBE);
+      if(q.uBE<limits.uBE[0]||q.uBE>limits.uBE[1])handoffNote='The calculated '+baseLabel()+' is outside 0.50–0.80 V; voltage drive starts at the nearest limit. ';
+    }
     state.drive=drive;
   }
-  function resetLimits() {
-    limits.ib=[0,100e-6];limits.uBE=[-.2,.85];
-  }
   function applyPreset(region='active') {
-    resetLimits();handoffNote='';
-    const presets={cut:[0,2],active:[20e-6,2],saturation:[20e-6,.08],reverse:[20e-6,-1]};
-    [state.ib,state.uCE]=presets[region];
-    // Use the same current-defined examples in either mode, then hold the
-    // quantity selected by the user. Zero current still permits leakage.
-    state.uBE=currentAt().uBE;
+    handoffNote='';
+    const presets={active:[20e-6,.68,2],saturation:[20e-6,.70,.2]};
+    [state.ib,state.uBE,state.uCE]=presets[region];
   }
   function update() {
     state.uCE=clamp(state.uCE,...limits.uCE);
-    state.uBE=clamp(state.uBE,-1,1);
+    if(state.drive==='vbe')state.uBE=clamp(state.uBE,...limits.uBE);
     if(state.drive==='ib')state.ib=clamp(state.ib,...limits.ib);
     q=state.drive==='ib'?currentAt():evalAt();
     state.uBE=q.uBE;if(state.drive==='vbe')state.ib=q.ibN;
     state.vb=q.vb;state.vc=q.vc;state.ve=0;
-    // Keep computed VBE visible within the supported −1 to +1 V envelope.
-    // Editable current drive stays bounded even after a large voltage drive.
-    limits.uBE[0]=Math.min(limits.uBE[0],Math.floor(state.uBE*20)/20);
-    limits.uBE[1]=Math.max(limits.uBE[1],Math.ceil(state.uBE*20)/20);
+    // Only calculated readouts expand; editable controls keep fixed limits.
     for(const [key,label,factor,unit] of controls) {
       const input=$('#'+key),derived=key==='ib'?state.drive==='vbe':key==='uBE'?state.drive==='ib':false;
       const value=state[key];
-      const [lo,hi]=key==='ib'&&derived?[Math.min(0,value),Math.max(limits.ib[1],value)]:limits[key];
+      const [lo,hi]=derived?[Math.min(limits[key][0],value),Math.max(limits[key][1],value)]:limits[key];
       input.min=lo*factor;input.max=hi*factor;input.value=value*factor;input.disabled=derived;
       const symbol=key==='ib'?currentLabel():key==='uBE'?baseLabel():collectorLabel();
       const terminalLabel=sign()<0?(key==='uBE'?'Emitter–base':key==='uCE'?'Emitter–collector':label):label;
@@ -1249,36 +1401,52 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
       $('#'+key+'-min').textContent=key==='ib'?quantity(lo):fixed(lo,2)+' '+unit;
       $('#'+key+'-max').textContent=key==='ib'?quantity(hi):fixed(hi,2)+' '+unit;
       $('#'+key+'-control').classList.toggle('derived-control',derived);
-      $('#'+key+'-detail').textContent=derived?'Calculated · switch drive mode to adjust.':key==='ib'?'Set · '+(sign()>0?'current into the base.':'current out of the base (−IB).'):'Set · relative to the emitter at 0 V.';
     }
-    $('#bias-note').textContent=handoffNote+(state.drive==='ib'?'Hold '+currentLabel()+'; '+baseLabel()+' adjusts as '+collectorLabel()+' changes.':'Hold '+baseLabel()+'; '+currentLabel()+' follows the junction currents.')+' VE = 0 V. '+(sign()<0?'PNP controls use VEB, VEC, and −IB; terminal readouts retain their physical signs. ':'')+(Math.max(q.uBE,q.uBC)>.8?'Forward junction bias exceeds 0.80 V: currents are ideal-model extrapolations.':'');
+    $('#bias-note').textContent=handoffNote+(state.drive==='ib'?'Hold '+currentLabel()+'; '+baseLabel()+' adjusts as '+collectorLabel()+' changes.':'Hold '+baseLabel()+'; '+currentLabel()+' follows the junction currents.')+' '+(sign()<0?'PNP controls use VEB, VEC, and −IB; terminal readouts retain their physical signs. ':'')+(Math.max(q.uBE,q.uBC)>.8?'Forward junction bias exceeds 0.80 V: currents are ideal-model extrapolations.':'');
     all('[data-drive]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.drive===state.drive)));
     $('[data-drive="vbe"]').textContent=baseLabel()+' drive';
-    $('#sweep-axis option[value="uCE"]').textContent=collectorLabel();
-    $('#sweep-axis option[value="drive"]').textContent=state.drive==='ib'?currentLabel():baseLabel();
-    $('#model-note').textContent=state.polarity.toUpperCase()+' · βF = '+p().betaF+' · βR = '+p().betaR+' · '+p().tempC+' °C';
+    for(const [key,,unit] of knobs){$('#'+key).value=p()[key];$('#'+key+'-out').textContent=fixed(p()[key],0)+(unit?' '+unit:'');}
     all('[data-polarity]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.polarity===state.polarity)));
-    all('[data-early]').forEach(el=>el.setAttribute('aria-pressed',String((el.dataset.early==='true')===state.early)));
     all('[data-scale]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.scale===state.scale)));
-    const metrics=[['Base–emitter · VBE',quantity(q.vbe,'V'),'VB − VE',''],['Collector · IC',quantity(q.ic),'Positive into collector','metric-current'],['Base · IB',quantity(q.ib),'Positive into base','metric-current'],['Emitter · IE',quantity(q.ie),'IC + IB + IE = 0','metric-current'],['Operating region',names[q.region],'VBC = '+fixed(q.vbc,3)+' V','metric-region']];
-    $('#metrics').innerHTML=metrics.map(([label,value,detail,cls])=>`<div class="metric ${cls}"><label>${label}</label><strong>${value}</strong><small>${detail}</small></div>`).join('');
-    $('#axis-convention').textContent=state.scale==='log'?'Current axes show |I|; signs remain in readouts.':'Current axes show '+(sign()>0?'IC and IB.':'−IC and −IB (PNP normalized).');
-    all('[data-plot]').forEach(el=>{el.setAttribute('aria-pressed',String(state.plots.has(el.dataset.plot)));const k=el.dataset.plot;el.textContent=k==='output'?'IC / '+collectorLabel():k==='transfer'?'IC / '+baseLabel():k==='input'?'IB / '+baseLabel():defs[k].button;});
+    const plotSymbols={output:'I<sub>C</sub> / V<sub>'+collectorLabel().slice(1)+'</sub>',transfer:'I<sub>C</sub> / V<sub>'+baseLabel().slice(1)+'</sub>',input:'I<sub>B</sub> / V<sub>'+baseLabel().slice(1)+'</sub>',gm:'g<sub>m</sub>',ro:'r<sub>o</sub>',ft:'f<sub>T</sub>',cDiff:'C<sub>diff</sub>'};
+    const extra=Object.entries(defs).filter(([key,d])=>d.active&&state.plots.has(key));
+    const metrics=[
+      ['vbe','Base–emitter · VBE',quantity(q.vbe,'V'),'VB − VE',''],
+      ['ic','Collector · IC',quantity(q.ic),'Positive into collector','metric-current'],
+      ['ib','Base · IB',quantity(q.ib),'Positive into base','metric-current'],
+      ...extra.map(([key,d])=>[key,plotSymbols[key],quantity(plotValue(d,q),d.unit),d.title,'metric-derived']),
+      ['region','Operating region',names[q.region],'VBC = '+fixed(q.vbc,3)+' V','metric-region']
+    ];
+    const readouts=$('#metrics'),compactColumns=extra.length?Math.ceil(metrics.length/2):4;
+    readouts.style.setProperty('--metric-count',metrics.length);
+    readouts.style.setProperty('--metric-compact-count',compactColumns);
+    readouts.dataset.expanded=String(extra.length>0);
+    readouts.dataset.compactColumns=compactColumns;
+    readouts.innerHTML=metrics.map(([key,label,value,detail,cls])=>`<div class="metric ${cls}" data-metric="${key}"><label>${label}</label><strong>${value}</strong><small>${detail}</small></div>`).join('');
+    all('[data-plot]').forEach(el=>{el.setAttribute('aria-pressed',String(state.plots.has(el.dataset.plot)));el.innerHTML=plotSymbols[el.dataset.plot];});
     $('#plot-empty').hidden=state.plots.size>0;
     for(const [key,d] of Object.entries(defs)) {$('#'+key+'-card').hidden=!state.plots.has(key);if(state.plots.has(key)) drawPlot(key,d);}
-    drawInsight();BJTDiagram.update(q,state);BJTDiagram.animate(clock,state.paused||reduced.matches);
+    drawInsight();BJTDiagram.update(q,state);BJTDiagram.animate(clock,reduced.matches);
   }
 
   function drawInsight() {
+    const ic=sub('i','C'),ib=sub('i','B'),ie=sub('i','E'),vt=sub('V','T'),gm=sub('g','m'),cd=sub('C','diff');
+    const eq={
+      cut:math(`${ic}<mo>≈</mo>${sub('I','leak')}`),
+      active:rows(`${ic}<mo>≈</mo>${sub('β','F')}${ib}<mi>M</mi>`,`${gm}<mo>≈</mo>${frac(ic,vt)}`,`<mi>M</mi><mo>≈</mo><mn>1</mn><mo>+</mo>${frac(sub('u','CE')+'<mo>−</mo>'+sub('u','BE'),sub('V','A'))}`),
+      saturation:rows(`${sub('u','BE')}<mo>&gt;</mo><mn>0</mn><mo>,</mo><mspace width="1em"/>${sub('u','BC')}<mo>&gt;</mo><mn>0</mn>`,`${ic}<mo>≠</mo>${sub('β','F')}${ib}`),
+      reverse:math(`<mo>|</mo>${ie}<mo>|</mo><mo>≈</mo>${sub('β','R')}<mo>|</mo>${ib}<mo>|</mo>`)
+    };
     const text={
-      cut:['Little injection, very little current','Neither junction supplies substantial minority-carrier injection at this bias. Leakage remains in the equations, even at zero base current. Raise the base drive to watch injection grow; 0.7 V is not an on/off threshold.','IC ≈ leakage'],
-      active:['The thin base makes amplification possible','The emitter junction injects '+(sign()>0?'electrons':'holes')+' into the thin base. Most reach the collector; only a small fraction contributes to base current. '+(state.early?'The Early effect adds a gentle output slope as reverse collector bias narrows the base.':'Ideal Ebers–Moll gives nearly flat output curves once the collector junction is reverse biased.'),'IC ≈ βF IB<br>gm ≈ |IC| / VT'],
-      saturation:['Both junctions inject carriers','The emitter–base and collector–base junctions are both forward biased. Opposing injection reduces net collector transport and increases base current. The ratio IC / IB can be much smaller than βF, or change sign in deep saturation.','uBE > 0 and uBC > 0<br>IC ≠ βF IB'],
-      reverse:['Collector and emitter exchange roles','The collector junction now injects carriers, and the emitter collects them. The device is asymmetric: the original collector is a less efficient injector, represented by the smaller reverse gain βR.','|IE| ≈ βR |IB|']
+      cut:['Little injection, very little current','Neither junction supplies substantial minority-carrier injection at this bias. Leakage remains in the equations, even at zero base current. Raise the base drive to watch injection grow; 0.7 V is not an on/off threshold.'],
+      active:['The thin base makes amplification possible','The emitter injects '+(sign()>0?'electrons':'holes')+' into the base. Some meet opposite carriers and recombine; the base contact supplies replacements. Lower β increases the recombining fraction. Lower VA strengthens depletion encroachment and base narrowing at the same reverse collector bias, increasing collector current.'],
+      saturation:['Both junctions inject carriers','The emitter–base and collector–base junctions are both forward biased. Opposing injection reduces net collector transport and increases base current. The ratio IC / IB can be much smaller than β. The forward-active frequency and capacitance estimates do not apply here.'],
+      reverse:['Collector and emitter exchange roles','The collector junction now injects carriers, and the emitter collects them. The device is asymmetric: the original collector is a less efficient injector, represented by the smaller reverse gain βR.']
     }[q.region];
-    $('#insight-region').textContent=state.polarity.toUpperCase()+' · '+(state.drive==='ib'?'IB drive':baseLabel()+' drive')+' · '+names[q.region];$('#insight-title').textContent=text[0];$('#insight-copy').textContent=text[1];$('#insight-eq').innerHTML=text[2];
-    $('#equation-convention').textContent='Equations use '+baseLabel()+', '+collectorLabel()+', and polarity-normalized currents. The emitter is at 0 V. Terminal readouts are signed positive into the device; IC + IB + IE = 0. '+(state.early?'The Early correction is enabled.':'Ideal Ebers–Moll is selected.');
-    $('#insight-numbers').innerHTML=`<b>E–B junction:</b> ${q.junctionBE}<br><b>C–B junction:</b> ${q.junctionBC}<br><b>Thermal voltage:</b> ${quantity(q.VT,'V')}<br>`+(q.region==='active'?`<b>IC / IB:</b> ${quantity(q.beta,'')}<br><b>gm:</b> ${quantity(q.gm,'S')} · <b>rπ:</b> ${quantity(q.rpi,'Ω')}<br><b>ro:</b> ${quantity(q.ro,'Ω')}`:q.region==='reverse'?`<b>|IE / IB|:</b> ${quantity(q.betaReverse,'')}`:'The region label is descriptive; the current equations stay continuous.');
+    $('#insight-region').textContent=state.polarity.toUpperCase()+' · '+(state.drive==='ib'?'IB drive':baseLabel()+' drive')+' · '+names[q.region];$('#insight-title').textContent=text[0];$('#insight-copy').textContent=text[1];
+    $('#insight-eq').innerHTML=eq[q.region]+(q.region==='active'&&(state.plots.has('ft')||state.plots.has('cDiff'))?rows(`${cd}<mo>=</mo>${sub('τ','F')}${gm}`,`${sub('f','T')}<mo>≈</mo>${frac(gm,'<mn>2</mn><mi>π</mi><mo>(</mo>'+cd+'<mo>+</mo>'+sub('C','JE')+'<mo>+</mo>'+sub('C','JC')+'<mo>)</mo>')}`):'');
+    $('#equation-convention').textContent='Equations use polarity-normalized currents and '+baseLabel()+'/'+collectorLabel()+'. The emitter is at 0 V. Readout currents are positive into the device; IC + IB + IE = 0. β is the forward-gain parameter βF; actual IC/IB also depends on bias and Early modulation. ≈ marks an approximation.';
+    $('#insight-numbers').innerHTML=`<b>E–B junction:</b> ${q.junctionBE}<br><b>C–B junction:</b> ${q.junctionBC}<br><b>Thermal voltage:</b> ${quantity(q.VT,'V')}<br><b>Early multiplier M:</b> ${fixed(q.earlyFactor,3)}<br>`+(q.region==='active'?`<b>g<sub>m</sub>:</b> ${quantity(q.gm,'S')} · <b>r<sub>π</sub>:</b> ${quantity(q.rpi,'Ω')}<br><b>r<sub>o</sub>:</b> ${quantity(q.ro,'Ω')}<br><b>C<sub>diff</sub>:</b> ${quantity(q.cDiff,'F')} · <b>f<sub>T</sub>:</b> ${quantity(q.ft,'Hz')}<br>Frequency estimates use τ<sub>F</sub> = 1 ns plus junction capacitances; see the model guide.`:'The region label is descriptive; the current equations stay continuous.');
     toast.hidden=false;toast.classList.add('show');clampToastPosition();
   }
 
@@ -1287,14 +1455,13 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
     const svg=$('#'+key+'-plot'), log=(d.current&&state.scale==='log')||key==='ro';
     const collector=d.x==='uCE';
     const currentOutput=key==='output'&&state.drive==='ib';
-    const x0=collector?Math.min(0,state.uCE):Math.min(-.15,state.uBE);
-    const x1=collector?limits.uCE[1]:Math.min(1,Math.max(.72,state.uBE+.035));
+    const [x0,x1]=limits[d.x];
     const xPoint=collector?state.uCE:state.uBE;
     ranges[key]=[x0,x1];
-    const raw=pt=>d.active&&pt.region!=='active'?null:pt[d.key];
+    const raw=pt=>plotValue(d,pt);
     const ordinate=v=>v===null?null:log?(Math.abs(v)>0&&(!d.current||Math.abs(v)>=1e-15)?Math.log10(Math.abs(v)):null):v;
-    const sample=(early,base=currentOutput?state.ib:state.uBE)=>{
-      const valueAt=x=>raw(currentOutput?currentAt(x,base,early):evalAt(collector?base:x,collector?x:state.uCE,early));
+    const sample=(base=currentOutput?state.ib:state.uBE)=>{
+      const valueAt=x=>raw(currentOutput?currentAt(x,base):evalAt(collector?base:x,collector?x:state.uCE));
       const data=[];let previous=null;
       for(let i=0;i<=180;i++) {
         const x=x0+(x1-x0)*i/180,v=valueAt(x);
@@ -1311,8 +1478,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
       }
       return data;
     };
-    const main=sample(state.early),ref=state.early?sample(false):[];
-    const family=key==='output'&&state.family?(currentOutput?[5e-6,10e-6,50e-6,100e-6]:[.55,.60,.65,.70]).map(b=>sample(state.early,b)):[];
+    const main=sample();
+    const family=key==='output'&&state.family?(currentOutput?[5e-6,10e-6,50e-6,100e-6]:[.55,.60,.65,.70]).map(b=>sample(b)):[];
     const finite=[...main,...family.flat()].map(a=>a[1]).filter(Number.isFinite);
     let ymin=0,ymax=1;
     if(finite.length) {
@@ -1323,7 +1490,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
     const largest=Math.max(Math.abs(ymin),Math.abs(ymax));
     let unitScale=1,unit=d.unit;
     if(!log&&d.unit) for(const [f,prefix] of [[1e12,'T'],[1e9,'G'],[1e6,'M'],[1e3,'k'],[1,''],[1e-3,'m'],[1e-6,'µ'],[1e-9,'n'],[1e-12,'p'],[1e-15,'f']]) if(largest>=f){unitScale=f;unit=prefix+d.unit;break;}
-    const yTitle=key==='gain'?'IC / IB':key==='gm'?'gm ('+unit+')':key==='ro'?'ro (Ω, log)':(log?'|'+(key==='input'?'IB':'IC')+'| (A)':(sign()<0?'−':'')+(key==='input'?'IB':'IC')+' ('+unit+')');
+    const yTitle=key==='ro'?'ro (Ω, log)':d.active?d.button+' ('+unit+')':(log?'|'+(key==='input'?'IB':'IC')+'| (A)':(sign()<0?'−':'')+(key==='input'?'IB':'IC')+' ('+unit+')');
     let html=`<title>${d.title}; ${log?'log magnitude':'linear'} scale. Operating value ${quantity(raw(q),d.unit)}.</title><defs><clipPath id="clip-${key}"><rect x="${left}" y="${top}" width="${right-left}" height="${bottom-top}"/></clipPath></defs><text x="${left}" y="15">${yTitle}</text>`;
     for(let i=0;i<=5;i++) {
       const x=x0+(x1-x0)*i/5;
@@ -1338,26 +1505,27 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
     const boundary=currentOutput?q.VT*Math.log1p(state.ib*p().betaF/q.IsT):collector?state.uBE:state.uCE;
     if(boundary>x0&&boundary<x1) html+=`<path class="junction-boundary" d="M${X(boundary)} ${top}V${bottom}"/>`;
     for(const data of family)html+=path(data,'family');
-    html+=path(ref,'reference')+path(main,'curve');
+    html+=path(main,'curve');
     const point=ordinate(raw(q));
-    if(Number.isFinite(point)&&point>=ymin&&point<=ymax) html+=`<path class="cursor-line" d="M${X(xPoint)} ${top}V${bottom}M${left} ${Y(point)}H${right}"/><circle class="op-dot" cx="${X(xPoint)}" cy="${Y(point)}" r="4.5"/>`;
+    if(Number.isFinite(point)&&point>=ymin&&point<=ymax&&xPoint>=x0&&xPoint<=x1) html+=`<path class="cursor-line" d="M${X(xPoint)} ${top}V${bottom}M${left} ${Y(point)}H${right}"/><circle class="op-dot" cx="${X(xPoint)}" cy="${Y(point)}" r="4.5"/>`;
     html+='</g>';
-    if(!finite.length)html+=`<text class="plot-notice" x="245" y="126" text-anchor="middle">${key==='ro'&&!state.early?'Ideal active-region ro → ∞':d.active?'Choose a forward-active bias':'Below the log display floor'}</text>`;
+    if(!finite.length)html+=`<text class="plot-notice" x="245" y="126" text-anchor="middle">${d.active?'Choose a forward-active bias':'Below the log display floor'}</text>`;
     svg.innerHTML=html;
     svg.setAttribute('aria-label',d.title+', '+(collector?collectorLabel():baseLabel())+' on horizontal axis; '+yTitle+' on vertical axis. Current point '+quantity(raw(q),d.unit));
     $('#'+key+'-value').textContent=quantity(raw(q),d.unit);
-    const held=currentOutput?currentLabel()+' = '+quantity(state.ib)+' held constant. ':(collector?baseLabel():collectorLabel())+' = '+fixed(collector?state.uBE:state.uCE,3)+' V held constant. ';
-    const note=d.active?(key==='ro'?'ro = 1/(∂IC/∂VCE) at fixed '+baseLabel()+', even in IB drive. Forward active; log resistance.':'Forward active only; linear scale.'):key==='output'?(state.family?'Family: '+(currentOutput?currentLabel()+' = 5, 10, 50, 100 µA. ':baseLabel()+' = 0.55, 0.60, 0.65, 0.70 V. '):'')+'Amber: collector junction at zero bias.':key==='transfer'?'Exponential injection; no fixed turn-on voltage.':'Base current includes both junction injections.';
-    $('#'+key+'-foot').textContent=held+note+(d.current&&log&&!Number.isFinite(point)?' Operating magnitude is below 1 fA (or zero).':'')+(d.active&&q.region!=='active'?' Current point is outside forward active.':'');
+    const held=(currentOutput?currentLabel()+' = '+quantity(state.ib):(collector?baseLabel():collectorLabel())+' = '+fixed(collector?state.uBE:state.uCE,3)+' V')+(key==='output'?' fixed · ':' held constant. ');
+    const smallNotes={ro:'ro = 1/(∂IC/∂VCE) at fixed '+baseLabel()+', even in IB drive. Forward active; log resistance.',gm:'Forward active only; linear scale.',ft:'fT ≈ gm/[2π(Cdiff + CJE + CJC)]. τF = 1 ns; illustrative forward-active estimate.',cDiff:'Cdiff = τF gm, with τF = 1 ns. Forward-active stored-charge estimate; excludes depletion capacitance.'};
+    const note=d.active?smallNotes[key]:key==='output'?(state.family?'Family: '+(currentOutput?'5, 10, 50, 100 µA':'0.55–0.70 V')+' · ':'')+'Amber: VBC = 0.':key==='transfer'?'Exponential response to base voltage.':'Base current includes both junction injections.';
+    $('#'+key+'-foot').textContent=held+note+(d.current&&log&&!Number.isFinite(point)?' Operating magnitude is below 1 fA (or zero).':'')+(d.active&&q.region!=='active'?' Current point is outside forward active.':'')+(xPoint<x0||xPoint>x1?' Calculated operating voltage is outside this plot window.':'');
   }
 
-  all('[data-polarity]').forEach(el=>el.addEventListener('click',()=>{stopSweep();state.polarity=el.dataset.polarity;handoffNote='';syncProperties();update();}));
-  all('[data-drive]').forEach(el=>el.addEventListener('click',()=>{stopSweep();changeDrive(el.dataset.drive);update();}));
-  all('[data-early]').forEach(el=>el.addEventListener('click',()=>{state.early=el.dataset.early==='true';syncProperties();update();}));
+  all('[data-polarity]').forEach(el=>el.addEventListener('click',()=>{state.polarity=el.dataset.polarity;handoffNote='';syncProperties();update();}));
+  all('[data-drive]').forEach(el=>el.addEventListener('click',()=>{changeDrive(el.dataset.drive);update();}));
   all('[data-scale]').forEach(el=>el.addEventListener('click',()=>{state.scale=el.dataset.scale;update();}));
   all('[data-plot]').forEach(el=>el.addEventListener('click',()=>{const key=el.dataset.plot;state.plots.has(key)?state.plots.delete(key):state.plots.add(key);update();}));
-  for(const [key,,factor] of controls) $('#'+key).addEventListener('input',()=>{stopSweep();handoffNote='';state[key]=Number($('#'+key).value)/factor;update();});
-  all('[data-preset]').forEach(el=>el.addEventListener('click',()=>{stopSweep();applyPreset(el.dataset.preset);update();}));
+  for(const [key,,factor] of controls) $('#'+key).addEventListener('input',()=>{handoffNote='';state[key]=Number($('#'+key).value)/factor;update();});
+  for(const [key] of knobs) $('#'+key).addEventListener('input',()=>{p()[key]=clamp(Number($('#'+key).value),...limits[key]);update();});
+  all('[data-preset]').forEach(el=>el.addEventListener('click',()=>{applyPreset(el.dataset.preset);update();}));
   for(const [key,,help,min,max] of fields) {
     const input=$('#prop-'+key);
     input.addEventListener('input',()=>{const v=input.valueAsNumber;if(Number.isFinite(v)&&v>=min&&v<=max){p()[key]=v;update();}});
@@ -1365,30 +1533,25 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
     input.addEventListener('change',commit);input.addEventListener('blur',commit);
   }
   $('#defaults').addEventListener('click',()=>{devices[state.polarity]=BJTModel.defaults();syncProperties();update();});
-  $('#reset').addEventListener('click',()=>{stopSweep();applyPreset();update();});
   $('#family').addEventListener('change',()=>{state.family=$('#family').checked;update();});
-  $('#motion').addEventListener('click',()=>{state.paused=!state.paused;$('#motion').textContent=state.paused?'Resume carriers':'Pause carriers';$('#motion').setAttribute('aria-pressed',String(state.paused));});
-  $('#sweep').addEventListener('click',()=>{state.sweep=!state.sweep;sweepDirection=1;$('#sweep').textContent=state.sweep?'Stop sweep':'Start sweep';$('#sweep').setAttribute('aria-pressed',String(state.sweep));});
-  $('#sweep-axis').addEventListener('change',stopSweep);
   for(const [key,d] of Object.entries(defs)) $('#'+key+'-plot').addEventListener('pointerdown',event=>{
     if(event.button!==0)return;
     const bounds=event.currentTarget.getBoundingClientRect(),x=(event.clientX-bounds.left)/bounds.width*440;
-    if(x<65||x>425)return;stopSweep();const [min,max]=ranges[key];const bias=min+(x-65)/360*(max-min);
+    if(x<65||x>425)return;const [min,max]=ranges[key];const bias=min+(x-65)/360*(max-min);
     if(d.x==='uBE')changeDrive('vbe');
     handoffNote='';state[d.x]=bias;update();
   });
   function frame(t) {
     const dt=Math.min(.05,(t-last)/1000||0);last=t;
     if(!document.hidden) {
-      if(!state.paused&&!reduced.matches)clock+=dt;
-      if(state.sweep&&t-lastPaint>65) {
-        const key=$('#sweep-axis').value==='drive'?(state.drive==='ib'?'ib':'uBE'):'uCE';
-        const [lo,hi]=limits[key];
-        state[key]+=sweepDirection*(hi-lo)*.009;
-        if(state[key]>=hi){state[key]=hi;sweepDirection=-1;}if(state[key]<=lo){state[key]=lo;sweepDirection=1;}
-        update();lastPaint=t;
+      if(junctionDrag?.active){
+        const edge=64,y=junctionDrag.y;
+        const scroll=y<edge?-16*(1-clamp(y/edge,0,1)):y>innerHeight-edge?16*(1-clamp((innerHeight-y)/edge,0,1)):0;
+        if(scroll)window.scrollBy(0,scroll);
+        updateJunctionTarget();
       }
-      BJTDiagram.animate(clock,state.paused||reduced.matches);
+      if(!reduced.matches)clock+=dt;
+      BJTDiagram.animate(clock,reduced.matches);
     }
     requestAnimationFrame(frame);
   }
