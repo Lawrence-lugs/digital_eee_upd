@@ -5,6 +5,8 @@ project:
     - pages/**/*.qmd  
   post-render:
     - cp static_apps/transistor_fabrication.html _site/
+    - cp static_apps/transistor_fabrication_v2.html _site/
+    - cp static_apps/bjt_characterization.html _site/
     - cp static_apps/transistor_characterization.html _site/
     - cp static_apps/FSM_simulatEEE.html _site/
     - cp static_apps/timing_simulatEEE.html _site/
