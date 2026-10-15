@@ -570,13 +570,13 @@ html.junction-reordering{scroll-behavior:auto!important}
           <section class="reference-section" aria-label="Model equations and learning guide">
             <details class="guide-details"><summary>Inside the model · equations &amp; learning guide</summary><div class="guide-content">
               <div class="guide-columns">
-                <div><h3>01 / Carrier flow through the base</h3><p>During forward active operation, the emitter–base junction injects minority carriers into the thin base. Most reach the collector, while a smaller fraction recombines with majority carriers supplied by the base contact. NPN uses electrons in a p-type base; PNP uses holes in an n-type base.</p><p>Recombining pairs converge and disappear in a brief ring. Lower β increases the illustrated recombining share. Charge counts and depletion widths are amplified to make these changes visible. Higher current speeds up the carriers on a capped square-root scale.</p>
-                <h3>02 / Set the drive and device parameters</h3><p><b>IB drive</b> sets 0–100 µA and calculates V<sub>BE</sub>. <b>VBE drive</b> sets 0.50–0.80 V and calculates I<sub>B</sub>. Both modes use V<sub>CE</sub> from 0 to 5 V with the emitter at 0 V. V<sub>A</sub> spans 10–300 V and β = β<sub>F</sub> spans 10–800. NPN and PNP retain their own device settings.</p><p>The shaded slider displays the calculated quantity. Switching drive mode retains the operating point within the destination range and uses the closest limit when needed. Clicking a plot sets its horizontal bias; base-voltage plots select VBE drive. Drag or click the Junction header to place the animation above or below the plots.</p><p>Equations use s = +1 for NPN and −1 for PNP, u<sub>BE</sub> = s(V<sub>B</sub> − V<sub>E</sub>), u<sub>CE</sub> = s(V<sub>C</sub> − V<sub>E</sub>), u<sub>BC</sub> = u<sub>BE</sub> − u<sub>CE</sub>, and i = sI. PNP controls read V<sub>EB</sub>, V<sub>EC</sub>, and −I<sub>B</sub>. Terminal readouts retain their physical signs, with positive current directed into the device.</p>
-                <h3>03 / Junction currents and Early effect</h3><p>F and R describe injection at the emitter–base and collector–base junctions. Their exponential voltage dependence shapes the current curves. V<sub>T</sub> = kT/q and I<sub>S</sub> follows the selected temperature. β<sub>F</sub> and β<sub>R</sub> weight the two base-current contributions.</p><div class="equation" id="guide-core"></div><p>The Early multiplier M strengthens transport as reverse junction bias widens the depletion region:</p><div class="equation" id="guide-early"></div><p>P(x) = [x + √(x² + (0.01 V)²)]/2 gives a smooth positive part. Lower V<sub>A</sub> increases the slope of the forward-active output curves and the illustrated depletion encroachment into the base. In forward active operation, M ≈ 1 + (u<sub>CE</sub> − u<sub>BE</sub>)/V<sub>A</sub> and i<sub>C</sub>/i<sub>B</sub> ≈ β<sub>F</sub>M.</p><p>Forward active operation combines forward emitter–base bias with reverse collector–base bias. In saturation, both junctions inject carriers. Current drive solves the displayed base-current equation across these regions. The cutoff label marks very small currents using a 1 nA threshold.</p></div>
+                <div><h3>01 / Carrier flow through the base</h3><p>During forward active operation, the emitter–base junction injects minority carriers into the thin base. Most reach the collector, while a smaller fraction recombines in the base. Forward B–E bias also sends base majority carriers into the emitter: holes in NPN and electrons in PNP. These carriers recombine in the emitter. The base contact supplies both processes.</p><p>Base recombination pairs converge and disappear in a brief ring. The upper base-to-emitter stream fades as carriers enter the emitter. Lower β increases the illustrated base-current activity. β sets the combined base-current contribution, and the drawing shows both mechanisms schematically. Charge counts and depletion widths are amplified to make these changes visible. Higher current speeds up the carriers on a capped square-root scale.</p>
+                <h3>02 / Set the drive and device parameters</h3><p><b>IB drive</b> sets 0–100 µA and calculates V<sub>BE</sub>. <b>VBE drive</b> sets 0–0.80 V and calculates I<sub>B</sub>. Both modes use V<sub>CE</sub> from 0 to 5 V with the emitter at 0 V. V<sub>A</sub> spans 10–300 V and β = β<sub>F</sub> spans 10–800. NPN and PNP retain their own device settings.</p><p>For cutoff, select voltage drive and set V<sub>BE</sub> (V<sub>EB</sub> for PNP) to 0 V. This holds base and emitter at the same potential while collector-junction leakage remains. Current drive at I<sub>B</sub> = 0 represents an open base; leakage can establish a small forward base bias, especially at higher temperature.</p><p>The shaded slider displays the calculated quantity. Switching drive mode retains the operating point within the destination range and uses the closest limit when needed. Clicking a plot sets its horizontal bias; base-voltage plots select VBE drive. Drag or click the Junction header to place the animation above or below the plots.</p><p>Equations use s = +1 for NPN and −1 for PNP, u<sub>BE</sub> = s(V<sub>B</sub> − V<sub>E</sub>), u<sub>CE</sub> = s(V<sub>C</sub> − V<sub>E</sub>), u<sub>BC</sub> = u<sub>BE</sub> − u<sub>CE</sub>, and i = sI. PNP controls read V<sub>EB</sub>, V<sub>EC</sub>, and −I<sub>B</sub>. Terminal readouts retain their physical signs, with positive current directed into the device.</p>
+                <h3>03 / Junction currents and Early effect</h3><p>F and R describe injection at the emitter–base and collector–base junctions. Their exponential voltage dependence shapes the current curves. V<sub>T</sub> = kT/q and I<sub>S</sub> follows the selected temperature. β<sub>F</sub> and β<sub>R</sub> weight the two base-current contributions.</p><div class="equation" id="guide-core"></div><p>The Early multiplier M strengthens transport as reverse junction bias widens the depletion region:</p><div class="equation" id="guide-early"></div><p>P(x) = [x + √(x² + (0.01 V)²)]/2 gives a smooth positive part. Lower V<sub>A</sub> increases the slope of the forward-active output curves and the illustrated depletion encroachment into the base. In forward active operation, M ≈ 1 + (u<sub>CE</sub> − u<sub>BE</sub>)/V<sub>A</sub> and i<sub>C</sub>/i<sub>B</sub> ≈ β<sub>F</sub>M.</p><p>Forward active operation combines forward emitter–base bias with reverse collector–base bias. In saturation, both junctions inject carriers. Current drive solves the displayed base-current equation across these regions. The cutoff label applies when both junctions have zero or reverse bias, or all terminal-current magnitudes fall below 1 nA.</p></div>
                 <div><h3>04 / Read the characteristic plots</h3><p><b>Large signal:</b> I<sub>C</sub>/V<sub>CE</sub> sweeps collector voltage at fixed base drive. Its <b>Show output family</b> checkbox adds curves at I<sub>B</sub> = 5, 10, 50, and 100 µA, or V<sub>BE</sub> = 0.55, 0.60, 0.65, and 0.70 V. I<sub>C</sub>/V<sub>BE</sub> and I<sub>B</sub>/V<sub>BE</sub> sweep base voltage at fixed V<sub>CE</sub>. The amber line marks zero collector–base bias.</p><p><b>Small signal:</b> g<sub>m</sub>, r<sub>o</sub>, f<sub>T</sub>, and C<sub>diff</sub> show forward-active values. Selecting a plot adds its value to the operating-point row. g<sub>m</sub>, f<sub>T</sub>, and C<sub>diff</sub> sweep base voltage; r<sub>o</sub> sweeps collector voltage at fixed V<sub>BE</sub>. The g<sub>m</sub> derivative holds V<sub>CE</sub> fixed, and the r<sub>o</sub> derivative holds V<sub>BE</sub> fixed in either drive mode:</p><div class="equation" id="guide-small"></div><p>Current plots use linear normalized current or logarithmic magnitude with a 1 fA display floor. r<sub>o</sub> uses a logarithmic axis. The remaining small-signal plots use linear axes. A dash identifies a small-signal operating point outside the forward-active range.</p>
                 <h3>05 / Diffusion capacitance and transition frequency</h3><div class="equation" id="guide-frequency"></div><p>C<sub>diff</sub> measures the change in stored minority-carrier charge with base voltage. It rises with g<sub>m</sub> using the fixed forward transit time τ<sub>F</sub> = <b>1 ns</b>. f<sub>T</sub> estimates the frequency where short-circuit current gain reaches unity. Its capacitance includes C<sub>diff</sub> and the emitter and collector junction terms C<sub>JE</sub> and C<sub>JC</sub>. As current rises, the estimate approaches 1/(2πτ<sub>F</sub>) ≈ <b>159 MHz</b>.</p><p>Junction capacitance uses C<sub>J</sub>(u) = C<sub>J0</sub>/(1 − u/φ)<sup>m</sup>, with C<sub>JE0</sub> = <b>2 pF</b>, C<sub>JC0</sub> = <b>1 pF</b>, φ = <b>0.75 V</b>, and m = <b>0.33</b>. Here u is the corresponding normalized junction voltage. Above u = φ/2, a tangent continuation keeps the capacitance and its slope continuous.</p>
                 <h3>06 / Model assumptions</h3><p>The curves represent an illustrative silicon device driven by ideal voltage or current sources. Temperature changes V<sub>T</sub> and I<sub>S</sub>; β and V<sub>A</sub> retain their slider settings. Frequency and capacitance values use a forward-active small-signal approximation with fixed transit-time and junction parameters.</p><p>The drawing shows carrier paths, recombination, and base-width modulation at a visual scale. Its animation speed communicates current magnitude. Reduced-motion preferences freeze the carriers.</p>
-                <h3>References</h3><div class="source-links"><a href="https://www.mathworks.com/help/simscape-electrical/ref/npnbipolartransistor.html" target="_blank" rel="noopener">MathWorks · Junction current model</a><a href="https://analog-electronics.tudelft.nl/webbook/SED/_build/html/ModelingActiveDevices/ActiveDevices_Bipolar_transistors.html" target="_blank" rel="noopener">TU Delft · BJT charge and frequency</a><a href="https://ngspice.sourceforge.io/docs/ngspice-46-manual.pdf" target="_blank" rel="noopener">ngspice · BJT capacitances</a></div></div>
+                <h3>References</h3><div class="source-links"><a href="https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2005/fba725b75109fd1dec7c316fc3f74b47_lecture17annotat.pdf" target="_blank" rel="noopener">MIT · Carrier injection</a><a href="https://www.mathworks.com/help/simscape-electrical/ref/npnbipolartransistor.html" target="_blank" rel="noopener">MathWorks · Junction current model</a><a href="https://analog-electronics.tudelft.nl/webbook/SED/_build/html/ModelingActiveDevices/ActiveDevices_Bipolar_transistors.html" target="_blank" rel="noopener">TU Delft · BJT charge and frequency</a><a href="https://ngspice.sourceforge.io/docs/ngspice-46-manual.pdf" target="_blank" rel="noopener">ngspice · BJT capacitances</a></div></div>
               </div>
             </div></details>
           </section>
@@ -790,8 +790,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
   const NS = 'http://www.w3.org/2000/svg';
   const regionNames = { cut: 'Cutoff', active: 'Forward active', saturation: 'Saturation', reverse: 'Reverse active' };
   let root, svg, nodes = {}, point = null, state = null, lastAnimationTime = null;
-  let phases = { forward: 0, reverse: 0, base: 0 };
-  let particles = { forward: [], reverse: [], base: [], majority: [], flash: [] };
+  let phases = { forward: 0, reverse: 0, base: 0, emitterInjection: 0 };
+  let particles = { forward: [], reverse: [], base: [], majority: [], flash: [], emitterInjection: [] };
   const PAIR_COUNT = 5, MEETING_PHASE = 0.72;
 
   function set(id, attr, value) { nodes[id].setAttribute(attr, String(value)); }
@@ -862,6 +862,12 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
           <path id="diag-base-trail" d="M285 207 Q350 207 350 229" fill="none" stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="3 4" opacity=".4"/>
           <path id="diag-replenishment-trail" d="M354 124 C314 169 337 210 350 229" fill="none" stroke="var(--warm)" stroke-width="1.2" stroke-dasharray="3 4" opacity=".45"/>
           <g id="diag-forward-particles"></g><g id="diag-reverse-particles"></g><g id="diag-base-particles"></g><g id="diag-majority-particles"></g><g id="diag-flash-particles"></g>
+          <g id="diag-emitter-injection-part" tabindex="0" role="img">
+            <title id="diag-emitter-injection-title">Base majority carriers cross the forward-biased B–E junction into the emitter.</title>
+            <path d="M365 184 H145" fill="none" stroke="var(--warm)" stroke-width="1.2" stroke-dasharray="3 4" opacity=".55" marker-end="url(#diag-arrow-current)"/>
+            <text x="238" y="178" text-anchor="middle" style="font-size:9px;fill:var(--warm)">base → emitter</text>
+            <g id="diag-emitterInjection-particles"></g>
+          </g>
         </g>
         <g id="diag-neutral-base-part" tabindex="0" data-device-part="neutral-base" role="img">
           <title id="diag-neutral-base-title">Collector depletion encroachment reduces the neutral base width. The drawn width is qualitative.</title>
@@ -870,7 +876,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
         </g>
 
         <g tabindex="0" role="img" id="diag-contacts-part">
-          <title>Metal contacts connect the emitter, base and collector. The base contact replenishes majority carriers lost to recombination. Brown arrows indicate signed conventional current: positive is into the device.</title>
+          <title>Metal contacts connect the emitter, base and collector. The base contact supplies majority carriers for emitter injection and base recombination. Brown terminal arrows indicate signed conventional current: positive is into the device.</title>
           <path class="device-wire" d="M174 80 V116 M354 80 V116 M547 80 V116"/>
           <rect x="162" y="114" width="24" height="8" rx="1.5" fill="var(--muted)"/>
           <rect x="342" y="114" width="24" height="8" rx="1.5" fill="var(--muted)"/>
@@ -924,11 +930,11 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
     svg = root.querySelector('#diag-device');
     nodes = {};
     root.querySelectorAll('[id]').forEach(el => { nodes[el.id.replace(/^diag-/, '')] = el; });
-    particles = { forward: [], reverse: [], base: [], majority: [], flash: [] };
-    phases = { forward: 0, reverse: 0, base: 0 };
+    particles = { forward: [], reverse: [], base: [], majority: [], flash: [], emitterInjection: [] };
+    phases = { forward: 0, reverse: 0, base: 0, emitterInjection: 0 };
     lastAnimationTime = null;
     for (const group of Object.keys(particles)) {
-      const count = ['base', 'majority', 'flash'].includes(group) ? PAIR_COUNT : 26;
+      const count = group === 'emitterInjection' ? 6 : ['base', 'majority', 'flash'].includes(group) ? PAIR_COUNT : 26;
       for (let i = 0; i < count; i++) {
         const dot = document.createElementNS(NS, 'circle');
         dot.setAttribute('r', '3.3');
@@ -971,7 +977,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
     label('base-doping', (pnp ? 'n' : 'p') + ' base');
     label('collector-doping', (pnp ? 'p' : 'n') + ' collector');
     label('carrier-legend', carrier + (pnp ? ' · outlined' : ' · filled'));
-    label('majority-legend', 'Base ' + (pnp ? 'electrons · filled' : 'holes · outlined') + ' · replenished');
+    label('majority-legend', 'Base ' + (pnp ? 'electrons · filled' : 'holes · outlined') + ' · injection & recombination');
     nodes['majority-key'].style.background = pnp ? 'var(--warm)' : 'var(--panel)';
     nodes['carrier-key'].style.background = pnp ? 'var(--panel)' : 'var(--accent)';
     nodes['carrier-key'].style.border = '1.5px solid var(--accent)';
@@ -979,9 +985,14 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
     label('symbol-note', 'Emitter arrow points ' + (pnp ? 'in' : 'out'));
     label('symbol-title', type + ' schematic symbol: the emitter arrow points ' + (pnp ? 'in toward the base.' : 'out away from the base.') + ' This fixed arrow indicates conventional emitter current in normal forward operation; it does not reverse when the applied bias reverses.');
     set('symbol-arrow', 'd', pnp ? 'M820 188 L800 176' : 'M800 176 L820 188');
-    label('emitter-title', 'The heavily doped ' + (pnp ? 'p-type' : 'n-type') + ' emitter injects ' + carrier.toLowerCase() + ' into the thin base when its junction is forward biased. The emitter and collector retain their physical labels in reverse operation.');
+    label('emitter-title', 'The heavily doped ' + (pnp ? 'p-type' : 'n-type') + ' emitter injects ' + carrier.toLowerCase() + ' into the thin base under forward bias. At the same junction, base ' + (pnp ? 'electrons' : 'holes') + ' enter the emitter and recombine there.');
     label('collector-title', 'The more lightly doped ' + (pnp ? 'p-type' : 'n-type') + ' collector collects ' + carrier.toLowerCase() + ' in forward active operation. It can inject them into the base when its own junction is forward biased.');
-    label('base-title', 'The thin ' + (pnp ? 'n-type' : 'p-type') + ' base allows most injected ' + carrier.toLowerCase() + ' to reach the other junction. Some meet opposite majority carriers supplied by the base contact; each pair disappears in a flash. Lower beta increases the illustrated recombining share. Pair counts are visually amplified, not literal carrier fractions.');
+    label('base-title', 'The thin ' + (pnp ? 'n-type' : 'p-type') + ' base allows most injected ' + carrier.toLowerCase() + ' to reach the collector. The base contact supplies carriers that cross into the emitter or meet injected carriers in base recombination flashes. Lower beta increases the illustrated base-current activity. Particle counts are amplified for visibility.');
+    const emitterInjectionOn = !cut && q.uBE > 0 && q.baseForward > 0;
+    visible('emitter-injection-part', emitterInjectionOn);
+    const emitterInjectionDescription = 'Base ' + (pnp ? 'electrons' : 'holes') + ' move left across the forward-biased B–E junction into the emitter, where they recombine. Speed follows the forward base-current contribution F/βF; the dots fade as excess carriers are depleted. β describes the combined emitter-injection and base-recombination contribution, with both mechanisms illustrated schematically.';
+    label('emitter-injection-title', emitterInjectionDescription);
+    nodes['emitter-injection-part'].setAttribute('aria-label', emitterInjectionDescription);
 
     // Depletion broadens under reverse bias; emitter doping keeps most E–B depletion in the base.
     const widthBE = bounded(7 + 20 * Math.sqrt(Math.max(0, 0.78 - q.uBE) / 0.78), 7, 48);
@@ -1018,7 +1029,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
     visible('carrier-arrow-2', saturation);
     visible('current-arrow', !cut && !saturation);
     if (cut) {
-      label('carrier-direction', 'no visible net transport');
+      label('carrier-direction', 'cutoff · leakage only');
       label('current-direction', 'leakage below drawing scale');
     } else if (saturation) {
       set('carrier-arrow', 'd', 'M215 308 H287');
@@ -1037,16 +1048,16 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
     let explanation = cut
       ? 'Carrier injection is below the drawing threshold; leakage may remain. '
       : saturation
-        ? carrier + ' enter the base from both emitter and collector; recombining pairs disappear in flashes. '
+        ? carrier + ' enter the base from both ends. Base ' + (pnp ? 'electrons' : 'holes') + ' also enter the emitter; rings mark base recombination. '
         : reversed
           ? carrier + ' travel from collector to emitter; recombining pairs disappear in flashes. '
-          : carrier + ' cross the thin base toward the collector; recombining pairs disappear in flashes. Lower VA narrows the illustrated neutral base. ';
+          : carrier + ' cross toward the collector. Base ' + (pnp ? 'electrons' : 'holes') + ' flow into the emitter; rings mark base recombination. Lower VA narrows the illustrated base. ';
     explanation += 'Motion, counts and dimensions are qualitative.';
     label('description', explanation);
     svg.setAttribute('aria-label', type + ' cross-section in ' + (regionNames[q.region] || q.region) + '. ' + explanation);
     for (const group of Object.keys(particles)) {
       for (const dot of particles[group]) {
-        const majority = group === 'majority', flash = group === 'flash';
+        const majority = group === 'majority' || group === 'emitterInjection', flash = group === 'flash';
         dot.setAttribute('fill', flash ? 'none' : majority ? (pnp ? 'var(--warm)' : 'var(--panel)') : pnp ? 'var(--panel)' : 'var(--accent)');
         dot.setAttribute('stroke', flash ? 'var(--accent2)' : majority ? 'var(--warm)' : pnp ? 'var(--accent)' : 'var(--panel)');
       }
@@ -1080,6 +1091,19 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
         dot.setAttribute('opacity', '.9');
       });
     }
+    // F/betaF represents the combined forward base-current contribution.
+    // Use it as a schematic activity scale for emitter injection. Counts in
+    // this stream and the base pairs illustrate mechanisms, not a fitted split.
+    const injectionEnabled = !cut && q.uBE > 0 && q.baseForward > 0;
+    const injectionCount = bounded(Math.round(2 + 4 * Math.sqrt(10 / q.params.betaF)), 2, 6);
+    particles.emitterInjection.forEach((dot, i) => {
+      const phase = (phases.emitterInjection + i * 0.618033988749895) % 1;
+      dot.setAttribute('visibility', injectionEnabled && i < injectionCount ? 'visible' : 'hidden');
+      dot.setAttribute('cx', (365 - 220 * phase).toFixed(2));
+      dot.setAttribute('cy', (184 + Math.sin(i * 2.3) * 2).toFixed(2));
+      // Excess minority carriers decay as they diffuse into the emitter.
+      dot.setAttribute('opacity', (.95 * (1 - .85 * bounded((phase - .23) / .77, 0, 1))).toFixed(2));
+    });
     // Use a bounded, exaggerated share so low-beta recombination is visible.
     // All pairs retain fixed phase offsets when beta changes; no phase resets.
     const beta = reversed ? q.params.betaR : q.params.betaF;
@@ -1116,7 +1140,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
   }
 
   function flowRates() {
-    if (!point || point.region === 'cut') return { forward: 0, reverse: 0, base: 0 };
+    if (!point || point.region === 'cut') return { forward: 0, reverse: 0, base: 0, emitterInjection: 0 };
     const q = point;
     // SVG units per second: square-root compression makes small currents visible
     // while a cap keeps ideal-model extremes readable. Zero current stays still.
@@ -1126,7 +1150,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
     return {
       forward: q.region === 'reverse' ? 0 : speed(Math.max(0, q.F) * q.earlyFactor) / 553,
       reverse: q.region === 'reverse' || q.region === 'saturation' ? speed(Math.max(0, q.R) * q.earlyFactor) / 553 : 0,
-      base: speed(q.ib) / 85
+      base: speed(q.ib) / 85,
+      emitterInjection: q.uBE > 0 ? speed(Math.max(0, q.baseForward)) / 220 : 0
     };
   }
 
@@ -1154,7 +1179,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
   const fixed = (n,k=2) => (Math.abs(n)<0.5*10**-k?0:n).toFixed(k);
   const names = {cut:'Cutoff',active:'Forward active',saturation:'Saturation',reverse:'Reverse active'};
   const state = {polarity:'npn',drive:'ib',ib:20e-6,uBE:.68,uCE:2,vb:0,vc:2,ve:0,scale:'linear',family:true,plots:new Set(['output','transfer'])};
-  const limits={ib:[0,100e-6],uBE:[.5,.8],uCE:[0,5],VA:[10,300],betaF:[10,800]};
+  const limits={ib:[0,100e-6],uBE:[0,.8],uCE:[0,5],VA:[10,300],betaF:[10,800]};
   let handoffNote='';
   const devices = {npn:BJTModel.defaults(),pnp:BJTModel.defaults()};
   const p = () => devices[state.polarity];
@@ -1371,7 +1396,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
       else if(q.ibN>limits.ib[1]*(1+1e-12))handoffNote='The calculated base current exceeds 100 µA; current drive starts at 100 µA. ';
     } else {
       state.uBE=clamp(q.uBE,...limits.uBE);
-      if(q.uBE<limits.uBE[0]||q.uBE>limits.uBE[1])handoffNote='The calculated '+baseLabel()+' is outside 0.50–0.80 V; voltage drive starts at the nearest limit. ';
+      if(q.uBE<limits.uBE[0]||q.uBE>limits.uBE[1])handoffNote='The calculated '+baseLabel()+' is outside 0–0.80 V; voltage drive starts at the nearest limit. ';
     }
     state.drive=drive;
   }
@@ -1438,8 +1463,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJTModel;
       reverse:math(`<mo>|</mo>${ie}<mo>|</mo><mo>≈</mo>${sub('β','R')}<mo>|</mo>${ib}<mo>|</mo>`)
     };
     const text={
-      cut:['Little injection, very little current','Neither junction supplies substantial minority-carrier injection at this bias. Leakage remains in the equations, even at zero base current. Raise the base drive to watch injection grow; 0.7 V is not an on/off threshold.'],
-      active:['The thin base makes amplification possible','The emitter injects '+(sign()>0?'electrons':'holes')+' into the base. Some meet opposite carriers and recombine; the base contact supplies replacements. Lower β increases the recombining fraction. Lower VA strengthens depletion encroachment and base narrowing at the same reverse collector bias, increasing collector current.'],
+      cut:['Little injection, very little current','Set '+baseLabel()+' to 0 V to hold the base at the emitter potential. Collector-junction leakage remains visible in the readouts. Raising base voltage increases injection continuously; the cutoff label uses junction bias and a 1 nA display threshold.'],
+      active:['The thin base makes amplification possible','The emitter injects '+(sign()>0?'electrons':'holes')+' toward the collector. Base '+(sign()>0?'holes':'electrons')+' cross into the emitter, while some injected carriers recombine in the base. Both contribute to base current. Lower β increases the illustrated base-current activity. Lower VA strengthens base narrowing and collector current.'],
       saturation:['Both junctions inject carriers','The emitter–base and collector–base junctions are both forward biased. Opposing injection reduces net collector transport and increases base current. The ratio IC / IB can be much smaller than β. The forward-active frequency and capacitance estimates do not apply here.'],
       reverse:['Collector and emitter exchange roles','The collector junction now injects carriers, and the emitter collects them. The device is asymmetric: the original collector is a less efficient injector, represented by the smaller reverse gain βR.']
     }[q.region];

@@ -524,6 +524,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .junction-diagrams{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}.junction-diagrams>summary{font-size:12px;font-weight:600;line-height:1.6;color:var(--text);list-style-position:inside;padding:4px 0}.junction-diagrams[open]>summary{margin-bottom:12px}.device-viewport:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
 
 .junction-diagrams .expansion-hint{font-weight:400;color:var(--muted)}.junction-diagrams[open] .expansion-hint{display:none}
+.plot-caption{text-align:center}.plot-equation{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px 18px;min-height:58px;padding:8px 0 5px;color:var(--text);font-family:"MOS Math",math;font-size:17px}.plot-equation math{font-family:"MOS Math",math;max-width:100%;padding:3px 0}.plot-caption .plot-foot{margin-top:5px}.voltage-range-ends{display:grid;grid-template-columns:1fr auto 1fr}.voltage-range-ends span:nth-child(2){text-align:center}.voltage-range-ends span:last-child{text-align:right}.voltage-scale-note{margin:6px 0 0;font-size:10px;line-height:1.5;color:var(--muted);text-align:center}
+@media(max-width:700px){.plot-equation{font-size:16px;gap:7px 14px}}
 </style>
   <style>/* Match the MOS companion's movable explanation and panel handles. */
 .diode-visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
@@ -570,7 +572,7 @@ html.junction-reordering{scroll-behavior:auto!important}
       <aside class="bias-rail" aria-label="Bias and device controls">
         <section class="rail-panel"><p class="section-kicker"><span class="index">01</span> Bias console</p><h2 class="rail-heading">Set the conditions.</h2><p class="rail-intro">Move the bias, change the doping, and watch the electrical and physical views respond together.</p>
           <div class="voltage-controls">
-            <div class="voltage-control"><div class="control-top"><label for="voltage">Diode voltage · V</label><output id="voltage-out" for="voltage"></output></div><input id="voltage" aria-label="Diode voltage" type="range" min="-10" max="1" step="0.005" value="0"><div class="range-ends"><span>−10 V · reverse</span><span>+1 V · forward</span></div><div class="fine-control"><label for="voltage-exact">Exact voltage (V)</label><input id="voltage-exact" type="number" min="-10" max="1" step="0.005" value="0"></div></div>
+            <div class="voltage-control"><div class="control-top"><label for="voltage">Diode voltage · V</label><output id="voltage-out" for="voltage"></output></div><input id="voltage" aria-label="Diode voltage" aria-describedby="voltage-scale-note" type="range" min="-1000" max="1000" step="1" value="0"><div class="range-ends voltage-range-ends"><span>−10 V</span><span>0 V</span><span>+1 V</span></div><p class="voltage-scale-note" id="voltage-scale-note">Finer steps near 0 V · logarithmic scale</p><div class="fine-control"><label for="voltage-exact">Exact voltage (V)</label><input id="voltage-exact" type="number" min="-10" max="1" step="0.001" value="0"></div></div>
             <div class="voltage-control"><div class="control-top"><label for="temperature">Temperature</label><output id="temperature-out" for="temperature"></output></div><input id="temperature" aria-label="Temperature" type="range" min="-20" max="100" step="1" value="27"><div class="range-ends"><span>−20 °C</span><span>100 °C</span></div></div>
           </div>
           <div class="preset-row" aria-label="Bias presets"><button data-preset="equilibrium">Equilibrium</button><button data-preset="forward">Forward bias</button><button data-preset="reverse">Reverse bias</button><button data-preset="breakdown">Breakdown</button></div>
@@ -1221,6 +1223,17 @@ if (typeof module !== 'undefined' && module.exports) module.exports=DiodeModel;
   'use strict';
   const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
   const clamp = (x,a,b) => Math.max(a,Math.min(b,x));
+  // Each polarity occupies half the track. log1p keeps the scale continuous at zero.
+  const VOLTAGE_SOFTENING = 0.1, SLIDER_HALF = 1000;
+  function voltageFromSlider(position) {
+    const u=clamp(position/SLIDER_HALF,-1,1), limit=u<0?10:1;
+    return Math.sign(u)*VOLTAGE_SOFTENING*Math.expm1(Math.abs(u)*Math.log1p(limit/VOLTAGE_SOFTENING));
+  }
+  function sliderFromVoltage(voltage) {
+    const v=clamp(voltage,-10,1), limit=v<0?10:1;
+    return Math.sign(v)*SLIDER_HALF*Math.log1p(Math.abs(v)/VOLTAGE_SOFTENING)/Math.log1p(limit/VOLTAGE_SOFTENING);
+  }
+  const voltageText = v => v.toFixed(v!==0&&Math.abs(v)<0.01?4:3);
   const sub = (base,index) => `<msub><mi>${base}</mi><mi>${index}</mi></msub>`;
   const frac = (top,bottom) => `<mfrac><mrow>${top}</mrow><mrow>${bottom}</mrow></mfrac>`;
   const math = content => `<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">${content}</math>`;
@@ -1237,6 +1250,20 @@ if (typeof module !== 'undefined' && module.exports) module.exports=DiodeModel;
     zenerEquilibrium:zeroCurrent+math(`${sub('N','A')}${sub('x','p')}<mo>=</mo>${sub('N','D')}${sub('x','n')}`),
     zenerBreakdown:math('<mi>I</mi><mo>&lt;</mo><mn>0</mn>')+seriesEquation
   };
+  const derivative = (top,bottom) => frac(`<mi mathvariant="normal">d</mi>${top}`,`<mi mathvariant="normal">d</mi>${bottom}`);
+  const power = (base,exponent) => `<msup><mrow>${base}</mrow><mrow>${exponent}</mrow></msup>`;
+  const exp = exponent => power('<mi>e</mi>',exponent);
+  function plotEquation(key) {
+    const schottky=state.device==='schottky', Rs=sub('R','s'), Cdiff=sub('C','diff');
+    if(key==='forward')return insightEquations.forward+(state.practical?seriesEquation:'');
+    if(key==='reverse')return math(`<mi>I</mi><mo>=</mo>${Is}<mo>(</mo>${exp(frac(Vj,`<mi>n</mi>${VT}`))}<mo>−</mo><mn>1</mn><mo>)</mo>${state.practical?`<mo>+</mo>${sub('I','br')}`:''}`)+(state.practical?seriesEquation:'');
+    if(key==='capacitance')return math(`${sub('C','j')}<mo>=</mo>${frac(`${sub('ε','Si')}<mi>A</mi>`,'<mi>W</mi>')}`);
+    if(key==='diffusion')return math(`${Cdiff}${schottky?'<mo>=</mo><mn>0</mn>':`<mo>≈</mo><mi>τ</mi>${derivative(sub('I','base'),Vj)}`}`);
+    if(key==='width')return math(`<mi>W</mi><mo>=</mo><msqrt>${schottky?frac(`<mn>2</mn>${sub('ε','Si')}<mo>(</mo>${Vbi}<mo>−</mo>${Vj}<mo>)</mo>`,`<mi>q</mi>${sub('N','D')}`):`${frac(`<mn>2</mn>${sub('ε','Si')}`,'<mi>q</mi>')}<mo>(</mo>${frac('<mn>1</mn>',sub('N','A'))}<mo>+</mo>${frac('<mn>1</mn>',sub('N','D'))}<mo>)</mo><mo>(</mo>${Vbi}<mo>−</mo>${Vj}<mo>)</mo>`}</msqrt>`);
+    if(key==='resistance')return math(`${sub('r','d')}<mo>=</mo>${derivative('<mi>V</mi>','<mi>I</mi>')}<mo>=</mo>${state.practical?`${Rs}<mo>+</mo>`:''}${derivative(Vj,'<mi>I</mi>')}`);
+    if(key==='temperature')return math(`${Is}<mo>∝</mo>${power('<mi>T</mi>',`<mn>${schottky?2:3}</mn>`)}${exp(frac(`<mo>−</mo>${schottky?sub('φ','Bn'):sub('E','g')}`,`${sub('k','B')}<mi>T</mi>`))}`)+math(`${VT}<mo>=</mo>${frac(`${sub('k','B')}<mi>T</mi>`,'<mi>q</mi>')}`);
+    return '';
+  }
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const devices=['pn','schottky','zener'];
   const deviceNames={pn:'PN junction',schottky:'Schottky',zener:'Zener'};
@@ -1267,18 +1294,19 @@ if (typeof module !== 'undefined' && module.exports) module.exports=DiodeModel;
     forward:{title:'Forward I–V',label:'Forward I–V',unit:'A',get:r=>r.I,domain:()=>[0,Math.min(1,Math.max(.8,state.v+.04))],foot:'Current rises with forward voltage.'},
     reverse:{title:'Reverse I–V',label:'Reverse I–V',unit:'A',get:r=>r.I,domain:()=>[Math.max(-10,Math.min(-(state.compare?Math.max(...devices.map(d=>saved[d].BV)):state.p.BV)-1,state.v-.15)),0],foot:'Reverse current grows sharply near breakdown.'},
     capacitance:{title:'Junction capacitance',label:'Cⱼ',readout:'Cⱼ',unit:'F',get:r=>r.Cj,domain:()=>[-5,.75],foot:'Wider depletion lowers Cⱼ. Gaps mark the model limit.'},
-    diffusion:{title:'Diffusion capacitance',label:'Cdiff',readout:'Cdiff',unit:'F',get:r=>r.highInjection?null:r.Cdiff,domain:()=>[0,.75],foot:'Stored minority charge adds capacitance. Gaps mark high injection.'},
+    diffusion:{title:'Diffusion capacitance',label:'Cdiff',readout:'Cdiff',unit:'F',get:r=>r.highInjection?null:r.Cdiff,domain:()=>[0,.75],foot:'Forward stored charge follows the base-current slope. Gaps mark high injection.'},
     width:{title:'Depletion width',label:'W',unit:'m',get:r=>r.W===null?null:r.W*.01,domain:()=>[-5,.75],foot:'The lighter-doped side depletes farther. Gaps mark the model limit.'},
-    resistance:{title:'Differential resistance',label:'r_d',readout:'r_d',unit:'Ω',get:r=>r.rd,domain:()=>[-1,.8],log:true,foot:'Local I–V slope: r_d = dV/dI. Log scale; includes Rₛ in the extended model.'},
-    temperature:{title:'Temperature response',label:'I / T',readout:'I(T)',unit:'A',get:r=>r.I,domain:()=>[-20,100],temperature:true,foot:'Current versus temperature at the selected voltage.'}
+    resistance:{title:'Differential resistance',label:'r_d',readout:'r_d',unit:'Ω',get:r=>r.rd,domain:()=>[-1,.8],log:true,foot:'A steeper current rise gives a smaller resistance. Log scale.'},
+    temperature:{title:'Temperature response',label:'I / T',readout:'I(T)',unit:'A',get:r=>r.I,domain:()=>[-20,100],temperature:true,foot:'Fixed applied voltage; T in kelvin. Eɡ is the silicon band gap.'}
   };
   $('#plot-selectors').innerHTML=Object.entries(defs).map(([k,d])=>`<button data-plot="${k}" aria-pressed="${state.plots.has(k)}">${d.label}</button>`).join('');
-  $('#plots').innerHTML=Object.entries(defs).map(([k,d])=>`<div class="plot-card" id="${k}-card"><div class="plot-heading"><h3>${d.title}</h3><strong class="plot-value" id="${k}-value"></strong></div><svg id="${k}-plot" class="plot-svg" viewBox="0 0 440 266" role="img" tabindex="0" aria-label="${d.title}. Click or use arrow keys to change the horizontal value."></svg><p class="plot-foot" id="${k}-foot">${d.foot}</p></div>`).join('');
+  $('#plots').innerHTML=Object.entries(defs).map(([k,d])=>`<div class="plot-card" id="${k}-card"><div class="plot-heading"><h3>${d.title}</h3><strong class="plot-value" id="${k}-value"></strong></div><svg id="${k}-plot" class="plot-svg" viewBox="0 0 440 266" role="img" tabindex="0" aria-describedby="${k}-caption" aria-label="${d.title}. Click or use arrow keys to change the horizontal value."></svg><div class="plot-caption" id="${k}-caption"><div class="plot-equation" id="${k}-equation"></div><p class="plot-foot" id="${k}-foot">${d.foot}</p></div></div>`).join('');
   DiodeDiagram.mount($('#diagram'));
   function syncProps(){ for(const key in props){const el=$('#prop-'+key);el.value=state.p[key]===undefined?'':['NA','ND'].includes(key)?state.p[key].toExponential():String(state.p[key]);const unused=state.device==='schottky'?['NA','tau'].includes(key):key==='phiBn';el.parentElement.hidden=unused;el.disabled=unused||!state.practical&&['Rs','BV'].includes(key);} }
   function changeDevice(device){const tempC=state.p.tempC;saved[state.device]=state.p;state.device=device;state.p=saved[device];state.p.tempC=tempC;syncProps();update();}
   function sync(){
-    $('#voltage').value=state.v;if(document.activeElement!==$('#voltage-exact'))$('#voltage-exact').value=state.v.toFixed(3);$('#voltage-out').textContent=state.v.toFixed(3)+' V';
+    $('#voltage').value=sliderFromVoltage(state.v);$('#voltage').setAttribute('aria-valuetext',voltageText(state.v)+' volts');
+    if(document.activeElement!==$('#voltage-exact'))$('#voltage-exact').value=voltageText(state.v);$('#voltage-out').textContent=voltageText(state.v)+' V';
     $('#temperature').value=state.p.tempC;$('#temperature-out').textContent=state.p.tempC.toFixed(0)+' °C';
     $$('[data-model]').forEach(b=>b.setAttribute('aria-pressed',String((b.dataset.model==='practical')===state.practical)));
     $$('[data-scale]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.scale===state.scale)));
@@ -1378,19 +1406,20 @@ if (typeof module !== 'undefined' && module.exports) module.exports=DiodeModel;
     if(note)h+=label((L+R)/2,T+17,note,'middle');
     svg.innerHTML=h;svg.setAttribute('aria-label',`${d.title}. ${ylabel}. Operating value ${fmt(currentRaw,d.unit)}. ${note} Click to set ${d.temperature?'temperature':'voltage'}; arrow keys also adjust it.`);
     $('#'+key+'-value').textContent=fmt(currentRaw,d.unit);
+    $('#'+key+'-equation').innerHTML=plotEquation(key);
     let foot=d.foot;
     if(state.practical&&key==='forward')foot='Rₛ limits the forward current rise.';
     if(state.device==='schottky'&&key==='diffusion')foot='Schottky Cdiff = 0; depletion charge contributes Cⱼ.';
     if(state.device==='schottky'&&key==='width')foot='Depletion forms in n-type silicon. Gaps mark the model limit.';
-    if(!state.practical&&key==='reverse')foot='Reverse current approaches the saturation current −Iₛ.';
-    if(!state.practical&&key==='resistance')foot='Local I–V slope: r_d = dV/dI, shown on a log scale.';
-    if(log&&d.unit==='A')foot='Log |I| shows current magnitude above the 1 fA display floor.';
+    if(key==='reverse')foot=state.practical?'Ibr adds breakdown near Vⱼ = −BV. Rₛ limits the reverse current.':'Reverse current approaches the saturation current −Iₛ.';
+    if(state.device==='schottky'&&key==='temperature')foot='Fixed applied voltage; T in kelvin. φBn is the metal barrier energy.';
+    if(log&&d.unit==='A')foot=key==='reverse'&&state.practical?'Ibr adds breakdown near Vⱼ = −BV. Log |I| starts at 1 fA.':key==='temperature'?'Fixed voltage; T in kelvin. Log |I| starts at 1 fA.':'Log |I| shows current magnitude from 1 fA.';
     if(extrapolated.length)foot+=' Amber: model extrapolation.';
     $('#'+key+'-foot').textContent=foot;
   }
   function setVoltage(v){state.v=clamp(v,-10,1);update();}
-  $('#voltage').addEventListener('input',e=>setVoltage(Number(e.target.value)));
-  function exactVoltage(commit){const el=$('#voltage-exact'),n=Number(el.value);if(el.value!==''&&Number.isFinite(n)&&(commit||n>=-10&&n<=1))setVoltage(n);if(commit)el.value=state.v.toFixed(3);}
+  $('#voltage').addEventListener('input',e=>setVoltage(voltageFromSlider(Number(e.target.value))));
+  function exactVoltage(commit){const el=$('#voltage-exact'),n=Number(el.value);if(el.value!==''&&Number.isFinite(n)&&(commit||n>=-10&&n<=1))setVoltage(n);if(commit)el.value=voltageText(state.v);}
   $('#voltage-exact').addEventListener('input',()=>exactVoltage(false));
   for(const event of ['change','blur'])$('#voltage-exact').addEventListener(event,()=>exactVoltage(true));
   $('#voltage-exact').addEventListener('keydown',e=>{if(e.key==='Enter')exactVoltage(true);});
