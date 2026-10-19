@@ -46,6 +46,11 @@ website:
             text: Logic Labs
       - text: Simulators
         menu:
+          - text: Semiconductor fundamentals
+          - href: diode_characterization.html
+            text: Diode Characterization
+          - href: bjt_characterization.html
+            text: BJT Characterization
           - text: MOS Transistor Fundamentals
           - href: transistor_fabrication.html
             text: MOS Transistor Fabrication

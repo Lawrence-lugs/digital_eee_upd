@@ -66,6 +66,38 @@ include-in-header:
     <h2 class="text-2xl font-bold text-gray-800 mb-1">Interactive Tools</h2>
     <p class="text-gray-500 mb-8 text-sm">Browser-based tools — no installation needed</p>
 
+    <section class="tool-group" aria-labelledby="semiconductor-fundamentals">
+      <h3 id="semiconductor-fundamentals" class="text-xl font-bold text-gray-800 mb-5">Semiconductor fundamentals</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <a href="diode_characterization.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/diode_characterization.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Diode Characterization</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Compare PN, Schottky, and Zener diodes through interactive
+          current-voltage curves, depletion regions, band diagrams, and capacitance.</p>
+          </div>
+        </a>
+
+        <a href="bjt_characterization.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/bjt_characterization.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">BJT Characterization</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Adjust NPN and PNP transistor bias conditions and explore
+          characteristic curves, junction currents, and animated carrier transport.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
     <section class="tool-group" aria-labelledby="mos-transistor-fundamentals">
       <h3 id="mos-transistor-fundamentals" class="text-xl font-bold text-gray-800 mb-5">MOS Transistor Fundamentals</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
