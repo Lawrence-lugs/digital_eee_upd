@@ -88,21 +88,21 @@ website:
         - href: pages/introEEEComputing/index.qmd
           text: Overview
         - href: pages/introEEEComputing/01-number-systems.qmd
-          text: "1. Number Systems"
+          text: "0: Number Systems"
         - href: pages/introEEEComputing/02-logic-and-boolean-algebra.qmd
-          text: "2. Logic and Boolean Algebra"
+          text: "1: Logic and Boolean Algebra"
         - href: pages/introEEEComputing/03-binary-arithmetic.qmd
-          text: "3. Binary Arithmetic"
+          text: "2: Binary Arithmetic"
         - href: pages/introEEEComputing/04-routing-and-logic-blocks.qmd
-          text: "4. Routing and Logic Blocks"
+          text: "3: Routing and Logic Blocks"
         - href: pages/introEEEComputing/05-memory-and-registers.qmd
-          text: "5. Memory and Registers"
+          text: "4: Memory and Registers"
         - href: pages/introEEEComputing/06-building-a-processor.qmd
-          text: "6. Building a Processor"
+          text: "5: Building a Processor"
         - href: pages/introEEEComputing/07-programs-and-algorithms.qmd
-          text: "7. Programs and Algorithms"
+          text: "6: Programs and Algorithms"
         - href: pages/introEEEComputing/08-computer-systems.qmd
-          text: "8. Computer Systems"
+          text: "7: Computer Systems"
     - id: digital-design-crash-course
       title: "Digital Design Crash Course"
       style: floating
@@ -111,21 +111,21 @@ website:
         - href: pages/digitaldesignCrashCourse/index.qmd
           text: Overview
         - href: pages/digitaldesignCrashCourse/00-thinking-in-hardware.qmd
-          text: "000: Thinking in Hardware"
+          text: "0: Thinking in Hardware"
         - href: pages/digitaldesignCrashCourse/01-bits-and-arithmetic.qmd
-          text: "001: Bits, Ranges, and Arithmetic"
+          text: "1: Bits, Ranges, and Arithmetic"
         - href: pages/digitaldesignCrashCourse/02-clock-cycles-and-pipelines.qmd
-          text: "010: Clock Cycles and Pipelines"
+          text: "2: Clock Cycles and Pipelines"
         - href: pages/digitaldesignCrashCourse/03-loops-and-parallelism.qmd
-          text: "011: Loops Are Architecture Choices"
+          text: "3: Loops Are Architecture Choices"
         - href: pages/digitaldesignCrashCourse/04-memory-and-data-movement.qmd
-          text: "100: Memory and Data Movement"
+          text: "4: Memory and Data Movement"
         - href: pages/digitaldesignCrashCourse/05-state-machines.qmd
-          text: "101: State Machines and Control"
+          text: "5: State Machines and Control"
         - href: pages/digitaldesignCrashCourse/06-streams-and-handshakes.qmd
-          text: "110: Streams and Handshakes"
+          text: "6: Streams and Handshakes"
         - href: pages/digitaldesignCrashCourse/07-designing-an-accelerator.qmd
-          text: "111: Designing an Accelerator"
+          text: "7: Designing an Accelerator"
     - id: verilog-crash-course
       title: "Verilog Crash Course"
       style: floating
@@ -134,21 +134,21 @@ website:
         - href: pages/verilogCrashCourse/index.qmd
           text: Overview
         - href: pages/verilogCrashCourse/00-fundamentals.qmd
-          text: "1: Basic Structure and Syntax"
+          text: "0: Basic Structure and Syntax"
         - href: pages/verilogCrashCourse/001-combinational.qmd
-          text: "2: Writing Combinational Logic"
+          text: "1: Writing Combinational Logic"
         - href: pages/verilogCrashCourse/01-combinational.qmd
-          text: "3: Advanced Combinational Logic"
+          text: "2: Advanced Combinational Logic"
         - href: pages/verilogCrashCourse/02-sequential.qmd
-          text: "4: Writing Sequential Logic"
+          text: "3: Writing Sequential Logic"
         - href: pages/verilogCrashCourse/100-advanced-sequential.qmd
-          text: "5: Advanced Sequential Logic"
+          text: "4: Advanced Sequential Logic"
         - href: pages/verilogCrashCourse/03-verification.qmd
-          text: "6: Testbench Basics and Verification"
+          text: "5: Testbench Basics and Verification"
         - href: pages/verilogCrashCourse/110-advanced-verification.qmd
-          text: "7: Advanced Verification Ideas"
+          text: "6: Advanced Verification Ideas"
         - href: pages/verilogCrashCourse/04-practices.qmd
-          text: "8: Best Practices and Wrap-Up"
+          text: "7: Best Practices and Wrap-Up"
         - href: pages/verilogCrashCourse/extra00-structural.qmd
           text: "A: Structural Verilog Coding"
         - href: pages/verilogCrashCourse/extra01-advanced-syntax.qmd

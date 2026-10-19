@@ -1,14 +1,28 @@
 ---
-title: "About"
+title: "About this site"
 ---
 
-**digital.eee** began with the [Verilog Crash Course](https://digital.eee.upd.edu.ph/pages/verilogCrashCourse/index.html), which I originally wrote and distributed through [UVLe](https://uvle.upd.edu.ph/my/), the university’s online learning management system. When we decided to expand the course with exercises and assessments, we needed a repository to bring those materials together. Then we imagined students writing and simulating Verilog directly on the course webpage through the [Verilog IDE](https://digital.eee.upd.edu.ph/verilog). That idea called for a website, and digital.eee took shape. In late 2025, Lawrence designed and implemented the hosting infrastructure that made it possible.
+We are a group of dedicated *teachers* specializing in digital system design at the [Microelectronics Laboratory](https://www.up-microlab.org/) of the [Electrical and Electronics Engineering Institute (EEEI)](https://eee.upd.edu.ph/) at the [University of the Philippines Diliman](https://upd.edu.ph/). Through **digital.eee**, we bring together crash courses, exercises, and interactive simulators to help students understand digital design, from fundamental concepts to complex compute architectures. We emphasize intuitive visuals and generous, step-by-step guidance so students can explore how things work at their own pace.
 
-By 2026, we had begun expanding the site with interactive simulators to accompany the digital design courses I care about. Much of that work grew out of frustration. I kept relying on slide animations and doodles to explain concepts that students could understand much more easily if they could see them in action. These were fundamental digital design concepts, yet I could not find online tools that visualized them in quite the way I wanted to teach them. So I started developing those tools and bringing them together here.
+As the collection grows, we hope to share the breadth and depth of the institute’s teaching with students and educators at other universities, not just locally but also internationally. **Our aim is to democratize digital design education by making these resources accessible to anyone who wants to learn.**
 
-I currently create most of the site’s content. The materials and simulators reflect my taste in teaching: intuitive, highly visual, and deliberately generous with guidance. I want students to follow what happens, explore why it happens, and work through the details at their own pace.
+::: {.callout-note collapse="true" icon="false" title="Short history (from the main author)"}
 
-The site continues to evolve rapidly as we—and, much of the time, I—develop more content. Behind that work is a dream of democratizing digital design education: making the explanations and tools I wish I had more accessible to anyone who wants to learn.
+**digital.eee** began with the [Verilog Crash Course](https://digital.eee.upd.edu.ph/pages/verilogCrashCourse/index.html), which I wrote to address an appalling shortage of competent digital system designers in the institute. When I returned from my PhD studies abroad in mid-2023, I could rely on only three people in the lab to design digital systems competently. All three were lecturers nearing the end of their graduate degrees. Once they graduated, I would be the only designer left in the lab with recent hands-on experience in large-scale, system-level design. Research on more complex architectures depended on developing people who could carry it forward, starting with strong fundamentals. I wrote the crash course to help build that foundation and first distributed it through [UVLe](https://uvle.upd.edu.ph/), the university’s online learning management system, in mid-2025.
+
+Even then, I imagined a broader collection that students could return to as they progressed from the fundamentals to the advanced topics I care about. I also wanted students and educators at other universities to see what we teach and study, and to have resources they could adapt alongside their own approaches. My wish was for students, wherever they study, to have the opportunity to build equally strong foundations in digital design.
+
+The collection began to take shape when Lawrence created [Vercises](https://digital.eee.upd.edu.ph/exercises) to hold the crash course’s companion exercises. He also coined the name, short for "Verilog Exercises." We then expanded the idea into the [Verilog IDE](https://digital.eee.upd.edu.ph/verilog), where students could write and simulate any Verilog code. We decided to bring both tools and the crash course together on one website, choosing the domain name **digital.eee.upd.edu.ph** on September 16, 2025. Lawrence designed and implemented the hosting infrastructure in late 2025, giving the growing collection a shared home.
+
+Interactive simulators became the next step. I had grown frustrated with relying on slide animations and doodles to explain fundamental concepts that students could understand more easily by seeing them in action. I find it quite disappointing that there are no available online tools that visualized them quite as I wanted to teach them. In early 2026, Isaac’s work on [FSM_simulatEEE](https://digital.eee.upd.edu.ph/FSM_simulatEEE.html) and [ASM_simulatEEE](https://digital.eee.upd.edu.ph/ASM_simulatEEE.html) for the digital design fundamentals course showed me a way forward. Seeing how much he could do in a single, self-contained HTML file inspired me to build similarly engaging simulators for the other courses I teach and share them here.
+
+Looking ahead, I hope students will use these resources to design systems of their own, pursue new research questions, and bring what they learn into their classrooms and communities. It would mean a great deal to me to see today’s learners become the designers, researchers, and teachers who help the next generation get started.
+
+*—Adelson Chua*
+
+:::
+
+## Contributors
 
 The people behind digital.eee are:
 
@@ -16,7 +30,7 @@ The people behind digital.eee are:
 
 **Adelson Chua — Main content contributor**
 
-I develop most of the site’s learning materials and simulators, shape its educational direction, and spend a considerable amount of time thinking about how to make digital design easier to see and understand.
+I develop most of the site’s content and shape its educational direction. The materials and simulators reflect my taste in teaching: intuitive, highly visual, and deliberately generous with guidance. I want students to follow what happens, explore why it happens, and work through the details at their own pace.
 
 <!--
 ![Adelson Chua](images/team/adelson-chua.jpg){width=180px}
@@ -24,13 +38,15 @@ I develop most of the site’s learning materials and simulators, shape its educ
 
 **Lawrence Roman Quizon — Website back-end architect**
 
-digital.eee would not exist without Lawrence. He initiated the website’s construction, built its technical foundation, and enabled many of the features that shape how it looks and works today. He also hosts the website’s [main repository](https://github.com/Lawrence-lugs/digital_eee_upd) under his GitHub account.
+digital.eee would not exist without Lawrence. He initiated and built the website, including its technical foundation and many of the features that shape how it looks and works today. He also hosts the website’s [main repository](https://github.com/Lawrence-lugs/digital_eee_upd) under his GitHub account.
 
 <!--
 ![Lawrence Roman Quizon](images/team/lawrence-roman-quizon.jpg){width=180px}
 -->
 
-I also want to recognize the people whose ideas, teaching materials, and technical work have helped shape this project:
+---
+
+*I also want to recognize the people whose ideas, teaching materials, and technical work have helped shape this project:*
 
 **Fredrick Angelo Galapon**
 
@@ -42,7 +58,7 @@ Fred helped me conceptualize the original Verilog Crash Course. Our discussions 
 
 **Allen Jason Tan**
 
-Allen is our local expert in making FPGA exercises work in practice. Beyond this website, he has developed FPGA exercises and the setups that support them. We plan to bring that work to digital.eee soon.
+Allen is our local expert in making FPGA exercises work in practice. He developed exercises and the setups that support them, which we plan to bring to digital.eee soon.
 
 <!--
 ![Allen Jason Tan](images/team/allen-jason-tan.jpg){width=180px}
@@ -50,7 +66,7 @@ Allen is our local expert in making FPGA exercises work in practice. Beyond this
 
 **Jose Francois Abedejos**
 
-Francois pioneered the [KMAP game](https://digital.eee.upd.edu.ph/kmapgameee), our very first simulator, which he initially prototyped and developed in early 2025. He continues to help with course management and website maintenance.
+Francois pioneered the [KMAP game](https://digital.eee.upd.edu.ph/kmapgameee), our very first simulator, which he prototyped and developed in early 2025. He continues to help with course management and website maintenance.
 
 <!--
 ![Jose Francois Abedejos](images/team/jose-francois-abedejos.jpg){width=180px}
@@ -63,6 +79,10 @@ Aries designed the main laboratory exercises for the Hardware for AI graduate cl
 <!--
 ![Carl Aries Oliva](images/team/carl-aries-oliva.jpg){width=180px}
 -->
+
+---
+
+*I am also grateful to the student assistants whose work has helped make this project possible:*
 
 **Isaac Sy**
 
