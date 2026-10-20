@@ -17,6 +17,7 @@ project:
     - cp static_apps/convolution_simulator.html _site/
     - cp static_apps/cache_simulator.html _site/
     - cp static_apps/virtual_memory_simulator.html _site/
+    - cp static_apps/memory_technology.html _site/
     - cp -r static_apps/ripes _site/
   resources:
     - "googleba81d2991a90411e.html"
