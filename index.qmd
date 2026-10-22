@@ -191,6 +191,19 @@ include-in-header:
       <h3 id="computer-architecture" class="text-xl font-bold text-gray-800 mb-5">Computer Architecture</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
+        <a href="adel-simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/adel-simulator.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">ADEL Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Explore the ADEL processor and step through program execution
+          to see how instructions change registers and memory.</p>
+          </div>
+        </a>
+
         <a href="ripes/" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
                   hover:shadow-md hover:border-red-300 transition-all group">
           <div class="simulator-preview">
@@ -239,6 +252,19 @@ include-in-header:
             <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Virtual Memory Simulator</h4>
             <p class="text-sm text-gray-500 leading-relaxed">Explore virtual-to-physical address translation, page tables, TLBs,
           and page faults with interactive memory accesses.</p>
+          </div>
+        </a>
+
+        <a href="memory_technology.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/memory_technology.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Memory Technology Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Explore how flip-flops, SRAM, DRAM, flash memory, and magnetic
+          disks store and access data through interactive models.</p>
           </div>
         </a>
       </div>
@@ -349,7 +375,7 @@ include-in-header:
       </a>
 
       <!-- ADEL Processor -->
-      <a href="https://github.com/Lawrence-lugs/sky130_analog_digital_flow_demo/tree/main/adel_proc"
+      <a href="https://github.com/adelsonchua/adel_processor"
          target="_blank" rel="noopener noreferrer"
          class="block bg-white rounded-xl border border-gray-200 p-6
                 hover:shadow-md hover:border-red-300 transition-all group">

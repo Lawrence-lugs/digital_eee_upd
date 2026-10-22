@@ -18,6 +18,7 @@ project:
     - cp static_apps/cache_simulator.html _site/
     - cp static_apps/virtual_memory_simulator.html _site/
     - cp static_apps/memory_technology.html _site/
+    - cp static_apps/adel-simulator.html _site/
     - cp -r static_apps/ripes _site/
   resources:
     - "googleba81d2991a90411e.html"
@@ -67,6 +68,8 @@ website:
           - href: timing_simulatEEE.html
             text: Timing Simulator
           - text: Computer Architecture
+          - href: adel-simulator.html
+            text: ADEL Simulator
           - href: ripes/
             text: RIPES
           - href: RV32I_encoding_simulator.html
@@ -75,6 +78,8 @@ website:
             text: Cache Memory Simulator
           - href: virtual_memory_simulator.html
             text: Virtual Memory Simulator
+          - href: memory_technology.html
+            text: Memory Technology Simulator
           - text: Hardware for Machine Learning
           - href: systolic_array_simulator.html
             text: Systolic Array Simulator
