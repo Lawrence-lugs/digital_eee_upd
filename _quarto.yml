@@ -9,6 +9,8 @@ project:
     - cp static_apps/bjt_characterization.html _site/
     - cp static_apps/diode_characterization.html _site/
     - cp static_apps/transistor_characterization.html _site/
+    - cp static_apps/bode_simulator.html _site/
+    - cp static_apps/root_locus_simulator.html _site/
     - cp static_apps/FSM_simulatEEE.html _site/
     - cp static_apps/timing_simulatEEE.html _site/
     - cp static_apps/ASM_simulatEEE.html _site/
@@ -58,6 +60,11 @@ website:
             text: MOS Transistor Fabrication
           - href: transistor_characterization.html
             text: MOS Transistor Characterization
+          - text: Transfer function visualization
+          - href: bode_simulator.html
+            text: Bode Plot Simulator
+          - href: root_locus_simulator.html
+            text: Root Locus Simulator
           - text: Digital Design Fundamentals
           - href: kmapgameee
             text: kmap-gamEEE

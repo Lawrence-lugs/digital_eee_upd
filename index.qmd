@@ -130,6 +130,38 @@ include-in-header:
       </div>
     </section>
 
+    <section class="tool-group" aria-labelledby="transfer-function-visualization">
+      <h3 id="transfer-function-visualization" class="text-xl font-bold text-gray-800 mb-5">Transfer function visualization</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <a href="bode_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/bode_simulator.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Bode Plot Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Build transfer functions with poles and zeros, compare exact Bode
+          curves with asymptotes, and explore the sinusoidal response.</p>
+          </div>
+        </a>
+
+        <a href="root_locus_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/root_locus_simulator.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Root Locus Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Explore how gain changes closed-loop pole locations and connect
+          the root locus to the system's step response.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
     <section class="tool-group" aria-labelledby="digital-design-fundamentals">
       <h3 id="digital-design-fundamentals" class="text-xl font-bold text-gray-800 mb-5">Digital Design Fundamentals</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">

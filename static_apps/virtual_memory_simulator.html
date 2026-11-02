@@ -300,6 +300,14 @@ body.intro-active .left-sticky-group,body.tutorial-active .left-sticky-group{pos
 .lesson-wp{background:#fff6d9;box-shadow:0 0 0 2px #f0b72f;border-radius:2px;padding:1px 3px;font-weight:800;box-decoration-break:clone}
 #tutorialTitle.lesson-hit{color:#00B050}#tutorialTitle.lesson-miss{color:#FF341D}
 
+/* Advanced access programs use the same controls and colors as the cache simulator. */
+.access-panel-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start}.access-head-controls{display:flex;flex-direction:column;align-items:flex-end;gap:12px}.advanced-toggle{display:flex;align-items:center;gap:6px;font-size:.78rem;white-space:nowrap;cursor:pointer;margin:0;color:var(--up-maroon)}.advanced-toggle input{width:auto;margin:0;accent-color:var(--up-maroon)}
+.address-helper-details,.generator-details{margin-top:13px;border:1px solid #d9dfe5;border-radius:10px;background:#fbfcfd;overflow:hidden}.address-helper-details>summary,.generator-details>summary{cursor:pointer;padding:10px 12px;font-weight:800;font-size:1rem;color:#3f4a55;user-select:none}.address-helper-details[open]>summary,.generator-details[open]>summary{border-bottom:1px solid #e2e6ea}.generator-body{padding:12px}.generator-body>div{min-width:0}.generator-body label,.generator-body select{font-size:1rem}.generator-body select{max-width:100%}
+.address-helper-body{padding:11px 12px 12px}.address-helper-note{color:#68737e;font-size:.84rem;line-height:1.4;margin-bottom:9px}.address-helper-fields{display:flex;width:100%;min-height:26px;border:1px solid #aeb7c0;border-radius:7px;overflow:hidden;margin-bottom:5px}.address-helper-field{min-width:0;display:flex;align-items:center;justify-content:center;padding:3px 1px;border-right:1px solid #5a646e47;font-size:.75rem;font-weight:850;text-align:center;line-height:1.2}.address-helper-field:last-child{border-right:0}.address-helper-field.vpn,.address-helper-bit.vpn{background:var(--tag);color:#5e526b}.address-helper-field.offset,.address-helper-bit.offset{background:var(--offset);color:#775f35}.address-helper-bits{display:grid;width:100%;gap:1px;align-items:center;margin:5px 0 9px}.address-helper-bit{min-width:0;height:24px;display:flex;align-items:center;justify-content:center;border-radius:3px;cursor:pointer;margin:0}.address-helper-bit input{appearance:none;-webkit-appearance:none;margin:0;width:min(14px,100%);max-width:14px;min-width:3px;aspect-ratio:1;border:1px solid #69737d;border-radius:2px;background:#fff;cursor:pointer;position:relative}.address-helper-bit input:checked{background:#27323d;border-color:#27323d}.address-helper-bit input:checked::after{content:"";position:absolute;left:27%;top:8%;width:28%;height:55%;border:solid #fff;border-width:0 1.5px 1.5px 0;transform:rotate(45deg)}.address-helper-result{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px;border:1px solid #d8dee5;border-radius:8px;background:#fff}.address-helper-result span{color:#68737e;font-size:.84rem;font-weight:800}.address-helper-result strong{font-size:1rem;color:var(--up-maroon)}.address-helper-decoded{font-size:.82rem;color:#68737e;margin-top:6px;overflow-wrap:anywhere}
+.breakpoint-options{display:grid;gap:9px;padding:12px}.breakpoint-options label{display:flex;align-items:center;gap:7px;margin:0;font-size:1rem}.breakpoint-options input[type=checkbox]{width:auto;flex:0 0 auto;accent-color:var(--up-maroon)}.breakpoint-options input,.breakpoint-options select{font-size:1rem;min-width:0}.breakpoint-range{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.breakpoint-match-row{display:grid;grid-template-columns:minmax(0,1fr) 64px;gap:8px}.breakpoint-match-row>div{display:grid;gap:6px;min-width:0}.breakpoint-match-row select{padding-left:8px;padding-right:4px}.breakpoint-options .hint{margin:0;font-size:.86rem;line-height:1.45}#breakpointNotice{margin-top:9px;font-size:.9rem;line-height:1.45;color:var(--up-maroon);overflow-wrap:anywhere}#programVariables{overflow-wrap:anywhere;margin-top:8px;font-size:.9rem}.access-transport{gap:8px}.access-transport button{padding-inline:12px;white-space:nowrap}
+.access-backdrop .syntax-variable{color:#08756b}.access-backdrop .syntax-keyword{color:#7b1113}.editor-line.paused{background:#fff5d2;box-shadow:inset 3px 0 #d99b19}
+#breakpointDialog{font-size:1rem}#breakpointDialog .hint{font-size:.95rem;line-height:1.5}#breakpointDescription{overflow-wrap:anywhere;line-height:1.5}#breakpointDialog .memory-file-actions{flex-wrap:wrap}#breakpointDialog button{font-size:1rem}
+
 </style></head><body class="intro-active">
 <header><div class="wrap banner-wrap"><div class="banner-copy"><h1>Virtual Memory Simulator</h1><p class="banner-subtitle">Visualize how virtual pages map to physical pages, and follow address translation and data movement.<span class="banner-course">Designed for EEE 153 (Computer Organization and Embedded Systems I) class.</span><span class="banner-credit">Conceptualized by Adelson Chua</span></p></div><div class="banner-controls"><button id="tutorialToggle" class="tutorial-toggle" aria-pressed="false"><span>Tutorial mode</span><span id="tutorialToggleState" class="tutorial-toggle-state">Off</span></button></div></div></header>
 <main><div class="layout"><aside class="stack left-stack">
@@ -311,7 +319,40 @@ body.intro-active .left-sticky-group,body.tutorial-active .left-sticky-group{pos
 <div class="field" data-cache-setting><label for="cacheSize">Cache size (bytes)</label><select id="cacheSize"><option value="32">32</option><option value="64" selected>64</option><option value="128">128</option><option value="256">256</option></select></div><div class="field" data-cache-setting><label for="lineBytes">Block size (bytes)</label><select id="lineBytes"><option value="8">8</option><option value="16" selected>16</option><option value="32">32</option></select></div>
 <div class="field" data-cache-setting><label for="cacheWays">Cache associativity</label><select id="cacheWays"><option value="1">1</option><option value="2">2</option><option value="4" selected>4</option></select></div><div class="field" data-cache-setting><label for="cacheWritePolicy">Cache write policy</label><select id="cacheWritePolicy" title="Write-back + write-allocate keeps stores in cache until eviction. Write-through + no-write-allocate updates RAM immediately and bypasses the cache on a store miss."><option value="write-back" selected>Write-back</option><option value="write-through">Write-through</option></select></div>
 </div><button id="applyConfig" class="primary" hidden>Apply configuration</button><div id="configMessage" class="message" role="status"></div></div></div></section>
-<div class="left-sticky-group" id="leftStickyGroup"><section class="panel access-panel" id="accessPanel"><div class="section"><div class="panel-head"><div><h2>2. Access series</h2><p class="section-lead">Write your memory accesses here.</p></div><button class="collapse" data-collapse="seriesHelp" aria-expanded="true" aria-controls="seriesHelp">Collapse</button></div><div class="preset-row"><select id="example" aria-label="Example access series"><option value="intro">Translation & locality</option><option value="fault">Page fault & retry</option><option value="writeback" id="writePolicyExample">Cache write-back → RAM</option><option value="dirty">Dirty page-out → disk</option><option value="protection">Write protection</option><option value="store">Mixed widths &amp; endianness</option><option value="spatial">Spatial locality</option><option value="temporal">Temporal locality</option><option value="boundary">Across a page boundary</option><option value="tlb">TLB replacement</option><option value="pressure">Working set larger than RAM</option></select></div><div class="editor-caption"><span>Virtual addresses</span><span id="editorCount">0 requests</span></div><div class="access-editor-wrap" id="accessEditorWrap"><pre class="access-backdrop" id="accessBackdrop" aria-hidden="true"></pre><textarea id="accessInput" class="access-input" wrap="off" spellcheck="false" aria-label="Virtual memory access series" aria-describedby="seriesSyntax"></textarea></div><div id="seriesHelp"><div class="hint access-guide" id="seriesSyntax"><ul><li>Loads: <span class="mono">LB/LH/LW address</span> (1/2/4 B)</li><li>Stores: <span class="mono">SB/SH/SW address value</span></li><li>Alignment: word ÷4, halfword ÷2, byte unrestricted.</li><li>Hex, decimal, or binary; <span class="mono">#</span> and <span class="mono">//</span> comments.</li><li>Multi-byte values: <span id="accessEndianHint">little-endian</span>.</li></ul></div></div><div id="accessMessage" class="message" role="alert"></div><div class="button-row"><button id="resetBtn" class="danger">Reset</button><button id="undoBtn" class="secondary">Undo</button><span class="spacer"></span><button id="runBtn" class="secondary">Run</button><button id="stepBtn" class="primary">Step →</button></div><div id="queueStatus" class="queue-status" role="status"></div></div></section>
+<div class="left-sticky-group" id="leftStickyGroup"><section class="panel access-panel" id="accessPanel"><div class="section">
+ <div class="panel-head access-panel-head"><div><h2>2. Access series</h2><p class="section-lead">Write your memory accesses here.</p></div><div class="access-head-controls"><button class="collapse" data-collapse="seriesHelp" aria-expanded="true" aria-controls="seriesHelp">Collapse</button><label class="advanced-toggle" title="Enable variables, while loops, if / else branches, and pause. Step performs one memory access."><input id="advancedMode" type="checkbox">Advanced</label></div></div>
+ <div class="editor-caption"><span>Virtual addresses</span><span id="editorCount">0 requests</span></div>
+ <div class="access-editor-wrap" id="accessEditorWrap"><pre class="access-backdrop" id="accessBackdrop" aria-hidden="true"></pre><textarea id="accessInput" class="access-input" wrap="off" spellcheck="false" aria-label="Virtual memory access series" aria-describedby="seriesSyntax"></textarea></div>
+ <div id="seriesHelp">
+  <div class="hint access-guide" id="seriesSyntax"><ul><li>Loads: <span class="mono">LB/LH/LW address</span> (1/2/4 B)</li><li>Stores: <span class="mono">SB/SH/SW address value</span></li><li>Alignment: word ÷4, halfword ÷2, byte unrestricted.</li><li>Hex, decimal, or binary; <span class="mono">#</span> and <span class="mono">//</span> comments.</li><li>Multi-byte values: <span id="accessEndianHint">little-endian</span>.</li></ul></div>
+  <div id="advancedGuide" class="hint access-guide" hidden><ul><li>Initialize variables first; names are case sensitive.</li><li>Loops: <span class="mono">while condition … end</span></li><li>Branches: <span class="mono">if … else if … else … end</span></li><li>Compare: <span class="mono">&lt; &lt;= &gt; &gt;= == !=</span></li><li>Integer math: <span class="mono">+ - * / % ( )</span>; division rounds down.</li><li><span class="mono">pause</span> stops Run. Write one statement per line.</li></ul></div>
+  <details id="addressHelperPanel" class="address-helper-details"><summary>Address helper</summary><div class="address-helper-body">
+   <div class="address-helper-note">Toggle VPN and offset bits to construct a virtual address.</div><div id="addressHelperFields" class="address-helper-fields"></div><div id="addressHelperBits" class="address-helper-bits" aria-label="Virtual address bit checkboxes"></div>
+   <div class="address-helper-result"><span>Hex address</span><strong id="addressHelperHex" class="mono">0x000</strong></div><div id="addressHelperDecoded" class="address-helper-decoded mono">VPN 0x0 · Offset 0x0</div>
+  </div></details>
+  <details id="generatorPanel" class="generator-details"><summary>Generate access series</summary><div class="generator-body">
+   <div id="basicExampleField"><label for="example">Example access series</label><select id="example" aria-label="Example access series" title="Changing the example updates the access series immediately."><option value="intro">Translation &amp; locality</option><option value="fault">Page fault &amp; retry</option><option value="writeback" id="writePolicyExample">Cache write-back → RAM</option><option value="dirty">Dirty page-out → disk</option><option value="protection">Write protection</option><option value="store">Mixed widths &amp; endianness</option><option value="spatial">Spatial locality</option><option value="temporal">Temporal locality</option><option value="boundary">Across a page boundary</option><option value="tlb">TLB replacement</option><option value="pressure">Working set larger than RAM</option></select></div>
+   <div id="advancedExampleField" hidden><label for="advancedExample">VM loop example</label><select id="advancedExample" title="Changing the example updates the program immediately."><option value="intro">Translation &amp; locality</option><option value="fault">Page fault &amp; retry</option><option value="writeback" id="advancedWritePolicyExample">Cache write-back → RAM</option><option value="dirty">Dirty page-out → disk</option><option value="protection">Write protection</option><option value="store">Mixed widths &amp; endianness</option><option value="spatial">Spatial locality</option><option value="temporal">Temporal locality</option><option value="boundary">Across a page boundary</option><option value="tlb">TLB replacement</option><option value="pressure">Working set larger than RAM</option></select></div>
+  </div></details>
+  <details id="breakpointPanel" class="generator-details" hidden><summary>Custom breakpoints</summary><div class="breakpoint-options">
+   <div class="hint">Run pauses before a matching access. Enabled conditions use OR. Step executes one access.</div>
+   <label><input id="breakOnTLBMiss" type="checkbox">On TLB miss</label>
+   <label><input id="breakOnMiss" type="checkbox">On cache miss</label>
+   <label><input id="breakOnPageFault" type="checkbox">On page fault</label>
+   <label><input id="breakOnEviction" type="checkbox">On eviction of a valid cache line</label>
+   <label><input id="breakOnWriteBack" type="checkbox">On cache write-back to RAM</label>
+   <label><input id="breakOnPageOut" type="checkbox">On dirty page-out to disk</label>
+   <label><input id="breakOnAddress" type="checkbox">On virtual address or inclusive range</label>
+   <div class="breakpoint-range"><input id="breakAddressStart" type="text" aria-label="Breakpoint start virtual address" placeholder="Start: 0x200" spellcheck="false" disabled><input id="breakAddressEnd" type="text" aria-label="Breakpoint end virtual address" placeholder="End (optional)" spellcheck="false" disabled></div>
+   <div class="hint">Match any byte requested by the CPU. Fills and write-backs are excluded from address matching.</div>
+   <div class="breakpoint-match-row"><div><label for="breakMatchMode">When to break</label><select id="breakMatchMode"><option value="every">Every match</option><option value="skip">Skip first N matches</option><option value="nth">Nth match only</option></select></div><div><label for="breakMatchCount">N</label><input id="breakMatchCount" type="number" min="0" step="1" value="1" disabled></div></div>
+   <div id="breakMatchStatus" class="hint" aria-live="polite">0 matches counted.</div><div class="hint">Run counts each matching access once. Reset or changed rules restart the count; Undo restores it.</div><div id="breakpointMessage" class="message" aria-live="polite"></div>
+  </div></details>
+ </div>
+ <div id="accessMessage" class="message" role="alert"></div><div id="breakpointNotice" hidden aria-live="polite"></div>
+ <div class="button-row access-transport"><button id="resetBtn" class="danger" title="Restart the series and restore the initial TLB, cache, mappings, and memory.">Reset</button><button id="runBtn" class="primary" hidden title="Run until a pause, breakpoint, or the end of the program.">Run</button><span class="spacer"></span><button id="undoBtn" class="secondary" title="Undo the previous Step, Run, or Continue.">Undo</button><button id="stepBtn" class="primary" title="Execute one memory access.">Step</button></div>
+ <div id="queueStatus" class="queue-status" role="status"></div><div id="programVariables" class="hint mono" hidden></div>
+</div></section>
 <section class="panel stats-panel"><div class="section"><h2>Simulation summary</h2><div class="summary-grid" id="summary"></div></div></section>
 </div></aside><div class="stack right-stack">
 <section class="panel" id="addressPanel"><div class="section">
@@ -336,7 +377,7 @@ body.intro-active .left-sticky-group,body.tutorial-active .left-sticky-group{pos
  <div id="cachePageStatus" class="hint cache-page-status" aria-live="polite"></div><div id="cachePageMessage" class="message" role="alert"></div>
 </div><p class="cache-note" id="cacheNote">When V = 0, entry values are ignored. Initialization restarts the series.</p></div></section>
 <section class="panel" id="memoryPanel"><div class="section"><div class="memory-panel-head"><div class="memory-panel-copy"><h2>Main memory</h2><p class="section-lead">Physical pages contain data and the page table.</p></div><div class="memory-config-switches" aria-label="Memory display configuration"><div class="memory-switch-control"><span class="memory-switch-label">Data byte ordering</span><button id="byteOrderToggle" class="memory-switch" type="button" aria-pressed="false" title="Display byte offsets in ascending or descending order."><span class="switch-track"></span><span id="byteOrderLabel" class="memory-switch-state">Ascending offsets</span></button></div><div class="memory-switch-control"><span class="memory-switch-label">Endianness</span><button id="endiannessToggle" class="memory-switch" type="button" aria-pressed="false" title="Changing endianness restarts the series."><span class="switch-track"></span><span id="endiannessState" class="memory-switch-state">Little-endian</span></button></div></div></div><div class="pt-banner" id="ptBanner"></div><div class="ram-frame-strip" id="ramFrames" aria-label="Physical memory pages"></div><div class="pte-decoder" id="pteDecoder"></div><div class="memory-toolbar"><div class="memory-nav-controls"><div class="jump-field"><label for="memoryJump">Jump to physical address</label><input type="text" id="memoryJump" value="0x000" spellcheck="false"></div><button class="secondary" id="memoryJumpBtn">Jump</button><button class="secondary" id="memoryPrevBtn">← Previous</button><button class="secondary" id="memoryNextBtn">Next →</button><button class="secondary" id="showPageTable">Page table ↗</button><button class="secondary" id="showData">Current data ↗</button></div><div class="memory-init-controls"><button id="loadMemoryBtn" class="soft-blue" type="button">Load from file</button><button id="randomizeMemoryBtn" class="soft-blue" type="button">Randomize memory</button></div></div><div id="memoryMessage" class="message" role="alert"></div><div class="table-wrap" id="memoryTableWrap"><table class="memory-table" aria-label="Physical RAM bytes"><thead id="memoryHead"></thead><tbody id="memoryBody"></tbody></table></div><div class="memory-footer"><span id="memoryPageStatus"></span><span>Values: <span id="memoryEndianHint">little-endian</span> · byte ordering is display only</span></div><div class="memory-readout" id="memoryReadout"></div><p class="hint">Purple: page-table bytes. Gold: current transfer.</p></div></section>
-<section class="panel" id="historyPanel"><div class="section"><div class="panel-head"><div><h2>Access history</h2><p class="section-lead">Newest completed access first.</p></div></div><div class="table-wrap"><table><thead><tr><th>#</th><th>Op</th><th>Virtual</th><th>Physical</th><th>TLB</th><th>Cache</th><th>Result / value</th><th>Page traffic</th></tr></thead><tbody id="historyBody"></tbody></table></div></div><details class="notes"><summary>Model notes</summary><p>The PTBR points to the page table in RAM. Each PTE starts with Valid, Dirty, and Write protect at its three most significant bits. The physical page number (PPN) occupies bits 3–0; the intervening bits are reserved. PTE size is selectable.</p><p id="modelGeometry"></p><p>The low VPN bits select a TLB set (entries ÷ ways); the remaining VPN bits identify the translation within that set. Fully associative TLBs use one set and no index bits. A TLB miss reads the PTE. With caches disabled, each request walks the table and accesses RAM directly. A page fault can load a page from secondary storage and retry.</p><p>The data cache supports write-back + write-allocate and write-through + no-write-allocate. Write-through stores update RAM immediately and update the cached copy on a hit; a store miss leaves the cache untouched. Load misses allocate under both policies. The cache Dirty column is needed only for write-back. Write-back stores modify the cache and set its dirty bit. Dirty blocks return to RAM before replacement or page-out. In this simulator, the PTE dirty bit marks RAM data modified since its last disk copy. Write-back cached stores leave it unchanged; cache write-back, write-through stores, and direct RAM stores set it. Page replacement flushes dirty cache blocks before checking the PTE dirty bit, then saves a dirty RAM page to disk. Page-out clears that bit. This Dirty-bit timing is a teaching abstraction: real MMUs such as RISC-V mark the page dirty on a store, even while its data remains in a write-back cache. Loads return unsigned data; register sign extension and cycle timing are not modeled. Real page tables are often multilevel.</p><p>Changes and initialization restart the series. Reset keeps the current mappings. Undo restores the previous access; Tutorial Back restores an earlier stage.</p></details></section>
+<section class="panel" id="historyPanel"><div class="section"><div class="panel-head"><div><h2>Access history</h2><p class="section-lead">Newest completed access first.</p></div></div><div class="table-wrap"><table><thead><tr><th>#</th><th>Op</th><th>Virtual</th><th>Physical</th><th>TLB</th><th>Cache</th><th>Result / value</th><th>Page traffic</th></tr></thead><tbody id="historyBody"></tbody></table></div></div><details class="notes"><summary>Model notes</summary><p>The PTBR points to the page table in RAM. Each PTE starts with Valid, Dirty, and Write protect at its three most significant bits. The physical page number (PPN) occupies bits 3–0; the intervening bits are reserved. PTE size is selectable.</p><p id="modelGeometry"></p><p>The low VPN bits select a TLB set (entries ÷ ways); the remaining VPN bits identify the translation within that set. Fully associative TLBs use one set and no index bits. A TLB miss reads the PTE. With caches disabled, each request walks the table and accesses RAM directly. A page fault can load a page from secondary storage and retry.</p><p>The data cache supports write-back + write-allocate and write-through + no-write-allocate. Write-through stores update RAM immediately and update the cached copy on a hit; a store miss leaves the cache untouched. Load misses allocate under both policies. The cache Dirty column is needed only for write-back. Write-back stores modify the cache and set its dirty bit. Dirty blocks return to RAM before replacement or page-out. In this simulator, the PTE dirty bit marks RAM data modified since its last disk copy. Write-back cached stores leave it unchanged; cache write-back, write-through stores, and direct RAM stores set it. Page replacement flushes dirty cache blocks before checking the PTE dirty bit, then saves a dirty RAM page to disk. Page-out clears that bit. This Dirty-bit timing is a teaching abstraction: real MMUs such as RISC-V mark the page dirty on a store, even while its data remains in a write-back cache. Loads return unsigned data; register sign extension and cycle timing are not modeled. Real page tables are often multilevel.</p><p>Changes and initialization restart the series. Reset keeps the current mappings. Undo restores the previous Step, Run, or Continue; Tutorial Back restores an earlier stage.</p></details></section>
 </div></div></main>
 <div id="tutorialBackdrop" class="tutorial-backdrop" hidden></div><div id="tutorialPopover" class="tutorial-popover" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle" hidden tabindex="-1"><button id="tutorialClose" class="tutorial-close" aria-label="Close tutorial">×</button><div id="tutorialProgress" class="tutorial-progress"></div><h3 id="tutorialTitle"></h3><div id="tutorialContent" class="tutorial-content"><div id="tutorialBody" class="tutorial-body" aria-live="polite"></div><div id="tutorialTransfer" class="tutorial-transfer"></div><div class="tutorial-dirty" id="tutorialDirty" hidden></div><div id="tutorialMath" class="tutorial-math" hidden></div></div><div class="tutorial-nav"><button id="tutorialBack" class="secondary">Back</button><button id="tutorialNext" class="primary">Next →</button></div></div>
 
@@ -349,16 +390,21 @@ body.intro-active .left-sticky-group,body.tutorial-active .left-sticky-group{pos
   <p>The two main things you control are:</p>
   <div class="intro-features">
    <div><strong>Machine configuration</strong><span>Choose virtual and physical pages, page size, page-table entry size and location in RAM, and whether to include a TLB and data cache. Set each cache’s associativity and choose write-back or write-through for data stores.</span></div>
-   <div><strong>Access series</strong><span>Choose a template or type your own loads and stores. Use <strong>Step</strong> for one access or <strong>Run</strong> for the series.</span></div>
+   <div><strong>Access series</strong><span>Choose a template or type your own loads and stores. Use <strong>Step</strong> for one access. Enable <strong>Advanced</strong> for loops, generated programs, breakpoints, and <strong>Run</strong>.</span></div>
   </div>
   <p>Changing the configuration or access series restarts the simulation.</p>
   <div class="intro-question">First time learning virtual memory?</div>
   <p><strong>Turn Tutorial mode On.</strong> Each <strong>Step</strong> guides you through address partitioning, TLB lookups, page-table reads, cache hits and misses, and page faults. Follow the bytes moving between cache, RAM, and disk; gold highlights mark the fields used at each stage.</p>
   <p>Use <strong>Back</strong> and <strong>Next</strong> to inspect each stage. Closing the guide completes the current access.</p>
   <p><strong>Leave Tutorial mode Off</strong> to process accesses directly. Use the highlighted button in the title banner to switch modes anytime.</p>
-  <p class="intro-note"><span id="introTableLocation">The selected physical page holds the page table.</span></p>
  </section>
 </div>
+<dialog id="breakpointDialog" class="memory-file-dialog" aria-labelledby="breakpointTitle">
+ <div class="memory-file-head"><h2 id="breakpointTitle">Breakpoint — before access</h2></div>
+ <p id="breakpointDescription"></p>
+ <p class="hint">The TLB, cache, memory, and statistics show the state before this access. Inspect closes this popup. Step executes the pending access; Continue executes it once and runs to the next breakpoint.</p>
+ <div class="memory-file-actions"><button id="breakpointInspect" class="secondary" type="button">Inspect</button><button id="breakpointStep" class="primary" type="button">Step</button><button id="breakpointContinue" class="primary" type="button">Continue</button></div>
+</dialog>
 <dialog id="manualMappingDialog" class="memory-file-dialog manual-mapping-dialog" aria-labelledby="manualMappingTitle">
  <div class="memory-file-head"><h2 id="manualMappingTitle">Manual page mappings</h2><button id="manualMappingClose" class="secondary" type="button" aria-label="Close manual mappings">×</button></div>
  <p id="manualMappingNote" class="manual-mapping-note"></p><p class="manual-mapping-note">Apply restarts the series, cache, TLB, and memory with these mappings. Reset restores this starting layout.</p>
@@ -1449,6 +1495,521 @@ if (typeof module !== 'undefined' && module.exports) module.exports = { AtlasVME
 
 /*__ATLAS_SERIES_END__*/
 </script><script>
+/*__ATLAS_PROGRAM_START__*/
+/* Advanced access programs for the Virtual Memory Simulator.
+   Parse a small integer language; never evaluate source as JavaScript or expand loops.
+   next() stops before a memory access. Its caller advances pc after that access completes.
+   Source locations are zero-based; displayed error line numbers are one-based. */
+(function (root) {
+  'use strict';
+
+  const MAX_PROGRAM_CHARS = 100000;
+  const MAX_STATEMENTS = 10000000;
+  const MAX_NESTING = 100;
+  const MAX_EXPRESSION_TOKENS = 4096;
+  const INTEGER_BOUND = 1n << 256n;
+  const LITERAL = /^(?:0x[0-9a-f]+(?:_[0-9a-f]+)*|0b[01]+(?:_[01]+)*|[0-9]+(?:_[0-9]+)*)$/i;
+  const RESERVED = /^(?:while|if|else|end|pause|LB|LH|LW|SB|SH|SW)$/i;
+  const own = (object, key) => Object.prototype.hasOwnProperty.call(object, key);
+  const series = typeof module !== 'undefined' && module.exports ? require('./atlas-series.js') : null;
+
+  function fail(message, sourceLine = 0, sourceText = '', code = 'syntax') {
+    const error = new SyntaxError(`Line ${sourceLine + 1}: ${message}`);
+    error.sourceLine = sourceLine;
+    error.lineNumber = sourceLine + 1;
+    error.sourceText = sourceText;
+    error.code = code;
+    throw error;
+  }
+
+  function bounded(value, line, source) {
+    if (value < -INTEGER_BOUND || value >= INTEGER_BOUND) {
+      fail('Integer exceeds the 256-bit arithmetic limit.', line, source, 'integer-limit');
+    }
+    return value;
+  }
+
+  function expressionReader(source, line, initialized, sourceText) {
+    const tokens = [];
+    let rest = source;
+    while (rest.trim()) {
+      rest = rest.trimStart();
+      const match = rest.match(/^(0x[0-9a-f]+(?:_[0-9a-f]+)*|0b[01]+(?:_[01]+)*|[0-9]+(?:_[0-9]+)*|[A-Za-z_][A-Za-z0-9_]*|<=|>=|==|!=|[()+*\/%\-<>,])/i);
+      if (!match) fail(`Unexpected character “${rest[0]}”.`, line, sourceText);
+      tokens.push(match[0]);
+      if (tokens.length > MAX_EXPRESSION_TOKENS) fail('Expression exceeds the 4,096-token limit.', line, sourceText, 'expression-limit');
+      rest = rest.slice(match[0].length);
+    }
+    let position = 0, depth = 0;
+    function primary() {
+      if (++depth > MAX_NESTING) fail('Expression nesting exceeds 100 levels.', line, sourceText, 'nesting-limit');
+      const token = tokens[position++];
+      let node;
+      if (token === '+' || token === '-') node = { op: token === '-' ? 'neg' : 'pos', right: primary() };
+      else if (token === '(') {
+        node = expression();
+        if (tokens[position++] !== ')') fail('Expected a closing parenthesis.', line, sourceText);
+      } else if (token && LITERAL.test(token)) {
+        node = { value: bounded(BigInt(token.replace(/_/g, '')), line, sourceText).toString() };
+      } else if (token && /^[A-Za-z_][A-Za-z0-9_]*$/.test(token)) {
+        if (!initialized.has(token)) fail(`Variable “${token}” must be initialized before use on every possible path.`, line, sourceText, 'uninitialized');
+        node = { name: token };
+      } else fail('Expected an integer, initialized variable, or parenthesized expression.', line, sourceText);
+      depth--;
+      return node;
+    }
+    function expression(minimum = 0) {
+      let left = primary();
+      while (position < tokens.length) {
+        const op = tokens[position], precedence = ['*', '/', '%'].includes(op) ? 2 : (op === '+' || op === '-' ? 1 : 0);
+        if (!precedence || precedence <= minimum) break;
+        position++;
+        left = { op, left, right: expression(precedence) };
+      }
+      return left;
+    }
+    return { expression, peek: () => tokens[position], take: () => tokens[position++], finish: () => {
+      if (position !== tokens.length) fail(`Unexpected token “${tokens[position]}”.`, line, sourceText);
+    } };
+  }
+
+  function compile(text) {
+    if (typeof text !== 'string') throw new TypeError('The access program must be text.');
+    if (text.length > MAX_PROGRAM_CHARS) fail('Programs are limited to 100,000 characters.', 0, '', 'program-limit');
+    const instructions = [], blocks = [];
+    let initialized = new Set();
+    function conditionNode(condition, line, kind, source) {
+      condition = condition.trim();
+      let outerDepth = 0;
+      // Parentheses may enclose a comparison as well as either arithmetic operand.
+      while (condition.startsWith('(') && condition.endsWith(')')) {
+        if (++outerDepth > MAX_NESTING) fail('Expression nesting exceeds 100 levels.', line, source, 'nesting-limit');
+        let balance = 0, enclosesWhole = true;
+        for (let i = 0; i < condition.length; i++) {
+          if (condition[i] === '(' && ++balance > MAX_NESTING) fail('Expression nesting exceeds 100 levels.', line, source, 'nesting-limit');
+          if (condition[i] === ')') balance--;
+          if (balance === 0 && i < condition.length - 1) { enclosesWhole = false; break; }
+        }
+        if (!enclosesWhole || balance !== 0) break;
+        condition = condition.slice(1, -1).trim();
+      }
+      const reader = expressionReader(condition, line, initialized, source), left = reader.expression(), op = reader.take();
+      if (!['<', '<=', '>', '>=', '==', '!='].includes(op)) fail(`A ${kind} condition needs <, <=, >, >=, ==, or !=.`, line, source);
+      const right = reader.expression();
+      reader.finish();
+      return { kind, left, op, right, line, source };
+    }
+    text.replace(/\r\n?/g, '\n').split('\n').forEach((raw, line) => {
+      const source = raw.split(/#|\/\//, 1)[0].trim();
+      if (!source) return;
+      let match;
+      if ((match = source.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(?!=)(.+)$/))) {
+        if (RESERVED.test(match[1])) fail(`“${match[1]}” is a reserved keyword.`, line, source);
+        const reader = expressionReader(match[2], line, initialized, source), value = reader.expression();
+        reader.finish();
+        instructions.push({ kind: 'assign', name: match[1], value, line, source });
+        initialized.add(match[1]);
+      } else if ((match = source.match(/^(while|if)\s+(.+)$/i))) {
+        const kind = match[1].toLowerCase(), node = conditionNode(match[2], line, kind, source);
+        if (blocks.length >= MAX_NESTING) fail('Block nesting exceeds 100 levels.', line, source, 'nesting-limit');
+        blocks.push({ kind, index: instructions.length, initialized: new Set(initialized), lastTest: instructions.length, jumps: [], branches: [], hasElse: false });
+        instructions.push(node);
+      } else if ((match = source.match(/^else(?:\s+if\s+(.+))?$/i))) {
+        const block = blocks[blocks.length - 1];
+        if (!block || block.kind !== 'if') fail('Unexpected else; the innermost open block must be an if.', line, source);
+        if (block.hasElse) fail('No branch can follow else in the same if chain.', line, source);
+        block.branches.push(new Set(initialized));
+        initialized = new Set(block.initialized);
+        block.jumps.push(instructions.length);
+        instructions.push({ kind: 'jump', line, source });
+        instructions[block.lastTest].target = instructions.length;
+        if (match[1]) {
+          block.lastTest = instructions.length;
+          instructions.push(conditionNode(match[1], line, 'if', source));
+        } else { block.hasElse = true; block.lastTest = null; }
+      } else if (/^end$/i.test(source)) {
+        const block = blocks.pop();
+        if (!block) fail('Unexpected end; there is no open while or if block.', line, source);
+        if (block.kind === 'while') {
+          instructions.push({ kind: 'end', target: block.index, line, source });
+          instructions[block.index].target = instructions.length;
+          initialized = block.initialized;
+        } else {
+          block.branches.push(new Set(initialized));
+          if (!block.hasElse) block.branches.push(block.initialized);
+          initialized = new Set([...block.branches[0]].filter(name => block.branches.every(branch => branch.has(name))));
+          if (block.lastTest !== null) instructions[block.lastTest].target = instructions.length;
+          for (const jump of block.jumps) instructions[jump].target = instructions.length;
+        }
+      } else if (/^pause$/i.test(source)) instructions.push({ kind: 'pause', line, source });
+      else if ((match = source.match(/^(LB|LH|LW|SB|SH|SW)\s+(.+)$/i))) {
+        const mnemonic = match[1].toUpperCase(), reader = expressionReader(match[2], line, initialized, source), address = reader.expression();
+        let value = null;
+        if (mnemonic[0] === 'S') { if (reader.peek() === ',') reader.take(); value = reader.expression(); }
+        reader.finish();
+        instructions.push({ kind: 'access', mnemonic, address, value, line, source });
+      } else fail('Use assignment, while, if / else if / else, end, pause, or a memory access. Write one statement per line.', line, source);
+    });
+    if (blocks.length) {
+      const block = blocks[blocks.length - 1], instruction = instructions[block.index];
+      fail(`This ${block.kind} block is missing its end.`, instruction.line, instruction.source);
+    }
+    return instructions;
+  }
+
+  function evaluateExpression(node, vars, line, source) {
+    // An explicit stack also handles long left-associative arithmetic expressions.
+    const work = [{ node, visited: false }], values = [];
+    while (work.length) {
+      const frame = work.pop(), current = frame.node;
+      if (own(current, 'value')) values.push(bounded(BigInt(current.value), line, source));
+      else if (own(current, 'name')) {
+        if (!own(vars, current.name)) fail(`Variable “${current.name}” is not initialized.`, line, source, 'uninitialized');
+        values.push(bounded(BigInt(vars[current.name]), line, source));
+      } else if (!frame.visited) {
+        work.push({ node: current, visited: true });
+        work.push({ node: current.right, visited: false });
+        if (current.left) work.push({ node: current.left, visited: false });
+      } else {
+        const right = values.pop();
+        let value;
+        if (current.op === 'neg') value = -right;
+        else if (current.op === 'pos') value = right;
+        else {
+          const left = values.pop();
+          if (current.op === '/' || current.op === '%') {
+            if (right === 0n) fail(current.op === '/' ? 'Cannot divide by zero.' : 'Cannot take modulo by zero.', line, source, 'division-zero');
+            let quotient = left / right;
+            if (left % right !== 0n && (left < 0n) !== (right < 0n)) quotient--;
+            value = current.op === '/' ? quotient : left - quotient * right;
+          } else value = current.op === '+' ? left + right : current.op === '-' ? left - right : left * right;
+        }
+        values.push(bounded(value, line, source));
+      }
+    }
+    return values[0];
+  }
+
+  function createExecution(program) {
+    if (!Array.isArray(program)) throw new TypeError('Compile the program before creating its execution state.');
+    return { pc: 0, vars: {}, paused: false, pauseLine: null, finished: program.length === 0, error: false, statements: 0 };
+  }
+  function clone(execution) { return execution == null ? null : JSON.parse(JSON.stringify(execution)); }
+
+  function next(program, execution, geometry, { stopAtPause = true, budget = 2000 } = {}) {
+    if (!Array.isArray(program) || !execution) throw new TypeError('A compiled program and execution state are required.');
+    if (!Number.isSafeInteger(budget) || budget < 1) throw new RangeError('The statement budget must be a positive integer.');
+    if (execution.error) fail('Execution stopped after an error. Reset or edit the program to restart.', program[execution.pc]?.line ?? 0, '', 'stopped');
+    if (execution.finished) return { kind: 'end' };
+    execution.paused = false;
+    execution.pauseLine = null;
+    try {
+      for (let count = 0; count < budget && execution.pc < program.length; count++) {
+        const instruction = program[execution.pc], { line, source } = instruction;
+        if (++execution.statements > MAX_STATEMENTS) fail('Execution limit reached (10,000,000 statements). Check the loop condition and increment, then Reset.', line, source, 'statement-limit');
+        const evaluate = node => evaluateExpression(node, execution.vars, line, source);
+        if (instruction.kind === 'assign') {
+          // defineProperty also makes names such as __proto__ ordinary variables.
+          Object.defineProperty(execution.vars, instruction.name, { value: evaluate(instruction.value).toString(), enumerable: true, configurable: true, writable: true });
+          execution.pc++;
+        } else if (instruction.kind === 'while' || instruction.kind === 'if') {
+          const left = evaluate(instruction.left), right = evaluate(instruction.right);
+          const condition = { '<': left < right, '<=': left <= right, '>': left > right, '>=': left >= right, '==': left === right, '!=': left !== right }[instruction.op];
+          execution.pc = condition ? execution.pc + 1 : instruction.target;
+        } else if (instruction.kind === 'end' || instruction.kind === 'jump') execution.pc = instruction.target;
+        else if (instruction.kind === 'pause') {
+          execution.pc++;
+          if (stopAtPause) { execution.paused = true; execution.pauseLine = line; return { kind: 'pause' }; }
+        } else {
+          const address = evaluate(instruction.address), value = instruction.value ? evaluate(instruction.value) : null;
+          if (address < 0n) fail('Memory addresses cannot be negative.', line, source, 'range');
+          if (value !== null && value < 0n) fail('Store values cannot be negative.', line, source, 'store-range');
+          let access;
+          try {
+            access = (series || root.AtlasSeries).parse(`${instruction.mnemonic} ${address}${value === null ? '' : ' ' + value}`, geometry)[0];
+          } catch (error) {
+            fail(error.message.replace(/^Line 1:\s*/, ''), line, source, error.code || 'access');
+          }
+          return { kind: 'access', access: { ...access, sourceLine: line, sourceText: source } };
+        }
+      }
+      if (execution.pc >= program.length) { execution.finished = true; return { kind: 'end' }; }
+      return { kind: 'yield' };
+    } catch (error) {
+      execution.error = true;
+      throw error;
+    }
+  }
+
+  const api = Object.freeze({ compile, createExecution, clone, next, MAX_PROGRAM_CHARS, MAX_STATEMENTS, MAX_NESTING, MAX_EXPRESSION_TOKENS });
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  if (root) root.AtlasProgram = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+/*__ATLAS_PROGRAM_END__*/
+
+/*__ATLAS_GENERATE_START__*/
+/* Geometry-aware access-series examples. All addresses are virtual addresses.
+   The generator is pure: callers supply randomness for reproducible basic lists. */
+(function (root) {
+  'use strict';
+
+  const PATTERNS = Object.freeze(['locality', 'uniform', 'sequential', 'conflict']);
+  const TEMPLATES = Object.freeze(['word-loads', 'mixed-loads', 'mixed-rw', 'write-hit', 'write-miss']);
+  const ADVANCED = Object.freeze(['intro', 'fault', 'writeback', 'dirty', 'protection', 'store', 'spatial', 'temporal', 'boundary', 'tlb', 'pressure']);
+  const hex = value => '0x' + value.toString(16).toUpperCase();
+
+  function geometry(g) {
+    if (!g || !Number.isSafeInteger(g.virtualPages) || g.virtualPages < 2 ||
+        !Number.isSafeInteger(g.pageSize) || g.pageSize < 4 || g.pageSize % 4 !== 0) {
+      throw new TypeError('Access generation needs virtualPages and a pageSize divisible by 4.');
+    }
+    const bytes = g.virtualPages * g.pageSize;
+    if (!Number.isSafeInteger(bytes)) throw new TypeError('The virtual address space must fit in a safe integer.');
+    const lineBytes = g.lineBytes ?? 16, capacity = g.cacheCapacity ?? 4;
+    const ways = g.ways ?? (g.cacheWays === 'full' || g.cacheWays == null ? capacity : g.cacheWays);
+    const cacheSets = g.cacheSets ?? capacity / ways;
+    const tlbCapacity = g.tlbCapacity ?? 4;
+    const tlbWays = g.tlbAssociativity ?? (g.tlbWays === 'full' || g.tlbWays == null ? tlbCapacity : g.tlbWays);
+    const tlbSets = g.tlbSets ?? tlbCapacity / tlbWays;
+    if (![lineBytes, ways, cacheSets, tlbWays, tlbSets].every(value => Number.isSafeInteger(value) && value > 0) || lineBytes % 4) {
+      throw new TypeError('Cache and TLB geometry must use positive integer sizes.');
+    }
+    return { ...g, bytes, lineBytes, ways, cacheSets, tlbWays, tlbSets,
+      first: g.pageSize, base: Math.min(2, g.virtualPages - 1) * g.pageSize };
+  }
+
+  function conflictLayout(g) {
+    const stride = g.cacheSets * g.lineBytes;
+    const available = Math.floor((g.pageSize - 4) / stride) + 1;
+    const blocks = Math.min(g.ways + 2, available);
+    const notes = [
+      '# Same-page offsets keep these cache set indices equal after translation.',
+      `# Block addresses are ${stride} bytes apart within one virtual page.`
+    ];
+    if (blocks === 1) notes.push('# Only one candidate block fits here. Use a larger page or smaller cache for conflicts.');
+    else if (blocks <= g.ways) notes.push(`# This page provides ${blocks} candidate blocks for ${g.ways} ways, so they fit without replacement.`);
+    else notes.push(`# ${blocks} blocks compete for ${g.ways} ways in one cache set.`);
+    if (g.cachesEnabled === false) notes.push('# Enable Cache + TLB to observe cache hits and replacement.');
+    return { stride, blocks, notes };
+  }
+
+  function basic(givenGeometry, options = {}) {
+    const g = geometry(givenGeometry);
+    const { count = 20, pattern = 'locality', template = 'word-loads', random = Math.random } = options;
+    if (!Number.isSafeInteger(count) || count < 1 || count > 500) throw new RangeError('Count must be a whole number from 1 through 500.');
+    if (!PATTERNS.includes(pattern)) throw new Error('Unknown generated pattern: ' + pattern);
+    if (!TEMPLATES.includes(template)) throw new Error('Unknown memory access template: ' + template);
+    if (typeof random !== 'function') throw new TypeError('random must be a function.');
+    function sample(limit) {
+      const value = random();
+      if (!Number.isFinite(value) || value < 0 || value >= 1) throw new RangeError('random must return a number in [0, 1).');
+      return Math.floor(value * limit);
+    }
+    function aligned(address, width) {
+      const slots = Math.floor((g.bytes - g.first) / width);
+      const slot = Math.floor((address - g.first) / width);
+      return g.first + ((slot % slots) + slots) % slots * width;
+    }
+    const conflict = conflictLayout(g);
+    const hot = aligned(g.base + sample(Math.max(1, Math.floor(g.pageSize / g.lineBytes))) * g.lineBytes, 4);
+    function addressFor(index, width) {
+      if (pattern === 'uniform') return g.first + sample(Math.floor((g.bytes - g.first) / width)) * width;
+      if (pattern === 'sequential') return aligned(g.base + index * width, width);
+      if (pattern === 'conflict') return g.base + (index % conflict.blocks) * conflict.stride;
+      return sample(100) < 82 ? aligned(hot + index % 8 * width, width)
+        : g.first + sample(Math.floor((g.bytes - g.first) / width)) * width;
+    }
+    const notes = ['# Virtual addresses; VPN 0 is excluded from generated data accesses.'];
+    if (pattern === 'conflict' && template !== 'write-miss') notes.push(...conflict.notes);
+    if (template === 'write-hit') notes.push('# Load each word, then store to the same address while its cache line is present.');
+    if (template === 'write-miss') {
+      notes.push('# Store to a new block, then load it. Blocks repeat only after the virtual data range wraps.');
+      notes.push(g.cachesEnabled === false ? '# With caches absent, both accesses use RAM.' : g.cacheWritePolicy === 'write-through'
+        ? '# A store miss writes RAM without allocation; the following load allocates the block.'
+        : '# A store miss allocates the block; the following load can hit.');
+    }
+    if (g.cachesEnabled === false && template === 'write-hit') notes.push('# Enable Cache + TLB to observe the store hit.');
+    const loads = ['LW', 'LH', 'LB'], mixed = ['LW', 'SB', 'LH', 'SW', 'LB', 'SH'];
+    let sticky = g.base;
+    const lines = [];
+    for (let i = 0; i < count; i++) {
+      const mnemonic = template === 'word-loads' ? 'LW' : template === 'mixed-loads' ? loads[i % loads.length]
+        : template === 'mixed-rw' ? mixed[i % mixed.length]
+          : template === 'write-hit' ? i % 2 ? 'SW' : 'LW' : i % 2 ? 'LW' : 'SW';
+      const width = { B: 1, H: 2, W: 4 }[mnemonic[1]];
+      let address;
+      if (template === 'write-hit') {
+        if (i % 2 === 0) sticky = addressFor(Math.floor(i / 2), width);
+        address = sticky;
+      } else if (template === 'write-miss') {
+        if (i % 2 === 0) sticky = aligned(g.base + Math.floor(i / 2) * g.lineBytes, width);
+        address = sticky;
+      } else address = addressFor(i, width);
+      const value = mnemonic[0] === 'S' ? ' ' + hex(sample(2 ** (width * 8))) : '';
+      lines.push(mnemonic + ' ' + hex(address) + value);
+    }
+    return [...notes, ...lines].join('\n');
+  }
+
+  function advanced(kind = 'intro', givenGeometry, options = {}) {
+    const g = geometry(givenGeometry);
+    if (!ADVANCED.includes(kind)) throw new Error('Unknown loop example: ' + kind);
+    const base = hex(g.base), page = g.pageSize, pageHex = hex(page);
+    const cacheNote = g.cachesEnabled === false ? '# With caches disabled, each access walks the page table and uses RAM.\n' : '';
+    if (kind === 'intro') return `# Translation and locality: one VPN, several byte offsets.
+# First pass obtains the translation; second pass reuses the same virtual addresses.
+${cacheNote}pass = 0
+while pass < 2
+    offset = 0
+    while offset < 16
+        LW (${base} + offset)
+        offset = offset + 4
+    end
+    pause
+    pass = pass + 1
+end`;
+    if (kind === 'fault') return `# VPNs 0x5 and 0x6 start on disk in the default mapping.
+# Use Start empty to force faults with a different starting layout.
+# A fault loads a whole page; later accesses reuse that resident page.
+vpn = 5
+while vpn < 7
+    LW (vpn * ${pageHex})
+    pause
+    offset = 0
+    while offset < 16
+        LW (vpn * ${pageHex} + offset)
+        offset = offset + 4
+    end
+    pause
+    vpn = vpn + 1
+end`;
+    if (kind === 'writeback') {
+      if (typeof options.writebackSeries !== 'string' || !options.writebackSeries.trim()) {
+        throw new TypeError('The write-back loop needs the current mapping-aware writebackSeries.');
+      }
+      return `# Repeat the cache-to-RAM lesson using the current page mappings.
+# Cache write-back transfers a block to RAM; page-out transfers a page to disk.
+# Initial cold-access notes apply to the first pass; later passes can start warm.
+round = 0
+while round < 2
+${options.writebackSeries.split(/\r?\n/).map(line => '    ' + line).join('\n')}
+    pause
+    round = round + 1
+end`;
+    }
+    if (kind === 'dirty') {
+      const policy = g.cachesEnabled !== false && g.cacheWritePolicy !== 'write-through'
+        ? '# First the cache is dirty. Cache write-back copies a block to RAM and sets the PTE Dirty bit.'
+        : '# The store changes RAM immediately and sets the PTE Dirty bit.';
+      return `${policy}
+# Page-out copies a dirty RAM page to disk, then clears its PTE Dirty bit.
+SW ${pageHex} 0xDEADBEEF
+pause
+vpn = 2
+while vpn < ${g.virtualPages}
+    LW (vpn * ${pageHex})
+    vpn = vpn + 1
+end
+pause
+# Reload the stored word after page replacement; the value must survive.
+LW ${pageHex}`;
+    }
+    if (kind === 'protection') return `# VPN 0x0 is read-only. Reads succeed even when its WP bit is 1.
+offset = 0
+while offset < 12
+    LW offset
+    offset = offset + 4
+end
+pause
+# The final store is intentionally denied; no data bytes may change.
+SW 0x24 0xDEADBEEF`;
+    if (kind === 'store') return `# Access width changes the payload, while every access uses the same VPN.
+# Overwrite one byte and one halfword of each stored word, then inspect endianness.
+word = 0
+while word < 4
+    address = ${base} + 4*word
+    SW address 0xDEADBEEF
+    SB (address + 1) 0x12
+    SH (address + 2) 0x3456
+    LB address
+    LH (address + 2)
+    LW address
+    pause
+    word = word + 1
+end`;
+    if (kind === 'spatial') return `# Scan one virtual page and continue into the next.
+# Offsets change within a page; at the boundary the VPN changes and offset returns to zero.
+${cacheNote}offset = 0
+while offset < ${page + 16}
+    LW (${base} + offset)
+    offset = offset + 4
+end`;
+    if (kind === 'temporal') return `# Repeated reads reuse one virtual-to-physical translation.
+# Compare the first access with later TLB and data-cache hits.
+${cacheNote}pass = 0
+while pass < 3
+    repeat = 0
+    while repeat < 3
+        LW (${base} + 0x24)
+        repeat = repeat + 1
+    end
+    pause
+    pass = pass + 1
+end`;
+    if (kind === 'boundary') return `# Read the last two words of VPN 0x2, then the first two of VPN 0x3.
+# Adjacent virtual pages can map to nonadjacent physical pages.
+pass = 0
+while pass < 2
+    offset = ${hex(page - 8)}
+    while offset < ${hex(page + 8)}
+        LW (${base} + offset)
+        offset = offset + 4
+    end
+    pause
+    pass = pass + 1
+end`;
+    if (kind === 'tlb') {
+      const count = Math.min(g.tlbWays + 1, Math.floor((g.virtualPages - 2) / g.tlbSets) + 1);
+      return `# VPNs separated by ${hex(g.tlbSets)} select the same TLB set.
+# ${count} translations compete for ${g.tlbWays} ways; a TLB miss alone is not a page fault.
+# Each immediate reread can hit; returning after the other VPNs tests replacement.
+${g.cachesEnabled === false ? '# Enable Cache + TLB to observe TLB replacement.\n' : ''}pass = 0
+while pass < 2
+    x = 0
+    while x < ${count}
+        address = (1 + ${g.tlbSets}*x) * ${pageHex}
+        LW address
+        LW address
+        x = x + 1
+    end
+    pause
+    pass = pass + 1
+end`;
+    }
+    const workingPages = Math.min(g.virtualPages - 1, (g.physicalFrames ?? 8) + 1);
+    return `# This ${workingPages}-page working set exceeds RAM's ${(g.physicalFrames ?? 8) - 1} data pages.
+# One physical page holds the page table. Replacement brings evicted pages back from disk.
+# Compare the page faults in each pass; a larger TLB cannot make more pages fit in RAM.
+pass = 0
+while pass < 2
+    vpn = 1
+    while vpn <= ${workingPages}
+        LW (vpn * ${pageHex})
+        vpn = vpn + 1
+    end
+    pause
+    pass = pass + 1
+end`;
+  }
+
+  const api = Object.freeze({ basic, advanced, PATTERNS, TEMPLATES, ADVANCED });
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  if (root) root.AtlasGenerate = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+/*__ATLAS_GENERATE_END__*/
+
 /*__ATLAS_UI_START__*/
 /* Virtual-memory UI: series execution, RAM inspection, and reversible guided steps. */
 (() => {
@@ -1464,6 +2025,9 @@ let queue=[],cursor=0,history=[],undos=[],draft=[],parseError=null,needsLoad=fal
 let tutorialEnabled=false,tutorialOpen=false,tutorialFrames=[],tutorialIndex=0,tutorialTotal=0,activeContext=null,focusTarget=null;
 let mappingSeed=null,mappingMode='default',manualMapping=null,manualDraft=null,introOpen=true,physicalPartitionMode='page',virtualPartitionMode='page';
 let memoryBaseline=null,memoryImage=null,pendingMemoryFile=null,memoryFileTicket=0;
+let advanced=false,program=[],execution=null,pendingAccess=null,breakpointMatches=0,programAction=null,runRules=null;
+let generatedKind='example',modeDrafts={basic:null,advanced:null},addressHelperValue=0;
+const ADVANCED_HISTORY_LIMIT=500;
 const MEMORY_FILE_MAX_BYTES=4*1024*1024;
 const MEMORY_ROWS=8,ROW_BYTES=16,WINDOW_BYTES=MEMORY_ROWS*ROW_BYTES;
 function config(){const g=vm.snapshot().geometry,values=Object.fromEntries(configKeys.map(k=>[k,k==='cachesEnabled'?$(k).value==='true':k.endsWith('InitMode')||k==='cacheWritePolicy'?$(k).value:Number($(k).value)]));values.cacheCapacity=values.cacheSize/values.lineBytes;delete values.cacheSize;return {...values,endianness:g.endianness,cacheInitSeed:g.cacheInitSeed,tlbInitSeed:g.tlbInitSeed};}
@@ -1474,7 +2038,7 @@ function syncConfig(){
  for(const k of configKeys)$(k).value=String(k==='cacheWays'?g.ways:k==='tlbWays'?g.tlbAssociativity:g[k]);
 }
 function message(id,text,info=false){$(id).textContent=text;$(id).classList.toggle('info',info);}
-function stopRun(){if(runTimer!==null)clearInterval(runTimer);runTimer=null;}
+function stopRun(){if(runTimer!==null)clearInterval(runTimer);runTimer=null;programAction=null;runRules=null;}
 function guard(fn){try{fn();}catch(e){stopRun();message('accessMessage',e.message);render();}}
 function resetCacheView(){cacheViewBase=0;message('cachePageMessage','');}
 function initialView(){selectedVPN=2;memoryBase=memoryPage(vm.snapshot().geometry.ptbr);resetCacheView();}
@@ -1534,15 +2098,33 @@ function loadMemoryFile(){
  try{const {name,image}=pendingMemoryFile;initializeMemory(image,`Loaded ${name}.`);$('memoryFileDialog').close();}
  catch(e){message('memoryFileMessage',e.message);}
 }
-function parseDraft(){try{draft=AtlasSeries.parse($('accessInput').value,vm.snapshot().geometry);parseError=null;message('accessMessage','');}catch(e){draft=[];parseError=e;message('accessMessage',e.message);}renderEditor();}
+function clearPendingAccess(){pendingAccess=null;if($('breakpointDialog').open)$('breakpointDialog').close();}
+function resetProgram(){clearPendingAccess();breakpointMatches=0;execution=advanced?AtlasProgram.createExecution(program):null;message('breakpointMessage','');}
+function parseDraft(){
+ try{if(advanced){program=AtlasProgram.compile($('accessInput').value);draft=[];}else draft=AtlasSeries.parse($('accessInput').value,vm.snapshot().geometry);parseError=null;message('accessMessage','');}
+ catch(e){program=[];draft=[];parseError=e;message('accessMessage',e.message);}
+ resetProgram();renderEditor();
+}
 function editSeries(){
  stopRun();closeTutorial(false);resetMachine();cursor=0;history=[];undos=[];activeContext=null;tutorialFrames=[];initialView();
  needsLoad=true;parseDraft();queue=draft;render();
 }
 function commitSeries(){
- const parsed=AtlasSeries.parse($('accessInput').value,vm.snapshot().geometry);
- if(!parsed.length)throw Error('Enter at least one LW, LH, LB, SW, SH, or SB access.');
- stopRun();closeTutorial(false);resetMachine();queue=parsed;draft=parsed;cursor=0;history=[];undos=[];activeContext=null;tutorialFrames=[];needsLoad=false;parseError=null;initialView();message('accessMessage','');
+ const parsed=advanced?AtlasProgram.compile($('accessInput').value):AtlasSeries.parse($('accessInput').value,vm.snapshot().geometry);
+ if(!parsed.length)throw Error(advanced?'Enter a program to begin.':'Enter at least one LW, LH, LB, SW, SH, or SB access.');
+ stopRun();closeTutorial(false);resetMachine();if(advanced){program=parsed;queue=[];draft=[];}else{queue=parsed;draft=parsed;}cursor=0;history=[];undos=[];activeContext=null;tutorialFrames=[];needsLoad=false;parseError=null;resetProgram();initialView();message('accessMessage','');
+}
+function generatedText(g){const kind=$('advancedExample').value;return advanced?AtlasGenerate.advanced(kind,g,kind==='writeback'?{writebackSeries:writebackExample(g)}:{}):exampleText($('example').value,g);}
+function generateAccessSeries(){
+ const next=generatedText(vm.snapshot().geometry);
+ generatedKind=advanced?'program':'example';lastGenerated=next;$('accessInput').value=next;commitSeries();render();
+}
+function toggleAdvanced(){
+ stopRun();closeTutorial(false);modeDrafts[advanced?'advanced':'basic']={text:$('accessInput').value,lastGenerated,generatedKind};advanced=$('advancedMode').checked;
+ const saved=modeDrafts[advanced?'advanced':'basic'];
+ if(saved){$('accessInput').value=saved.text;lastGenerated=saved.lastGenerated;generatedKind=saved.generatedKind;}
+ else{generatedKind=advanced?'program':'example';lastGenerated=generatedText(vm.snapshot().geometry);$('accessInput').value=lastGenerated;}
+ $('accessInput').scrollTop=0;editSeries();
 }
 function writebackExample(g){
  if(g.cachesEnabled&&g.cacheWritePolicy==='write-through')return '# Write-through + no-write-allocate: stores reach RAM immediately.\n# A cold store misses without filling a cache block.\nSW '+hex(2*g.pageSize+36)+' 0xDEADBEEF\n# A load now fetches the block from RAM.\nLW '+hex(2*g.pageSize+36)+'\n# This store hits and updates both cache and RAM.\nSB '+hex(2*g.pageSize+37)+' 0x12\nLW '+hex(2*g.pageSize+36);
@@ -1576,11 +2158,11 @@ function exampleText(id,g){const at=(v,o=36)=>hex(v*g.pageSize+o);if(id==='intro
  for(let v=4;v<g.physicalFrames-1;v++)lines.push('LW '+at(v));
  lines.push('# Full RAM: evict dirty VPN 0x1, then load this page.','LW '+at(g.physicalFrames-1),'# Reload VPN 0x1; its stored value must survive.','LW '+at(1));return lines.join('\n');
 }
-function loadExample(){stopRun();closeTutorial(false);lastGenerated=exampleText($('example').value,vm.snapshot().geometry);$('accessInput').value=lastGenerated;commitSeries();render();}
+function loadExample(){stopRun();closeTutorial(false);generatedKind='example';lastGenerated=exampleText($('example').value,vm.snapshot().geometry);$('accessInput').value=lastGenerated;commitSeries();render();}
 function resetAll(){stopRun();closeTutorial(false);resetMachine();cursor=0;history=[];undos=[];activeContext=null;tutorialFrames=[];initialView();needsLoad=false;parseDraft();queue=draft;render();}
 function applyConfiguration(changedKey,overrides={}){
  if(changedKey==='tlbCapacity'&&Number($('tlbWays').value)>Number($('tlbCapacity').value))$('tlbWays').value=$('tlbCapacity').value;
- try{if(changedKey==='physicalFrames'&&Number($('physicalFrames').value)===16&&Number($('virtualPages').value)===16){$('virtualPages').value='32';}if(changedKey==='virtualPages'&&Number($('virtualPages').value)===16&&Number($('physicalFrames').value)===16){$('physicalFrames').value='8';}if(typeof changedKey==='string'&&Number($('pageTablePage').value)>=Number($('physicalFrames').value)){$('pageTablePage').value='0';}if(['cacheSize','lineBytes'].includes(changedKey)){const lines=Number($('cacheSize').value)/Number($('lineBytes').value);if(Number($('cacheWays').value)>lines){$('cacheWays').value=String(lines);}}const candidate=new AtlasVMEngine({...config(),...overrides}),g=candidate.snapshot().geometry;stopRun();closeTutorial(false);const regenerate=$('accessInput').value===lastGenerated;applyMappingLayout(candidate);if(mappingMode==='manual'){const next=normalizedMapping(manualMapping,g);manualMapping=next;}carryMemoryBaseline(candidate);window.vm=candidate;cursor=0;history=[];undos=[];activeContext=null;tutorialFrames=[];initialView();if(regenerate){lastGenerated=exampleText($('example').value,g);$('accessInput').value=lastGenerated;}needsLoad=false;parseDraft();queue=draft;syncConfig();message('configMessage','');render();}
+ try{if(changedKey==='physicalFrames'&&Number($('physicalFrames').value)===16&&Number($('virtualPages').value)===16){$('virtualPages').value='32';}if(changedKey==='virtualPages'&&Number($('virtualPages').value)===16&&Number($('physicalFrames').value)===16){$('physicalFrames').value='8';}if(typeof changedKey==='string'&&Number($('pageTablePage').value)>=Number($('physicalFrames').value)){$('pageTablePage').value='0';}if(['cacheSize','lineBytes'].includes(changedKey)){const lines=Number($('cacheSize').value)/Number($('lineBytes').value);if(Number($('cacheWays').value)>lines){$('cacheWays').value=String(lines);}}const candidate=new AtlasVMEngine({...config(),...overrides}),g=candidate.snapshot().geometry;stopRun();closeTutorial(false);const regenerate=$('accessInput').value===lastGenerated;applyMappingLayout(candidate);if(mappingMode==='manual'){const next=normalizedMapping(manualMapping,g);manualMapping=next;}carryMemoryBaseline(candidate);window.vm=candidate;cursor=0;history=[];undos=[];activeContext=null;tutorialFrames=[];initialView();if(regenerate){lastGenerated=generatedText(g);$('accessInput').value=lastGenerated;}needsLoad=false;parseDraft();queue=draft;syncConfig();message('configMessage','');render();}
  catch(e){message('configMessage',e.message);}
 }
 function initializeStructure(which){
@@ -1593,7 +2175,7 @@ function shuffleMappings(){
  const before=vm.snapshot().pages.slice(0,4).map(p=>p.pfn).join(',');let seed=Math.floor(Math.random()*0x100000000);
  stopRun();closeTutorial(false);mappingMode='shuffle';manualMapping=null;for(let n=0;n<32;n++){mappingSeed=(seed+n)>>>0;vm.shuffleMappings(mappingSeed);if(vm.snapshot().pages.slice(0,4).map(p=>p.pfn).join(',')!==before)break;}
  if(memoryBaseline){const g=vm.snapshot().geometry,bytes=memoryBaseline.snapshot.frames.filter(f=>f.pfn!==g.pageTablePage).flatMap(f=>f.bytes.map((value,offset)=>({address:f.pfn*g.pageSize+offset,value})));vm.initializeMemory({mode:'zero',seed:null,bytes});memoryBaseline=vm.checkpoint();}
- if(regenerate){lastGenerated=exampleText($('example').value,vm.snapshot().geometry);$('accessInput').value=lastGenerated;}
+ if(regenerate){lastGenerated=generatedText(vm.snapshot().geometry);$('accessInput').value=lastGenerated;}
  cursor=0;history=[];undos=[];activeContext=null;tutorialFrames=[];initialView();needsLoad=false;parseDraft();queue=draft;message('configMessage','');render();
 }
 function setStartingMappings(mapping,mode){
@@ -1603,7 +2185,7 @@ function setStartingMappings(mapping,mode){
  stopRun();closeTutorial(false);window.vm=candidate;mappingMode=mode;mappingSeed=null;manualMapping=mode==='manual'?mapping.slice():null;
  if(memoryBaseline)memoryBaseline=vm.checkpoint();
  cursor=0;history=[];undos=[];activeContext=null;tutorialFrames=[];initialView();needsLoad=false;
- if(regenerate){lastGenerated=exampleText($('example').value,vm.snapshot().geometry);$('accessInput').value=lastGenerated;}
+ if(regenerate){lastGenerated=generatedText(vm.snapshot().geometry);$('accessInput').value=lastGenerated;}
  parseDraft();queue=draft;message('configMessage','');render();
 }
 function startEmpty(){setStartingMappings(Array(vm.snapshot().geometry.virtualPages).fill(null),'empty');}
@@ -1619,22 +2201,105 @@ function renderManualMappings(){
 function saveManualMappings(){try{setStartingMappings(manualDraft,'manual');$('manualMappingDialog').close();}catch(e){message('manualMappingMessage',e.message);}}
 function showIntro(){stopRun();closeTutorial(false);introOpen=true;$('introOverlay').hidden=false;$('introBackdrop').hidden=false;document.body.classList.add('intro-active');document.querySelectorAll('header,main').forEach(el=>el.inert=true);window.scrollTo?.({top:0,behavior:'instant'});$('introContent').focus({preventScroll:true});render();}
 function closeIntro(enableTutorial){introOpen=false;$('introOverlay').hidden=true;$('introBackdrop').hidden=true;document.body.classList.remove('intro-active');document.querySelectorAll('header,main').forEach(el=>el.inert=false);if(typeof enableTutorial==='boolean')setTutorial(enableTutorial);$('introContent').blur();$('introClose').blur();}
+// Advanced programs run one bounded slice at a time. A Run/Continue owns one
+// undo checkpoint; previewing a breakpoint uses a separate VM instance.
+function advancedUndo(label){
+ const saved={advanced:true,label,checkpoint:vm.checkpoint(),cursor,history:history.slice(),execution:AtlasProgram.clone(execution),pendingAccess:pendingAccess?JSON.parse(JSON.stringify(pendingAccess)):null,breakpointMatches,cacheViewBase,memoryBase,selectedVPN};
+ undos.push(saved);if(undos.length>100)undos.shift();return saved;
+}
+function restoreAdvancedUndo(saved){
+ vm.restore(saved.checkpoint);cursor=saved.cursor;history=saved.history.slice();execution=AtlasProgram.clone(saved.execution);clearPendingAccess();pendingAccess=saved.pendingAccess?JSON.parse(JSON.stringify(saved.pendingAccess)):null;breakpointMatches=saved.breakpointMatches;cacheViewBase=saved.cacheViewBase;memoryBase=saved.memoryBase;selectedVPN=saved.selectedVPN;activeContext=null;tutorialFrames=[];message('accessMessage','');render();
+}
+function breakpointRules(){
+ const g=vm.snapshot().geometry,rules={tlbMiss:$('breakOnTLBMiss').checked,miss:$('breakOnMiss').checked,pageFault:$('breakOnPageFault').checked,eviction:$('breakOnEviction').checked,writeBack:$('breakOnWriteBack').checked,pageOut:$('breakOnPageOut').checked,address:$('breakOnAddress').checked,mode:$('breakMatchMode').value||'every'};
+ if(rules.address){
+  const number=(id)=>{const raw=$(id).value.trim();if(!/^(?:0x[0-9a-f]+|0b[01]+|[0-9]+)$/i.test(raw))throw Error('Enter a decimal, hexadecimal, or binary virtual address.');const value=Number(raw);if(!Number.isSafeInteger(value)||value<0||value>=g.virtualPages*g.pageSize)throw Error('Breakpoint addresses must fit in the virtual address space.');return value;};
+  rules.start=number('breakAddressStart');rules.end=$('breakAddressEnd').value.trim()?number('breakAddressEnd'):rules.start;if(rules.start>rules.end)throw Error('Breakpoint start must be less than or equal to its end.');
+ }
+ if(rules.mode!=='every'){const raw=$('breakMatchCount').value.trim();rules.count=Number(raw);if(!/^[0-9]+$/.test(raw)||!Number.isSafeInteger(rules.count)||rules.count<(rules.mode==='nth'?1:0))throw Error(rules.mode==='nth'?'Nth match must be a positive whole number.':'Skip count must be a nonnegative whole number.');}
+ return rules;
+}
+function breakpointPlan(item,rules){
+ const matches=[];let result=null;
+ if(rules.tlbMiss||rules.miss||rules.pageFault||rules.eviction||rules.writeBack||rules.pageOut){
+  const preview=new AtlasVMEngine();preview.restore(vm.checkpoint());preview.begin(item.va,item.op,item.value,item.width);let eviction=false;
+  while(!preview.snapshot().access.done){const before=preview.snapshot();preview.next();const after=preview.snapshot();if(after.current.stage==='line-fill'){const slot=after.cache.findIndex(line=>line.valid&&line.base===after.current.address);if(slot>=0&&before.cache[slot]?.valid)eviction=true;}}
+  result=preview.snapshot();const has=stage=>result.events.some(e=>e.stage===stage);
+  if(rules.tlbMiss&&has('tlb-miss'))matches.push('TLB miss');
+  if(rules.miss&&has('cache-miss'))matches.push('cache miss');
+  if(rules.pageFault&&has('page-fault'))matches.push('page fault');
+  if(rules.eviction&&eviction)matches.push('valid cache-line eviction');
+  if(rules.writeBack&&(has('cache-writeback')||has('page-cache-writeback')))matches.push('cache write-back to RAM');
+  if(rules.pageOut&&has('page-out'))matches.push('page-out to disk');
+ }
+ if(rules.address&&item.va<=rules.end&&item.va+item.width-1>=rules.start)matches.push('virtual address match');
+ if(!matches.length)return null;
+ breakpointMatches++;
+ const stop=rules.mode==='skip'?breakpointMatches>rules.count:rules.mode==='nth'?breakpointMatches===rules.count:true;
+ return stop?{access:{...item},matches,matchNumber:breakpointMatches,pa:result?.access.pa??null}:null;
+}
+function pendingDescription(){if(!pendingAccess)return '';const p=pendingAccess,a=p.access;return `Before ${opName(a)} ${hex(a.va)}${a.op==='write'?' '+hex(a.value,a.width*2):''} (line ${a.sourceLine+1}). Match #${p.matchNumber}: ${p.matches.join(', ')}. The access has not executed.`;}
+function pauseBeforeAccess(plan){
+ pendingAccess=plan;execution.paused=true;execution.pauseLine=plan.access.sourceLine;stopRun();render();$('breakpointDescription').textContent=pendingDescription();$('breakpointDialog').showModal();
+}
+function beginAdvancedAccess(item){
+ const before=vm.checkpoint();activeContext={cursor,historyLength:history.length,checkpoint:before,cacheViewBase,item:{...item},programBefore:AtlasProgram.clone(execution),committed:false};
+ vm.begin(item.va,item.op,item.value,item.width);selectedVPN=vm.snapshot().access.vpn;tutorialFrames=[vm.checkpoint()];tutorialIndex=0;
+ if(programAction?.singleStep&&tutorialEnabled){const preview=new AtlasVMEngine();preview.restore(vm.checkpoint());tutorialTotal=preview.finish().events.length;}
+}
+function advancedPump(){
+ if(!programAction||!execution)return;
+ const singleStep=programAction.singleStep,now=()=>typeof performance!=='undefined'&&typeof performance.now==='function'?performance.now():Date.now(),started=now();
+ try{
+  // Yield after about 12 ms or eight accesses. Always allow the first access.
+  for(let count=0;count<8&&(count===0||now()-started<12);count++){
+   const event=pendingAccess?{kind:'access',access:pendingAccess.access}:AtlasProgram.next(program,execution,vm.snapshot().geometry,{stopAtPause:!singleStep,budget:2000});
+   if(event.kind==='yield'){render();return;}
+   if(event.kind==='pause'||event.kind==='end'){stopRun();render();return;}
+   if(!singleStep&&!pendingAccess){const plan=breakpointPlan(event.access,runRules);if(plan){pauseBeforeAccess(plan);return;}}
+   clearPendingAccess();execution.paused=false;execution.pauseLine=null;beginAdvancedAccess(event.access);
+   if(singleStep&&tutorialEnabled){openTutorial();return;}
+   vm.finish();reconcileCompletion();
+   if(history.length>ADVANCED_HISTORY_LIMIT)history.splice(0,history.length-ADVANCED_HISTORY_LIMIT);
+   if(singleStep||execution.finished||vm.snapshot().access.error){stopRun();render();followTransfer(vm.snapshot());renderMemory(vm.snapshot());return;}
+  }
+  render();
+ }catch(e){execution.error=true;execution.errorLine=e.sourceLine??null;stopRun();message('accessMessage',e.message);render();}
+}
+function startAdvancedAction(singleStep){
+ if(runTimer!==null){execution.paused=true;execution.pauseLine=program[execution.pc]?.line??null;stopRun();render();return;}
+ if(parseError)return;
+ if(needsLoad){try{commitSeries();}catch(e){message('accessMessage',e.message);render();return;}}
+ if(!execution||execution.finished||execution.error)return;
+ if(tutorialOpen){closeTutorial();if(execution.finished)return;}
+ let rules=null;try{if(!singleStep)rules=breakpointRules();message('breakpointMessage','');}catch(e){message('breakpointMessage',e.message);render();return;}
+ advancedUndo(singleStep?'Step':execution.paused?'Continue':'Run');
+ programAction={singleStep};runRules=rules;execution.paused=false;execution.pauseLine=null;
+ runTimer=setInterval(advancedPump,16);advancedPump();
+}
+function changeBreakpoints(){
+ breakpointMatches=0;if(runTimer!==null&&advanced&&execution){execution.paused=true;execution.pauseLine=program[execution.pc]?.line??null;stopRun();}
+ // A previously inspected access remains pending and executes exactly once.
+ try{breakpointRules();message('breakpointMessage','');}catch(e){message('breakpointMessage',e.message);}
+ render();
+}
 function beginNext(){
  if(needsLoad)commitSeries();
  if(parseError)throw parseError;
  if(cursor>=queue.length)return false;
  const item=queue[cursor],before=vm.checkpoint();
- activeContext={cursor,historyLength:history.length,checkpoint:before,cacheViewBase,committed:false};undos.push(activeContext);if(undos.length>100)undos.shift();
+ activeContext={cursor,historyLength:history.length,checkpoint:before,cacheViewBase,item,committed:false};undos.push(activeContext);if(undos.length>100)undos.shift();
  vm.begin(item.va,item.op,item.value,item.width);selectedVPN=vm.snapshot().access.vpn;tutorialFrames=[vm.checkpoint()];tutorialIndex=0;
  const preview=new AtlasVMEngine();preview.restore(vm.checkpoint());tutorialTotal=preview.finish().events.length;
  return true;
 }
 function reconcileCompletion(){
  if(!activeContext)return;const s=vm.snapshot(),a=s.access;
- if(a?.done&&!activeContext.committed){const old=activeContext.checkpoint.snapshot.stats;history.push({number:activeContext.cursor+1,sourceLine:queue[activeContext.cursor]?.sourceLine,access:{...a},pageIn:s.stats.pageInBytes-old.pageInBytes,pageOut:s.stats.pageOutBytes-old.pageOutBytes,pte:s.stats.pteBytes-old.pteBytes,events:s.events.map(e=>({...e}))});cursor=activeContext.cursor+1;activeContext.committed=true;followCache(s);}
- else if(a&&!a.done&&activeContext.committed){history.length=activeContext.historyLength;cursor=activeContext.cursor;activeContext.committed=false;}
+ if(a?.done&&!activeContext.committed){const old=activeContext.checkpoint.snapshot.stats;history.push({number:activeContext.cursor+1,sourceLine:activeContext.item?.sourceLine,access:{...a},pageIn:s.stats.pageInBytes-old.pageInBytes,pageOut:s.stats.pageOutBytes-old.pageOutBytes,pte:s.stats.pteBytes-old.pteBytes,events:s.events.map(e=>({...e}))});cursor=activeContext.cursor+1;activeContext.committed=true;if(advanced&&activeContext.programBefore){execution=AtlasProgram.clone(activeContext.programBefore);execution.pc++;execution.finished=execution.pc>=program.length;execution.paused=false;execution.pauseLine=null;}followCache(s);}
+ else if(a&&!a.done&&activeContext.committed){history.length=activeContext.historyLength;cursor=activeContext.cursor;activeContext.committed=false;if(advanced&&activeContext.programBefore)execution=AtlasProgram.clone(activeContext.programBefore);}
 }
 function stepAccess(){
+ if(advanced){startAdvancedAction(true);return;}
  stopRun();let a=vm.snapshot().access;if(!a||a.done){if(!beginNext()){render();return;}}
  if(tutorialEnabled){openTutorial();return;}
  vm.finish();reconcileCompletion();render();followTransfer(vm.snapshot());renderMemory(vm.snapshot());
@@ -1644,8 +2309,8 @@ function runOne(){
  const a=vm.snapshot().access;if(!a||a.done){if(!beginNext()){stopRun();render();return;}}
  vm.finish();reconcileCompletion();render();if(cursor>=queue.length||vm.snapshot().access.error){stopRun();render();}
 }
-function toggleRun(){if(runTimer!==null){stopRun();render();return;}if(tutorialEnabled)return;if(needsLoad)commitSeries();runOne();if(cursor<queue.length&&!vm.snapshot().access?.error){runTimer=setInterval(()=>guard(runOne),350);render();}}
-function undoAccess(){stopRun();closeTutorial(false);const old=undos.pop();if(!old)return;vm.restore(old.checkpoint);cacheViewBase=old.cacheViewBase??0;message('cachePageMessage','');cursor=old.cursor;history.length=old.historyLength;activeContext=null;tutorialFrames=[];selectedVPN=queue[cursor]?Math.floor(queue[cursor].va/vm.snapshot().geometry.pageSize):2;memoryBase=memoryPage(vm.snapshot().geometry.ptbr);message('accessMessage','');render();}
+function toggleRun(){if(advanced){startAdvancedAction(false);return;}if(runTimer!==null){stopRun();render();return;}if(tutorialEnabled)return;if(needsLoad)commitSeries();runOne();if(cursor<queue.length&&!vm.snapshot().access?.error){runTimer=setInterval(()=>guard(runOne),350);render();}}
+function undoAccess(){stopRun();closeTutorial(false);const old=undos.pop();if(!old)return;if(old.advanced){restoreAdvancedUndo(old);return;}vm.restore(old.checkpoint);cacheViewBase=old.cacheViewBase??0;message('cachePageMessage','');cursor=old.cursor;history.length=old.historyLength;activeContext=null;tutorialFrames=[];selectedVPN=queue[cursor]?Math.floor(queue[cursor].va/vm.snapshot().geometry.pageSize):2;memoryBase=memoryPage(vm.snapshot().geometry.ptbr);message('accessMessage','');render();}
 function microNext(){if(!tutorialOpen)return;const a=vm.snapshot().access;if(a?.done){closeTutorial();return;}
  if(tutorialIndex<tutorialFrames.length-1){tutorialIndex++;vm.restore(tutorialFrames[tutorialIndex]);}else{vm.next();tutorialFrames.push(vm.checkpoint());tutorialIndex++;}
  reconcileCompletion();followTransfer(vm.snapshot());render();showTutorial();
@@ -1683,7 +2348,7 @@ function tutorialLesson(s){
  const cachePartition=()=>lessonBits(`Physical address → cache lookup`,[{label:'Tag',tone:'vpn',bits:g.cacheTagBits,value:tag},...(g.cacheIndexBits?[{label:'Index',tone:'ppn',bits:g.cacheIndexBits,value:set,decimal:true}]:[]),{label:'Block offset',tone:'offset',bits:g.cacheOffsetBits,value:blockOffset}]);
  const writeBack=g.cacheWritePolicy==='write-back',storeBypass=a.op==='write'&&!writeBack&&a.cacheResult==='miss',tlbSet=a.vpn%g.tlbSets;
  const tlbPartition=()=>lessonBits('Virtual address → TLB lookup',[{label:'Tag',tone:'vpn',bits:g.tlbTagBits,value:Math.floor(a.vpn/g.tlbSets),active:true},...(g.tlbIndexBits?[{label:'Index',tone:'ppn',bits:g.tlbIndexBits,value:tlbSet,active:true,decimal:true}]:[]),{label:'Page offset',tone:'offset',bits:g.offsetBits,value:a.offset}]);
- const tlbSelection=()=>g.tlbIndexBits?`<p>The low <strong>${g.tlbIndexBits} VPN bit${g.tlbIndexBits===1?'':'s'}</strong> select <strong>TLB set ${tlbSet}</strong>. Compare the upper <strong>${g.tlbTagBits} VPN tag bits</strong> only within its ${g.tlbAssociativity} way${g.tlbAssociativity===1?'':'s'}. The table displays the full VPN for clarity; the set already fixes its low bits.</p>`:'<p>This TLB is fully associative: all entries share one set, so there are <strong>no TLB index bits</strong>. Compare the full VPN against its valid entries.</p>';
+ const tlbSelection=()=>g.tlbIndexBits?`<p>The low <strong>${g.tlbIndexBits} VPN bit${g.tlbIndexBits===1?'':'s'}</strong> select <strong>TLB set ${tlbSet}</strong>. Compare the upper <strong>${g.tlbTagBits} VPN tag bits</strong> only within its ${g.tlbAssociativity} way${g.tlbAssociativity===1?'':'s'}. The table shows the full VPN followed by its tag in parentheses; the set already fixes the low VPN bits.</p>`:'<p>This TLB is fully associative: all entries share one set, so there are <strong>no TLB index bits</strong>. Compare the full VPN against its valid entries.</p>';
  const selection=()=>lessonPanel('Select the requested bytes',`<p>Start at block offset <strong>${hexNumber(blockOffset)}</strong>. This ${kind} uses ${a.width===1?'that one byte':`offsets <strong>${hexNumber(blockOffset)}–${hexNumber(blockOffset+a.width-1)}</strong>`}, at physical address <strong>${range(a.pa,a.width)}</strong>.</p><p>${a.width===1?'A byte needs no endian ordering.':`In <strong>${g.endianness}-endian</strong> order, the ${g.endianness==='little'?'least':'most'} significant byte is at the lowest address.`}</p>`,'offset');
  switch(e.stage){
   case 'request':return `${request}<p>The CPU supplies a <strong>virtual address</strong>. Before ${a.op==='write'?'storing the value':'reading the value'}, the MMU must find the corresponding location in physical memory.</p>${lessonPanel('Address versus data','<p>An address identifies a location. It is not the value stored at that location. Translation changes the address; the data transfer comes later.</p>')}`;
@@ -1740,9 +2405,31 @@ function showTutorial(first=false){const s=vm.snapshot(),e=s.current,a=s.access,
  $('tutorialContent').scrollTop=0;positionTutorial();if(first)$('tutorialNext').focus({preventScroll:true});
 }
 function positionTutorial(){if(!tutorialOpen||!focusTarget)return;const p=$('tutorialPopover');if(window.innerWidth<=720){p.style.top='';p.style.left='';return;}const side=$('accessPanel').getBoundingClientRect(),rect=focusTarget.getBoundingClientRect(),height=p.getBoundingClientRect().height;p.style.left=Math.max(18,Math.min(side.left,window.innerWidth-p.getBoundingClientRect().width-18))+'px';p.style.top=Math.max(16,Math.min(window.innerHeight-height-16,rect.top+(Math.min(rect.height,window.innerHeight)-height)/2))+'px';}
+function updateAddressHelperValue(g){
+ $('addressHelperHex').textContent=hex(addressHelperValue,Math.ceil(g.vaBits/4));
+ $('addressHelperDecoded').textContent=`VPN ${hexNumber(Math.floor(addressHelperValue/g.pageSize))} · Offset ${hexNumber(addressHelperValue%g.pageSize)}`;
+}
+function renderAddressHelper(g){
+ addressHelperValue%=2**g.vaBits;
+ $('addressHelperFields').innerHTML=[{name:'VPN',bits:g.vpnBits,cls:'vpn'},{name:'Offset',bits:g.offsetBits,cls:'offset'}].map(f=>`<div class="address-helper-field ${f.cls}" style="flex:${f.bits} 1 0" title="${f.name}: ${f.bits} bits">${f.name} · ${f.bits} bits</div>`).join('');
+ $('addressHelperBits').style.gridTemplateColumns=`repeat(${g.vaBits},minmax(0,1fr))`;
+ $('addressHelperBits').innerHTML=bin(addressHelperValue,g.vaBits).split('').map((value,i)=>{
+  const bit=g.vaBits-1-i,isVPN=bit>=g.offsetBits,field=isVPN?'VPN':'Offset';
+  return `<label class="address-helper-bit ${isVPN?'vpn':'offset'}" title="Bit ${bit} · ${field}"><input type="checkbox" data-helper-bit="${bit}"${value==='1'?' checked':''} aria-label="Bit ${bit} · ${field}"></label>`;
+ }).join('');
+ updateAddressHelperValue(g);
+}
+function changeAddressHelper(event){
+ const box=event.target.closest('input[data-helper-bit]');if(!box)return;
+ const bit=Number(box.dataset.helperBit),g=vm.snapshot().geometry;
+ if(!Number.isInteger(bit)||bit<0||bit>=g.vaBits)return;
+ const weight=2**bit,wasSet=Math.floor(addressHelperValue/weight)%2===1;
+ if(wasSet!==box.checked)addressHelperValue+=box.checked?weight:-weight;
+ updateAddressHelperValue(g);
+}
 function bitGroup(n,bits,kind,label,id,bitBase=0,pattern=null,active=false,decimal=false){return `<div class="bit-group ${kind}${active?' tutorial-emphasis':''}" id="${id}"><div class="bit-cells">${(pattern??(n==null?'?'.repeat(bits):bin(n,bits))).split('').map((c,i)=>`<span title="Address bit ${bitBase+bits-i-1}${c==='?'?' · awaiting page translation':''}"${c==='?'?' class="bit-unknown"':''}>${c}</span>`).join('')}</div><div class="bit-caption">${label}${n==null?'':' '+(decimal?n:hexNumber(n))} · ${bits} bits</div></div>`;}
-function displayAccess(s){return s.access||queue[cursor]&&{...queue[cursor],vpn:Math.floor(queue[cursor].va/s.geometry.pageSize),offset:queue[cursor].va%s.geometry.pageSize,pa:null,done:false,pending:true};}
-function renderAddress(s){const a=displayAccess(s),g=s.geometry;$('currentAddress').textContent=a?`${opName(a)} ${hex(a.va)}${a.op==='write'?' ← '+hex(a.value,(a.width||4)*2):''}`:'No access queued';$('currentSub').textContent=a?`${a.pending?'Next request':'Access '+(activeContext?activeContext.cursor+1:Math.max(1,cursor))} · VPN ${hexNumber(a.vpn)} · offset ${hexNumber(a.offset)} · ${a.width||4}-byte ${a.op}`:'Write an access series and press Step.';
+function displayAccess(s){if(advanced&&pendingAccess){const a=pendingAccess.access;return {...a,vpn:Math.floor(a.va/s.geometry.pageSize),offset:a.va%s.geometry.pageSize,pa:null,done:false,pending:true};}return s.access||queue[cursor]&&{...queue[cursor],vpn:Math.floor(queue[cursor].va/s.geometry.pageSize),offset:queue[cursor].va%s.geometry.pageSize,pa:null,done:false,pending:true};}
+function renderAddress(s){const a=displayAccess(s),g=s.geometry;$('currentAddress').textContent=a?`${opName(a)} ${hex(a.va)}${a.op==='write'?' ← '+hex(a.value,(a.width||4)*2):''}`:advanced?'Program ready':'No access queued';$('currentSub').textContent=a?`${a.pending?'Next request':'Access '+(activeContext?activeContext.cursor+1:Math.max(1,cursor))} · VPN ${hexNumber(a.vpn)} · offset ${hexNumber(a.offset)} · ${a.width||4}-byte ${a.op}`:'Write an access series and press Step.';
  $('currentResult').className='result-badge'+(a?.done?(a.error?' bad':' good'):'');$('currentResult').textContent=!a?'Ready':a.pending?'Not started':a.error?'Access denied':a.done?(a.op==='write'?'Stored ':'Loaded ')+hex(a.result,(a.width||4)*2):'In progress';
  const offset=a?.offset??0,pfn=a?.pa!=null?Math.floor(a.pa/g.pageSize):null;
  const blockMode=g.cachesEnabled&&physicalPartitionMode==='block',tlbMode=g.cachesEnabled&&g.tlbSets>1&&virtualPartitionMode==='tlb',pa=a?.pa??null;
@@ -1801,8 +2488,8 @@ function tlbTable(s,{lookup=false,protect=false}={}){
   }
   return field==='wp'&&protect&&(!entry||entry.valid&&entry.setIndex===set&&entry.vpn===s.access?.vpn)?' tutorial-field-active':'';
  };
- const vpnTip=showSet?`Full VPN shown for clarity. Low ${g.tlbIndexBits} bits select the set; compare the upper ${g.tlbTagBits} tag bits within it.`:'Virtual page number compared on lookup';
- return `<table class="cache-table ${lookup?'metadata-lookup':''} ${hit?'lookup-hit':''}" aria-label="TLB entries"><thead><tr>${showSet?'<th>Set</th>':'<th>Slot</th>'}${showWay?'<th>Way</th>':''}<th data-field="valid" class="${cls('valid').trim()}" title="V = 0: ignore all other stored bits. V = 1: this entry can match.">V</th><th data-field="wp" class="${cls('wp').trim()}" title="Write protect">WP</th><th title="LRU rank within this set: 0 is most recently used. Invalid entries are filled first.">LRU</th><th data-field="vpn" class="${cls('vpn').trim()}" title="${vpnTip}">VPN</th><th title="Physical page number returned by this translation">PPN</th></tr></thead><tbody>${s.tlb.map((t,slot)=>`<tr data-tlb-slot="${slot}" data-tlb-set="${t.setIndex}" class="cache-row ${!t.valid?'empty-slot':t.setIndex===set&&t.vpn===s.access?.vpn?'relevant current-line':''} ${showSet&&t.wayIndex===g.tlbAssociativity-1?'set-end':''}"><td>${showSet?t.setIndex:slot}</td>${showWay?`<td>${t.wayIndex}</td>`:''}<td data-field="valid" class="cache-valid-cell ${t.valid?'valid-one':'valid-zero'}${cls('valid',t)}">${+t.valid}</td><td data-field="wp" class="${cls('wp',t).trim()}">${exposed(t)?+t.writeProtected:'—'}</td><td>${exposed(t)?t.valid?rank(t):0:'—'}</td><td data-field="vpn" class="mono${cls('vpn',t)}">${exposed(t)?hexNumber(t.vpn):'—'}</td><td class="mono">${exposed(t)?hexNumber(t.pfn):'—'}</td></tr>`).join('')}</tbody></table>`;
+ const vpnTip=showSet?`Full VPN followed by its hexadecimal tag in parentheses. Low ${g.tlbIndexBits} bits select the set; compare the upper ${g.tlbTagBits} tag bits within it.`:'Virtual page number compared on lookup';
+ return `<table class="cache-table ${lookup?'metadata-lookup':''} ${hit?'lookup-hit':''}" aria-label="TLB entries"><thead><tr>${showSet?'<th>Set</th>':'<th>Slot</th>'}${showWay?'<th>Way</th>':''}<th data-field="valid" class="${cls('valid').trim()}" title="V = 0: ignore all other stored bits. V = 1: this entry can match.">V</th><th data-field="wp" class="${cls('wp').trim()}" title="Write protect">WP</th><th title="LRU rank within this set: 0 is most recently used. Invalid entries are filled first.">LRU</th><th data-field="vpn" class="${cls('vpn').trim()}" title="${vpnTip}">${showSet?'VPN (tag)':'VPN'}</th><th title="Physical page number returned by this translation">PPN</th></tr></thead><tbody>${s.tlb.map((t,slot)=>`<tr data-tlb-slot="${slot}" data-tlb-set="${t.setIndex}" class="cache-row ${!t.valid?'empty-slot':t.setIndex===set&&t.vpn===s.access?.vpn?'relevant current-line':''} ${showSet&&t.wayIndex===g.tlbAssociativity-1?'set-end':''}"><td>${showSet?t.setIndex:slot}</td>${showWay?`<td>${t.wayIndex}</td>`:''}<td data-field="valid" class="cache-valid-cell ${t.valid?'valid-one':'valid-zero'}${cls('valid',t)}">${+t.valid}</td><td data-field="wp" class="${cls('wp',t).trim()}">${exposed(t)?+t.writeProtected:'—'}</td><td>${exposed(t)?t.valid?rank(t):0:'—'}</td><td data-field="vpn" class="mono${cls('vpn',t)}">${exposed(t)?hexNumber(t.vpn)+(showSet?' ('+hexNumber(Math.floor(t.vpn/g.tlbSets))+')':''):'—'}</td><td class="mono">${exposed(t)?hexNumber(t.pfn):'—'}</td></tr>`).join('')}</tbody></table>`;
 }
 // A cache page uses the same row count as the configured TLB. Navigation is
 // display-only; access events reveal a candidate, hit, fill, or write-back line.
@@ -1906,9 +2593,18 @@ function renderMemory(s){const g=s.geometry,range=transferRange(s),end=Math.min(
  $('pteDecoder').innerHTML=`<div class="panel-head"><h3>Page Table [${hexNumber(selectedVPN)}] · ${g.pteBits} bits</h3><span class="badge purple">PA ${hex(p.address)}${g.pteBytes>1?'–'+hex(p.address+g.pteBytes-1):''}</span></div><p><span class="mono">${p.bytes.map(byte).join(' ')}</span> → <strong class="mono">${hex(raw,g.pteBytes*2)}</strong> (${g.endianness}-endian)</p>${pteDiagram(s,p)}<p>${!p.present?'V = 0. OS bookkeeping locates this page on disk.':`V = 1 → physical page ${hexNumber(p.pfn)}. ${p.writeProtected?'Write protected.':'Reads and writes allowed.'}`}</p><div class="pte-equation">PTE address = PTBR + VPN × ${hexNumber(g.pteBytes)} = ${hex(g.ptbr)} + ${hexNumber(selectedVPN)} × ${hexNumber(g.pteBytes)} = ${hex(p.address)}<br>PPN = PTE &amp; 0xF · V / D / WP = bits ${g.pteBits-1} / ${g.pteBits-2} / ${g.pteBits-3}</div>`;
  $('memoryReadout').textContent=range?`Current highlighted range: physical ${hex(range.base)}–${hex(range.base+range.bytes-1)} (${range.bytes} B). ${range.base<memoryBase||range.base+range.bytes>end?'Some or all of this range lies outside the displayed window.':''}`:'Inspect the page-table bytes or choose a physical page.';
 }
-function editorSyntax(line){const cut=line.search(/#|\/\//),body=cut<0?line:line.slice(0,cut),comment=cut<0?'':line.slice(cut);let out='',last=0;const pattern=/\b(?:LW|LH|LB|SW|SH|SB)\b|\b(?:0[xX][\da-fA-F_]+|0[bB][01_]+|\d[\d_]*)\b/gi;for(const m of body.matchAll(pattern)){out+=esc(body.slice(last,m.index));out+=`<span class="${/^[A-Za-z]+$/.test(m[0])?'syntax-op':'syntax-num'}">${esc(m[0])}</span>`;last=m.index+m[0].length;}return out+esc(body.slice(last))+(comment?'<span class="syntax-comment">'+esc(comment)+'</span>':'');}
-function renderEditor(){const lines=$('accessInput').value.replace(/\r/g,'').split('\n'),a=vm.snapshot().access,at=a?(activeContext?.cursor??Math.max(0,cursor-1)):null,list=needsLoad?draft:queue,currentLine=at===null?null:list[at]?.sourceLine,queuedLine=!a?list[cursor]?.sourceLine:null;
- const finished=new Set(!needsLoad?history.map(h=>h.sourceLine):[]);$('accessBackdrop').innerHTML=lines.map((line,i)=>`<span class="editor-line ${parseError?.sourceLine===i?'invalid':i===currentLine?'current':i===queuedLine?'queued':finished.has(i)?'done':''}">${editorSyntax(line)||' '}</span>`).join('')+'\n';$('editorCount').textContent=`${(needsLoad?draft:queue).length} requests`;syncEditor();
+function editorSyntax(line){
+ const cut=line.search(/#|\/\//),body=cut<0?line:line.slice(0,cut),comment=cut<0?'':line.slice(cut);let out='',last=0;
+ const pattern=advanced?/\b(?:0[xX][\da-fA-F_]+|0[bB][01_]+|\d[\d_]*|[A-Za-z_][A-Za-z_0-9]*)\b/g:/\b(?:LW|LH|LB|SW|SH|SB)\b|\b(?:0[xX][\da-fA-F_]+|0[bB][01_]+|\d[\d_]*)\b/gi;
+ for(const m of body.matchAll(pattern)){out+=esc(body.slice(last,m.index));const token=m[0],kind=/^(LW|LH|LB|SW|SH|SB)$/i.test(token)?'op':/^(while|if|else|end|pause)$/i.test(token)?'keyword':/^[A-Za-z_]/.test(token)?'variable':'num';out+=`<span class="syntax-${kind}">${esc(token)}</span>`;last=m.index+token.length;}
+ return out+esc(body.slice(last))+(comment?'<span class="syntax-comment">'+esc(comment)+'</span>':'');
+}
+function renderEditor(){
+ const lines=$('accessInput').value.replace(/\r/g,'').split('\n'),a=vm.snapshot().access,at=a?(activeContext?.cursor??Math.max(0,cursor-1)):null,list=needsLoad?draft:queue;
+ const currentLine=advanced?(execution?.paused?execution.pauseLine:activeContext?.item?.sourceLine??history.at(-1)?.sourceLine):at===null?null:list[at]?.sourceLine;
+ const queuedLine=advanced?(!a?program[execution?.pc??0]?.line:null):!a?list[cursor]?.sourceLine:null,errorLine=parseError?.sourceLine??(execution?.error?execution.errorLine:null);
+ const finished=new Set(!needsLoad?history.map(h=>h.sourceLine):[]);$('accessBackdrop').innerHTML=lines.map((line,i)=>`<span class="editor-line ${errorLine===i?'invalid':i===currentLine?'current':i===queuedLine?'queued':finished.has(i)?'done':''}">${editorSyntax(line)||' '}</span>`).join('')+'\n';
+ $('editorCount').textContent=advanced?`${cursor} accesses`:`${(needsLoad?draft:queue).length} requests`;syncEditor();
 }
 function flashByteOrderingHeaders(){
  for(const header of document.querySelectorAll('#memoryHead th[title^="Byte offset"], #cacheView .cache-col-data')){
@@ -1919,18 +2615,27 @@ function flashByteOrderingHeaders(){
 function syncEditor(){const input=$('accessInput'),back=$('accessBackdrop');back.style.width=input.clientWidth+'px';back.style.height=input.clientHeight+'px';back.scrollTop=input.scrollTop;back.scrollLeft=input.scrollLeft;}
 function renderStats(s){
  const st=s.stats,on=s.geometry.cachesEnabled,rate=(hit,miss)=>hit+miss?(100*hit/(hit+miss)).toFixed(0)+'%':'—';
- const metrics=[['Completed',history.length],...(on?[['TLB hit rate',rate(st.tlbHits,st.tlbMisses)],['Cache hit rate',rate(st.cacheHits,st.cacheMisses)]]:[]),['Page faults',st.pageFaults]];
+ const metrics=[['Completed',advanced?cursor:history.length],...(on?[['TLB hit rate',rate(st.tlbHits,st.tlbMisses)],['Cache hit rate',rate(st.cacheHits,st.cacheMisses)]]:[]),['Page faults',st.pageFaults]];
  $('summary').innerHTML=metrics.map(([label,value])=>`<div class="stat ${label==='Page faults'?'fault':''}"><strong>${value}</strong><span>${label}</span></div>`).join('');
 }
 function resultTag(result){return result?`<span class="pill ${result}">${result.toUpperCase()}</span>`:'—';}
 function renderHistory(){ $('historyBody').innerHTML=history.length?[...history].reverse().map(h=>{const a=h.access;return `<tr><td>${h.number}</td><td><span class="pill ${a.op==='write'?'write':'read'}">${opName(a)}</span></td><td class="mono">${hex(a.va)}</td><td class="mono">${hex(a.pa)}</td><td>${resultTag(a.tlbResult)}</td><td>${resultTag(a.cacheResult)}</td><td class="history-value ${a.error?'muted':'mono'}" title="${esc(a.error||'')}">${a.error?esc(a.error):hex(a.result,(a.width||4)*2)}</td><td>${h.events.some(e=>e.stage==='page-fault')?'<span class="pill miss">Page Fault</span> ':''}${h.pageIn+h.pageOut?`in ${h.pageIn} B / out ${h.pageOut} B`:'—'}</td></tr>`;}).join(''):'<tr><td colspan="8" class="muted">No accesses processed yet.</td></tr>';}
 function render(){const s=vm.snapshot(),g=s.geometry,a=s.access,active=!!a&&!a.done,busy=active||runTimer!==null;
- renderMap(s);renderAddress(s);renderCaches(s);renderMemory(s);renderStats(s);renderHistory();renderEditor();
- $('stepBtn').disabled=runTimer!==null||!!parseError||(!active&&(needsLoad?draft.length===0:cursor>=queue.length));$('stepBtn').textContent=active&&!tutorialEnabled?'Finish access':'Step →';$('runBtn').disabled=tutorialEnabled||!!parseError||(!active&&(needsLoad?draft.length===0:cursor>=queue.length));$('runBtn').textContent=runTimer!==null?'Pause':'Run';$('runBtn').title=tutorialEnabled?'Turn Tutorial mode off to run the full series.':'Run until an access exception or the end of the series.';$('undoBtn').disabled=!undos.length||runTimer!==null;$('accessInput').disabled=false;$('applyConfig').disabled=false;$('example').disabled=false;for(const k of configKeys)$(k).disabled=!g.cachesEnabled&&['tlbCapacity','tlbWays','cacheSize','lineBytes','cacheWays','cacheWritePolicy'].includes(k);document.querySelectorAll('[data-cache-setting]').forEach(el=>el.hidden=!g.cachesEnabled);$('initializeCacheBtn').disabled=false;$('initializeTLBBtn').disabled=false;
- $('queueStatus').textContent=needsLoad?(parseError?'Series reset · correct the highlighted error.':`Series reset · ${draft.length} accesses ready.`):active?`Access ${activeContext.cursor+1} of ${queue.length} in progress · microstep ${s.events.length}.`:cursor>=queue.length&&queue.length?`${cursor} of ${queue.length} accesses processed. Series complete.`:`${cursor} of ${queue.length} accesses processed. ${queue[cursor]?'Next: line '+(queue[cursor].sourceLine+1)+'.':''}`;
+ renderMap(s);renderAddress(s);renderAddressHelper(g);renderCaches(s);renderMemory(s);renderStats(s);renderHistory();renderEditor();
+ const ready=advanced?!!execution&&!execution.finished&&!execution.error&&program.length>0:active||(needsLoad?draft.length>0:cursor<queue.length);
+ $('stepBtn').disabled=runTimer!==null||!!parseError||!ready;$('stepBtn').textContent=active&&!tutorialEnabled?'Finish access':'Step';
+ $('runBtn').hidden=!advanced;$('runBtn').disabled=runTimer===null&&(!!parseError||!ready||(!advanced&&tutorialEnabled));$('runBtn').textContent=runTimer!==null?'Stop':advanced&&execution?.paused?'Continue':'Run';$('runBtn').title='Run to a pause, breakpoint, or the end. Tutorial mode applies to Step.';
+ $('undoBtn').disabled=!undos.length||runTimer!==null;$('undoBtn').title=undos.length?'Undo the previous '+(undos.at(-1).label||'Step')+'.':'Undo the previous Step, Run, or Continue.';
+ $('accessInput').disabled=false;$('applyConfig').disabled=false;$('example').disabled=false;for(const k of configKeys)$(k).disabled=!g.cachesEnabled&&['tlbCapacity','tlbWays','cacheSize','lineBytes','cacheWays','cacheWritePolicy'].includes(k);document.querySelectorAll('[data-cache-setting]').forEach(el=>el.hidden=!g.cachesEnabled);$('initializeCacheBtn').disabled=false;$('initializeTLBBtn').disabled=false;
+ if(advanced){const status=parseError?'Fix the program errors':execution?.error?'Execution stopped; fix the error or Reset':runTimer!==null?'Running…':execution?.paused?`Paused${execution.pauseLine!=null?' at line '+(execution.pauseLine+1):''}`:execution?.finished?'Finished':active?'Access in progress':'Ready';$('queueStatus').textContent=`${status} · ${cursor.toLocaleString()} accesses processed`;}
+ else $('queueStatus').textContent=needsLoad?(parseError?'Series reset · correct the highlighted error.':`Series reset · ${draft.length} accesses ready.`):active?`Access ${activeContext.cursor+1} of ${queue.length} in progress · microstep ${s.events.length}.`:cursor>=queue.length&&queue.length?`${cursor} of ${queue.length} accesses processed. Series complete.`:`${cursor} of ${queue.length} accesses processed. ${queue[cursor]?'Next: line '+(queue[cursor].sourceLine+1)+'.':''}`;
+ $('basicExampleField').hidden=advanced;$('seriesSyntax').hidden=advanced;$('advancedGuide').hidden=!advanced;$('advancedExampleField').hidden=!advanced;
+ $('programVariables').hidden=!advanced;$('programVariables').textContent=execution&&Object.keys(execution.vars).length?Object.entries(execution.vars).map(([name,value])=>name+' = '+value).join(' · '):'Variables appear during execution.';
+ $('accessInput').setAttribute('aria-describedby',advanced?'advancedGuide':'seriesSyntax');$('breakpointPanel').hidden=!advanced;$('breakpointNotice').hidden=!pendingAccess;$('breakpointNotice').textContent=pendingDescription();
+ $('breakAddressStart').disabled=$('breakAddressEnd').disabled=!$('breakOnAddress').checked;$('breakMatchCount').disabled=$('breakMatchMode').value==='every';$('breakMatchCount').min=$('breakMatchMode').value==='nth'?'1':'0';$('breakMatchStatus').textContent=`${breakpointMatches.toLocaleString()} matches counted.`;
  $('modelGeometry').textContent=`${g.pteBits}-bit PTEs (${g.pteBytes} B each), ${g.pageSize}-byte pages. Table at PP ${hexNumber(g.pageTablePage)}, PTBR ${hex(g.ptbr)}. Every virtual page has an image in RAM or on disk.`;
  $('writePolicyExample').textContent=g.cachesEnabled&&g.cacheWritePolicy==='write-through'?'Write-through → RAM':'Cache write-back → RAM';
- $('introTableLocation').textContent=`Physical page ${hexNumber(g.pageTablePage)} is reserved for the page table (PTBR ${hex(g.ptbr)}).`;
+ $('advancedWritePolicyExample').textContent=$('writePolicyExample').textContent;
  $('endiannessToggle').setAttribute('aria-pressed',String(g.endianness==='big'));$('endiannessState').textContent=g.endianness==='big'?'Big-endian':'Little-endian';$('accessEndianHint').textContent=g.endianness+'-endian';$('memoryEndianHint').textContent=g.endianness+'-endian';
  document.body.classList.toggle('direct-memory',!g.cachesEnabled);
 }
@@ -1948,6 +2653,13 @@ $('memoryFileDialog').addEventListener('close',()=>{memoryFileTicket++;pendingMe
 $('memoryFileDrop').addEventListener('dragover',e=>{e.preventDefault();$('memoryFileDrop').classList.add('dragging');});
 $('memoryFileDrop').addEventListener('dragleave',()=>$('memoryFileDrop').classList.remove('dragging'));
 $('memoryFileDrop').addEventListener('drop',e=>{e.preventDefault();$('memoryFileDrop').classList.remove('dragging');const files=e.dataTransfer.files;if(files.length!==1){memoryFileTicket++;pendingMemoryFile=null;$('memoryFileLoad').disabled=true;message('memoryFileMessage','Drop exactly one text file.');return;}prepareMemoryFile(files[0]);});
+$('advancedMode').addEventListener('change',()=>guard(toggleAdvanced));
+$('advancedExample').addEventListener('change',()=>guard(generateAccessSeries));
+$('addressHelperBits').addEventListener('change',changeAddressHelper);
+for(const id of ['breakOnTLBMiss','breakOnMiss','breakOnPageFault','breakOnEviction','breakOnWriteBack','breakOnPageOut','breakOnAddress','breakAddressStart','breakAddressEnd','breakMatchMode','breakMatchCount'])$(id).addEventListener('input',changeBreakpoints);
+$('breakpointInspect').addEventListener('click',()=>{$('breakpointDialog').close();$('cachePanel').scrollIntoView({block:'center',behavior:'smooth'});});
+$('breakpointStep').addEventListener('click',()=>{$('breakpointDialog').close();guard(()=>startAdvancedAction(true));});
+$('breakpointContinue').addEventListener('click',()=>{$('breakpointDialog').close();guard(()=>startAdvancedAction(false));});
 $('accessInput').addEventListener('input',()=>guard(editSeries));$('accessInput').addEventListener('scroll',syncEditor);if(typeof ResizeObserver!=='undefined')new ResizeObserver(syncEditor).observe($('accessInput'));
 $('stepBtn').addEventListener('click',()=>guard(stepAccess));$('runBtn').addEventListener('click',()=>guard(toggleRun));$('undoBtn').addEventListener('click',()=>guard(undoAccess));$('resetBtn').addEventListener('click',()=>guard(resetAll));$('applyConfig').addEventListener('click',applyConfiguration);
 for(const key of configKeys)$(key).addEventListener('change',()=>key.endsWith('InitMode')?initializeStructure(key.startsWith('cache')?'cache':'tlb'):applyConfiguration(key));
@@ -1969,9 +2681,13 @@ function mapSelect(e){const p=e.target.closest('[data-vpn]'),f=e.target.closest(
 $('map').addEventListener('click',mapSelect);$('map').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();mapSelect(e);}});$('ramFrames').addEventListener('click',e=>{const b=e.target.closest('[data-ram-frame]');if(b)chooseFrame(Number(b.dataset.ramFrame));});$('memoryBody').addEventListener('click',e=>{const b=e.target.closest('[data-byte-address]');if(b){const pa=Number(b.dataset.byteAddress),g=vm.snapshot().geometry;if(pa>=g.ptbr&&pa<g.ptbr+g.tableBytes)choosePage(Math.floor((pa-g.ptbr)/g.pteBytes));}});
 $('cacheJumpBtn').addEventListener('click',jumpCache);$('cacheJump').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();jumpCache();}});$('cachePrevBtn').addEventListener('click',()=>moveCachePage(-1));$('cacheNextBtn').addEventListener('click',()=>moveCachePage(1));
 $('memoryJumpBtn').addEventListener('click',jump);$('memoryJump').addEventListener('keydown',e=>{if(e.key==='Enter')jump();});$('memoryPrevBtn').addEventListener('click',()=>{memoryBase=memoryPage(memoryBase-WINDOW_BYTES);renderMemory(vm.snapshot());});$('memoryNextBtn').addEventListener('click',()=>{memoryBase=memoryPage(memoryBase+WINDOW_BYTES);renderMemory(vm.snapshot());});$('showPageTable').addEventListener('click',()=>{memoryBase=memoryPage(vm.snapshot().geometry.ptbr);renderMemory(vm.snapshot());});$('showData').addEventListener('click',()=>{const a=vm.snapshot().access;if(a?.pa!=null){memoryBase=memoryPage(a.pa);renderMemory(vm.snapshot());}});$('byteOrderToggle').addEventListener('click',()=>{reverseBytes=!reverseBytes;$('byteOrderToggle').setAttribute('aria-pressed',String(reverseBytes));$('byteOrderLabel').textContent=reverseBytes?'Descending offsets':'Ascending offsets';renderMemory(vm.snapshot());renderCaches(vm.snapshot());flashByteOrderingHeaders();});
-window.addEventListener('resize',()=>{if(tutorialOpen)showTutorial();});window.addEventListener('scroll',positionTutorial,{passive:true});window.addEventListener('pagehide',stopRun);
-window.render=render;window.AtlasApp={state:()=>({queue:queue.map(x=>({...x})),cursor,history:history.map(x=>({...x})),needsLoad,tutorialOpen,tutorialEnabled,tutorialIndex,tutorialTotal,view,physicalPartitionMode,virtualPartitionMode,memoryBase,cacheViewBase,selectedVPN,mappingSeed,mappingMode,manualMapping:manualMapping?.slice()??null,memorySeed:memoryImage?.seed??null,introOpen,running:runTimer!==null}),step:stepAccess,reset:resetAll,undo:undoAccess,next:microNext,back:microBack,setTutorial,loadExample,applyConfiguration,shuffleMappings,showIntro,closeIntro,initializeStructure,prepareMemoryFile};
-syncConfig();lastGenerated=AtlasSeries.getExample(vm.snapshot().geometry);$('accessInput').value=lastGenerated;commitSeries();render();showIntro();
+// A tall sidebar scrolls with the page until its bottom fits in the viewport.
+// Keep every Advanced control reachable without adding an inner scrollbar.
+function sizeStickySidebar(){const group=$('leftStickyGroup');group.style.top=window.innerWidth>1100?Math.min(18,window.innerHeight-group.getBoundingClientRect().height-18)+'px':'';}
+if(typeof ResizeObserver!=='undefined')new ResizeObserver(sizeStickySidebar).observe($('leftStickyGroup'));
+window.addEventListener('resize',()=>{sizeStickySidebar();if(tutorialOpen)showTutorial();});window.addEventListener('scroll',positionTutorial,{passive:true});window.addEventListener('pagehide',stopRun);
+window.render=render;window.AtlasApp={state:()=>({advanced,execution:execution?AtlasProgram.clone(execution):null,breakpointMatches,pendingAccess:pendingAccess?JSON.parse(JSON.stringify(pendingAccess)):null,queue:queue.map(x=>({...x})),cursor,history:history.map(x=>({...x})),needsLoad,tutorialOpen,tutorialEnabled,tutorialIndex,tutorialTotal,view,physicalPartitionMode,virtualPartitionMode,memoryBase,cacheViewBase,selectedVPN,mappingSeed,mappingMode,manualMapping:manualMapping?.slice()??null,memorySeed:memoryImage?.seed??null,introOpen,running:runTimer!==null}),step:stepAccess,reset:resetAll,undo:undoAccess,next:microNext,back:microBack,setTutorial,loadExample,applyConfiguration,shuffleMappings,showIntro,closeIntro,initializeStructure,prepareMemoryFile};
+syncConfig();lastGenerated=AtlasSeries.getExample(vm.snapshot().geometry);$('accessInput').value=lastGenerated;commitSeries();render();sizeStickySidebar();showIntro();
 })();
 
 /*__ATLAS_UI_END__*/
