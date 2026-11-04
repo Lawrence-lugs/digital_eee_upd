@@ -20,6 +20,7 @@ project:
     - cp static_apps/cache_simulator.html _site/
     - cp static_apps/virtual_memory_simulator.html _site/
     - cp static_apps/memory_technology.html _site/
+    - cp static_apps/riscv-simulator.html _site/
     - cp static_apps/adel-simulator.html _site/
     - cp -r static_apps/ripes _site/
   resources:
@@ -50,7 +51,7 @@ website:
             text: Logic Labs
       - text: Simulators
         menu:
-          - text: Semiconductor fundamentals
+          - text: Semiconductor Fundamentals
           - href: diode_characterization.html
             text: Diode Characterization
           - href: bjt_characterization.html
@@ -60,7 +61,7 @@ website:
             text: MOS Transistor Fabrication
           - href: transistor_characterization.html
             text: MOS Transistor Characterization
-          - text: Transfer function visualization
+          - text: Transfer Function Visualization
           - href: bode_simulator.html
             text: Bode Plot Simulator
           - href: root_locus_simulator.html
@@ -87,6 +88,8 @@ website:
             text: Virtual Memory Simulator
           - href: memory_technology.html
             text: Memory Technology Simulator
+          - href: riscv-simulator.html
+            text: RISC-V Processor and I/O Simulator
           - text: Hardware for Machine Learning
           - href: systolic_array_simulator.html
             text: Systolic Array Simulator

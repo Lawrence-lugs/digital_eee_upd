@@ -67,7 +67,7 @@ include-in-header:
     <p class="text-gray-500 mb-8 text-sm">Browser-based tools — no installation needed</p>
 
     <section class="tool-group" aria-labelledby="semiconductor-fundamentals">
-      <h3 id="semiconductor-fundamentals" class="text-xl font-bold text-gray-800 mb-5">Semiconductor fundamentals</h3>
+      <h3 id="semiconductor-fundamentals" class="text-xl font-bold text-gray-800 mb-5">Semiconductor Fundamentals</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
         <a href="diode_characterization.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
@@ -131,7 +131,7 @@ include-in-header:
     </section>
 
     <section class="tool-group" aria-labelledby="transfer-function-visualization">
-      <h3 id="transfer-function-visualization" class="text-xl font-bold text-gray-800 mb-5">Transfer function visualization</h3>
+      <h3 id="transfer-function-visualization" class="text-xl font-bold text-gray-800 mb-5">Transfer Function Visualization</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
         <a href="bode_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
@@ -236,18 +236,6 @@ include-in-header:
           </div>
         </a>
 
-        <a href="ripes/" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
-                  hover:shadow-md hover:border-red-300 transition-all group">
-          <div class="simulator-preview">
-            <img src="static_apps/snapshots/ripes.png" alt="" width="1280" height="720"
-                 loading="lazy" decoding="async">
-          </div>
-          <div class="p-6">
-            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">RIPES</h4>
-            <p class="text-sm text-gray-500 leading-relaxed">Explore RISC-V processor architectures and visualize instruction execution.</p>
-          </div>
-        </a>
-
         <a href="RV32I_encoding_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
                   hover:shadow-md hover:border-red-300 transition-all group">
           <div class="simulator-preview">
@@ -297,6 +285,19 @@ include-in-header:
             <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Memory Technology Simulator</h4>
             <p class="text-sm text-gray-500 leading-relaxed">Explore how flip-flops, SRAM, DRAM, flash memory, and magnetic
           disks store and access data through interactive models.</p>
+          </div>
+        </a>
+
+        <a href="riscv-simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/riscv-simulator.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">RISC-V Processor and I/O Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Write and run RV32IM assembly programs, inspect registers and memory,
+          and explore configurable I/O and machine interrupts.</p>
           </div>
         </a>
       </div>
