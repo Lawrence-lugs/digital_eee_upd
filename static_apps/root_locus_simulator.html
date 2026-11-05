@@ -349,10 +349,71 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
 @media(max-width:760px){#tutorial-popover{width:auto!important;max-height:48dvh;padding:15px 16px;border-radius:14px}#tutorial-popover h3{font-size:18px}#tutorial-popover .tutorial-body{font-size:14px}#tutorial-popover .tutorial-nav{margin-top:10px;padding-top:10px}#tutorial-popover .tutorial-collapse{padding-bottom:6px}#tutorial-backdrop{background:rgba(61,66,72,.38);backdrop-filter:none;-webkit-backdrop-filter:none}.tutorial-highlight{scroll-margin-top:18px;scroll-margin-bottom:50dvh}}
 @media(prefers-reduced-motion:reduce){#tutorial-popover,#tutorial-toggle{transition:none!important}}
 </style>
-  <style>.rail-panel{display:block!important}.rail-panel #preset{width:100%}.gain-actions{display:flex;gap:8px;margin-top:13px}.gain-actions button:first-child{flex:1}.pair-check{margin-top:12px;font-size:13px}.term-list{max-height:290px;overflow:auto;padding:2px}.term-button{padding:8px}.term-frequency{font-size:13px}.metric #metric-pole{font-size:24px;letter-spacing:-.04em}.metric .unstable{color:#a43e20}.metric .stable{color:var(--zero)}.feedback-equation{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:center;text-align:center;font-family:"MOS Math",Cambria Math,serif;font-size:19px;color:var(--muted)}.feedback-equation span{font-size:17px}.coefficient-details{font-size:13px;color:var(--muted);margin-top:14px}.coefficient-details summary{text-align:center}.coefficient-details div{font-family:"MOS Mono",monospace;text-align:center;padding:10px;overflow-wrap:anywhere}.locus-panel .section-line{margin-bottom:10px}.plot-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:7px 0 0}.plot-toolbar .note{margin:0}.view-buttons{display:flex;gap:5px;flex-shrink:0}.view-buttons button{padding:5px 10px;font-size:13px}.locus-svg{display:block;width:100%;height:530px;cursor:crosshair;touch-action:none;user-select:none}.locus-svg text,.step-svg text{font-family:"MOS Inter",sans-serif;fill:var(--muted);font-size:13px}.locus-svg .axis-label,.step-svg .axis-label{font-size:14px;fill:var(--text)}.locus-svg .root-marker{cursor:move;outline:none}.locus-svg .root-marker:focus .marker-halo{stroke:var(--teal);stroke-width:3}.marker-halo{fill:white;fill-opacity:.85;stroke:none}.root-marker.selected .marker-halo{fill:var(--pole-soft);stroke:var(--pole);stroke-width:1}.root-marker.zero.selected .marker-halo{fill:var(--zero-soft);stroke:var(--zero)}.open-root{fill:none;stroke:var(--pole);stroke-width:2.5;vector-effect:non-scaling-stroke}.zero .open-root{stroke:var(--zero)}.closed-root{fill:var(--teal);stroke:white;stroke-width:1.5;vector-effect:non-scaling-stroke}.closed-key{width:10px;height:10px;border-radius:50%;background:var(--teal);display:inline-block}.locus-branch{stroke-width:2.4}.damping-line{stroke:#a4adb8;stroke-dasharray:3 5;stroke-width:1}.damping-label{paint-order:stroke;stroke:white;stroke-width:4;stroke-linejoin:round}.locus-svg .region-label{font-size:13px;fill:#a15b4a}.locus-arrow{fill:var(--accent);stroke:white;stroke-width:.6}.locus-svg .centroid{fill:var(--warm)}.duration-controls{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted)}.duration-controls input{width:80px;padding:5px}.duration-controls button{padding:5px 9px;font-size:13px}.step-svg{display:block;width:100%;height:260px;margin-top:8px}.pole-table-wrap{overflow:auto;margin-top:20px}.pole-table{width:100%;border-collapse:collapse;font-size:13px}.pole-table caption{text-align:left;font-size:14px;font-weight:650;margin-bottom:9px;color:var(--text)}.pole-table th{text-align:left;background:var(--panel-alt);color:var(--muted);font-weight:600;padding:9px 10px;border-block:1px solid var(--line);white-space:nowrap}.pole-table td{padding:8px 10px;border-bottom:1px solid #e8ecf0;font-family:"MOS Mono",monospace}.pole-table td:last-child{font-family:"MOS Inter",sans-serif}.pole-table tr:last-child td{border-bottom:0}.response-panel .section-line{gap:12px}.tutorial-source{margin:12px 0 0}.tutorial-nav{display:flex}.tutorial-nav .primary{background:var(--accent);color:white}.tutorial-body strong{color:var(--accent)}.equation{font-size:32px;padding:10px 4px 13px}.note:empty{display:none}.control-rail{scrollbar-gutter:stable}#construction-note{border-top:1px solid #e8ecf0;padding-top:11px}#view-note{margin-top:4px}.root-count{margin-left:auto}.model-stale{opacity:.35}
+  <style>.rail-panel{display:block!important}.rail-panel #preset{width:100%}.pair-check{margin-top:12px;font-size:13px}.term-list{max-height:290px;overflow:auto;padding:2px}.term-button{padding:8px}.term-frequency{font-size:13px}.metric #metric-pole{font-size:24px;letter-spacing:-.04em}.metric .unstable{color:#a43e20}.metric .stable{color:var(--zero)}.locus-panel .section-line{margin-bottom:10px}.locus-svg{display:block;width:100%;height:530px;cursor:crosshair;touch-action:none;user-select:none}.locus-svg text,.step-svg text{font-family:"MOS Inter",sans-serif;fill:var(--muted);font-size:13px}.locus-svg .axis-label,.step-svg .axis-label{font-size:14px;fill:var(--text)}.locus-svg .root-marker{cursor:move;outline:none}.locus-svg .root-marker:focus .marker-halo{stroke:var(--teal);stroke-width:3}.marker-halo{fill:white;fill-opacity:.85;stroke:none}.root-marker.selected .marker-halo{fill:var(--pole-soft);stroke:var(--pole);stroke-width:1}.root-marker.zero.selected .marker-halo{fill:var(--zero-soft);stroke:var(--zero)}.open-root{fill:none;stroke:var(--pole);stroke-width:2.5;vector-effect:non-scaling-stroke}.zero .open-root{stroke:var(--zero)}.closed-root{fill:var(--teal);stroke:white;stroke-width:1.5;vector-effect:non-scaling-stroke}.closed-key{width:10px;height:10px;border-radius:50%;background:var(--teal);display:inline-block}.locus-branch{stroke-width:2.4}.damping-line{stroke:#a4adb8;stroke-dasharray:3 5;stroke-width:1}.damping-label{paint-order:stroke;stroke:white;stroke-width:4;stroke-linejoin:round}.locus-svg .region-label{font-size:13px;fill:#a15b4a}.locus-arrow{fill:var(--accent);stroke:white;stroke-width:.6}.locus-svg .centroid{fill:var(--warm)}.duration-controls{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted)}.duration-controls input{width:80px;padding:5px}.duration-controls button{padding:5px 9px;font-size:13px}.step-svg{display:block;width:100%;height:260px;margin-top:8px}.pole-table-wrap{overflow:auto;margin-top:20px}.pole-table{width:100%;border-collapse:collapse;font-size:13px}.pole-table caption{text-align:left;font-size:14px;font-weight:650;margin-bottom:9px;color:var(--text)}.pole-table th{text-align:left;background:var(--panel-alt);color:var(--muted);font-weight:600;padding:9px 10px;border-block:1px solid var(--line);white-space:nowrap}.pole-table td{padding:8px 10px;border-bottom:1px solid #e8ecf0;font-family:"MOS Mono",monospace}.pole-table td:last-child{font-family:"MOS Inter",sans-serif}.pole-table tr:last-child td{border-bottom:0}.response-panel .section-line{gap:12px}.tutorial-source{margin:12px 0 0}.tutorial-nav{display:flex}.tutorial-nav .primary{background:var(--accent);color:white}.tutorial-body strong{color:var(--accent)}.equation{font-size:32px;padding:10px 4px 13px}.note:empty{display:none}.control-rail{scrollbar-gutter:stable}#construction-note{border-top:1px solid #e8ecf0;padding-top:11px}#view-note{margin-top:4px}.root-count{margin-left:auto}.model-stale{opacity:.35}
 @media(max-width:1150px){.metric #metric-pole{font-size:21px}.curve-switches{gap:9px}.check-label{font-size:13px}.domain-content{padding:16px}.locus-svg{height:510px}}
 @media(max-width:900px) and (min-width:601px){.rail-panel{display:grid!important;grid-template-columns:1fr 1fr!important;gap:24px!important}.rail-panel #term-controls{grid-column:2;grid-row:auto}.rail-panel #system-controls{grid-column:1}.locus-svg{height:530px}}
-@media(max-width:600px){.metric #metric-pole{font-size:20px}.metric strong{font-size:25px}.domain-content{padding:16px 10px}.locus-svg{height:420px}.step-svg{height:240px}.curve-switches{gap:8px 12px}.plot-toolbar{align-items:start}.plot-toolbar .note{max-width:48%}.domain-cap{padding:6px 12px;flex-wrap:wrap;gap:1px 10px}.equation{font-size:26px}.feedback-equation{font-size:17px}.feedback-equation span{font-size:15px}.pole-table th,.pole-table td{padding:8px;font-size:13px}.metric small{font-size:13px}.duration-controls{flex-wrap:wrap}.response-panel h2,.locus-panel h2{font-size:20px}}
+@media(max-width:600px){.metric #metric-pole{font-size:20px}.metric strong{font-size:25px}.domain-content{padding:16px 10px}.locus-svg{height:420px}.step-svg{height:240px}.curve-switches{gap:8px 12px}.domain-cap{padding:6px 12px;flex-wrap:wrap;gap:1px 10px}.equation{font-size:26px}.pole-table th,.pole-table td{padding:8px;font-size:13px}.metric small{font-size:13px}.duration-controls{flex-wrap:wrap}.response-panel h2,.locus-panel h2{font-size:20px}}
+.feedback-controls{border-top:1px solid var(--line);padding-top:16px;margin:18px 0 22px}.feedback-controls h3{font-size:15px;margin:0 0 12px}.feedback-controls .field-label{margin-top:12px}.feedback-controls select{font-size:13px}.transfer-functions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(200px,1.1fr);gap:14px;align-items:center}.transfer-functions .equation{font-size:28px}.feedback-diagram{display:block;width:100%;height:110px;max-width:720px;margin:0 auto}.feedback-diagram text{font-family:"MOS Inter",sans-serif;font-size:15px;fill:var(--muted)}.feedback-diagram .block-text{font-family:"MOS Math",serif;font-size:22px;fill:var(--text)}.open-response-section{border-top:1px solid var(--line);margin-top:20px;padding-top:20px}.open-response-section select{font-size:13px;padding:6px}.open-output{stroke:var(--pole)}.line.open-output{border-color:var(--pole)}.locus-svg .feedback-root-label{font-size:11px;font-weight:700;fill:var(--muted);paint-order:stroke;stroke:white;stroke-width:3px;pointer-events:none}.term-button .path-label{font-weight:650;color:var(--muted)}#edit-path{margin-bottom:3px}.term-list .empty{font-size:13px;margin:6px 0}#feedback-status{text-align:right}
+@media(max-width:600px){.transfer-functions{grid-template-columns:1fr;gap:0}.transfer-functions .equation{font-size:25px;padding-block:7px}.feedback-diagram{height:auto;margin-block:8px 0}.open-response-section .section-line{align-items:start}.open-response-section select{max-width:100%;width:100%}}
+@media(max-width:600px){.feedback-diagram text,.feedback-diagram .block-text{font-size:26px}}
+
+/* Compact controls and an adjustable desktop sidebar. */
+.compact-control-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:end}
+.compact-control-row>div{min-width:0}
+.compact-control-row .field-label{margin:0 0 6px;line-height:1.4}
+.compact-control-row input,.compact-control-row select{width:100%;height:38px;padding:7px 8px}
+.feedback-controls .compact-control-row .field-label{margin-top:0}
+.rail-panel #gain-control{margin:18px 0 14px}
+.feedback-controls{margin:14px 0 18px;padding-top:0;border-top:0}
+#term-controls{border-top:1px solid var(--line);padding-top:16px}
+.editor-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+#deselect-term{padding:3px 8px;font-size:20px;line-height:1.2;color:var(--muted)}
+.open-response-section>summary{display:flex;align-items:center;gap:10px;list-style:none;cursor:pointer;border-radius:4px}
+.open-response-section>summary::-webkit-details-marker{display:none}
+.open-response-section>summary::before{content:"";border-block:5px solid transparent;border-left:7px solid var(--muted);flex-shrink:0;transition:transform .15s}
+.open-response-section[open]>summary::before{transform:rotate(90deg)}
+.open-response-controls{justify-content:flex-end;margin-top:12px}
+.sidebar-resizer{display:none}
+@media(min-width:901px){
+  .workbench{grid-template-columns:var(--sidebar-width,320px) 14px minmax(0,1fr);column-gap:2px}
+  .sidebar-resizer{display:flex;position:sticky;top:12px;height:calc(100dvh - 24px);align-items:center;justify-content:center;cursor:col-resize;touch-action:none;user-select:none;border-radius:7px;outline-offset:1px}
+  .sidebar-resizer span{width:1px;height:100%;background:#a4aebb;border-radius:1px}
+  .sidebar-resizer:hover span,.sidebar-resizer:focus-visible span,.sidebar-resizer.is-resizing span{background:var(--teal)}
+  .sidebar-resizer:focus-visible{outline:2px solid var(--teal)}
+  body.sidebar-resizing,body.sidebar-resizing *{cursor:col-resize!important;user-select:none!important}
+}
+
+/* Keep the loop equations beside the system title and wrap on narrow panels. */
+.transfer-header{align-items:flex-start;flex-wrap:nowrap;gap:12px;margin-bottom:4px}
+.transfer-header .transfer-heading{flex:1;min-width:0;gap:4px 14px;align-items:baseline}
+.transfer-header .section-kicker{flex:none;margin:0}
+.transfer-header .badge{flex:none}
+.feedback-equation{display:flex;flex:1 1 360px;min-width:0;flex-wrap:wrap;gap:2px 14px;justify-content:flex-start;text-align:left;font-family:"MOS Math",Cambria Math,serif;font-size:15px;font-style:italic;font-synthesis:style;line-height:1.35;color:var(--muted)}
+.feedback-equation span{max-width:100%;overflow-wrap:anywhere}
+@media(max-width:600px){
+  .transfer-header{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 10px}
+  .transfer-header .transfer-heading{display:contents}
+  .transfer-header .section-kicker{grid-column:1;grid-row:1}
+  .transfer-header .badge{grid-column:2;grid-row:1}
+  .feedback-equation{grid-column:1/-1;grid-row:2}
+}
+
+/* Show the characteristic equation and current polynomial beside G and H. */
+.transfer-panel{container-type:inline-size}
+.characteristic-block{min-width:0;display:grid;gap:3px;padding:6px 0;text-align:center;color:var(--muted)}
+.characteristic-block h3{margin:0;font-size:13px;font-weight:650;line-height:1.4}
+.characteristic-equation,.characteristic-value{font-family:"MOS Math",Cambria Math,serif;line-height:1.3;overflow-wrap:anywhere}
+.characteristic-equation{font-size:16px;font-style:italic;font-synthesis:style}
+.characteristic-value{font-size:18px;color:var(--text)}
+.characteristic-value sup{font-size:.72em;line-height:0}
+@container(max-width:540px){
+  .transfer-functions{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .characteristic-block{grid-column:1/-1}
+}
+@media(max-width:600px){
+  .transfer-functions{grid-template-columns:1fr}
+  .characteristic-block{grid-column:auto}
+}
 </style>
 </head>
 <body>
@@ -364,7 +425,7 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
   <section id="tutorial-popover" role="dialog" aria-labelledby="tutorial-title" aria-modal="false" hidden></section>
   <main class="site-shell">
     <section class="readout-frame" aria-label="Closed-loop system at the selected gain">
-      <div class="readout-cap"><span>Closed-loop system at the selected gain</span><span>Negative unity feedback · K ≥ 0</span></div>
+      <div class="readout-cap"><span>Closed-loop system at the selected gain</span><span id="feedback-status">Negative feedback · K ≥ 0</span></div>
       <div class="metrics">
         <div class="metric"><span>Loop gain · K</span><strong id="metric-gain">4</strong><small>Move the gain to trace the locus</small></div>
         <div class="metric"><span>Internal stability</span><strong id="metric-stability">Stable</strong><small id="stability-note">All poles in the left half-plane</small></div>
@@ -373,73 +434,98 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
       </div>
     </section>
     <div class="workbench">
-      <aside class="control-rail" aria-label="Transfer function controls">
+      <aside id="control-rail" class="control-rail" aria-label="Transfer function controls">
         <section class="panel rail-panel">
           <div id="system-controls"><h2>Transfer function settings</h2>
           <select id="preset" aria-label="Transfer function preset"><option value="two">Two poles · breakaway</option><option value="three">Three poles · stability crossing</option><option value="zero">Add a zero · branch attraction</option><option value="pair">Complex poles · damping</option><option value="unstable">Unstable plant · stabilization</option><option value="first">One pole · first-order response</option><option value="custom" disabled>Custom transfer function</option></select>
           <div id="gain-control" class="control-block">
-            <div class="control-top"><label for="gain-exact">Loop gain · K</label><input id="gain-exact" type="number" min="0" max="1000000" step="any" value="4"></div>
+            <div class="compact-control-row"><div><label class="field-label" for="gain-exact">Loop gain · K</label><input id="gain-exact" type="number" min="0" max="1000000" step="any" value="4"></div><div><label class="field-label" for="gain-max">Locus maximum K</label><input id="gain-max" type="number" min="0.01" max="1000000" step="any" value="25"></div></div>
             <input id="gain" type="range" min="0" max="1000" step="1" value="494" aria-label="Loop gain slider">
             <div class="range-ends"><span>0</span><span id="gain-end">25</span></div>
-            <div class="exact-row"><label for="gain-max">Locus maximum K</label><input id="gain-max" type="number" min="0.01" max="1000000" step="any" value="25"></div>
-            <div class="gain-actions"><button id="play" aria-pressed="false">▶ Sweep gain</button><button id="reset-gain">K = 0</button></div>
+          </div>
+          <div id="feedback-controls" class="feedback-controls">
+            <h3>Feedback · H(s)</h3>
+            <div class="compact-control-row"><div><label class="field-label" for="feedback-sign">Feedback sign</label><select id="feedback-sign"><option value="negative">Negative</option><option value="positive">Positive</option></select></div><div><label class="field-label" for="feedback-gain">Feedback gain · h</label><input id="feedback-gain" type="number" min="0" max="1000" step="any" value="1"></div></div>
+            <label class="field-label" for="feedback-preset">Feedback transfer function</label><select id="feedback-preset"><option value="unity">Unity · H(s) = 1</option><option value="lowpass">Low-pass · 1 / (s + 1)</option><option value="lead">Lead · (s + 1) / (s + 5)</option><option value="custom" disabled>Custom feedback</option></select>
           </div></div>
           <div id="term-controls">
-            <div class="subheading"><h3>Open-loop poles &amp; zeros</h3><span id="order-count"></span></div>
+            <div class="subheading"><h3>Poles &amp; zeros</h3><span id="order-count"></span></div>
+            <label class="field-label" for="edit-path">Edit factors in</label><select id="edit-path"><option value="forward">Forward path · G(s)</option><option value="feedback">Feedback path · H(s)</option></select>
             <div class="placement-tools" role="group" aria-label="Plot placement tools"><button id="place-pole" class="placement-button place-pole" aria-pressed="false">× Place pole</button><button id="place-zero" class="placement-button place-zero" aria-pressed="false">○ Place zero</button></div>
             <label class="check-label pair-check"><input id="place-pair" type="checkbox"> Place a conjugate pair</label>
-            <p id="tool-hint" class="note" role="status">Click a branch to choose K. Drag × or ○ to edit the system.</p>
+            <p id="tool-hint" class="note" role="status"></p>
             <p class="note term-list-hint">Select a factor to enter exact coordinates.</p>
             <div id="term-list" class="term-list"></div>
-            <div id="term-editor" class="term-editor">
-              <div class="editor-heading"><strong id="selected-label"></strong><button id="remove-term" class="remove-button">Remove</button></div>
+            <div id="term-editor" class="term-editor" hidden>
+              <div class="editor-heading"><strong id="selected-label"></strong><div class="editor-actions"><button id="remove-term" class="remove-button">Remove</button><button id="deselect-term" type="button" aria-label="Deselect factor" title="Deselect factor">×</button></div></div>
               <label class="field-label" for="term-type">Factor type</label><select id="term-type"><option value="real">Real root</option><option value="pair">Complex conjugate pair</option></select>
               <div class="exact-row"><label for="term-re">Real part · σ</label><input id="term-re" type="number" min="-100" max="100" step="0.1"></div>
               <div id="imag-row" class="exact-row"><label for="term-im">Imaginary part · ±ω</label><input id="term-im" type="number" min="0" max="100" step="0.1"></div>
-              <p class="note">Coordinates in s⁻¹. A pair moves together to keep real coefficients.</p>
             </div>
-            <p id="action-status" class="note action-status" role="status">Up to six poles, with fewer zeros than poles.</p>
+            <p id="action-status" class="note action-status" role="status"></p>
           </div>
         </section>
       </aside>
+      <div id="sidebar-resizer" class="sidebar-resizer" role="separator" tabindex="0" aria-label="Sidebar width" aria-orientation="vertical" aria-controls="control-rail" aria-valuemin="280" aria-valuemax="560" aria-valuenow="320" aria-describedby="sidebar-resize-help" title="Drag to resize the sidebar. Arrow keys adjust its width; double-click resets it."><span aria-hidden="true"></span></div>
       <div class="science-column">
+        <p id="sidebar-resize-help" class="sr-only">Drag left or right to resize the sidebar. Left and right arrow keys adjust its width; Shift uses larger steps. Home selects the minimum, End selects the maximum, and double-click restores the default. Escape cancels a drag.</p>
         <p id="panel-move-help" class="sr-only">Drag a gray plot panel title bar up or down to reorder the two panels. Use the arrow keys, Enter, or Space with a focused title bar.</p><p id="panel-order-status" class="sr-only" role="status"></p>
         <section id="transfer-panel" class="panel transfer-panel" aria-label="Current transfer function">
-          <div class="section-line"><p class="section-kicker">The system you built</p><span id="transfer-badge" class="badge">Negative unity feedback</span></div>
-          <div id="transfer-equation" class="equation"></div>
-          <div class="feedback-equation">T(s) = KG(s) / [1 + KG(s)]<span>Characteristic equation: D(s) + KN(s) = 0</span></div>
-          <details class="coefficient-details"><summary>Characteristic polynomial at this K</summary><div id="characteristic"></div></details>
+          <div class="section-line transfer-header"><div class="transfer-heading"><p class="section-kicker">The system you built</p><div id="feedback-equation" class="feedback-equation"></div></div><span id="transfer-badge" class="badge">Negative feedback</span></div>
+          <div class="transfer-functions">
+            <div id="transfer-equation" class="equation"></div>
+            <div id="feedback-transfer-equation" class="equation"></div>
+            <section class="characteristic-block" aria-labelledby="characteristic-title">
+              <h3 id="characteristic-title">Characteristic polynomial</h3>
+              <div id="characteristic-equation" class="characteristic-equation"></div>
+              <div id="characteristic" class="characteristic-value"></div>
+            </section>
+          </div>
+          <svg class="feedback-diagram" viewBox="0 0 720 116" role="img" aria-label="Reference r enters a summing junction, the forward path KG produces y, and H feeds back b to the junction.">
+            <defs><marker id="signal-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#606b79"/></marker></defs>
+            <g fill="none" stroke="#606b79" stroke-width="1.5"><path d="M65 30H179" marker-end="url(#signal-arrow)"/><path d="M215 30H310" marker-end="url(#signal-arrow)"/><path d="M420 30H650" marker-end="url(#signal-arrow)"/><path d="M570 30V91H420" marker-end="url(#signal-arrow)"/><path d="M310 91H197V49" marker-end="url(#signal-arrow)"/><circle cx="197" cy="30" r="18"/><rect x="310" y="10" width="110" height="40" rx="6"/><rect x="310" y="71" width="110" height="39" rx="6"/></g>
+            <g text-anchor="middle"><text x="94" y="20">r(t)</text><text x="253" y="20">e(t)</text><text x="614" y="20">y(t)</text><text x="252" y="83">b(t)</text><text x="197" y="36">Σ</text><text x="173" y="19">+</text><text id="feedback-sign-symbol" x="180" y="59">−</text><text class="block-text" x="365" y="36">K G(s)</text><text class="block-text" x="365" y="97">H(s)</text></g>
+          </svg>
         </section>
         <section id="locus-panel" class="panel locus-panel" aria-label="Interactive root locus diagram">
           <div class="domain-cap panel-drag-handle" data-panel="locus-panel" role="button" tabindex="0" aria-label="Move Root locus panel" aria-describedby="panel-move-help"><span>Complex s-plane</span><span><span id="locus-range">0 ≤ K ≤ 25</span> · <span class="drag-hint">Drag to move</span></span></div>
           <div class="domain-content">
             <div class="section-line"><h2>Root locus</h2><div class="curve-switches"><label class="check-label"><input id="show-asymptotes" type="checkbox" checked> Asymptotes</label><label class="check-label"><input id="show-damping" type="checkbox"> Damping grid</label><label class="check-label"><input id="show-arrows" type="checkbox" checked> Direction arrows</label></div></div>
-            <div class="plot-toolbar"><span class="note">Click a branch to select a gain.</span><div class="view-buttons" role="group" aria-label="Plot view"><button id="zoom-in" aria-label="Zoom in">+</button><button id="zoom-out" aria-label="Zoom out">−</button><button id="fit-view">Fit locus</button></div></div>
             <p id="model-error" class="message" role="alert" hidden></p>
             <svg id="locus-plot" class="locus-svg" viewBox="0 0 1000 530" role="group" aria-label="Root locus. Blue crosses are open-loop poles, green circles are open-loop zeros, and teal dots are closed-loop poles at the selected gain."></svg>
-            <div class="plot-legend"><span><i class="line"></i>Root locus</span><span class="pole-key">× Open-loop pole</span><span class="zero-key">○ Open-loop zero</span><span><i class="closed-key"></i>Poles at K</span><span id="asymptote-legend"><i class="line dashed"></i>Asymptote</span></div>
+            <div class="plot-legend"><span><i class="line"></i>Root locus of KGH</span><span class="pole-key">× Pole</span><span class="zero-key">○ Zero</span><span>H: feedback factor</span><span><i class="closed-key"></i>Poles at K</span><span id="asymptote-legend"><i class="line dashed"></i>Asymptote</span></div>
             <p id="construction-note" class="note"></p>
             <p id="view-note" class="note"></p>
           </div>
         </section>
-        <section id="response-panel" class="panel response-panel" aria-label="Closed-loop response">
-          <div class="domain-cap panel-drag-handle" data-panel="response-panel" role="button" tabindex="0" aria-label="Move Closed-loop step response panel" aria-describedby="panel-move-help"><span>Time domain &amp; pole locations</span><span>Unit-step input · zero initial state · <span class="drag-hint">Drag to move</span></span></div>
+        <section id="response-panel" class="panel response-panel" aria-label="Open-loop and closed-loop step responses">
+          <div class="domain-cap panel-drag-handle" data-panel="response-panel" role="button" tabindex="0" aria-label="Move Step responses panel" aria-describedby="panel-move-help"><span>Time domain &amp; pole locations</span><span>Unit-step input · zero initial state · <span class="drag-hint">Drag to move</span></span></div>
           <div class="domain-content">
             <div class="section-line"><h2>Closed-loop step response</h2><div class="duration-controls"><label for="duration">Time window</label><input id="duration" type="number" min="0.01" max="1000" value="10" step="any"><span>s</span><button id="auto-time">Auto</button></div></div>
             <svg id="step-plot" class="step-svg" viewBox="0 0 1000 250" role="img" aria-label="Closed-loop unit-step response"></svg>
             <div class="plot-legend"><span><i class="line input"></i>Unit-step reference</span><span><i class="line"></i>Output y(t)</span></div>
             <p id="response-note" class="note"></p>
+            <details id="open-response-details" class="open-response-section">
+              <summary><h2>Open-loop step response</h2></summary>
+              <div class="section-line open-response-controls"><select id="open-response-path" aria-label="Open-loop response transfer function"><option value="forward">Forward path · K G(s)</option><option value="loop">Loop transfer · K G(s) H(s)</option></select></div>
+              <p id="open-response-equation" class="note"></p>
+              <svg id="open-step-plot" class="step-svg" viewBox="0 0 1000 250" role="img" aria-label="Open-loop unit-step response"></svg>
+              <div class="plot-legend"><span><i class="line input"></i>Unit-step reference</span><span><i class="line open-output"></i>Open-loop output</span></div>
+              <p id="open-response-note" class="note"></p>
+            </details>
             <div class="pole-table-wrap"><table class="pole-table"><caption>Closed-loop poles at the selected K</caption><thead><tr><th scope="col">Pole · s⁻¹</th><th scope="col">Natural frequency · ωₙ</th><th scope="col">Damping · ζ</th><th scope="col">Location</th></tr></thead><tbody id="pole-table"></tbody></table></div>
           </div>
         </section>
         <details class="panel guide"><summary>Learning guide · how to read a root locus</summary><div class="guide-content">
-          <div><h3>Follow the roots as gain changes</h3><p>Write G(s) = N(s)/D(s) in monic factors. With negative unity feedback, the closed-loop poles solve D(s) + KN(s) = 0. Each branch begins at an open-loop pole when K = 0. As K grows, it ends at a zero or goes to infinity.</p><p>For positive K, a real-axis point lies on the locus when an odd number of real poles and zeros lie to its right. Complex roots occur in conjugate pairs.</p><h3>Construct the asymptotes</h3><p>With n poles and m zeros, n − m branches go to infinity. Their centroid is (Σp − Σz)/(n − m). Their angles are (2q + 1)180°/(n − m), for q = 0, …, n − m − 1.</p></div>
-          <div><h3>Connect pole location to behavior</h3><p>Poles in the left half-plane decay. Poles in the right half-plane grow. Simple imaginary-axis poles are marginal; repeated imaginary-axis poles are unstable. Internal stability includes every characteristic root, including canceled modes.</p><p>For s = σ + jω, ωₙ = √(σ² + ω²) and ζ = −σ/ωₙ. Damping rays have equal ζ because the plot uses equal scales on both axes. These pole values describe modes; zeros and other poles also shape the complete step response.</p><h3>Use the model in a lecture</h3><p>Start with two poles and set K = 1 to find the breakaway. Switch to three poles and compare K = 5, 6, and 7. Add a zero and follow the branch that approaches it.</p><p>The colored locus shows the finite gain interval in the panel header. Dashed asymptotes describe the limiting directions as K → ∞. This continuous-time model supports one to six poles and fewer zeros than poles.</p><div class="source-links"><a href="https://lpsa.swarthmore.edu/Root_Locus/RootLocus.html" target="_blank" rel="noreferrer">Root locus reference · Swarthmore</a></div></div>
+          <div><h3>Follow the roots as gain changes</h3><p>Write G(s) = Nɢ(s)/Dɢ(s) and H(s) = h Nʜ(s)/Dʜ(s). The loop transfer is L(s) = KG(s)H(s). The output transfer is T(s) = KG(s)/[1 ± KG(s)H(s)]: use + for negative feedback and − for positive feedback.</p><p>The characteristic equation is DɢDʜ ± KhNɢNʜ = 0. For h &gt; 0, each branch starts at a pole of G or H. A real-axis point is on the negative-feedback locus with an odd number of real poles and zeros to its right. Positive feedback uses an even count.</p><h3>Construct the asymptotes</h3><p>Count the n poles and m zeros of GH. The n − m asymptotes have centroid (Σp − Σz)/(n − m). For q = 0, …, n − m − 1, their angles are (2q + 1)180°/(n − m) with negative feedback, or 2q180°/(n − m) with positive feedback. When h = 0, the characteristic roots stay at their starting points.</p></div>
+          <div><h3>Connect pole location to behavior</h3><p>Poles in the left half-plane decay. Poles in the right half-plane grow. Simple imaginary-axis poles are marginal; repeated imaginary-axis poles are unstable. Internal stability includes every characteristic root, including canceled modes.</p><p>For s = σ + jω, ωₙ = √(σ² + ω²) and ζ = −σ/ωₙ. Damping rays have equal ζ because the plot uses equal scales on both axes. Zeros and other poles also shape the complete step response.</p><h3>Compare open and closed loops</h3><p>The closed-loop plot shows the output y from T(s). The open-loop selector shows either the disconnected forward path KG, or the loop transfer KGH. Both plots share the time window and use independent amplitude scales. The root locus always follows KGH.</p><p>G must have more poles than zeros. H can have the same number of poles and zeros, including a constant gain. Up to six poles are supported across both paths. Colored locus curves stop at the displayed maximum gain.</p><div class="source-links"><a href="https://lpsa.swarthmore.edu/Root_Locus/RootLocus.html" target="_blank" rel="noreferrer">Root locus · Swarthmore</a><a href="https://faculty.washington.edu/chx/teaching/fbintro/lec13-root-locus-technique/" target="_blank" rel="noreferrer">Feedback paths · University of Washington</a></div></div>
         </div></details>
       </div>
     </div>
   </main>
-  <script>/* Continuous-time root locus for negative unity feedback: D(s) + K N(s) = 0.
+  <script>/* Continuous-time root locus with forward G(s) and feedback H(s).
+   Negative feedback: Dg Dh + K h Ng Nh = 0; positive feedback reverses the sign.
+   Closed-loop output: T(s) = K Ng Dh / (Dg Dh ± K h Ng Nh).
    Monic real factors; coefficients use descending powers of s (rad/s).
    All modes are retained, including coincident pole/zero factors. */
 (function (root) {
@@ -462,17 +548,31 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
     return C(re, im);
   }
   const sortRoots = roots => roots.sort((a, b) => a.re - b.re || a.im - b.im);
-  function expand(terms, kind) {
+  function systemOf(input) {
+    return Array.isArray(input) ? { forward: input, feedback: [], feedbackGain: 1, feedbackSign: 'negative' }
+      : { forward: input?.forward, feedback: input?.feedback ?? [], feedbackGain: input?.feedbackGain ?? 1, feedbackSign: input?.feedbackSign ?? 'negative' };
+  }
+  function expand(input, kind, path = 'loop') {
+    const system = systemOf(input);
+    const terms = Array.isArray(input) ? input : path === 'forward' ? system.forward : path === 'feedback' ? system.feedback : [...system.forward, ...system.feedback];
     return terms.filter(t => t.kind === kind).flatMap(t => t.type === 'pair'
       ? [C(t.re, Math.abs(t.im)), C(t.re, -Math.abs(t.im))] : [C(t.re)]);
   }
-  function validate(terms, K = 0) {
-    if (!Array.isArray(terms) || !Number.isFinite(K) || K < 0 || K > 1e6) throw new RangeError('Gain must be between 0 and 1,000,000.');
-    for (const t of terms) {
+  function validate(input, K = 0) {
+    const system = systemOf(input);
+    if (!Number.isFinite(K) || K < 0 || K > 1e6) throw new RangeError('Gain must be between 0 and 1,000,000.');
+    if (!Array.isArray(system.forward) || !Array.isArray(system.feedback)) throw new TypeError('Forward and feedback factors must be arrays.');
+    if (!Number.isFinite(system.feedbackGain) || system.feedbackGain < 0 || system.feedbackGain > 1000) throw new RangeError('Feedback gain must be between 0 and 1,000.');
+    if (!['negative', 'positive'].includes(system.feedbackSign)) throw new RangeError('Feedback sign must be negative or positive.');
+    for (const t of [...system.forward, ...system.feedback]) {
       if (!['pole', 'zero'].includes(t.kind) || !['real', 'pair'].includes(t.type) || !Number.isFinite(t.re) || Math.abs(t.re) > 100 || (t.type === 'pair' && (!Number.isFinite(t.im) || Math.abs(t.im) > 100))) throw new RangeError('Root coordinates must be finite and between −100 and 100.');
     }
-    const n = expand(terms, 'pole').length, m = expand(terms, 'zero').length;
-    if (n < 1 || n > 6 || m >= n) throw new RangeError('Use 1–6 poles and fewer zeros than poles.');
+    const ng = expand(system.forward, 'pole').length, mg = expand(system.forward, 'zero').length;
+    const nh = expand(system.feedback, 'pole').length, mh = expand(system.feedback, 'zero').length;
+    if (ng < 1 || mg >= ng) throw new RangeError('The forward path needs at least one pole and fewer zeros than poles.');
+    if (mh > nh) throw new RangeError('The feedback path must have at least as many poles as zeros.');
+    if (ng + nh > 6) throw new RangeError('Use at most six poles across the forward and feedback paths.');
+    return system;
   }
   function polynomial(roots) {
     let a = [C(1)];
@@ -484,13 +584,18 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
     if (a.some(v => Math.abs(v.im) > 1e-8 * Math.max(1, Math.abs(v.re)))) throw new RangeError('Complex roots must occur in conjugate pairs.');
     return a.map(v => v.re);
   }
-  function coefficients(terms, K = 0) {
-    validate(terms, K);
-    const denominator = polynomial(expand(terms, 'pole'));
-    const numerator = polynomial(expand(terms, 'zero'));
+  function coefficients(input, K = 0) {
+    const system = validate(input, K), sign = system.feedbackSign === 'positive' ? -1 : 1;
+    const denominator = polynomial(expand(system, 'pole'));
+    const numerator = polynomial(expand(system, 'zero')).map(v => system.feedbackGain * v);
     const characteristic = denominator.slice(), offset = denominator.length - numerator.length;
-    numerator.forEach((v, i) => { characteristic[i + offset] += K * v; });
-    return { numerator, denominator, characteristic };
+    numerator.forEach((v, i) => { characteristic[i + offset] += sign * K * v; });
+    const forwardNumerator = polynomial(expand(system.forward, 'zero'));
+    const forwardDenominator = polynomial(expand(system.forward, 'pole'));
+    const feedbackNumerator = polynomial(expand(system.feedback, 'zero')).map(v => system.feedbackGain * v);
+    const feedbackDenominator = polynomial(expand(system.feedback, 'pole'));
+    const closedNumerator = polynomial([...expand(system.forward, 'zero'), ...expand(system.feedback, 'pole')]).map(v => K * v);
+    return { numerator, denominator, characteristic, closedNumerator, forwardNumerator, forwardDenominator, feedbackNumerator, feedbackDenominator, feedbackSign: system.feedbackSign, feedbackGain: system.feedbackGain };
   }
   function evaluate(a, z) {
     let value = C(a[0]), derivative = C(0), halfSecond = C(0), bound = Math.abs(a[0]);
@@ -567,7 +672,7 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
       const found = [];
       for (let d = degree; d >= 1; d--) {
         let z = d === 1 ? scale(div(reduced[1], reduced[0]), -1) : laguerre(reduced, C(0));
-        if (Math.abs(z.im) < 1e-11 * Math.max(1, Math.abs(z.re))) z.im = 0;
+        if (Math.abs(z.im) * rootScale < 1e-11 * Math.max(1, Math.abs(z.re * rootScale + center))) z.im = 0;
         found.push(z);
         const next = [reduced[0]];
         for (let j = 1; j < d; j++) next.push(add(reduced[j], mul(z, next[j - 1])));
@@ -591,7 +696,7 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
         }
       }
       for (const z of polished) {
-        if (Math.abs(z.im) < 1e-10 * Math.max(1, Math.abs(z.re))) z.im = 0;
+        if (Math.abs(z.im) * rootScale < 1e-10 * Math.max(1, Math.abs(z.re * rootScale + center))) z.im = 0;
         roots.push(C(z.re * rootScale + center, z.im * rootScale));
       }
       // A residual alone can accept the same root more than once. Reconstruct
@@ -611,18 +716,18 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
     }
     return sortRoots(roots);
   }
-  function closedLoop(terms, K) {
-    validate(terms, K);
-    const poles = expand(terms, 'pole');
-    if (K === 0) return sortRoots(poles);
+  function closedLoop(input, K) {
+    const system = validate(input, K), effectiveGain = K * system.feedbackGain * (system.feedbackSign === 'positive' ? -1 : 1);
+    const poles = expand(system, 'pole');
+    if (effectiveGain === 0) return sortRoots(poles);
     // Build the characteristic polynomial around the pole centroid directly
     // from the factors, so a small K survives even with large root offsets.
     const center = poles.reduce((v, z) => v + z.re, 0) / poles.length;
     const shifted = roots => roots.map(z => C(z.re - center, z.im));
     const characteristic = polynomial(shifted(poles));
-    const numerator = polynomial(shifted(expand(terms, 'zero')));
+    const numerator = polynomial(shifted(expand(system, 'zero')));
     const offset = characteristic.length - numerator.length;
-    numerator.forEach((v, i) => { characteristic[offset + i] += K * v; });
+    numerator.forEach((v, i) => { characteristic[offset + i] += effectiveGain * v; });
     return polynomialRoots(characteristic).map(z => C(z.re + center, z.im));
   }
   function assignment(previous, next) {
@@ -641,9 +746,11 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
     for (let row = n - 1; row >= 0; row--) { const j = choices[mask]; result[row] = next[j]; mask ^= 1 << j; }
     return result;
   }
-  function breakaways(terms, maxK = 1e6) {
-    validate(terms, maxK);
-    const poles = expand(terms, 'pole'), zeros = expand(terms, 'zero');
+  function breakaways(input, maxK = 1e6) {
+    const system = validate(input, maxK);
+    if (system.feedbackGain === 0) return [];
+    const multiplier = system.feedbackGain * (system.feedbackSign === 'positive' ? -1 : 1);
+    const poles = expand(system, 'pole'), zeros = expand(system, 'zero');
     const center = poles.reduce((v, z) => v + z.re, 0) / poles.length;
     const d = polynomial(poles.map(z => C(z.re - center, z.im)));
     const num = polynomial(zeros.map(z => C(z.re - center, z.im)));
@@ -662,13 +769,17 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
       if (Math.abs(z.im) > 1e-7 * Math.max(1, Math.abs(z.re))) continue;
       const at = C(z.re), numerator = evaluate(num, at), denominator = evaluate(d, at);
       if (Math.abs(numerator.value.re) < 1e-12 * numerator.bound || numerator.value.re === 0) continue;
-      const k = -denominator.value.re / numerator.value.re, re = z.re + center;
+      const k = -denominator.value.re / (multiplier * numerator.value.re), re = z.re + center;
       if (k > 0 && k <= maxK && !candidates.some(p => Math.abs(p.re - re) < 1e-7 * Math.max(1, Math.abs(re)))) candidates.push({ re, im: 0, k });
     }
     return candidates.sort((a, b) => a.k - b.k);
   }
   function locus(terms, maxK, options = {}) {
-    validate(terms, maxK);
+    const system = validate(terms, maxK);
+    if (system.feedbackGain === 0) {
+      const gains = maxK === 0 ? [0] : [0, maxK];
+      return { branches: closedLoop(system, 0).map(z => gains.map(k => ({ ...z, k }))), gains, maxK, breakaways: [], constructionWarning: null };
+    }
     const samples = Math.max(80, Math.min(2000, Math.floor(options.samples || 420)));
     const gains = new Set([0, maxK]);
     // Linear coverage near the selected range, plus logarithmic coverage of small gains.
@@ -693,11 +804,12 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
     }
     return { branches, gains: grid, maxK, breakaways: stationary, constructionWarning };
   }
-  function asymptotes(terms) {
-    validate(terms);
-    const poles = expand(terms, 'pole'), zeros = expand(terms, 'zero'), count = poles.length - zeros.length;
+  function asymptotes(input) {
+    const system = validate(input);
+    if (system.feedbackGain === 0) return { count: 0, centroid: null, angles: [] };
+    const poles = expand(system, 'pole'), zeros = expand(system, 'zero'), count = poles.length - zeros.length;
     return { count, centroid: (poles.reduce((v, z) => v + z.re, 0) - zeros.reduce((v, z) => v + z.re, 0)) / count,
-      angles: Array.from({ length: count }, (_, q) => (2 * q + 1) * Math.PI / count) };
+      angles: Array.from({ length: count }, (_, q) => (2 * q + (system.feedbackSign === 'positive' ? 0 : 1)) * Math.PI / count) };
   }
   function stability(roots) {
     const tolerance = 1e-7, rootTolerance = z => tolerance * Math.max(1, abs(z));
@@ -734,30 +846,44 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
     for (let i = 0; i < squares; i++) result = multiply(result, result);
     return result;
   }
-  function stepResponse(terms, K, options = {}) {
-    validate(terms, K);
-    const roots = closedLoop(terms, K);
-    // Remove exact common factors only for the forced input/output response.
-    // All original characteristic modes remain in closedLoop() and stability().
-    const responsePoles = expand(terms, 'pole'), responseZeros = expand(terms, 'zero');
-    let cancelledModes = 0;
-    for (let i = responseZeros.length - 1; i >= 0; i--) {
-      const z = responseZeros[i], match = responsePoles.findIndex(p => p.re === z.re && p.im === z.im);
-      if (match >= 0) { responseZeros.splice(i, 1); responsePoles.splice(match, 1); cancelledModes++; }
+  const sameRoot = (a, b) => a.re === b.re && a.im === b.im;
+  function cancelExactFactors(denominator, numeratorRoots) {
+    let den = denominator.slice(), roots = numeratorRoots.slice(), cancelledModes = 0;
+    for (let i = 0; i < roots.length;) {
+      const z = roots[i], pair = z.im === 0 ? -1 : roots.findIndex((w, j) => j !== i && w.re === z.re && w.im === -z.im);
+      if (z.im !== 0 && pair < 0) { i++; continue; }
+      const factor = z.im === 0 ? [1, -z.re] : [1, -2 * z.re, z.re * z.re + z.im * z.im];
+      if (den.length < factor.length) { i++; continue; }
+      const working = den.slice(), quotient = [], length = den.length - factor.length + 1;
+      for (let j = 0; j < length; j++) {
+        const value = working[j]; quotient.push(value);
+        for (let k = 1; k < factor.length; k++) working[j + k] -= value * factor[k];
+      }
+      // This secondary pass removes only exact zero remainders. Near-cancelled
+      // modes remain, including their slow growth or long settling time.
+      if (working.slice(length).every(v => v === 0)) {
+        den = quotient;
+        if (pair >= 0) { roots.splice(Math.max(i, pair), 1); roots.splice(Math.min(i, pair), 1); cancelledModes += 2; i = 0; }
+        else { roots.splice(i, 1); cancelledModes++; }
+      } else i++;
     }
-    const numerator = polynomial(responseZeros), characteristic = polynomial(responsePoles);
-    const offset = characteristic.length - numerator.length;
-    numerator.forEach((v, i) => { characteristic[offset + i] += K * v; });
-    const samples = Math.max(40, Math.min(2000, Math.floor(options.samples || 600)));
+    return { denominator: den, numeratorRoots: roots, cancelledModes };
+  }
+  function rationalStepResponse(numerator, denominator, roots, options, cancelledModes = 0) {
+    const requestedSamples = options.samples === undefined ? 600 : options.samples;
+    if (!Number.isFinite(requestedSamples) || requestedSamples <= 0) throw new RangeError('The response sample count must be positive and finite.');
+    const samples = Math.max(40, Math.min(2000, Math.floor(requestedSamples)));
     const maxReal = Math.max(...roots.map(z => z.re)), rates = roots.map(z => Math.abs(z.re)).filter(x => x > 1e-5);
     const slow = rates.length ? Math.min(...rates) : Math.max(1, ...roots.map(abs));
     const duration = options.duration === undefined ? Math.min(100, Math.max(.1, (maxReal > 1e-7 ? 3 : 7) / slow)) : options.duration;
     if (!Number.isFinite(duration) || duration <= 0 || duration > 1000) throw new RangeError('Time window must be greater than 0 and at most 1,000 seconds.');
-    if (K === 0) return { supported: true, points: Array.from({ length: samples + 1 }, (_, i) => ({ t: i * duration / samples, y: 0 })), duration, finalValue: 0 };
+    if (numerator.every(v => v === 0)) return { supported: true, points: Array.from({ length: samples + 1 }, (_, i) => ({ t: i * duration / samples, y: 0 })), duration, finalValue: 0, cancelledModes };
+    const leading = denominator[0], characteristic = denominator.map(v => v / leading), scaledNumerator = numerator.map(v => v / leading);
     const n = characteristic.length - 1, rate = Math.max(1, ...characteristic.slice(1).map((v, i) => Math.pow(Math.abs(v), 1 / (i + 1))));
+    if (n < scaledNumerator.length) throw new RangeError('The response transfer function must be strictly proper.');
     const den = characteristic.map((v, i) => v / Math.pow(rate, i));
-    const num = Array(n).fill(0), numeratorOffset = n - numerator.length;
-    numerator.forEach((v, i) => { num[numeratorOffset + i] = K * v / Math.pow(rate, numeratorOffset + i + 1); });
+    const num = Array(n).fill(0), numeratorOffset = n - scaledNumerator.length;
+    scaledNumerator.forEach((v, i) => { num[numeratorOffset + i] = v / Math.pow(rate, numeratorOffset + i + 1); });
     const a = matrix(n + 1);
     for (let i = 0; i < n - 1; i++) a[i][i + 1] = 1;
     for (let j = 0; j < n; j++) a[n - 1][j] = -den[n - j];
@@ -772,10 +898,49 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
       x = transition.map(row => row.reduce((v, q, j) => v + q * x[j], 0));
     }
     const status = stability(roots);
-    const finalValue = status.label === 'Stable' && characteristic[n] !== 0 ? K * numerator[numerator.length - 1] / characteristic[n] : null;
+    const finalValue = status.label === 'Stable' && characteristic[n] !== 0 ? scaledNumerator[scaledNumerator.length - 1] / characteristic[n] : null;
     return { supported: true, points, duration, finalValue, cancelledModes };
   }
-  const api = { expand, validate, polynomial, coefficients, polynomialRoots, closedLoop, locus, breakaways, asymptotes, stability, characterize, stepResponse };
+  function stepResponse(input, K, options = {}) {
+    const system = validate(input, K), roots = closedLoop(system, K);
+    const gain = K * system.feedbackGain * (system.feedbackSign === 'positive' ? -1 : 1);
+    if (gain === 0) {
+      // With no return gain, the forced output is KG; the feedback subsystem's
+      // original modes still belong to the internal characteristic equation.
+      const response = openLoopStepResponse(system, K, { ...options, path: 'forward' });
+      if (K !== 0 && stability(roots).label !== 'Stable') response.finalValue = null;
+      response.cancelledModes += expand(system.feedback, 'pole').length;
+      return response;
+    }
+    const denominatorRoots = expand(system, 'pole'), loopZeros = expand(system, 'zero');
+    const outputZeros = [...expand(system.forward, 'zero'), ...expand(system.feedback, 'pole')];
+    let cancelledModes = 0;
+    // A common loop factor is removable from T only when it also divides Ng Dh.
+    // In particular, a G pole cancelled by an H zero can remain in the output.
+    for (let i = outputZeros.length - 1; i >= 0; i--) {
+      const z = outputZeros[i], p = denominatorRoots.findIndex(w => sameRoot(z, w)), q = loopZeros.findIndex(w => sameRoot(z, w));
+      if (p >= 0 && q >= 0) { denominatorRoots.splice(p, 1); loopZeros.splice(q, 1); outputZeros.splice(i, 1); cancelledModes++; }
+    }
+    const characteristic = polynomial(denominatorRoots), loopNumerator = polynomial(loopZeros);
+    const offset = characteristic.length - loopNumerator.length;
+    loopNumerator.forEach((v, i) => { characteristic[offset + i] += gain * v; });
+    const reduced = cancelExactFactors(characteristic, outputZeros);
+    const numerator = polynomial(reduced.numeratorRoots).map(v => K * v);
+    return rationalStepResponse(numerator, reduced.denominator, roots, options, cancelledModes + reduced.cancelledModes);
+  }
+  function openLoopStepResponse(input, K, options = {}) {
+    const system = validate(input, K), path = options.path ?? 'forward';
+    if (!['forward', 'loop'].includes(path)) throw new RangeError('Open-loop path must be forward or loop.');
+    const roots = expand(system, 'pole', path), responsePoles = roots.slice(), responseZeros = expand(system, 'zero', path);
+    let cancelledModes = 0;
+    for (let i = responseZeros.length - 1; i >= 0; i--) {
+      const match = responsePoles.findIndex(p => sameRoot(p, responseZeros[i]));
+      if (match >= 0) { responseZeros.splice(i, 1); responsePoles.splice(match, 1); cancelledModes++; }
+    }
+    const numerator = polynomial(responseZeros).map(v => K * (path === 'loop' ? system.feedbackGain : 1) * v);
+    return rationalStepResponse(numerator, polynomial(responsePoles), roots, options, cancelledModes);
+  }
+  const api = { expand, validate, polynomial, coefficients, polynomialRoots, closedLoop, locus, breakaways, asymptotes, stability, characterize, stepResponse, openLoopStepResponse };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.RootLocusModel = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);
@@ -795,32 +960,49 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
     const rootSum = (terms, kind) => terms.filter(t => t.kind === kind).reduce((sum, t) => sum + t.re * (t.type === 'pair' ? 2 : 1), 0);
     const rightmost = roots => roots.reduce((best, root) => !best || root.re > best.re || (root.re === best.re && root.im > best.im) ? root : best, null);
     const rootList = roots => roots.length ? roots.map(complex).join('; ') : 'Awaiting a valid system';
+    const feedbackGain = state => Number.isFinite(state.feedbackGain) ? state.feedbackGain : 1;
+    const positiveFeedback = state => state.feedbackSign === 'positive';
+    const feedbackOperator = state => positiveFeedback(state) ? '−' : '+';
+    const pathTerms = (state, path) => state.terms.filter(term => (term.path || 'forward') === path);
     let isOpen = false, stepIndex = 0, collapsed = false, previousFocus = null, target = null, positionFrame = null;
     const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
     const steps = [
       {
         title: 'Close the feedback loop', target: 'transfer-panel',
-        body: state => `<p>The factored equation defines the open-loop plant <strong>G(s) = N(s)/D(s)</strong>. The scalar K multiplies this plant.</p><div class="tutorial-math">T(s) = KN(s) / [D(s) + KN(s)]<br>D(s) + KN(s) = 0</div><p>With negative unity feedback, the characteristic equation determines the closed-loop poles. The current gain is <strong>K = ${number(state.K)}</strong>.</p><p class="tutorial-note">Open the characteristic polynomial beneath the equation to see how K changes its coefficients.</p>`
+        body: state => `<p>The forward path is <strong>KG(s)</strong>. The feedback path <strong>H(s)</strong> acts on the output before it returns to the summing point.</p><div class="tutorial-math">G(s) = N<sub>G</sub>(s)/D<sub>G</sub>(s)<br>H(s) = hN<sub>H</sub>(s)/D<sub>H</sub>(s)<br>L(s) = KG(s)H(s)<br>T(s) = KG(s) / [1 ${feedbackOperator(state)} L(s)]</div><p>For the selected <strong>${positiveFeedback(state) ? 'positive' : 'negative'} feedback</strong>, the characteristic equation is:</p><div class="tutorial-math">D<sub>G</sub>D<sub>H</sub> ${feedbackOperator(state)} KhN<sub>G</sub>N<sub>H</sub> = 0</div><p class="tutorial-note">The characteristic polynomial beside G(s) and H(s) shows its coefficients at K = ${number(state.K)}.</p>`
+      },
+      {
+        title: 'Choose the feedback path', target: 'feedback-controls',
+        body: state => {
+          const terms = pathTerms(state, 'feedback'), h = feedbackGain(state);
+          const description = h === 0 ? 'At h = 0, the returned signal is zero. T(s) = KG(s), and changing K leaves the internal characteristic roots fixed.' : terms.length ? 'The poles and zeros of H(s) join those of G(s) in the loop transfer function. They can change the branch paths and stability boundaries.' : h === 1 ? 'The current feedback path is H(s) = 1, which is unity feedback.' : `The current feedback path is the constant H(s) = ${number(h)}.`;
+          return `<p>Choose a feedback configuration, set its gain <strong>h = ${number(h)}</strong>, and select the summing sign.</p><div class="tutorial-math">Negative feedback: 1 + KGH = 0<br>Positive feedback: 1 − KGH = 0</div><p>${description}</p><p class="tutorial-note">Use the factor editor's path selector to edit G(s) or H(s). The forward and feedback configurations can be changed independently.</p>`;
+        }
       },
       {
         title: 'Start at the open-loop poles', target: 'term-controls',
         body: state => {
           const n = order(state.terms, 'pole'), m = order(state.terms, 'zero');
-          return `<p>Your system has <strong>${n} ${n === 1 ? 'pole' : 'poles'}</strong> and <strong>${m} ${m === 1 ? 'zero' : 'zeros'}</strong>. Each pole starts one branch when K = 0.</p><p>Blue crosses mark poles; green circles mark zeros. Select a factor in the list to enter exact coordinates, or drag its marker in the plot.</p><p class="tutorial-note">A conjugate pair counts as two roots and moves together. For real roots, placement uses the real axis.</p><p>Try moving a zero and observe how it changes the paths toward the branch endpoints.</p>`;
+          const path = state.editPath === 'feedback' ? 'H(s), the feedback path' : 'G(s), the forward path';
+          return `<p>The combined factors of G(s)H(s) contain <strong>${n} ${n === 1 ? 'pole' : 'poles'}</strong> and <strong>${m} ${m === 1 ? 'zero' : 'zeros'}</strong>. At K = 0, the characteristic roots are the poles of both paths.</p><p>The editor currently shows <strong>${path}</strong>. Select a listed factor for exact coordinates. Blue crosses mark poles; green circles mark zeros. Feedback markers carry an H label.</p><p class="tutorial-note">A conjugate pair counts as two roots and moves together. ${feedbackGain(state) === 0 ? 'With h = 0, all characteristic roots stay at their starting positions.' : 'With h > 0, each starting pole has a branch as K increases.'}</p>`;
         }
       },
       {
         title: 'Trace the branches with gain', target: 'gain-control',
-        body: state => `<p>Move the gain slider or enter an exact K. The teal dots show all characteristic roots at that gain.</p><div class="tutorial-math">K = ${number(state.K)}<br>Poles: ${rootList(state.roots)}</div><p>The colored locus covers <strong>0 ≤ K ≤ ${number(state.maxK)}</strong>. Direction arrows follow increasing K. Click a branch to choose a nearby sampled gain.</p><p class="tutorial-note">For the two-pole example, enter K = 1. The roots meet at s = −1, then form a conjugate pair as K increases.</p>`
+        body: state => `<p>Move the gain slider or enter an exact K. The teal dots show all internal characteristic roots at that gain.</p><div class="tutorial-math">K = ${number(state.K)} · h = ${number(feedbackGain(state))}<br>Poles: ${rootList(state.roots)}</div><p>${feedbackGain(state) === 0 ? 'With h = 0, the characteristic equation is D<sub>G</sub>D<sub>H</sub> = 0. Changing K changes the forward gain but produces no gain-dependent root locus.' : `The colored locus covers <strong>0 ≤ K ≤ ${number(state.maxK)}</strong>. Arrows follow increasing K. Click a branch to choose a nearby sampled gain.`}</p><p class="tutorial-note">The feedback sign and H(s) determine the branch paths. Changing h also changes the K values at which the roots reach a given location.</p>`
       },
       {
         title: 'Find the limiting directions', target: 'locus-panel',
         body: state => {
           const n = order(state.terms, 'pole'), m = order(state.terms, 'zero'), count = n - m;
+          if (feedbackGain(state) === 0) return '<p>At h = 0, the characteristic roots remain at the poles of G(s) and H(s) for every K.</p><div class="tutorial-math">D<sub>G</sub>D<sub>H</sub> = 0</div><p>The diagram therefore has no gain-dependent branches or asymptotes. Set h above zero to inspect the limiting directions.</p>';
           const centroid = (rootSum(state.terms, 'pole') - rootSum(state.terms, 'zero')) / count;
-          const angles = Array.from({ length: Math.max(0, count) }, (_, q) => `${number((2 * q + 1) * 180 / count)}°`).join(', ');
-          return `<p>As K → ∞, ${m} ${m === 1 ? 'branch approaches a finite zero' : 'branches approach finite zeros'}, and <strong>${count} ${count === 1 ? 'branch goes' : 'branches go'} to infinity</strong>.</p><div class="tutorial-math">Centroid = (Σp − Σz) / (n − m)<br>Current centroid: ${number(centroid)}<br>Asymptote angles: ${angles}</div><p>Enable <strong>Asymptotes</strong> to see these limiting directions. On the real axis, the locus lies to the left of an odd number of real poles and zeros, counting repeated roots.</p><p class="tutorial-note">The gain range ends at a finite K. Its branch endpoints can still be far from the asymptotes or zeros.</p>`;
+          const offset = positiveFeedback(state) ? 0 : 1;
+          const angles = Array.from({ length: Math.max(0, count) }, (_, q) => `${number((2 * q + offset) * 180 / count)}°`).join(', ');
+          const parity = positiveFeedback(state) ? 'even' : 'odd';
+          const asymptotes = count > 0 ? `Centroid = (Σp − Σz) / (n − m)<br>Current centroid: ${number(centroid)}<br>Angles: ${positiveFeedback(state) ? '2q' : '(2q + 1)'}180°/(n − m)<br>Current angles: ${angles}` : 'Every branch approaches a finite zero; there are no asymptotes to infinity.';
+          return `<p>For fixed h > 0 as K → ∞, ${m} ${m === 1 ? 'branch approaches a finite zero' : 'branches approach finite zeros'}, and <strong>${count} ${count === 1 ? 'branch goes' : 'branches go'} to infinity</strong>.</p><div class="tutorial-math">${asymptotes}</div><p>For the selected ${positiveFeedback(state) ? 'positive' : 'negative'} feedback, a real-axis point is on the locus when an <strong>${parity}</strong> number of real poles and zeros lie to its right, counting multiplicity.</p><p class="tutorial-note">Poles and zeros from both G(s) and H(s) enter these rules. The colored curves stop at the finite gain limit.</p>`;
         }
       },
       {
@@ -828,12 +1010,15 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
         body: state => {
           const pole = rightmost(state.roots), wn = pole ? Math.hypot(pole.re, pole.im) : 0;
           const values = pole ? `Rightmost pole: ${complex(pole)}<br>ωₙ = ${number(wn)} rad/s<br>ζ = ${wn ? number(-pole.re / wn) : 'undefined at the origin'}` : 'Awaiting a valid system';
-          return `<p>Left-half-plane modes decay; right-half-plane modes grow. Simple imaginary-axis modes are marginal. Repeated imaginary-axis modes are unstable.</p><div class="tutorial-math">${values}</div><p>Enable the <strong>Damping grid</strong>. Points along each ray share ζ = −σ/√(σ² + ω²). Both plot axes use equal spatial scales.</p><p class="tutorial-note">In the three-pole example, compare K = 5, 6, and 7 to see the crossing from stable through marginal to unstable.</p>`;
+          return `<p>Left-half-plane modes decay; right-half-plane modes grow. Simple imaginary-axis modes are marginal. Repeated imaginary-axis modes are unstable.</p><div class="tutorial-math">${values}</div><p>Enable the <strong>Damping grid</strong>. Points along each ray share ζ = −σ/√(σ² + ω²). Both plot axes use equal spatial scales.</p><p class="tutorial-note">Stability depends on the complete characteristic equation, including H(s) and the feedback sign. Follow all roots while varying K.</p>`;
         }
       },
       {
-        title: 'Connect the poles to time', target: 'response-panel',
-        body: state => `<p>The plot applies a unit step to T(s) from zero initial state at <strong>K = ${number(state.K)}</strong>. The table lists the poles and their modal damping.</p><p>${state.K === 0 ? 'At K = 0, the input produces zero output. The diagram still displays the characteristic roots of D(s).' : 'Change K and compare the pole motion with the output. Complex poles can produce oscillation; zeros and the other poles also shape the response.'}</p><p>Use <strong>Auto</strong> for a suggested time window, or enter a duration to inspect a slower or faster response.</p><p class="tutorial-note">Internal stability includes every characteristic root, including canceled modes. A canceled mode can be absent from the input-to-output response.</p><p class="tutorial-source"><a href="https://lpsa.swarthmore.edu/Root_Locus/RootLocus.html" target="_blank" rel="noopener noreferrer">Further reading: Swarthmore root locus overview</a></p>`
+        title: 'Compare the step responses', target: 'response-panel',
+        body: state => {
+          const loop = (state.openResponsePath || document.getElementById('open-response-path')?.value || 'forward') === 'loop';
+          return `<p>Expand <strong>Open-loop step response</strong> to compare it with the closed-loop plot. Both apply a unit step from zero initial state at <strong>K = ${number(state.K)}</strong>.</p><div class="tutorial-math">Closed loop: T(s) = KG / [1 ${feedbackOperator(state)} KGH]<br>Selected open response: ${loop ? 'KGH, the loop transfer function' : 'KG, the forward path'}</div><p>The open-response selector chooses <strong>KG</strong> or <strong>KGH</strong>. KG is the output with feedback disconnected. KGH includes the feedback path and describes the signal returned around the loop.</p><p>${state.K === 0 ? 'At K = 0, both plotted outputs are zero. The pole diagram retains the internal characteristic roots.' : feedbackGain(state) === 0 ? 'At h = 0, the closed-loop response equals KG. The open KGH response is zero.' : 'Compare the two responses as you change K, H(s), or the feedback sign.'}</p><p class="tutorial-note">The plots share a time window and use separate amplitude scales. Internal stability includes canceled modes that may be absent from an input-to-output response.</p><p class="tutorial-source"><a href="https://lpsa.swarthmore.edu/Root_Locus/RootLocus.html" target="_blank" rel="noopener noreferrer">Further reading: Swarthmore root locus overview</a></p>`;
+        }
       }
     ];
 
@@ -907,7 +1092,7 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
       if (!isOpen) return;
       schedulePosition();
       const state = getState();
-      const html = steps[stepIndex].body({ terms: [], roots: [], ...state });
+      const html = steps[stepIndex].body({ terms: [], roots: [], feedbackSign: 'negative', feedbackGain: 1, editPath: 'forward', ...state });
       if (body.innerHTML === html) return;
       const focusedLink = body.contains(document.activeElement) ? document.activeElement.closest('a') : null;
       const focusedHref = focusedLink ? focusedLink.getAttribute('href') : null;
@@ -994,8 +1179,10 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
       }
     }, true);
     global.addEventListener('root-locus:panel-order-change', schedulePosition);
+    global.addEventListener('root-locus:sidebar-resize', schedulePosition);
     global.addEventListener('resize', schedulePosition);
     global.addEventListener('scroll', schedulePosition, { passive: true, capture: true });
+    document.getElementById('open-response-path')?.addEventListener('change', update);
     const observer = new ResizeObserver(schedulePosition);
     observer.observe(popover);
     for (const id of new Set(steps.map(step => step.target))) {
@@ -1016,7 +1203,7 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
   const THRESHOLD = 48;
   let initialized = false, active = null;
   const clamp = (value, lo, hi) => Math.max(lo, Math.min(hi, value));
-  const panelName = panel => panel.id === 'locus-panel' ? 'Root locus' : 'Closed-loop step response';
+  const panelName = panel => panel.id === 'locus-panel' ? 'Root locus' : 'Step responses';
   function announce(message) {
     const status = document.getElementById('panel-order-status');
     if (status) status.textContent = message;
@@ -1154,6 +1341,82 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
   root.RootLocusLayout = { init };
 })(typeof window !== 'undefined' ? window : globalThis);
 </script>
+  <script>/* Resize the desktop control rail while preserving room for the plots. */
+(function () {
+  'use strict';
+  const workbench = document.querySelector('.workbench');
+  const rail = document.getElementById('control-rail');
+  const handle = document.getElementById('sidebar-resizer');
+  const desktop = window.matchMedia('(min-width:901px)');
+  const MIN_WIDTH = 280, MAX_WIDTH = 560, PLOT_MIN_WIDTH = 440, GUTTER = 18;
+  const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+  let preferredWidth = null, active = null;
+  const defaultWidth = () => window.innerWidth <= 1150 ? 290 : 320;
+  const maximum = () => Math.max(MIN_WIDTH, Math.min(MAX_WIDTH, Math.floor(workbench.clientWidth - GUTTER - PLOT_MIN_WIDTH)));
+  function syncHeight() {
+    if (desktop.matches) handle.style.height = `${rail.getBoundingClientRect().height}px`;
+  }
+  function applyWidth() {
+    const max = maximum();
+    const width = Math.round(clamp(preferredWidth ?? defaultWidth(), MIN_WIDTH, max));
+    workbench.style.setProperty('--sidebar-width', `${width}px`);
+    handle.setAttribute('aria-valuemax', String(max));
+    handle.setAttribute('aria-valuenow', String(width));
+    handle.setAttribute('aria-valuetext', `${width} pixels`);
+    syncHeight();
+    window.dispatchEvent(new CustomEvent('root-locus:sidebar-resize'));
+  }
+  function changeWidth(width) {
+    preferredWidth = clamp(width, MIN_WIDTH, maximum());
+    applyWidth();
+  }
+  function finish(cancel = false) {
+    if (!active) return;
+    const drag = active;
+    active = null;
+    if (cancel) { preferredWidth = drag.previousWidth; applyWidth(); }
+    handle.classList.remove('is-resizing');
+    document.body.classList.remove('sidebar-resizing');
+    if (handle.hasPointerCapture(drag.id)) handle.releasePointerCapture(drag.id);
+  }
+  handle.addEventListener('pointerdown', event => {
+    if (!desktop.matches || active || event.button !== 0 || event.isPrimary === false) return;
+    event.preventDefault();
+    handle.focus({preventScroll:true});
+    active = {id:event.pointerId, x:event.clientX, width:rail.getBoundingClientRect().width, previousWidth:preferredWidth};
+    handle.setPointerCapture(event.pointerId);
+    handle.classList.add('is-resizing');
+    document.body.classList.add('sidebar-resizing');
+  });
+  handle.addEventListener('pointermove', event => {
+    if (!active || event.pointerId !== active.id) return;
+    event.preventDefault();
+    changeWidth(active.width + event.clientX - active.x);
+  });
+  handle.addEventListener('pointerup', event => {
+    if (!active || event.pointerId !== active.id) return;
+    changeWidth(active.width + event.clientX - active.x);
+    finish();
+  });
+  handle.addEventListener('pointercancel', () => finish(true));
+  handle.addEventListener('lostpointercapture', () => finish(true));
+  handle.addEventListener('dblclick', () => { preferredWidth = null; applyWidth(); });
+  handle.addEventListener('keydown', event => {
+    if (!desktop.matches || active || !['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+    event.preventDefault();
+    const step = event.shiftKey ? 40 : 16;
+    const width = rail.getBoundingClientRect().width;
+    changeWidth(event.key === 'Home' ? MIN_WIDTH : event.key === 'End' ? maximum() : width + (event.key === 'ArrowRight' ? step : -step));
+  });
+  document.addEventListener('keydown', event => {
+    if (active && event.key === 'Escape') { event.preventDefault(); finish(true); }
+  }, true);
+  window.addEventListener('blur', () => finish(true));
+  window.addEventListener('resize', () => { finish(true); applyWidth(); });
+  new ResizeObserver(syncHeight).observe(rail);
+  applyWidth();
+})();
+</script>
   <script>(function () {
   'use strict';
   const M = window.RootLocusModel, $ = id => document.getElementById(id);
@@ -1161,7 +1424,7 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
   const fmt = (v, digits = 3) => v === 0 ? '0' : Math.abs(v) >= 1e5 || Math.abs(v) < .001 ? v.toExponential(2) : Number(v.toFixed(digits)).toString();
   const complex = z => z.im === 0 ? fmt(z.re) : `${fmt(z.re)} ${z.im < 0 ? '−' : '+'} j${fmt(Math.abs(z.im))}`;
   let nextId = 1;
-  const term = (kind, re, im = 0, pair = false) => ({id:nextId++,kind,type:pair ? 'pair' : 'real',re,im});
+  const term = (kind, re, im = 0, pair = false, path = 'forward') => ({id:nextId++,kind,type:pair ? 'pair' : 'real',re,im,path});
   const presets = {
     two: {terms:()=>[term('pole',0),term('pole',-2)],K:4,maxK:25},
     three: {terms:()=>[term('pole',0),term('pole',-1),term('pole',-2)],K:2,maxK:12},
@@ -1170,29 +1433,57 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
     unstable: {terms:()=>[term('pole',1),term('pole',-2)],K:4,maxK:20},
     first: {terms:()=>[term('pole',-1)],K:2,maxK:10}
   };
-  const state = {terms:[],K:4,maxK:25,selected:null,tool:null,locus:null,roots:[],view:null,duration:10,autoTime:true,playing:false,drag:null};
-  let tutorial, animation = null, scheduled = null, plotBox;
+  const state = {terms:[],K:4,maxK:25,selected:null,tool:null,locus:null,roots:[],view:null,duration:10,autoTime:true,drag:null,editPath:'forward',feedbackGain:1,feedbackSign:'negative',forwardPreset:'two',feedbackPreset:'unity',openResponsePath:'forward'};
+  let tutorial, scheduled = null, plotBox;
+  const pathTerms = (path,terms=state.terms) => terms.filter(t=>t.path===path);
+  const system = (terms=state.terms) => ({forward:pathTerms('forward',terms),feedback:pathTerms('feedback',terms),feedbackGain:state.feedbackGain,feedbackSign:state.feedbackSign});
   const order = kind => state.terms.filter(t=>t.kind===kind).reduce((n,t)=>n+(t.type==='pair'?2:1),0);
   const selected = () => state.terms.find(t=>t.id===state.selected);
   function announce(message) { $('action-status').textContent = message; }
   function validTerms(terms) {
-    const n = M.expand(terms,'pole').length, m = M.expand(terms,'zero').length;
-    if (n < 1 || n > 6 || m >= n) { announce('Keep one to six poles, with fewer zeros than poles. A conjugate pair counts as two roots.'); return false; }
+    const count=(path,kind)=>M.expand(pathTerms(path,terms),kind).length;
+    const gp=count('forward','pole'),gz=count('forward','zero'),hp=count('feedback','pole'),hz=count('feedback','zero');
+    if(gp<1||gz>=gp||hz>hp||gp+hp>6){announce('Use one to six poles across both paths. G needs more poles than zeros; H needs at least as many poles as zeros. A pair counts twice.');return false;}
     return true;
   }
-  function custom() { $('preset').value='custom'; }
+  function custom(path=selected()?.path||state.editPath) { if(path==='feedback')state.feedbackPreset='custom';else state.forwardPreset='custom'; }
+  function commitActiveTermEdit() {
+    const active=document.activeElement;
+    if($('term-editor').contains(active)&&active.matches('input, select'))active.blur();
+  }
+  function selectTerm(id) {commitActiveTermEdit();state.selected=id;const t=selected();if(t&&state.editPath!==t.path){state.editPath=t.path;const tool=state.tool;state.tool=null;setTool(tool);}}
+  function refreshSelection() {renderControls();if(state.locus)renderLocus();tutorial?.update();}
+  function deselectTerm(restoreFocus=false) {
+    const id=state.selected,focusEditor=$('term-editor').contains(document.activeElement);
+    commitActiveTermEdit();
+    state.selected=null;state.drag=null;announce('');refreshSelection();
+    if(restoreFocus||focusEditor){
+      const button=$('term-list').querySelector(`[data-term="${id}"]`);
+      (button||$('edit-path')).focus({preventScroll:true});
+    }
+  }
+  function toggleTerm(id) {if(state.selected===id)deselectTerm();else {selectTerm(id);announce('');refreshSelection();}}
   function setTool(tool) {
     state.tool = state.tool === tool ? null : tool;
     for (const kind of ['pole','zero']) $('place-'+kind).setAttribute('aria-pressed',String(state.tool===kind));
-    $('tool-hint').textContent=state.tool ? `Placement mode · click the s-plane to add a ${state.tool}${$('place-pair').checked?' pair':''}. Escape returns to gain selection.` : 'Click a branch to choose K. Drag × or ○ to edit the system.';
+    $('tool-hint').textContent=state.tool ? `Place in ${state.editPath==='forward'?'G(s)':'H(s)'} · click the s-plane to add a ${state.tool}${$('place-pair').checked?' pair':''}. Escape returns to gain selection.` : '';
   }
-  function stop() { state.playing=false; cancelAnimationFrame(animation); animation=null; $('play').textContent='▶ Sweep gain'; $('play').setAttribute('aria-pressed','false'); }
   function applyPreset(key) {
-    stop(); const p = presets[key]; if(!p) return;
-    state.terms=p.terms(); state.K=p.K; state.maxK=p.maxK; state.selected=state.terms[0].id; state.tool=null; state.autoTime=true;
-    $('preset').value=key; setTool(null);
-    announce('Drag a marker, enter coordinates, or move the gain to explore this example.');
+    const p = presets[key]; if(!p) return;
+    const terms=[...p.terms(),...pathTerms('feedback')];
+    if(!validTerms(terms)){renderControls();return;}
+    state.terms=terms; state.K=p.K; state.maxK=p.maxK; state.selected=null;state.drag=null;state.editPath='forward';state.tool=null; state.autoTime=true;state.forwardPreset=key;
+    setTool(null);
+    announce('');
     update(true,true);
+  }
+  function applyFeedbackPreset(key) {
+    const factors=key==='unity'?[]:key==='lowpass'?[term('pole',-1,0,false,'feedback')]:[term('pole',-5,0,false,'feedback'),term('zero',-1,0,false,'feedback')];
+    const terms=[...pathTerms('forward'),...factors];
+    if(!validTerms(terms)){renderControls();return;}
+    state.terms=terms;state.feedbackGain=1;state.feedbackPreset=key;state.editPath='feedback';state.selected=null;state.drag=null;
+    const tool=state.tool;state.tool=null;setTool(tool);update(true,true);
+    announce('');
   }
   function setGain(value) {
     if(!Number.isFinite(value)) return;
@@ -1206,37 +1497,43 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
     const replacement={...t,...values};
     const terms=state.terms.map(x=>x.id===t.id?replacement:x);
     if(!validTerms(terms)){renderControls();return;}
-    stop(); state.terms=terms; custom(); update(true,false);
+    state.terms=terms; custom(); update(true,false);
   }
   function removeTerm() {
+    const path=selected()?.path;if(!path)return;
     const terms=state.terms.filter(t=>t.id!==state.selected);
     if(!validTerms(terms))return;
-    stop();state.terms=terms;state.selected=terms[0].id;custom();update(true,false);announce('Selected factor removed.');
+    state.terms=terms;state.selected=null;state.drag=null;custom(path);update(true,false);announce('Selected factor removed.');
+    ($('term-list').querySelector('[data-term]')||$('edit-path')).focus({preventScroll:true});
   }
   function addTerm(re,im) {
+    commitActiveTermEdit();
     const pair=$('place-pair').checked;
-    const t=term(state.tool,clamp(Math.round(re*10)/10,-100,100),pair?clamp(Math.round(Math.abs(im)*10)/10,0,100):0,pair);
+    const t=term(state.tool,clamp(Math.round(re*10)/10,-100,100),pair?clamp(Math.round(Math.abs(im)*10)/10,0,100):0,pair,state.editPath);
     if(!validTerms([...state.terms,t]))return;
-    stop();state.terms.push(t);state.selected=t.id;custom();update(true,false);
+    state.terms.push(t);state.selected=t.id;custom();update(true,false);
     announce(`${t.kind==='pole'?'Pole':'Zero'} ${pair?'pair ':''}added. Use the coordinate fields for precise placement.`);
   }
   function renderControls() {
     const active=document.activeElement, focusTerm=active?.closest('[data-term]')?.dataset.term;
     if(active!==$('gain-exact'))$('gain-exact').value=fmt(state.K,6);
     if(active!==$('gain-max'))$('gain-max').value=fmt(state.maxK,6);
+    if(active!==$('feedback-gain'))$('feedback-gain').value=fmt(state.feedbackGain,6);
+    $('preset').value=state.forwardPreset;$('feedback-preset').value=state.feedbackPreset;
+    $('feedback-sign').value=state.feedbackSign;$('edit-path').value=state.editPath;
     $('gain').value=1000*Math.log1p(state.K)/Math.log1p(state.maxK);
     $('gain').setAttribute('aria-valuetext',`K = ${fmt(state.K)}`);
     $('gain-end').textContent=fmt(state.maxK);
-    $('order-count').textContent=`${order('pole')} P · ${order('zero')} Z`;
+    $('order-count').textContent=`Loop: ${order('pole')} P · ${order('zero')} Z`;
     const counters={pole:0,zero:0};
-    $('term-list').innerHTML=state.terms.map(t=>{
+    $('term-list').innerHTML=pathTerms(state.editPath).map(t=>{
       const n=++counters[t.kind], name=`${t.kind==='pole'?'Pole':'Zero'} ${n}${t.type==='pair'?' pair':''}`;
-      return `<button class="term-button ${t.kind}" data-term="${t.id}" aria-pressed="${state.selected===t.id}" aria-label="${name}, ${fmt(t.re)}${t.type==='pair'?` plus or minus j ${fmt(t.im)}`:''}"><span class="term-symbol">${t.kind==='pole'?'×':'○'}</span><span>${name}</span><span class="term-frequency">${fmt(t.re)}${t.type==='pair'?` ± j${fmt(t.im)}`:''}</span></button>`;
-    }).join('');
+      return `<button class="term-button ${t.kind}" data-term="${t.id}" aria-pressed="${state.selected===t.id}" aria-label="${t.path==='forward'?'G':'H'} ${name}, ${fmt(t.re)}${t.type==='pair'?` plus or minus j ${fmt(t.im)}`:''}"><span class="term-symbol">${t.kind==='pole'?'×':'○'}</span><span>${name}</span><span class="term-frequency">${fmt(t.re)}${t.type==='pair'?` ± j${fmt(t.im)}`:''}</span></button>`;
+    }).join('')||'<p class="empty">H(s) is a constant gain. Place a pole to add feedback dynamics.</p>';
     if(focusTerm)$('term-list').querySelector(`[data-term="${focusTerm}"]`)?.focus({preventScroll:true});
     const t=selected();$('term-editor').hidden=!t;
     if(t){
-      $('selected-label').textContent=`${t.kind==='pole'?'Pole':'Zero'} settings`;
+      $('selected-label').textContent=`${t.path==='forward'?'G':'H'} · ${t.kind==='pole'?'Pole':'Zero'} settings`;
       $('term-type').value=t.type;
       if(active!==$('term-re'))$('term-re').value=fmt(t.re,4);
       if(active!==$('term-im'))$('term-im').value=fmt(t.im,4);
@@ -1250,14 +1547,22 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
     return t.re===0?linear:`<mrow><mo>(</mo>${linear}<mo>)</mo></mrow>`;
   }
   function renderEquation() {
-    const factors=kind=>state.terms.filter(t=>t.kind===kind).map(factorMath).join('')||'<mn>1</mn>';
-    $('transfer-equation').innerHTML=`<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mrow><mi>L</mi><mo>(</mo><mi>s</mi><mo>)</mo></mrow><mo>=</mo><mi>K</mi><mrow><mi>G</mi><mo>(</mo><mi>s</mi><mo>)</mo></mrow><mo>=</mo><mi>K</mi><mfrac><mrow class="factor-num">${factors('zero')}</mrow><mrow class="factor-den">${factors('pole')}</mrow></mfrac></mrow></math>`;
-    const d=M.polynomial(M.expand(state.terms,'pole')),n=M.polynomial(M.expand(state.terms,'zero'));
-    const a=d.map((v,i)=>v+state.K*(n[i-(d.length-n.length)]||0));
-    $('characteristic').textContent=a.map((v,i)=>{
+    for(const path of ['forward','feedback']){
+      const terms=pathTerms(path),factors=kind=>terms.filter(t=>t.kind===kind).map(factorMath).join('')||'<mn>1</mn>';
+      const expr=path==='feedback'?(terms.length?`<mn>${fmt(state.feedbackGain)}</mn><mfrac><mrow class="factor-num">${factors('zero')}</mrow><mrow class="factor-den">${factors('pole')}</mrow></mfrac>`:`<mn>${fmt(state.feedbackGain)}</mn>`):`<mfrac><mrow class="factor-num">${factors('zero')}</mrow><mrow class="factor-den">${factors('pole')}</mrow></mfrac>`;
+      $(path==='forward'?'transfer-equation':'feedback-transfer-equation').innerHTML=`<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mrow><mi>${path==='forward'?'G':'H'}</mi><mo>(</mo><mi>s</mi><mo>)</mo></mrow><mo>=</mo>${expr}</mrow></math>`;
+    }
+    const sign=state.feedbackSign==='negative'?'+':'−',name=state.feedbackSign==='negative'?'Negative':'Positive';
+    $('feedback-equation').innerHTML=`<span>L(s) = K G(s) H(s)</span><span>T(s) = K G(s) / [1 ${sign} K G(s) H(s)]</span>`;
+    $('characteristic-equation').innerHTML=`D<sub>G</sub>D<sub>H</sub> ${sign} KhN<sub>G</sub>N<sub>H</sub> = 0`;
+    $('feedback-sign-symbol').textContent=state.feedbackSign==='negative'?'−':'+';
+    $('transfer-badge').textContent=`${name} feedback`;
+    $('feedback-status').textContent=state.feedbackGain===0?'Feedback gain h = 0 · K ≥ 0':`${name} feedback · K ≥ 0`;
+    const a=M.coefficients(system(),state.K).characteristic;
+    $('characteristic').innerHTML=a.map((v,i)=>{
       if(v===0)return '';
       const pow=a.length-1-i, coef=Math.abs(v)===1&&pow?'':fmt(Math.abs(v));
-      return `${i===0?(v<0?'−':''):(v<0?' − ':' + ')}${coef}${pow?(pow===1?'s':`s^${pow}`):''}`;
+      return `${i===0?(v<0?'−':''):(v<0?' − ':' + ')}${coef}${pow?(pow===1?'s':`s<sup>${pow}</sup>`):''}`;
     }).join('').replace(/^ \+ /,'')+' = 0';
   }
   function renderReadouts() {
@@ -1305,7 +1610,7 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
     for(const x of ticks(xmin,xmax,width<500?5:9))html+=svgLine(X(x),p.y,X(x),p.y+p.h,'grid')+`<text x="${X(x)}" y="${p.y+p.h+22}" text-anchor="middle">${fmt(x)}</text>`;
     for(const y of ticks(-ymax,ymax,8))html+=svgLine(p.x,Y(y),p.x+p.w,Y(y),'grid')+`<text x="${p.x-9}" y="${Y(y)+4}" text-anchor="end">${fmt(y)}</text>`;
     html+=`<g clip-path="url(#plane-clip)">`;
-    const as=M.asymptotes(state.terms);
+    const as=M.asymptotes(system());
     if($('show-damping').checked){
       const radius=Math.max(Math.abs(xmin),Math.abs(xmax),ymax)*3;
       for(const zeta of [.2,.4,.6,.8])for(const sign of [-1,1]){
@@ -1314,7 +1619,7 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
         if(sign>0){const labelHeight=width<500?.98-.6*zeta:.88;const rr=Math.min(ymax*labelHeight/dy,Math.max(.1,-xmin*.85)/zeta);html+=`<text class="damping-label" x="${X(dx*rr)}" y="${Y(dy*rr)-5}" text-anchor="middle">ζ=${zeta}</text>`;}
       }
     }
-    if($('show-asymptotes').checked){
+    if($('show-asymptotes').checked&&as.count){
       const radius=Math.max(state.view.xSpan,state.view.ySpan)*5;
       for(const angle of as.angles)html+=svgLine(X(as.centroid),Y(0),X(as.centroid+radius*Math.cos(angle)),Y(radius*Math.sin(angle)),'asymptote');
       html+=`<path d="M ${X(as.centroid)-5} ${Y(0)} l 5 -5 5 5 -5 5 Z" class="centroid"/>`;
@@ -1337,8 +1642,9 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
       }
     }
     for(const t of state.terms)for(const z of M.expand([t],t.kind)){
-      const x=X(z.re),y=Y(z.im),label=`${t.kind} at ${complex(z)}`;
-      html+=`<g class="root-marker ${t.kind}${state.selected===t.id?' selected':''}" data-root="${t.id}" data-sign="${z.im<0?-1:1}" tabindex="0" role="button" aria-label="${label}. Arrow keys move; Enter opens coordinates; Delete removes."><title>${label}</title><circle class="marker-halo" cx="${x}" cy="${y}" r="12"/>${t.kind==='pole'?`<path class="open-root" d="M ${x-6} ${y-6} L ${x+6} ${y+6} M ${x-6} ${y+6} L ${x+6} ${y-6}"/>`:`<circle class="open-root" cx="${x}" cy="${y}" r="6"/>`}</g>`;
+      const x=X(z.re),y=Y(z.im),label=`${t.path==='forward'?'G':'H'} ${t.kind} at ${complex(z)}`;
+      html+=`<g class="root-marker ${t.kind}${state.selected===t.id?' selected':''}" data-root="${t.id}" data-sign="${z.im<0?-1:1}" tabindex="0" role="button" aria-pressed="${state.selected===t.id}" aria-label="${label}. Space selects or deselects; arrow keys move; Enter opens coordinates; Delete removes."><title>${label}</title><circle class="marker-halo" cx="${x}" cy="${y}" r="12"/>${t.kind==='pole'?`<path class="open-root" d="M ${x-6} ${y-6} L ${x+6} ${y+6} M ${x-6} ${y+6} L ${x+6} ${y-6}"/>`:`<circle class="open-root" cx="${x}" cy="${y}" r="6"/>`}</g>`;
+      if(t.path==='feedback')html+=`<text class="feedback-root-label" x="${x+10}" y="${y-10}">H</text>`;
     }
     for(const z of state.roots)html+=`<circle class="closed-root" cx="${X(z.re)}" cy="${Y(z.im)}" r="4.5" pointer-events="none"><title>Closed-loop pole ${complex(z)} at K = ${fmt(state.K)}</title></circle>`;
     html+='</g>';
@@ -1347,11 +1653,11 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
     svg.innerHTML=html;
     if(focusId)svg.querySelector(`[data-root="${focusId}"][data-sign="${focusSign}"]`)?.focus({preventScroll:true});
     $('locus-range').textContent=`0 ≤ K ≤ ${fmt(state.maxK)}`;
-    $('asymptote-legend').hidden=!$('show-asymptotes').checked;
+    $('asymptote-legend').hidden=!$('show-asymptotes').checked||!as.count;
     const degrees=as.angles.map(a=>fmt(a*180/Math.PI,1)+'°').join(', ');
-    $('construction-note').textContent=`${order('pole')} branches · ${order('zero')} finite zero${order('zero')===1?'':'s'} · ${as.count} asymptote${as.count===1?'':'s'} · centroid σₐ = ${fmt(as.centroid)} · angles ${degrees}.`;
+    $('construction-note').textContent=state.feedbackGain===0?'Feedback gain h = 0: all characteristic roots stay at their starting points as K changes.':`${order('pole')} branches of KGH · ${order('zero')} finite zero${order('zero')===1?'':'s'} · ${as.count} asymptote${as.count===1?'':'s'} · centroid σₐ = ${fmt(as.centroid)} · angles ${degrees}.`;
     const outside=state.roots.filter(z=>!inside(z)).length;
-    $('view-note').textContent=`Equal axis scales. ${outside?`${outside} selected pole(s) outside this view; use Fit locus. `:''}Colored curves stop at K = ${fmt(state.maxK)}; asymptotes extend toward K → ∞.${state.locus?.constructionWarning?' '+state.locus.constructionWarning:''}`;
+    $('view-note').textContent=[outside?`${outside} selected pole(s) outside this view.`:'',state.locus?.constructionWarning||''].filter(Boolean).join(' ');
   }
   function durationForRoots() {
     const decays=state.roots.filter(z=>z.re<-1e-7).map(z=>-z.re),osc=state.roots.map(z=>Math.abs(z.im));
@@ -1360,41 +1666,49 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
     if(state.stability.label==='Stable')return clamp(7/Math.min(...decays),.01,1000);
     const frequency=Math.max(...osc);return frequency>1e-5?clamp(6*Math.PI/frequency,.01,1000):10;
   }
-  function renderResponse() {
-    if(!state.roots.length){$('step-plot').innerHTML='';$('response-note').textContent='Adjust the system to calculate its response.';return;}
-    try { drawResponse(); }
-    catch(error){$('step-plot').innerHTML='';$('response-note').textContent=`The step response could not be calculated. ${error.message} Adjust the time window or system.`;}
-  }
-  function drawResponse() {
-    if(state.autoTime)state.duration=durationForRoots();
-    if(document.activeElement!==$('duration'))$('duration').value=fmt(state.duration,4);
-    $('auto-time').setAttribute('aria-pressed',String(state.autoTime));
-    const svg=$('step-plot'),width=Math.max(240,svg.clientWidth),height=svg.clientHeight||260,p={x:60,y:18,w:width-82,h:height-65};
+  function drawStepPlot(id,response,open=false) {
+    const svg=$(id),width=Math.max(240,svg.clientWidth),height=svg.clientHeight||260,p={x:60,y:18,w:width-82,h:height-65};
     svg.setAttribute('viewBox',`0 0 ${width} ${height}`);
-    const response=M.stepResponse(state.terms,state.K,{duration:state.duration,samples:600});
-    if(!response.supported){svg.innerHTML='';$('response-note').textContent=response.reason||'The response exceeds the numerical range. Shorten the time window.';return;}
+    if(!response.supported){svg.innerHTML='';return;}
     const points=response.points.filter(z=>Number.isFinite(z.y));
     const low=Math.min(0,...points.map(z=>z.y)),high=Math.max(1,...points.map(z=>z.y)),pad=Math.max(.12,(high-low)*.1),ymin=low-pad,ymax=high+pad;
-    const X=t=>p.x+t/state.duration*p.w,Y=y=>p.y+(ymax-y)/(ymax-ymin)*p.h;
-    let html=`<defs><clipPath id="step-clip"><rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}"/></clipPath></defs>`;
+    const X=t=>p.x+t/state.duration*p.w,Y=y=>p.y+(ymax-y)/(ymax-ymin)*p.h,clip=`${id}-clip`;
+    let html=`<defs><clipPath id="${clip}"><rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}"/></clipPath></defs>`;
     for(const t of ticks(0,state.duration,width<500?4:8))html+=svgLine(X(t),p.y,X(t),p.y+p.h,'grid')+`<text x="${X(t)}" y="${p.y+p.h+21}" text-anchor="middle">${fmt(t,2)}</text>`;
     for(const y of ticks(ymin,ymax,5))html+=svgLine(p.x,Y(y),p.x+p.w,Y(y),'grid')+`<text x="${p.x-8}" y="${Y(y)+4}" text-anchor="end">${fmt(y,2)}</text>`;
     html+=svgLine(p.x,Y(0),p.x+p.w,Y(0),'axis');
-    html+=`<g clip-path="url(#step-clip)">${svgLine(p.x,Y(1),p.x+p.w,Y(1),'wave-input')}<path class="wave-output" d="${points.map((z,i)=>`${i?'L':'M'}${X(z.t).toFixed(3)},${Y(z.y).toFixed(3)}`).join(' ')}"/></g>`;
+    html+=`<g clip-path="url(#${clip})">${svgLine(p.x,Y(1),p.x+p.w,Y(1),'wave-input')}<path class="wave-output${open?' open-output':''}" d="${points.map((z,i)=>`${i?'L':'M'}${X(z.t).toFixed(3)},${Y(z.y).toFixed(3)}`).join(' ')}"/></g>`;
     html+=`<text class="axis-label" x="${p.x+p.w/2}" y="${height-4}" text-anchor="middle">Time · t (s)</text><text class="axis-label" transform="translate(15 ${p.y+p.h/2}) rotate(-90)" text-anchor="middle">Amplitude</text>`;
     svg.innerHTML=html;
-    const d=M.polynomial(M.expand(state.terms,'pole')),n=M.polynomial(M.expand(state.terms,'zero')),den=d.at(-1)+state.K*n.at(-1);
-    const final=state.K*n.at(-1)/den;
-    let note=state.K===0?'K = 0 disconnects the input: y(t) = 0. The pole list retains the internal characteristic modes.':state.stability.label==='Stable'&&Number.isFinite(final)?`Stable system · final output y(∞) = ${fmt(final)}. Pole damping describes individual modes; the full response includes all poles and zeros.`:state.stability.label==='Marginal'?'Marginal internal stability · an imaginary-axis mode persists. A steady final value is not guaranteed.':'Unstable internal dynamics · growing modes may appear in the response. Exact pole-zero cancellation can hide an internal mode.';
-    const maxOsc=Math.max(...state.roots.map(z=>Math.abs(z.im)));
-    if(maxOsc*state.duration/(2*Math.PI)>60)note+=' This window contains many oscillations; shorten it to resolve individual cycles.';
-    if(response.truncated)note+=' The plotted response stops at the numerical amplitude limit.';
-    $('response-note').textContent=note;
+  }
+  function renderResponse() {
+    if(state.autoTime&&state.roots.length)state.duration=durationForRoots();
+    if(document.activeElement!==$('duration'))$('duration').value=fmt(state.duration,4);
+    $('auto-time').setAttribute('aria-pressed',String(state.autoTime));
+    $('open-response-equation').textContent=state.openResponsePath==='forward'?'Feedback disconnected · transfer K G(s). Shared time window; separate amplitude scale.':'Loop transfer K G(s) H(s). Shared time window; separate amplitude scale.';
+    for(const open of [false,true]){
+      if(open&&$('open-response-details')&&!$('open-response-details').open)continue;
+      const id=open?'open-step-plot':'step-plot',noteId=open?'open-response-note':'response-note';
+      try {
+        if(!open&&!state.roots.length)throw new Error('Resolve the characteristic roots to display the closed-loop response.');
+        const options={duration:state.duration,samples:600,path:state.openResponsePath};
+        const response=open?M.openLoopStepResponse(system(),state.K,options):M.stepResponse(system(),state.K,options);
+        drawStepPlot(id,response,open);
+        if(!response.supported){$(noteId).textContent=response.reason||'The response exceeds the numerical range. Shorten the time window.';continue;}
+        const roots=open?M.expand(state.openResponsePath==='forward'?pathTerms('forward'):state.terms,'pole'):state.roots;
+        const status=open?M.stability(roots):state.stability;
+        const zeroOutput=state.K===0||(open&&state.openResponsePath==='loop'&&state.feedbackGain===0);
+        let note=zeroOutput?'Zero path gain · the forced output is zero.':status.label==='Stable'&&Number.isFinite(response.finalValue)?`Stable ${open?'open-loop':'closed-loop'} dynamics · final output = ${fmt(response.finalValue)}.`:status.label==='Marginal'?'Imaginary-axis modes are present. The response can persist or grow; a final value is not guaranteed.':'Unstable internal dynamics · growing modes may appear in the response.';
+        if(response.cancelledModes)note+=' Exact cancellation hides a mode from this forced response; stability retains the internal modes.';
+        if(Math.max(...roots.map(z=>Math.abs(z.im)))*state.duration/(2*Math.PI)>60)note+=' Shorten the time window to resolve the rapid oscillations.';
+        $(noteId).textContent=note;
+      }catch(error){$(id).innerHTML='';$(noteId).textContent=`Response unavailable. ${error.message}`;}
+    }
   }
   function update(recompute=false,refit=false) {
     try{
-      if(recompute||!state.locus)state.locus=M.locus(state.terms,state.maxK,{samples:440});
-      state.roots=M.closedLoop(state.terms,state.K);
+      if(recompute||!state.locus)state.locus=M.locus(system(),state.maxK,{samples:440});
+      state.roots=M.closedLoop(system(),state.K);
       $('model-error').hidden=true;$('locus-plot').classList.remove('model-stale');
       if(refit)fit();
       renderControls();renderEquation();renderReadouts();renderLocus();renderResponse();tutorial?.update();
@@ -1404,7 +1718,7 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
       $('model-error').hidden=false;$('locus-plot').innerHTML='';$('locus-plot').classList.add('model-stale');
       $('metric-gain').textContent=fmt(state.K);$('stability-note').textContent='Adjust the system to resolve the roots.';
       $('metric-stability').textContent='Unresolved';$('metric-pole').textContent='—';$('metric-damping').textContent='—';
-      $('pole-table').innerHTML='';$('step-plot').innerHTML='';$('response-note').textContent='Adjust the system to calculate its response.';stop();renderControls();renderEquation();
+      $('pole-table').innerHTML='';renderControls();renderEquation();renderResponse();tutorial?.update();
     }
   }
   function bindNumber(id,callback) {
@@ -1419,33 +1733,39 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
     input.addEventListener('keydown',e=>{if(e.key==='Enter'){commit();input.blur();}});
   }
   $('preset').addEventListener('change',e=>applyPreset(e.target.value));
-  $('gain').addEventListener('input',e=>{stop();setGain(Math.expm1(Number(e.target.value)/1000*Math.log1p(state.maxK)));});
-  bindNumber('gain-exact',v=>{stop();setGain(v);});
-  bindNumber('gain-max',v=>{stop();state.maxK=v;state.K=Math.min(state.K,v);update(true,true);});
+  $('feedback-preset').addEventListener('change',e=>applyFeedbackPreset(e.target.value));
+  $('feedback-sign').addEventListener('change',e=>{state.feedbackSign=e.target.value;update(true,true);});
+  bindNumber('feedback-gain',v=>{state.feedbackGain=v;state.feedbackPreset=v===1&&!pathTerms('feedback').length?'unity':'custom';update(true,true);});
+  $('edit-path').addEventListener('change',e=>{state.editPath=e.target.value;state.selected=null;state.drag=null;const tool=state.tool;state.tool=null;setTool(tool);announce('');refreshSelection();});
+  $('open-response-path').addEventListener('change',e=>{state.openResponsePath=e.target.value;renderResponse();tutorial?.update();});
+  $('open-response-details')?.addEventListener('toggle',e=>{if(e.currentTarget.open)renderResponse();tutorial?.update();});
+  $('gain').addEventListener('input',e=>{setGain(Math.expm1(Number(e.target.value)/1000*Math.log1p(state.maxK)));});
+  bindNumber('gain-exact',v=>{setGain(v);});
+  bindNumber('gain-max',v=>{state.maxK=v;state.K=Math.min(state.K,v);update(true,true);});
   bindNumber('term-re',v=>editTerm({re:v}));bindNumber('term-im',v=>editTerm({im:v}));
   bindNumber('duration',v=>{state.duration=v;state.autoTime=false;renderResponse();});
   $('auto-time').addEventListener('click',()=>{state.autoTime=true;renderResponse();});
   $('term-type').addEventListener('change',e=>editTerm({type:e.target.value,im:e.target.value==='pair'?Math.max(selected().im,1):0}));
   $('remove-term').addEventListener('click',removeTerm);
+  $('deselect-term').addEventListener('click',()=>deselectTerm(true));
   for(const kind of ['pole','zero'])$('place-'+kind).addEventListener('click',()=>setTool(kind));
   $('place-pair').addEventListener('change',()=>{const t=state.tool;state.tool=null;setTool(t);});
-  $('term-list').addEventListener('click',e=>{const button=e.target.closest('[data-term]');if(button){state.selected=Number(button.dataset.term);renderControls();renderLocus();}});
+  $('term-list').addEventListener('click',e=>{const button=e.target.closest('[data-term]');if(button)toggleTerm(Number(button.dataset.term));});
   for(const id of ['show-asymptotes','show-damping','show-arrows'])$(id).addEventListener('change',renderLocus);
-  $('fit-view').addEventListener('click',()=>{fit();renderLocus();});
-  for(const [id,scale]of[['zoom-in',.7],['zoom-out',1/.7]])$(id).addEventListener('click',()=>{state.view.xSpan=clamp(state.view.xSpan*scale,.02,1e8);state.view.ySpan=clamp(state.view.ySpan*scale,.02,1e8);renderLocus();});
-  $('reset-gain').addEventListener('click',()=>{stop();setGain(0);});
-  $('play').addEventListener('click',()=>{
-    if(state.playing){stop();return;}
-    state.playing=true;$('play').textContent='Ⅱ Pause sweep';$('play').setAttribute('aria-pressed','true');
-    const start=performance.now(),initial=state.K>=state.maxK*.999?0:Math.log1p(state.K)/Math.log1p(state.maxK);
-    let last=0;
-    function frame(now){
-      if(!state.playing)return;
-      const progress=Math.min(1,initial+(now-start)/14000);
-      if(now-last>45||progress===1){state.K=Math.expm1(progress*Math.log1p(state.maxK));update();last=now;}
-      if(progress>=1)stop();else animation=requestAnimationFrame(frame);
-    }animation=requestAnimationFrame(frame);
-  });
+  $('locus-plot').addEventListener('wheel',e=>{
+    if(!e.ctrlKey)return;
+    e.preventDefault();
+    if(state.drag||!state.locus||!state.view)return;
+    const delta=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?300:1);
+    const {xSpan,ySpan}=state.view;
+    if(!Number.isFinite(delta)||delta===0||![xSpan,ySpan].every(v=>Number.isFinite(v)&&v>0))return;
+    const minFactor=Math.max(.02/xSpan,.02/ySpan),maxFactor=Math.min(1e12/xSpan,1e12/ySpan);
+    if(minFactor>maxFactor)return;
+    const factor=clamp(Math.exp(clamp(delta*.002,-.7,.7)),minFactor,maxFactor);
+    if(factor===1)return;
+    state.view.xSpan=xSpan*factor;state.view.ySpan=ySpan*factor;
+    renderLocus();
+  },{passive:false});
   function point(event) {
     const rect=$('locus-plot').getBoundingClientRect(),x=(event.clientX-rect.left)*plotBox.width/rect.width,y=(event.clientY-rect.top)*plotBox.height/rect.height;
     return {x,y,re:plotBox.xmin+(x-plotBox.x)/plotBox.scale,im:(plotBox.y+plotBox.h/2-y)/plotBox.scale};
@@ -1454,35 +1774,45 @@ body.panel-reordering,body.panel-reordering *{cursor:grabbing!important;user-sel
     if(e.button!==0)return;
     const marker=e.target.closest('[data-root]'),p=point(e);
     if(marker){
-      e.preventDefault();stop();state.selected=Number(marker.dataset.root);state.drag={id:state.selected,sign:marker.dataset.sign,startX:e.clientX,startY:e.clientY,moved:false};renderControls();renderLocus();return;
+      e.preventDefault();const id=Number(marker.dataset.root),wasSelected=state.selected===id;
+      selectTerm(id);state.drag={id,sign:marker.dataset.sign,pointerId:e.pointerId,startX:e.clientX,startY:e.clientY,moved:false,wasSelected};announce('');refreshSelection();return;
     }
     if(p.x<plotBox.x||p.x>plotBox.x+plotBox.w||p.y<plotBox.y||p.y>plotBox.y+plotBox.h)return;
     if(state.tool){addTerm(p.re,p.im);return;}
     let best=null,distance=24;
     for(const branch of state.locus?.branches||[])for(const z of branch){const d=Math.hypot(plotBox.X(z.re)-p.x,plotBox.Y(z.im)-p.y);if(d<distance){best=z;distance=d;}}
-    if(best){stop();setGain(best.k);announce(`Gain selected from the locus: K = ${fmt(best.k)}. Enter an exact gain for a precise comparison.`);}
-    else announce('Click closer to a colored branch to select a gain, or use the gain field.');
+    if(best){announce('');setGain(best.k);}
+    else deselectTerm();
   });
   window.addEventListener('pointermove',e=>{
-    if(!state.drag)return;
+    if(!state.drag||e.pointerId!==state.drag.pointerId)return;
     if(Math.hypot(e.clientX-state.drag.startX,e.clientY-state.drag.startY)<3&&!state.drag.moved)return;
     state.drag.moved=true;const t=selected(),p=point(e),step=e.shiftKey ? .01 : .1;
     t.re=clamp(Math.round(p.re/step)*step,-100,100);if(t.type==='pair')t.im=clamp(Math.round(Math.abs(p.im)/step)*step,0,100);
     custom();if(!scheduled)scheduled=requestAnimationFrame(()=>{scheduled=null;update(true,false);});
   });
-  function endDrag(){if(!state.drag)return;const {id,sign}=state.drag;state.drag=null;$('locus-plot').querySelector(`[data-root="${id}"][data-sign="${sign}"]`)?.focus({preventScroll:true});}
+  function endDrag(event){
+    if(!state.drag||event.pointerId!==state.drag.pointerId)return;
+    const {id,sign,moved,wasSelected}=state.drag;state.drag=null;
+    if(event.type==='pointerup'&&!moved&&wasSelected)deselectTerm();
+    $('locus-plot').querySelector(`[data-root="${id}"][data-sign="${sign}"]`)?.focus({preventScroll:true});
+  }
   window.addEventListener('pointerup',endDrag);window.addEventListener('pointercancel',endDrag);
   $('locus-plot').addEventListener('keydown',e=>{
     const marker=e.target.closest('[data-root]');if(!marker)return;
-    state.selected=Number(marker.dataset.root);const t=selected(),step=e.shiftKey?1:.1;
-    if(e.key==='Enter'){e.preventDefault();renderControls();$('term-re').focus();return;}
+    const id=Number(marker.dataset.root),sign=marker.dataset.sign;
+    if(e.key===' '||e.key==='Spacebar'){
+      e.preventDefault();toggleTerm(id);$('locus-plot').querySelector(`[data-root="${id}"][data-sign="${sign}"]`)?.focus({preventScroll:true});return;
+    }
+    if(!['Enter','Delete','Backspace','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;
+    selectTerm(Number(marker.dataset.root));const t=selected(),step=e.shiftKey?1:.1;
+    if(e.key==='Enter'){e.preventDefault();refreshSelection();$('term-re').focus();return;}
     if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();removeTerm();return;}
     const delta={ArrowLeft:[-step,0],ArrowRight:[step,0],ArrowUp:[0,step],ArrowDown:[0,-step]}[e.key];
     if(delta){e.preventDefault();const sign=marker.dataset.sign;editTerm({re:clamp(t.re+delta[0],-100,100),im:t.type==='pair'?clamp(t.im+delta[1]*Number(sign),0,100):0});$('locus-plot').querySelector(`[data-root="${t.id}"][data-sign="${sign}"]`)?.focus({preventScroll:true});}
   });
-  window.addEventListener('keydown',e=>{if(e.key==='Escape'){stop();state.drag=null;state.tool=null;setTool(null);}});
-  document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
-  new ResizeObserver(()=>{if(state.locus){renderLocus();renderResponse();}}).observe($('locus-panel'));
+  window.addEventListener('keydown',e=>{if(e.key==='Escape'&&!e.defaultPrevented){state.tool=null;setTool(null);deselectTerm();}});
+  new ResizeObserver(()=>{if(state.locus)renderLocus();renderResponse();}).observe($('locus-panel'));
   applyPreset('two');
   if(window.RootLocusTutorial)tutorial=window.RootLocusTutorial.init({getState:()=>state,formatComplex:complex,formatNumber:fmt});
   if(window.RootLocusLayout)window.RootLocusLayout.init();
