@@ -106,3 +106,11 @@ img {
 
   z-index: -1;
 }
+
+/* Keep the hero background within the page on phones. */
+@media (max-width: 767.98px) {
+  .hero::before {
+    left: 0;
+    right: 0;
+  }
+}
