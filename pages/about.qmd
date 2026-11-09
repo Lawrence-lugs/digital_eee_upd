@@ -22,6 +22,12 @@ Looking ahead, I hope students will use these resources to design systems of the
 
 :::
 
+<figure class="text-center">
+  <img src="digiboys.jpeg" class="img-fluid" alt="Group photo of the six contributors named below.">
+  <figcaption class="text-center"><strong>The Digiboys</strong><br>
+  (L-R): Fredrick Galapon, Lawrence Quizon, Adelson Chua, Allen Tan, Aries Oliva, and Francois Abedejos.</figcaption>
+</figure>
+
 ## Contributors
 
 The people behind digital.eee are:
