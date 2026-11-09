@@ -12,7 +12,7 @@ include-in-header:
         }
       </script>
       <style>
-        #quarto-content { padding: 0 !important; }
+        #quarto-content { padding: 0 !important; overflow-x: clip; }
         #quarto-content > * { margin-top: 0 !important; padding-top: 0 !important; }
         main.content { margin-top: 0 !important; padding-top: 0 !important; }
         .quarto-title-block, #title-block-header { display: none !important; }
