@@ -159,6 +159,64 @@ include-in-header:
           the root locus to the system's step response.</p>
           </div>
         </a>
+
+        <a href="signal_visualizations.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/signal_visualizations.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Signal Visualizations</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Draw signals and explore convolution, cross-correlation, and
+          autocorrelation through a moving product and its signed integral.</p>
+          </div>
+        </a>
+
+        <a href="smith_chart_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/smith_chart_simulator.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Smith Chart Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Explore impedance matching with an interactive Smith chart
+          and L, pi, T, and transmission-line networks.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="tool-group" aria-labelledby="signal-conversion">
+      <h3 id="signal-conversion" class="text-xl font-bold text-gray-800 mb-5">Signal Conversion</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <a href="adc_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/adc_simulator.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">ADC Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Compare sigma-delta, flash, and SAR analog-to-digital converters
+          through interactive feedback, parallel comparators, and step-by-step binary search.</p>
+          </div>
+        </a>
+
+        <a href="dac_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/dac_simulator.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">DAC Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Explore flash, R–2R ladder, and inverting-summer digital-to-analog
+          converters with interactive circuits, component inspection, and live waveforms.</p>
+          </div>
+        </a>
       </div>
     </section>
 

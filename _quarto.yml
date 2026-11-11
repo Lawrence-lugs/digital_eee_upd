@@ -11,6 +11,10 @@ project:
     - cp static_apps/transistor_characterization.html _site/
     - cp static_apps/bode_simulator.html _site/
     - cp static_apps/root_locus_simulator.html _site/
+    - cp static_apps/signal_visualizations.html _site/
+    - cp static_apps/smith_chart_simulator.html _site/
+    - cp static_apps/adc_simulator.html _site/
+    - cp static_apps/dac_simulator.html _site/
     - cp static_apps/FSM_simulatEEE.html _site/
     - cp static_apps/timing_simulatEEE.html _site/
     - cp static_apps/ASM_simulatEEE.html _site/
@@ -66,6 +70,15 @@ website:
             text: Bode Plot Simulator
           - href: root_locus_simulator.html
             text: Root Locus Simulator
+          - href: signal_visualizations.html
+            text: Signal Visualizations
+          - href: smith_chart_simulator.html
+            text: Smith Chart Simulator
+          - text: Signal Conversion
+          - href: adc_simulator.html
+            text: ADC Simulator
+          - href: dac_simulator.html
+            text: DAC Simulator
           - text: Digital Design Fundamentals
           - href: kmapgameee
             text: kmap-gamEEE
