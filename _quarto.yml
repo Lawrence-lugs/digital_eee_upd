@@ -12,6 +12,8 @@ project:
     - cp static_apps/bode_simulator.html _site/
     - cp static_apps/root_locus_simulator.html _site/
     - cp static_apps/signal_visualizations.html _site/
+    - cp static_apps/fourier_simulator.html _site/
+    - cp static_apps/modulation_simulator.html _site/
     - cp static_apps/smith_chart_simulator.html _site/
     - cp static_apps/adc_simulator.html _site/
     - cp static_apps/dac_simulator.html _site/
@@ -65,16 +67,21 @@ website:
             text: MOS Transistor Fabrication
           - href: transistor_characterization.html
             text: MOS Transistor Characterization
-          - text: Transfer Function Visualization
+          - text: Signals and Systems
           - href: bode_simulator.html
             text: Bode Plot Simulator
           - href: root_locus_simulator.html
             text: Root Locus Simulator
           - href: signal_visualizations.html
             text: Signal Visualizations
+          - href: fourier_simulator.html
+            text: Fourier Transform Simulator
+          - text: Communication Systems
           - href: smith_chart_simulator.html
             text: Smith Chart Simulator
-          - text: Signal Conversion
+          - href: modulation_simulator.html
+            text: Analog/Digital Modulation
+          - text: Mixed Signal Fundamentals
           - href: adc_simulator.html
             text: ADC Simulator
           - href: dac_simulator.html

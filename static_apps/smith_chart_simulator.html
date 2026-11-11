@@ -301,6 +301,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 
 .chart-canvas{position:relative}.chart-readout{position:absolute;top:12px;max-width:calc(50% - 20px);padding:8px 10px;border:1px solid #d6dde5bb;border-radius:8px;background:#ffffffeb;pointer-events:none;overflow-wrap:anywhere;line-height:1.35}.impedance-readout{left:4px}.vswr-readout{right:4px;text-align:right}.chart-readout>span{display:block;font-size:12px;color:var(--muted)}.chart-readout strong{display:block;font-size:20px;font-weight:650;color:var(--accent);font-variant-numeric:tabular-nums}.chart-readout small{display:block;font-size:11px;color:var(--green);margin-top:2px}.chart-measurements{margin-bottom:10px;border:1px solid var(--line);border-radius:7px;background:var(--panel-alt)}.chart-measurements summary{padding:7px 10px;font-size:12px;color:var(--muted)}.measurement-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:3px 10px 12px}.measurement-grid span,.measurement-grid small{display:block;font-size:11px;color:var(--muted)}.measurement-grid strong{display:block;font-size:13px;font-weight:600;margin:3px 0}.marker.dragging{cursor:grabbing}#smith-chart .port-ring{stroke:var(--green);stroke-width:2.6}#smith-chart .port-center{fill:var(--green)}
 @media(max-width:600px){.chart-canvas{padding-top:60px}.chart-readout{top:0;padding:5px 7px;max-width:calc(50% - 12px)}.chart-readout>span{font-size:10px}.chart-readout strong{font-size:13px}.chart-readout small{font-size:9px}.measurement-grid{grid-template-columns:1fr}.target-key{align-items:flex-start}}
+
+.probe-readout.matching-warning{background:#f8e9eb;color:var(--accent);box-shadow:inset 0 0 0 1px #d9b5ba;font-family:"MOS Inter",Segoe UI,sans-serif;font-weight:500}
 </style>
 </head>
 <body>
@@ -334,6 +336,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           </div>
           <div class="rail-section">
             <div class="subheading"><h3>Network components</h3><span>source → load</span></div>
+            <label id="element-type-lock" class="check-label" title="Dragging and Match at this frequency change values while preserving each element's type, position, and enabled state."><input id="lock-element-types" type="checkbox">Keep L/C types while matching</label>
             <div id="element-controls"></div>
             <div id="line-controls" hidden>
               <div class="field-pair"><div><label class="field-label" for="line-z0">Line Z<sub>c</sub> · Ω</label><input id="line-z0" type="number" min="1" max="1000" step="any" value="50"></div><div><label class="field-label" for="design-frequency">Length reference · MHz</label><input id="design-frequency" type="number" min="0.1" max="6000" step="any" value="100"></div></div>
@@ -374,7 +377,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
               <div><span>Chart reflection · |Γ₀|</span><strong id="metric-gamma"></strong><small id="metric-phase"></small></div>
               <div><span>Match return loss</span><strong id="metric-rl"></strong><small id="metric-power"></small></div>
             </div></details>
-            <div id="chart-probe" class="probe-readout">Move across the chart to inspect impedance and admittance.</div>
+            <div id="chart-probe" class="probe-readout"><span id="chart-warning" role="status" aria-atomic="true"></span><span id="chart-inspection">Move across the chart to inspect impedance and admittance.</span></div>
             <div id="stage-list" class="stage-list" aria-label="Transformations from load to input"></div>
             <p id="stage-detail" class="note"></p>
             <p id="chart-help" class="note">The center is Z₀. Upper half: inductive impedance. Lower half: capacitive impedance. Grid values are normalized to Z₀.</p>
@@ -391,9 +394,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         </section>
         <details class="panel guide" id="learning-guide"><summary>Learning guide · impedance matching on the Smith chart</summary><div class="guide-content">
           <div><h3>Choose the conjugate target</h3><p>Source Z<sub>S</sub> = R<sub>S</sub> + jX<sub>S</sub> and load Z<sub>L</sub> = R<sub>L</sub> + jX<sub>L</sub> can both be complex. A conjugate keeps the resistance and reverses the sign of the reactance.</p><p><strong>Source reference:</strong> start at the load and move toward the source. The target is Z<sub>in</sub> = Z<sub>S</sub><sup>*</sup>.</p><p><strong>Load reference:</strong> start at the source impedance and move toward the load. The independent source is deactivated to calculate Z<sub>out</sub>. The target is Z<sub>out</sub> = Z<sub>L</sub><sup>*</sup>.</p><p>Switching reference sides changes the view while preserving both endpoint impedances and the physical network. The E1, E2, and E3 numbering stays source → load; the calculation order reverses.</p><h3>Read the chart</h3><p>The chart uses a separate real normalization impedance Z₀. It maps impedance through Γ₀ = (Z − Z₀)/(Z + Z₀). Changing chart Z₀ changes the coordinates while preserving the circuit.</p><p>The gold diamond marks the conjugate target, which can be away from the center. At a conjugate match, the green port ring reaches the diamond. Chart Γ₀ can remain nonzero and chart VSWR can remain greater than 1.</p></div>
-          <div><h3>Follow each element</h3><p>A series element adds impedance along a constant-resistance circle. A shunt element adds admittance along a constant-conductance circle. Admittance y = 1/z = g + jb uses a grid rotated by 180°. Both grids keep the same physical Γ₀ coordinate.</p><div class="formula">Z<sub>inductor</sub> = jωL &nbsp; · &nbsp; Z<sub>capacitor</sub> = 1/(jωC)<br>Y<sub>parallel</sub> = Y + 1/Z<sub>element</sub></div><h3>Compare matching networks</h3><p>An L network uses two reactive elements. A π network uses shunt–series–shunt elements, and a T network uses series–shunt–series elements. Their extra element provides another design choice.</p><p>Match computes one ideal conjugate solution at the selected frequency. It may change the L order, component types, or enabled components. π and T networks have many possible solutions.</p><h3>Explore lines and stubs</h3><p>A line with Z<sub>c</sub> = Z₀ follows a constant-|Γ₀| circle. A quarter-wave line transforms termination Z into Z<sub>c</sub>²/Z. Line impedance Z<sub>c</sub> is independent of chart Z₀.</p><p>Choose the stub's physical side separately. Switching reference sides preserves its position. Automatic matching can move the stub to the selected reference port and change line impedance and electrical lengths.</p><p>Lengths are electrical degrees at the length-reference frequency and scale with frequency. The main line and stub use the same Z<sub>c</sub>.</p></div>
+          <div><h3>Follow each element</h3><p>A series element adds impedance along a constant-resistance circle. A shunt element adds admittance along a constant-conductance circle. Admittance y = 1/z = g + jb uses a grid rotated by 180°. Both grids keep the same physical Γ₀ coordinate.</p><div class="formula">Z<sub>inductor</sub> = jωL &nbsp; · &nbsp; Z<sub>capacitor</sub> = 1/(jωC)<br>Y<sub>parallel</sub> = Y + 1/Z<sub>element</sub></div><h3>Compare matching networks</h3><p>An L network uses two reactive elements. A π network uses shunt–series–shunt elements, and a T network uses series–shunt–series elements. Their extra element provides another design choice.</p><p>Match computes an ideal conjugate solution at the selected frequency. With Keep L/C types while matching selected, it preserves element types, order, and enabled states. With the lock cleared, it may change these to reach the target. π and T networks have many possible solutions.</p><h3>Explore lines and stubs</h3><p>A line with Z<sub>c</sub> = Z₀ follows a constant-|Γ₀| circle. A quarter-wave line transforms termination Z into Z<sub>c</sub>²/Z. Line impedance Z<sub>c</sub> is independent of chart Z₀.</p><p>Choose the stub's physical side separately. Switching reference sides preserves its position. Automatic matching can move the stub to the selected reference port and change line impedance and electrical lengths.</p><p>Lengths are electrical degrees at the length-reference frequency and scale with frequency. The main line and stub use the same Z<sub>c</sub>.</p></div>
           <div><h3>Distinguish chart reflection and matching</h3><div class="formula">VSWR₀ = (1 + |Γ₀|)/(1 − |Γ₀|)<br>Γ<sub>m</sub> = (Z<sub>port</sub> − Z<sub>ref</sub><sup>*</sup>)/(Z<sub>port</sub> + Z<sub>ref</sub>)<br>Match return loss = −20 log₁₀|Γ<sub>m</sub>|<br>Power transfer fraction = 1 − |Γ<sub>m</sub>|²</div><p>Chart reflection and VSWR use real chart Z₀. Match return loss uses the selected complex source or load as Z<sub>ref</sub> and becomes infinite at a conjugate match.</p><p>For positive source resistance and this ideal lossless network, the power fraction is the available source power delivered to the load. Available power is undefined when source resistance is zero. A zero-resistance load receives zero average power.</p><p>The frequency plot shows conjugate-match return loss and caps its displayed value at 60 dB. The readout retains the full calculated value.</p></div>
-          <div><h3>Model and controls</h3><p>This model uses ideal lossless L/C elements and nondispersive lines. Source and load can have any finite reactance and nonnegative resistance within the controls' limits. Automatic matching requires positive resistance at both endpoints.</p><p>Both endpoint impedances stay fixed across frequency. Component loss, parasitics, and frequency-dependent terminations require a more detailed circuit model.</p><p>Use exact fields or sliders to tune a component. Uncheck an element to bypass a series branch or open a shunt branch. Drag the green endpoint toward the gold target to tune the network at the entered frequency. Source and load impedances stay fixed during this drag. The blue marker edits the opposite endpoint: load in source-reference view, source in load-reference view.</p><p>Focus either marker and use arrow keys; Shift increases the step. Green-marker arrows tune the network across the chart, and blue-marker arrows change R or X. Use Escape during a drag to restore its starting values. Tuning can change element types, enabled branches, or L order when needed. Lines tune electrical lengths and may change line impedance. The gold target follows the reference endpoint's conjugate.</p><p>The frequency curves use sampled values. Reduce the sweep span to inspect narrow resonances or rapid line rotations.</p><p id="reference-links" class="source-links"></p></div>
+          <div><h3>Model and controls</h3><p>This model uses ideal lossless L/C elements and nondispersive lines. Source and load can have any finite reactance and nonnegative resistance within the controls' limits. Automatic matching requires positive resistance at both endpoints.</p><p>Both endpoint impedances stay fixed across frequency. Component loss, parasitics, and frequency-dependent terminations require a more detailed circuit model.</p><p>Use exact fields or sliders to tune a component. Uncheck an element to bypass a series branch or open a shunt branch. Drag the green endpoint toward the gold target to tune the network at the entered frequency. Source and load impedances stay fixed during this drag. The blue marker edits the opposite endpoint: load in source-reference view, source in load-reference view.</p><p>Enable <strong>Keep L/C types while matching</strong> to preserve each element's type, position, and enabled state. Values remain adjustable during dragging, green-marker arrow keys, and Match at this frequency. Some points require a different circuit; an unreachable target keeps the current circuit and shows a pale maroon warning below the chart. The option stays selected across presets and Reset. Presets load their example circuit.</p><p>Focus either marker and use arrow keys; Shift increases the step. Green-marker arrows tune the network across the chart, and blue-marker arrows change R or X. Use Escape during a drag to restore its starting values. With the lock cleared, tuning can change element types, enabled branches, or L order when needed. Lines tune electrical lengths and may change line impedance. The gold target follows the reference endpoint's conjugate.</p><p>The frequency curves use sampled values. Reduce the sweep span to inspect narrow resonances or rapid line rotations.</p><p id="reference-links" class="source-links"></p></div>
         </div></details>
       </div>
     </div>
@@ -580,17 +583,21 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     return value > 0 ? { type: 'C', value: value / w * 1e12, enabled: true } : { type: 'L', value: -1 / (w * value) * 1e9, enabled: true };
   }
   // Canonical element order is reference -> opposite termination.
-  function matchL(z, target, orientation, frequencyMHz, sign = 1) {
-    const y = reciprocal(z), yt = reciprocal(target), f = frequencyMHz;
+  function lAmounts(z, target, orientation, sign = 1) {
+    const y = reciprocal(z), yt = reciprocal(target);
     if (orientation === 'series-shunt' && y.re <= 1 / target.re * (1 + 1e-12)) {
       const b = sign * Math.sqrt(Math.max(0, y.re / target.re - y.re * y.re));
-      return [component(target.im + b * target.re / y.re, 'series', f), component(b - y.im, 'shunt', f)];
+      return [target.im + b * target.re / y.re, b - y.im];
     }
     if (orientation === 'shunt-series' && z.re <= 1 / yt.re * (1 + 1e-12)) {
       const x = sign * Math.sqrt(Math.max(0, z.re / yt.re - z.re * z.re));
-      return [component(yt.im + x * yt.re / z.re, 'shunt', f), component(x - z.im, 'series', f)];
+      return [yt.im + x * yt.re / z.re, x - z.im];
     }
     return null;
+  }
+  function matchL(z, target, orientation, frequencyMHz, sign = 1) {
+    const amounts = lAmounts(z, target, orientation, sign);
+    return amounts && amounts.map((value, i) => component(value, orientation.split('-')[i], frequencyMHz));
   }
   function lineCandidates(z, target, zc, stubType, phaseHint = 0) {
     const yt = reciprocal(target), mod = (a, period) => ((a % period) + period) % period;
@@ -679,9 +686,93 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     } catch (_) { return { success: false, config, message: 'This endpoint pair exceeds the numerical precision of the matching method.' }; }
     return { success: true, config: out, message };
   }
+  function lockedLumped(config, target, ends) {
+    const reverse = ends.referenceSide === 'load', physicalKinds = positions(config);
+    const kinds = reverse ? physicalKinds.slice().reverse() : physicalKinds;
+    const physical = physicalKinds.map((_, i) => config.elements[i]), old = reverse ? physical.slice().reverse() : physical;
+    const f = config.frequencyMHz, w = TAU * f * 1e6, z = ends.termination;
+    const scaleZ = Math.max(1, abs(z), abs(target));
+    const amount = (element, kind) => element.enabled === false ? 0 : kind === 'series' ? reactance(element, f) : susceptance(element, f);
+    const oldAmounts = old.map((element, i) => amount(element, kinds[i]));
+    const norm = kinds.map(kind => kind === 'series' ? 1 / scaleZ : scaleZ);
+    function candidate(values) {
+      if (!values || values.some(value => !Number.isFinite(value))) return null;
+      const elements = []; let score = 0;
+      for (let i = 0; i < values.length; i++) {
+        const value = values[i], previous = old[i], kind = kinds[i];
+        if (previous.enabled === false) {
+          if (Math.abs(value * norm[i]) > 1e-10) return null;
+          elements.push({ ...previous });
+          continue;
+        }
+        const positive = kind === 'series' ? previous.type === 'L' : previous.type === 'C';
+        if (!(positive ? value > 0 : value < 0)) return null;
+        const numeric = kind === 'series' ? (positive ? value / w * 1e9 : -1 / (w * value) * 1e12) : (positive ? value / w * 1e12 : -1 / (w * value) * 1e9);
+        if (!(numeric > 0 && Number.isFinite(numeric))) return null;
+        const prior = Number.isFinite(oldAmounts[i]) ? oldAmounts[i] : 0;
+        const delta = (value - prior) * norm[i];
+        score += delta * delta;
+        elements.push(previous.value > 0 && Math.abs(delta) < 1e-12 ? { ...previous } : { ...previous, value: numeric });
+      }
+      return { elements, score };
+    }
+    let best;
+    const consider = values => {
+      const next = candidate(values);
+      if (next && (!best || next.score < best.score)) best = next;
+      return next ? next.score : Infinity;
+    };
+    if (config.topology === 'l') {
+      for (const sign of [1, -1]) consider(lAmounts(z, target, kinds.join('-'), sign));
+    } else {
+      // In π use admittance, and in T use impedance. Both then have the
+      // same three-value synthesis: outer v1, middle v2, outer v3.
+      const pi = config.topology === 'pi', start = pi ? reciprocal(z) : z, finish = pi ? reciprocal(target) : target;
+      const a = start.re, b = start.im, d = finish.re, e = finish.im;
+      const qOld = b + (Number.isFinite(oldAmounts[2]) ? oldAmounts[2] : 0);
+      function valuesAt(q, sign) {
+        const denominator = a * a + q * q, square = d / a * q * q + d * (a - d);
+        if (square < -1e-12 * Math.max(d / a * denominator, d * d)) return null;
+        const k = sign * Math.sqrt(Math.max(0, square));
+        return [e + k, (q + a * k / d) / denominator, q - b];
+      }
+      // Keeping the spare is the most local solution when its two roots
+      // satisfy every locked sign and disabled-branch equality.
+      for (const sign of [1, -1]) consider(valuesAt(qOld, sign));
+      if (!best) {
+        const boundaries = [0, b];
+        for (const square of [a * (d - a), a * (d - a) + a / d * e * e]) {
+          if (square >= 0) { const root = Math.sqrt(square); boundaries.push(-root, root); }
+        }
+        boundaries.sort((x, y) => x - y);
+        const points = boundaries.filter((value, i) => Number.isFinite(value) && (i === 0 || value !== boundaries[i - 1]));
+        for (const q of points) for (const sign of [1, -1]) consider(valuesAt(q, sign));
+        // These are every possible feasibility/sign boundary: the L-root
+        // discriminant, v1=0, v3=0, and q=0 when a=d permits v2=0.
+        // A sample in each open interval therefore finds every sign region.
+        // atan maps the two infinite tails to finite search intervals.
+        const scaleQ = Math.max(abs(start), abs(finish), 1e-30);
+        const angles = [-Math.PI / 2, ...points.map(q => Math.atan(q / scaleQ)), Math.PI / 2];
+        for (let i = 1; i < angles.length; i++) for (const sign of [1, -1]) {
+          let lo = angles[i - 1], hi = angles[i];
+          const at = theta => consider(valuesAt(scaleQ * Math.tan(theta), sign));
+          const middle = (lo + hi) / 2;
+          if (!Number.isFinite(at(middle))) continue;
+          // Refine the electrical-value distance within this feasible region.
+          const ratio = (Math.sqrt(5) - 1) / 2;
+          let left = hi - ratio * (hi - lo), right = lo + ratio * (hi - lo), fl = at(left), fr = at(right);
+          for (let step = 0; step < 36; step++) {
+            if (fl < fr) { hi = right; right = left; fr = fl; left = hi - ratio * (hi - lo); fl = at(left); }
+            else { lo = left; left = right; fl = fr; right = lo + ratio * (hi - lo); fr = at(right); }
+          }
+        }
+      }
+    }
+    return best ? (reverse ? best.elements.reverse() : best.elements) : null;
+  }
   // Tune only the network to a requested port impedance. Unlike autoMatch,
   // this keeps the nearest existing solution branch for continuous dragging.
-  function tuneToImpedance(config, target) {
+  function tuneToImpedance(config, target, { lockTypes = false } = {}) {
     const fail = message => ({ success: false, config, message });
     if (!target || !(target.re > 0 && Number.isFinite(target.re)) || !Number.isFinite(target.im)) return fail('Choose a finite target with positive resistance inside the Smith chart.');
     let current;
@@ -728,6 +819,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       const chosen = candidates[0];
       out.lineZ0 = zc; out.lengthDeg = chosen.theta / toRadians; out.stubDeg = chosen.stub / toRadians; out.stubEnabled = chosen.stubEnabled;
       message = 'Line and stub lengths tuned at ' + Number(f.toPrecision(6)) + ' MHz; Zc = ' + Number(zc.toPrecision(6)) + ' Ω. The stub stays at the ' + ends.stubSide + ' port.';
+    } else if (lockTypes) {
+      const elements = lockedLumped(config, target, ends);
+      if (!elements) return fail('This point cannot be reached with the current component types, order, and enabled states locked.');
+      elements.forEach((element, i) => { out.elements[i] = element; });
+      message += ' Component types, order, and enabled states are retained.';
     } else {
       const kinds = positions(config), physical = kinds.map((_, i) => config.elements[i]);
       const old = reverse ? physical.slice().reverse() : physical;
@@ -791,7 +887,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   const names = {l:'L network',pi:'π network',t:'T network',line:'Transmission line'};
   const initial = () => ({referenceSide:'source',z0:50,sourceR:50,sourceX:0,loadR:100,loadX:50,frequencyMHz:100,designMHz:100,topology:'l',orientation:'series-shunt',elements:[{type:'L',value:82,enabled:true},{type:'C',value:22,enabled:true},{type:'L',value:68,enabled:true}],lineZ0:50,lengthDeg:45,stubEnabled:false,stubSide:'source',stubType:'open',stubDeg:45});
   let state = initial(), selected = '', drag = null, result, sweep = [];
-  let sweepMin = 25, sweepMax = 250, frame = 0;
+  let sweepMin = 25, sweepMax = 250, frame = 0, lockElementTypes = false;
   const sides = () => state.referenceSide==='load'
     ? {reverse:true,reference:'Load',termination:'Source',port:'output',direction:'source → load'}
     : {reverse:false,reference:'Source',termination:'Load',port:'input',direction:'load → source'};
@@ -808,7 +904,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   const componentBounds = e => ({lo:Math.min(.001,e.value>0?e.value/10:.001),hi:Math.max(1e7,e.value*10)});
   const logFraction = (v,bounds) => Math.log(v/bounds.lo)/Math.log(bounds.hi/bounds.lo);
   function clearValidation() { document.querySelectorAll('input[type=number]').forEach(input=>input.setCustomValidity('')); }
-  function announce(message) { $('action-status').textContent=message; }
+  function showChartMessage(message) { const warning=$('chart-warning');if(warning.textContent!==message)warning.textContent=message;$('chart-inspection').hidden=!!message;$('chart-probe').classList.toggle('matching-warning',!!message); }
+  function announce(message, chartMessage=false) { $('action-status').textContent=chartMessage?'':message;showChartMessage(chartMessage?message:'');$('chart-inspection').textContent='Move across the chart to inspect impedance and admittance.'; }
   function custom() { $('preset').value='custom'; }
   function requestRender() { if (!frame) frame=requestAnimationFrame(()=>{frame=0;render();}); }
   function commitNumber(input, action) {
@@ -840,6 +937,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     $('topology').value=state.topology;$('orientation').value=state.orientation;
     for(const [field,slider,value,limit] of [['line-length','line-slider',state.lengthDeg,360],['stub-length','stub-slider',state.stubDeg,180]]) {const max=Math.max(limit,Math.ceil(value/180)*180);$(field).max=max;$(slider).max=max;$(slider).value=value;}
     $('stub-type').value=state.stubType;$('stub-enabled').checked=state.stubEnabled;
+    $('lock-element-types').checked=lockElementTypes;$('element-type-lock').hidden=state.topology==='line';
     $('orientation-wrap').hidden=state.topology!=='l';$('line-controls').hidden=state.topology!=='line';$('element-controls').hidden=state.topology==='line';$('stub-controls').hidden=!state.stubEnabled;
   }
   function elementControls() {
@@ -878,7 +976,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     let s='<defs><clipPath id="chart-clip"><circle cx="350" cy="325" r="280"/></clipPath></defs><circle cx="350" cy="325" r="280" fill="#fff" stroke="#a4afbb" stroke-width="1.4"/>';
     for(const adm of [false,true]) {
       if(adm&&mode==='z'||!adm&&mode==='y')continue;
-      const stroke=adm?'#d3e5e3':'#d6dee7',sign=adm?-1:1;
+      const stroke=adm?'#ddc79f':'#cbd7e4',sign=adm?-1:1;
       s+=`<g clip-path="url(#chart-clip)" fill="none" stroke="${stroke}" stroke-width="1" ${adm?'stroke-dasharray="3 3"':''}>`;
       for(const r of [.2,.5,1,2,5]) s+=`<circle cx="${350+sign*280*r/(1+r)}" cy="325" r="${280/(1+r)}"/>`;
       for(const x of [.2,.5,1,2,5,-.2,-.5,-1,-2,-5]) {
@@ -930,8 +1028,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     if(Math.hypot(p.x-targetPoint.x,p.y-targetPoint.y)>1)s+=line(p.x,p.y,targetPoint.x,targetPoint.y,'#986a2f','stroke-dasharray="3 5" opacity=".5" pointer-events="none"');
     s+=`<g id="conjugate-target" role="img" pointer-events="none" aria-label="Conjugate target ${esc(ztext(result.target))} ohms"><path d="M${targetPoint.x},${targetPoint.y-12}l12,12 -12,12 -12,-12Z" fill="none" stroke="#986a2f" stroke-width="2"/><text x="${clamp(targetPoint.x,120,580)}" y="${targetPoint.y>580?targetPoint.y-23:targetPoint.y+29}" text-anchor="middle" class="marker-label" style="fill:#986a2f">Target · ${targetSymbol}</text></g>`;
     $('target-readout').textContent=`Conjugate target: ${side.reverse?'Zout = ZL*':'Zin = ZS*'} = ${ztext(result.target)} Ω`;
-    $('drag-help').textContent=`Drag the green ring to tune ${state.topology==='line'?'the line and stub':'L/C values'} toward the gold target. Drag blue to change the ${side.termination.toLowerCase()}.`;
-    $('chart-help').textContent=`The center is the real chart Z₀ = ${f(state.z0)} Ω. Match the green ring to the gold target.${Math.abs(result.target.im)>1e-10?' The conjugate target is away from the real axis.':''} ${$('grid-mode').value==='both'?'Solid grid: z = r + jx. Dotted grid: y = g + jb.':$('grid-mode').value==='y'?'Grid: normalized admittance y = g + jb.':'Grid: normalized impedance z = r + jx.'}`;
+    $('drag-help').textContent=`Drag the green ring to tune ${state.topology==='line'?'the line and stub':lockElementTypes?'values with L/C types fixed':'L/C values'} toward the gold target. Drag blue to change the ${side.termination.toLowerCase()}.`;
+    $('chart-help').textContent=`The center is the real chart Z₀ = ${f(state.z0)} Ω. Match the green ring to the gold target.${Math.abs(result.target.im)>1e-10?' The conjugate target is away from the real axis.':''} ${$('grid-mode').value==='both'?'Blue-gray solid grid: z = r + jx. Gold dotted grid: y = g + jb.':$('grid-mode').value==='y'?'Gold grid: normalized admittance y = g + jb.':'Blue-gray grid: normalized impedance z = r + jx.'}`;
     $('smith-chart').innerHTML=s;
     if(focused)$(focused)?.focus({preventScroll:true});
     $('stage-list').innerHTML=result.stages.map((t,i)=>`<button class="stage-button" data-stage="${t.name}" style="--stage-color:${colors[t.name]}" aria-pressed="${selected===t.name}"><strong>${i===0?'Start · '+t.name:i+' · '+t.name+' · '+t.kind}${i===result.stages.length-1?' → '+side.port:''}</strong><span>${ztext(t.z)}${Number.isFinite(t.z.re)?' Ω':''}</span></button>`).join('');
@@ -1025,8 +1123,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     const onTarget=snap&&result.target.re>0&&Math.hypot(g.re-result.targetGamma.re,g.im-result.targetGamma.im)*280*scale<=10;
     if(onTarget)g=result.targetGamma;
     else if(rho>.997)g={re:g.re*.997/rho,im:g.im*.997/rho};
-    const wanted=onTarget?result.target:M.impedance(g,state.z0),tuned=M.tuneToImpedance(state,wanted);
-    if(!tuned.success){announce(tuned.message);return;}
+    const wanted=onTarget?result.target:M.impedance(g,state.z0),tuned=M.tuneToImpedance(state,wanted,{lockTypes:lockElementTypes});
+    if(!tuned.success){announce(tuned.message,true);return;}
     announce('');
     if(tuned.config===state)return;
     state=tuned.config;selected='';custom();clearValidation();syncFields();elementControls();requestRender();
@@ -1038,7 +1136,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     if(marker.id==='port-marker'&&Math.hypot(g.re-result.stages[0].gamma.re,g.im-result.stages[0].gamma.im)*280<=7.5)marker=$('load-marker');
     e.preventDefault();marker.focus({preventScroll:true});
     const kind=marker.id==='port-marker'?'network':'termination',start=kind==='network'?result.gamma:result.stages[0].gamma;
-    drag={id:e.pointerId,kind,snapshot:structuredClone(state),preset:$('preset').value,selected,status:$('action-status').textContent,offset:{re:start.re-g.re,im:start.im-g.im},moved:false};
+    drag={id:e.pointerId,kind,snapshot:structuredClone(state),preset:$('preset').value,selected,status:$('action-status').textContent,chartMessage:$('chart-warning').textContent,offset:{re:start.re-g.re,im:start.im-g.im},moved:false};
     $('smith-chart').setPointerCapture(e.pointerId);
   });
   $('smith-chart').addEventListener('pointermove',e=>{
@@ -1047,12 +1145,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     if(Math.hypot(g.re,g.im)>1)return;
     const z=M.impedance(g,state.z0),d=z.re*z.re+z.im*z.im;
     const y=!Number.isFinite(d)?'0':d===0?'∞':ztext({re:1000*z.re/d,im:-1000*z.im/d});
-    $('chart-probe').textContent=`Z = ${ztext(z)}${Number.isFinite(z.re)?' Ω':''}  ·  Y = ${y} mS  ·  |Γ| = ${f(Math.hypot(g.re,g.im),4)}`;
+    showChartMessage('');$('chart-inspection').textContent=`Z = ${ztext(z)}${Number.isFinite(z.re)?' Ω':''}  ·  Y = ${y} mS  ·  |Γ| = ${f(Math.hypot(g.re,g.im),4)}`;
   });
   function endDrag(e,cancel){
     if(!drag||e.pointerId!==drag.id)return;
     const previous=drag;drag=null;
-    if(cancel){state=previous.snapshot;selected=previous.selected;$('preset').value=previous.preset;announce(previous.status);clearValidation();syncFields();elementControls();}
+    if(cancel){state=previous.snapshot;selected=previous.selected;$('preset').value=previous.preset;announce(previous.chartMessage||previous.status,!!previous.chartMessage);clearValidation();syncFields();elementControls();}
     requestRender();
     if($('smith-chart').hasPointerCapture(e.pointerId))$('smith-chart').releasePointerCapture(e.pointerId);
   }
@@ -1083,8 +1181,15 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   $('stub-enabled').addEventListener('change',e=>{state.stubEnabled=e.target.checked;custom();syncFields();render();});
   $('stub-type').addEventListener('change',e=>{state.stubType=e.target.value;custom();render();});
   $('stub-side').addEventListener('change',e=>{state.stubSide=e.target.value;custom();render();});
+  $('lock-element-types').addEventListener('change',e=>{lockElementTypes=e.target.checked;announce('');render();});
   $('preset').addEventListener('change',e=>loadPreset(e.target.value));$('reset').addEventListener('click',()=>loadPreset('start'));
-  $('auto-match').addEventListener('click',()=>{const match=M.autoMatch(state);if(match.success){state=match.config;selected='';clearValidation();custom();syncFields();elementControls();render();}announce(match.message);});
+  $('auto-match').addEventListener('click',()=>{
+    const locked=lockElementTypes&&state.topology!=='line';
+    const match=locked?M.tuneToImpedance(state,M.endpoints(state).target,{lockTypes:true}):M.autoMatch(state);
+    if(!match.success){announce(match.message,true);$('chart-probe').scrollIntoView({block:'nearest'});return;}
+    state=match.config;selected='';clearValidation();custom();syncFields();elementControls();render();
+    announce(locked?`Conjugate matched at ${f(state.frequencyMHz,6)} MHz with L/C types fixed.`:match.message);
+  });
   for(const id of ['grid-mode','show-vswr','show-sweep'])$(id).addEventListener('change',render);
   for(const id of ['sweep-min','sweep-max']){
     $(id).addEventListener('input',()=>$(id).setCustomValidity(''));

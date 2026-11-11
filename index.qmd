@@ -161,8 +161,8 @@ include-in-header:
       </div>
     </section>
 
-    <section class="tool-group" aria-labelledby="transfer-function-visualization">
-      <h3 id="transfer-function-visualization" class="text-xl font-bold text-gray-800 mb-5">Transfer Function Visualization</h3>
+    <section class="tool-group" aria-labelledby="signals-and-systems">
+      <h3 id="signals-and-systems" class="text-xl font-bold text-gray-800 mb-5">Signals and Systems</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
         <a href="bode_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
@@ -204,6 +204,24 @@ include-in-header:
           </div>
         </a>
 
+        <a href="fourier_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/fourier_simulator.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Fourier Transform Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Draw signals, build them from sinusoids, and explore their Fourier spectra.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="tool-group" aria-labelledby="communication-systems">
+      <h3 id="communication-systems" class="text-xl font-bold text-gray-800 mb-5">Communication Systems</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
         <a href="smith_chart_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
                   hover:shadow-md hover:border-red-300 transition-all group">
           <div class="simulator-preview">
@@ -216,11 +234,23 @@ include-in-header:
           and L, pi, T, and transmission-line networks.</p>
           </div>
         </a>
+
+        <a href="modulation_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/modulation_simulator.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Analog/Digital Modulation</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Explore analog and digital modulation, receiver processing, spectra, and recovered signals.</p>
+          </div>
+        </a>
       </div>
     </section>
 
-    <section class="tool-group" aria-labelledby="signal-conversion">
-      <h3 id="signal-conversion" class="text-xl font-bold text-gray-800 mb-5">Signal Conversion</h3>
+    <section class="tool-group" aria-labelledby="mixed-signal-fundamentals">
+      <h3 id="mixed-signal-fundamentals" class="text-xl font-bold text-gray-800 mb-5">Mixed Signal Fundamentals</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
         <a href="adc_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
