@@ -268,7 +268,6 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
 #discrete-workspace{--toolbar-height:58px}
 #q-science{container-name:q-views}
 #q-conversion-panel>.domain-cap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center}#q-clock-readout{height:3em;line-height:1.5;overflow:auto;text-align:right}
-.q-circuit-shell{margin-bottom:20px;border:1px solid var(--line);border-radius:10px;background:#fcfdfe;padding:14px 14px 8px}.q-circuit-shell .section-line{margin-bottom:6px;flex-wrap:wrap;gap:8px}.q-circuit-key{font-size:10px;color:var(--muted);white-space:nowrap}.q-circuit-key i{display:inline-block;width:14px;height:3px;vertical-align:middle}.q-key-analog{background:#087f8c}.q-key-trial{background:#ad6a12}.q-key-digital{background:#7b1113}.q-circuit-scroll{overflow:auto;scrollbar-width:thin}.q-circuit{display:block;width:100%;min-width:760px;height:auto;font-family:"MOS Inter","Segoe UI",sans-serif}.q-wire{fill:none;stroke:#a4aebb;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.q-wire.q-analog{stroke:#087f8c;stroke-width:3}.q-wire.q-trial{stroke:#ad6a12;stroke-width:3}.q-wire.q-digital{stroke:#7b1113;stroke-width:3}.q-circuit-block{fill:#f3f6f9;stroke:#bac4ce;stroke-width:1.5}.q-analog-block{fill:#eff9f9;stroke:#087f8c;stroke-width:2}.q-digital-block{fill:#fff3f2;stroke:#7b1113;stroke-width:2}.q-trial-block{fill:#fff8ec;stroke:#ad6a12;stroke-width:2}.q-circuit-comparator{fill:#f3f6f9;stroke:#a4aebb;stroke-width:1.5}.q-comparator-active{fill:#e9f7f7;stroke:#087f8c;stroke-width:3}.q-svg-heading{fill:#253443;font-size:15px;font-weight:600}.q-svg-value{fill:#253443;font-size:15px;font-family:"MOS Mono",Consolas,monospace}.q-svg-label{fill:#606b79;font-size:12px}.q-svg-polarity{fill:#253443;font-size:18px}.q-svg-resistor{fill:#fff5e7;stroke:#ad6a12;stroke-width:1.5}.q-tap-dot{fill:#ad6a12}.q-input-dot{fill:#087f8c}.q-circuit-bit{fill:#f1faf9;stroke:#087f8c;stroke-width:1.5}.q-circuit-bit.q-one{fill:#7b1113;stroke:#7b1113}.q-svg-bit{fill:#253443;font:16px "MOS Mono",Consolas,monospace}.q-circuit-bit.q-one+.q-svg-bit{fill:white}.q-circuit-note{line-height:1.5;height:4.5em;overflow:auto;margin-bottom:0}
 .q-small{font-size:11px!important}.q-wide-button{width:100%;margin-top:10px}
 .q-architecture-line{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}.q-stage{flex:1;min-width:150px;padding:12px 15px;border:1px solid var(--line);border-radius:9px;background:var(--panel-alt)}.q-stage span{display:block;font-size:12px;color:var(--muted)}.q-stage strong{display:block;font-family:"MOS Mono",Consolas,monospace;color:var(--teal);font-size:20px;margin-top:4px;font-weight:500;overflow-wrap:anywhere}.q-stage-accent{border-left:3px solid var(--accent)}.q-stage-accent strong{color:var(--accent)}.q-arrow{color:var(--muted);font-size:21px}
 .q-flash-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px}.q-ladder-scroll{max-height:450px;overflow:auto;scrollbar-width:thin;border:1px solid var(--line);border-radius:9px;margin-top:10px;background:#fcfdfe;padding:10px 12px}.q-rail{font:600 12px "MOS Mono",Consolas,monospace;color:var(--accent);padding:5px 0}.q-ladder-row{display:grid;grid-template-columns:minmax(100px,1fr) minmax(100px,1fr) 45px;align-items:center;gap:10px;padding:3px 0;font-size:11px}.q-ladder-row.q-crossing{background:#087f8c12;border-radius:6px;outline:1px solid #087f8c60}.q-resistor-cell{display:flex;align-items:center;gap:8px;min-height:40px}.q-resistor-symbol{width:14px;height:23px;border:1px solid #ad6a12;background:#fff5e7;position:relative;flex-shrink:0;margin:7px 5px}.q-resistor-symbol:before,.q-resistor-symbol:after{content:"";position:absolute;width:1px;height:8px;background:#85929e;left:5px}.q-resistor-symbol:before{top:-9px}.q-resistor-symbol:after{bottom:-9px}.q-resistor-text{font-family:"MOS Mono",Consolas,monospace;font-size:10px;color:var(--muted)}.q-tap{font-family:"MOS Mono",Consolas,monospace;font-size:11px;color:var(--teal);border-top:1px solid var(--line);padding-top:5px}.q-comparator{border:1px solid var(--line);padding:4px 5px;text-align:center;border-radius:5px;background:#fff;font:12px "MOS Mono",Consolas,monospace}.q-comparator.one{background:var(--accent);color:white;border-color:var(--accent)}
@@ -279,9 +278,46 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
 @media(max-width:600px){#q-playback-panel .transport{gap:8px}#q-playback-panel .transport-settings{gap:8px}.q-ladder-scroll{padding:8px}.q-architecture-line{gap:7px}.q-stage{min-width:100px}}
 /* Keep every SAR decision slot and variable-length readout at a stable height. */
 #q-sar-panel .q-architecture-line{align-items:stretch}#q-sar-panel .q-stage>span{height:3em;min-height:3em;overflow:auto}#q-sar-panel .q-stage>strong{height:2.6em;line-height:1.3;overflow:auto}#q-sar-progress{min-width:145px;text-align:center}#q-sar-explanation{height:6em;line-height:1.5;overflow:auto}#q-sar-panel .q-interval-row{height:33px;margin:9px 0}.q-pending{color:#87929e}.q-pending .q-interval-track{background:#f7f8fa;border-style:dashed}.q-search-table tbody tr{height:42px}.q-search-table-scroll{height:min(390px,calc(83px + var(--q-decision-count,4)*42px));scrollbar-gutter:stable}.q-sar-facts .quiet-info{height:132px;overflow:auto}.q-result-grid .stat{height:154px;overflow:auto}.q-result-grid .stat-sub{overflow-wrap:anywhere}
-@container q-views (max-width:600px){.q-circuit-shell{padding:10px 8px 8px}.q-circuit-note{height:7.5em}#q-sar-explanation{height:9em}.q-result-grid .stat{height:166px}}
+@container q-views (max-width:600px){#q-sar-explanation{height:9em}.q-result-grid .stat{height:166px}}
 
 @media(max-width:600px){#q-conversion-panel>.domain-cap{grid-template-columns:minmax(0,1fr)}}
+
+/* Shared diagram styling mirrors the Sigma–Delta block-diagram conventions. */
+.q-circuit-shell{margin-bottom:18px;padding:0;border:0;background:transparent}
+.q-circuit-shell .section-line{margin-bottom:8px;flex-wrap:wrap;gap:8px}
+.q-circuit-shell h3{font-size:13px;font-weight:650;color:var(--muted)}
+.q-circuit-key{font-size:10px;color:var(--muted);white-space:nowrap}
+.q-circuit-key i{display:inline-block;width:17px;height:0;border-top:2px solid;vertical-align:middle}
+.q-key-analog{border-color:#087f8c!important}.q-key-trial{border-color:#287a48!important}.q-key-digital{border-color:#7b1113!important}
+.q-circuit-scroll{overflow-x:auto;scrollbar-width:thin;margin:0 -3px}
+.q-circuit{display:block;width:100%;min-width:910px;height:auto;user-select:none;font-family:"MOS Inter","Segoe UI",sans-serif}
+.q-circuit text{font-family:"MOS Inter","Segoe UI",sans-serif;fill:var(--muted);font-size:11px}
+.q-circuit .q-svg-heading{fill:var(--text);font-size:15px;font-weight:650}
+.q-circuit .q-svg-value{font-family:"MOS Mono",Consolas,monospace;font-size:14px;font-weight:400;fill:var(--accent)}
+.q-circuit .q-svg-domain{font-size:11px;letter-spacing:1px;fill:#75818d;font-weight:700}
+.q-circuit .q-svg-key{font-size:11px;font-weight:650;fill:var(--teal)}
+.q-circuit .q-svg-rail,.q-circuit .q-svg-feedback{font-size:11px;fill:#287a48}
+.q-circuit .q-svg-polarity{font-size:15px;fill:var(--text)}
+.q-circuit-domain{fill:#f9fbfc;stroke:#dfe5eb;stroke-width:1;stroke-dasharray:5 5}
+.q-circuit-block,.q-circuit-comparator{fill:#fff;stroke:var(--line);stroke-width:1.5}
+.q-circuit-block.q-block-active,.q-circuit-comparator.q-comparator-active{fill:#f5fafb;stroke:var(--teal);stroke-width:1.8}
+.q-circuit-block.q-feedback-block.q-block-active{fill:#f6faf7;stroke:#287a48}
+.q-wire{fill:none;stroke:#85929e;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.q-wire-analog{stroke:#087f8c}.q-wire-feedback{stroke:#287a48}.q-wire-digital{stroke:#7b1113}
+.q-junction{fill:#85929e}.q-junction-active{fill:#087f8c}.q-reference-junction{fill:#287a48}
+.q-svg-resistor{fill:#fff;stroke:#85929e;stroke-width:1.5}
+.q-circuit-bit{fill:#fff;stroke:var(--line);stroke-width:1.2}.q-circuit-bit.q-one{fill:var(--accent);stroke:var(--accent)}
+.q-circuit .q-svg-bit,.q-circuit .q-svg-bit-one{font:13px "MOS Mono",Consolas,monospace;fill:var(--muted)}
+.q-circuit .q-svg-bit-one{fill:#fff}
+.q-circuit-note{line-height:1.5;height:4.5em;overflow:auto;margin-top:5px;margin-bottom:0}
+@container q-views (max-width:600px){.q-circuit-note{height:7.5em}}
+
+/* Shared source controls and a fixed-size emphasis for completed-code bit zero. */
+.settings-sidebar .mode-switch{display:flex;gap:3px}.settings-sidebar .mode-switch button{flex:1;min-width:0;padding-left:6px;padding-right:6px}
+#rampClocks,#q-rampClocks{width:88px;flex-shrink:0}
+.adc-lsb{display:inline-block;min-width:1.25em;text-align:center;padding:1px 2px;border:1px solid var(--teal);border-radius:3px;color:var(--teal);background:#eef7f8;line-height:1.2}
+.adc-lsb.changed{color:#fff;background:var(--accent);border-color:var(--accent)}
+.adc-lsb-label{font:9px "MOS Inter","Segoe UI",sans-serif;color:var(--muted);white-space:nowrap}
 
 </style></head><body>
 <header class="page-banner"><div class="banner-wrap">
@@ -301,7 +337,7 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
   <details class="panel" id="settings" open>
     <summary class="domain-cap editor-summary"><span class="editor-summary-title"><span class="disclosure-arrow" aria-hidden="true">▸</span><span id="settings-heading">Input &amp; converter settings</span></span></summary>
     <div class="domain-content">
-      <div class="selector-group"><span class="selector-label" id="source-label">Input signal</span><div class="mode-switch" role="group" aria-labelledby="source-label"><button type="button" data-mode="dc" aria-pressed="true">DC voltage</button><button type="button" data-mode="sine" aria-pressed="false">Sine wave</button></div></div>
+      <div class="selector-group"><span class="selector-label" id="source-label">Input signal</span><div class="mode-switch" role="group" aria-labelledby="source-label"><button type="button" data-mode="dc" aria-pressed="true">DC voltage</button><button type="button" data-mode="sine" aria-pressed="false">Sine wave</button><button type="button" data-mode="ramp" aria-pressed="false">Ramp</button></div></div>
       <div class="controls-grid">
       <section class="control-column"><h2 id="source-heading">Set the input voltage</h2>
         <div id="dc-controls">
@@ -315,7 +351,12 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
           <div class="source-field"><div class="control-top"><label for="amplitude">Peak amplitude</label><div class="number-unit"><input id="amplitude-value" type="number" min="0" max="1.25" step="0.01" value="0.65" aria-label="Sine peak amplitude"><span>V</span></div></div><input id="amplitude" data-key="amplitude" type="range" min="0" max="1.25" step="0.005" value="0.65" aria-label="Sine peak amplitude slider"></div>
           <div class="control-row"><label for="frequency">Signal frequency</label><div class="number-unit"><input id="frequency" type="number" min="0.5" max="1024" step="0.5" value="8"><span>Hz</span></div></div>
         </div>
-
+        <div id="ramp-controls" hidden>
+          <div class="control-top"><label for="rampClocks">Rise time · clocks</label><input id="rampClocks" type="number" min="16" max="1048576" step="1" value="256" aria-label="Ramp rise time in converter clocks"></div>
+          <input id="ramp-clocks" type="range" min="4" max="20" step="0.125" value="8" aria-label="Ramp rise time slider">
+          <div class="range-ends"><span>Faster · 16</span><span>Slower · 1,048,576</span></div>
+          <div class="quiet-info" id="ramp-info"></div><p class="note" id="ramp-timing"></p>
+        </div>
       </section>
       <section class="control-column"><h2>Set the converter</h2>
         <div class="control-row"><label for="input-range">Input range</label><select id="input-range"><option value="bipolar">Bipolar · −Vref to +Vref</option><option value="single-ended">Single-ended · 0 to Vref</option></select></div>
@@ -402,7 +443,7 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
     <h3>Model references</h3><p>Background on the modulator and the role of filtering: <a href="https://www.analog.com/en/resources/interactive-design-tools/sigma-delta-adc-tutorial.html" target="_blank" rel="noopener noreferrer">Analog Devices · Sigma-Delta ADC Tutorial</a> and <a href="https://e2e.ti.com/blogs_/archives/b/precisionhub/posts/delta-sigma-adc-basics-understanding-the-delta-sigma-modulator" target="_blank" rel="noopener noreferrer">Texas Instruments · Understanding the delta-sigma modulator</a>. The equations above define the particular implementation in this simulator.</p></div>
     <div><h3>Filtering is different from decimation</h3><p>The digital filter computes the mean of the most recent R DAC-equivalent samples at <em>every</em> modulator clock. It waits for a full window before reporting a value. The decimator then keeps the result at n = R−1, 2R−1, …, giving one output word every R clocks. The staircase is only a display of the held output value.</p><div class="math">C = number of ones in an R-clock output window<br><span id="sigma-guide-decode">V̂ = (2C/R − 1)Vref</span><br>Output rate = fs/R<br><span id="sigma-guide-spacing">Count-code spacing = 2Vref/R</span></div>
     <h3>A count is not a precision specification</h3><p>The displayed output word is the unsigned ones count C, from 0 through R inclusive. It has R+1 possible values and needs ceil(log₂(R+1)) storage bits. It is not a standardized commercial ADC code format. More storage bits or a larger R do not by themselves establish effective resolution. No ENOB estimate is claimed.</p>
-    <h3>Time, delay, and what the readouts mean</h3><p>The first sample is n = 0 at t = 0; sample n occurs at n/fs seconds. The filter’s group delay is (R−1)/(2fs). At each inspected clock, the density and output cards show the <em>latest completed output window</em>, which may end earlier than the cursor. Shading identifies that window. The waveform crosshair and all block values follow the hovered or pinned sample.</p><p>Run moves forward from the pinned sample, first replaying existing capture data, then generating new samples. Step clock advances one sample; Next word advances to the next decimator boundary. Reset clears the capture but keeps your settings. Capture +512 appends samples at the end. Changing a setting recomputes the existing capture; it does not insert a live input change. Select Sine wave to study a changing input.</p>
+    <h3>Time, delay, and what the readouts mean</h3><p>The first sample is n = 0 at t = 0; sample n occurs at n/fs seconds. The filter’s group delay is (R−1)/(2fs). At each inspected clock, the density and output cards show the <em>latest completed output window</em>, which may end earlier than the cursor. Shading identifies that window. The waveform crosshair and all block values follow the hovered or pinned sample.</p><p>Run moves forward from the pinned sample, first replaying existing capture data, then generating new samples. Step clock advances one sample; Next word advances to the next decimator boundary. Reset clears the capture but keeps your settings. Capture +512 appends samples at the end. Changing a setting recomputes the existing capture; it does not insert a live input change. Select Sine wave or Ramp to study a changing input. Ramp rises between the selected rails, includes the upper endpoint, and restarts at the lower rail on the next clock. A longer rise time makes the voltage change more slowly. The Playback control sets the viewing speed independently.</p>
     <h3>What is intentionally left out</h3><p>This is an educational first-order loop with one ideal integrator, a zero-threshold comparator, an ideal DAC using the selected lower and upper reference rails, and a sinc¹ filter. There is no analog saturation clamp, thermal noise, reference noise, clock jitter, hysteresis, or component mismatch. Over-range inputs are shown rather than silently clipped. Real converters can use higher-order loops, multibit quantizers, and much stronger digital filters.</p><p>The file works offline. The only external links are the optional reference articles; no external scripts, libraries, or network services are required.</p></div>
   </div></details>
 </div></div></main><main class="site-shell" id="discrete-workspace" hidden>
@@ -411,11 +452,12 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
   </section>
   <div class="workbench" id="q-workbench">
     <aside class="settings-sidebar" id="q-sidebar" aria-labelledby="q-settings-heading"><details class="panel" id="q-settings" open><summary class="domain-cap editor-summary"><span class="editor-summary-title"><span class="disclosure-arrow" aria-hidden="true">▸</span><span id="q-settings-heading">Input &amp; converter settings</span></span></summary><div class="domain-content">
-      <div class="selector-group"><span class="selector-label" id="q-source-label">Input signal</span><div class="mode-switch" role="group" aria-labelledby="q-source-label"><button data-q-mode="dc" aria-pressed="true">DC voltage</button><button data-q-mode="sine" aria-pressed="false">Sine wave</button></div></div>
+      <div class="selector-group"><span class="selector-label" id="q-source-label">Input signal</span><div class="mode-switch" role="group" aria-labelledby="q-source-label"><button data-q-mode="dc" aria-pressed="true">DC voltage</button><button data-q-mode="sine" aria-pressed="false">Sine wave</button><button data-q-mode="ramp" aria-pressed="false">Ramp</button></div></div>
       <div class="controls-grid"><section class="control-column"><h2 id="q-source-heading">Set the input voltage</h2>
         <div id="q-dc-controls"><div class="control-top"><label for="q-dc">Input voltage · Vin</label><div class="number-unit"><input id="q-dc-value" type="number" min="-1.25" max="1.25" step="0.01" value="0.25" aria-label="Exact DC input voltage"><span>V</span></div></div><input id="q-dc" type="range" min="-1.25" max="1.25" step="0.005" value="0.25" aria-label="DC input voltage"><div class="range-ends"><span id="q-range-min">−1.25 V</span><span id="q-range-mid">0 V</span><span id="q-range-max">+1.25 V</span></div></div>
         <div id="q-sine-controls" hidden><div class="source-field"><div class="control-top"><label for="q-offset">DC offset</label><div class="number-unit"><input id="q-offset-value" type="number" min="-1.25" max="1.25" step="0.01" value="0" aria-label="Exact sine offset"><span>V</span></div></div><input id="q-offset" type="range" min="-1.25" max="1.25" step="0.005" value="0" aria-label="Sine offset"></div><div class="source-field"><div class="control-top"><label for="q-amplitude">Peak amplitude</label><div class="number-unit"><input id="q-amplitude-value" type="number" min="0" max="1.25" step="0.01" value="0.65" aria-label="Exact sine amplitude"><span>V</span></div></div><input id="q-amplitude" type="range" min="0" max="1.25" step="0.005" value="0.65" aria-label="Sine amplitude"></div><div class="control-row"><label for="q-frequency">Signal frequency</label><div class="number-unit"><input id="q-frequency" type="number" min="0.5" max="1024" step="0.5" value="8"><span>Hz</span></div></div></div>
 
+        <div id="q-ramp-controls" hidden><div class="control-top"><label for="q-rampClocks">Rise time · clocks</label><input id="q-rampClocks" type="number" min="16" max="1048576" step="1" value="256" aria-label="Ramp rise time in converter clocks"></div><input id="q-ramp-clocks" type="range" min="4" max="20" step="0.125" value="8" aria-label="Ramp rise time slider"><div class="range-ends"><span>Faster · 16</span><span>Slower · 1,048,576</span></div><div class="quiet-info" id="q-ramp-info"></div><p class="note q-small" id="q-ramp-timing"></p></div>
       </section><section class="control-column"><h2>Set the converter</h2><div class="control-row"><label for="q-input-range">Input range</label><select id="q-input-range"><option value="bipolar">Bipolar · −Vref to +Vref</option><option value="single-ended">Single-ended · 0 to Vref</option></select></div><div class="control-row"><label for="q-vref">Reference · Vref</label><select id="q-vref"><option value="0.5">0.5 V</option><option value="1" selected>1.0 V</option><option value="2.5">2.5 V</option><option value="5">5.0 V</option></select></div><div class="control-row"><label for="q-fs" id="q-clock-label">Conversion clock · fs</label><select id="q-fs"><option value="1024">1,024 Hz</option><option value="4096" selected>4,096 Hz</option><option value="16384">16,384 Hz</option></select></div><div class="control-row"><label for="q-bits">Resolution · N</label><select id="q-bits"></select></div><div class="quiet-info" id="q-rate-info"></div><p class="note q-small">Changing Vref scales the source. Changing input range preserves its position within the range and scales its amplitude. Playback speed controls the animation.</p></section>
       <section class="control-column" id="q-ladder-settings"><h2>Resistor ladder</h2><div class="control-row"><label for="q-resistance">Nominal segment</label><div class="number-unit"><input id="q-resistance" type="number" min="10" max="1000000" step="100" value="1000"><span>Ω</span></div></div><div class="control-row"><label for="q-tolerance">Tolerance · ±</label><div class="number-unit"><input id="q-tolerance" type="number" min="0" max="10" step="0.1" value="1"><span>%</span></div></div><input id="q-tolerance-range" type="range" min="0" max="10" step="0.1" value="1" aria-label="Resistor tolerance percent"><div class="control-row"><label for="q-seed">Resistor-set seed</label><input id="q-seed" type="number" min="1" max="999999" step="1" value="1"></div><button id="q-new-ladder" class="q-wide-button">New resistor set</button><p class="note q-small">Each segment gets an independent, fixed deviation within the selected tolerance. Changing the input preserves this resistor set.</p></section></div>
       <div class="warning" id="q-warning" role="status" hidden></div>
@@ -423,12 +465,12 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
     <div class="sidebar-resizer" id="q-resizer" role="separator" tabindex="0" aria-label="Resize converter settings sidebar" aria-orientation="vertical" aria-controls="q-sidebar" aria-valuemin="280" aria-valuemax="560" aria-valuenow="320" aria-valuetext="320 pixels" title="Drag to resize. Arrow keys adjust; double-click restores the width."><span aria-hidden="true"></span></div>
     <div class="science-column" id="q-science">
       <section class="panel" id="q-conversion-panel" aria-labelledby="q-chain-title"><div class="domain-cap"><span id="q-chain-title">01 · Parallel comparison</span><span class="cap-meta" id="q-clock-readout"></span></div><div class="domain-content">
-        <div id="q-flash-panel"><div class="q-circuit-shell"><div class="section-line"><h3>Flash conversion circuit</h3><span class="q-circuit-key">Analog <i class="q-key-analog"></i> · DAC / threshold <i class="q-key-trial"></i> · Digital <i class="q-key-digital"></i></span></div><div class="q-circuit-scroll" tabindex="0" aria-label="Flash ADC circuit diagram"><svg id="q-flash-circuit" class="q-circuit" viewBox="0 0 960 360" role="img" aria-labelledby="q-flash-circuit-title q-flash-circuit-desc"></svg></div><p class="note q-small q-circuit-note" id="q-flash-circuit-note"></p></div><div class="q-architecture-line"><div class="q-stage"><span>Sampled input</span><strong id="q-flash-input">+0.250 V</strong></div><span class="q-arrow" aria-hidden="true">→</span><div class="q-stage"><span id="q-comparator-count">15 parallel comparators</span><strong id="q-thermo-count">10 ones</strong></div><span class="q-arrow" aria-hidden="true">→</span><div class="q-stage q-stage-accent"><span>Thermometer encoder</span><strong id="q-flash-code">1010₂ = 10</strong></div></div>
+        <div id="q-flash-panel"><div class="q-circuit-shell"><div class="section-line"><h3>Flash conversion circuit</h3><span class="q-circuit-key">Analog <i class="q-key-analog"></i> · Reference <i class="q-key-trial"></i> · Digital <i class="q-key-digital"></i></span></div><div class="q-circuit-scroll" tabindex="0" aria-label="Flash ADC circuit diagram"><svg id="q-flash-circuit" class="q-circuit" viewBox="0 0 1200 330" role="img" aria-labelledby="q-flash-circuit-title q-flash-circuit-desc"></svg></div><p class="note q-small q-circuit-note" id="q-flash-circuit-note"></p></div><div class="q-architecture-line"><div class="q-stage"><span>Sampled input</span><strong id="q-flash-input">+0.250 V</strong></div><span class="q-arrow" aria-hidden="true">→</span><div class="q-stage"><span id="q-comparator-count">15 parallel comparators</span><strong id="q-thermo-count">10 ones</strong></div><span class="q-arrow" aria-hidden="true">→</span><div class="q-stage q-stage-accent"><span>Thermometer encoder</span><strong id="q-flash-code">1010₂ = 10</strong></div></div>
           <div class="q-flash-grid"><div><div class="section-line"><h3>Resistor string &amp; comparator bank</h3><button id="q-find-crossing">Find crossing</button></div><p class="note q-small" id="q-ladder-caption"></p><div class="q-ladder-scroll" id="q-ladder-scroll" tabindex="0" aria-label="Complete resistor ladder and comparator outputs"><div class="q-rail" id="q-positive-rail"></div><div id="q-ladder-rows"></div><div class="q-rail" id="q-negative-rail"></div></div></div>
             <div class="q-flash-explain"><h3>More hardware buys parallel conversion</h3><div class="q-resource-grid"><div><span>Resistor segments · 2ᴺ</span><strong id="q-resistor-count"></strong></div><div><span>Comparators · 2ᴺ − 1</span><strong id="q-bank-count"></strong></div><div><span>Decision clocks / code</span><strong>1</strong></div><div><span>Ideal code width · 1 LSB</span><strong id="q-flash-lsb"></strong></div></div><p class="note">All comparators evaluate the same input together. Raising N by one doubles the resistor count and nearly doubles the comparator count.</p><div class="q-complexity" id="q-complexity" aria-label="Flash component growth with resolution"></div><div class="quiet-info" id="q-ladder-electrical"></div><p class="note q-small">At fixed segment resistance, more segments reduce ladder current. Comparator area, input loading, and switching energy still grow. Actual speed also depends on settling and encoder delay.</p><div class="q-tolerance-box"><h3>Mismatch changes the code boundaries</h3><p class="note" id="q-mismatch-readout"></p><p class="note q-small">DNL is each actual code width divided by the ideal LSB, minus 1. INL is each internal threshold shift in LSB. Values use the fixed reference endpoints.</p></div></div></div>
           <details class="q-details"><summary>Inspect all thresholds and resistor values</summary><div class="q-table-scroll"><table class="q-table"><thead><tr><th scope="col">Tap k</th><th scope="col">Rₖ below tap</th><th scope="col">Ideal threshold</th><th scope="col">Actual threshold</th><th scope="col">INL · LSB</th><th scope="col">Comparator</th></tr></thead><tbody id="q-threshold-table"></tbody></table></div><p class="note q-small" id="q-last-resistor"></p></details>
         </div>
-        <div id="q-sar-panel" hidden><div class="q-circuit-shell"><div class="section-line"><h3>SAR conversion circuit</h3><span class="q-circuit-key">Analog <i class="q-key-analog"></i> · DAC trial <i class="q-key-trial"></i> · Digital <i class="q-key-digital"></i></span></div><div class="q-circuit-scroll" tabindex="0" aria-label="SAR ADC circuit diagram"><svg id="q-sar-circuit" class="q-circuit" viewBox="0 0 960 360" role="img" aria-labelledby="q-sar-circuit-title q-sar-circuit-desc"></svg></div><p class="note q-small q-circuit-note" id="q-sar-circuit-note"></p></div><div class="q-architecture-line"><div class="q-stage"><span>Sample &amp; hold</span><strong id="q-sar-held"></strong></div><span class="q-arrow" aria-hidden="true">→</span><div class="q-stage"><span>Trial DAC voltage</span><strong id="q-sar-dac"></strong></div><span class="q-arrow" aria-hidden="true">→</span><div class="q-stage q-stage-accent"><span id="q-sar-decision-label">Comparator decision</span><strong id="q-sar-decision"></strong></div></div>
+        <div id="q-sar-panel" hidden><div class="q-circuit-shell"><div class="section-line"><h3>SAR conversion circuit</h3><span class="q-circuit-key">Analog <i class="q-key-analog"></i> · DAC trial <i class="q-key-trial"></i> · Digital <i class="q-key-digital"></i></span></div><div class="q-circuit-scroll" tabindex="0" aria-label="SAR ADC circuit diagram"><svg id="q-sar-circuit" class="q-circuit" viewBox="0 0 1200 330" role="img" aria-labelledby="q-sar-circuit-title q-sar-circuit-desc"></svg></div><p class="note q-small q-circuit-note" id="q-sar-circuit-note"></p></div><div class="q-architecture-line"><div class="q-stage"><span>Sample &amp; hold</span><strong id="q-sar-held"></strong></div><span class="q-arrow" aria-hidden="true">→</span><div class="q-stage"><span>Trial DAC voltage</span><strong id="q-sar-dac"></strong></div><span class="q-arrow" aria-hidden="true">→</span><div class="q-stage q-stage-accent"><span id="q-sar-decision-label">Comparator decision</span><strong id="q-sar-decision"></strong></div></div>
           <div class="section-line q-sar-heading"><h3>Resolve one bit per clock, from MSB to LSB</h3><span class="badge" id="q-sar-progress"></span></div><div class="q-register" id="q-register" aria-label="Successive-approximation register"></div><p class="note" id="q-sar-explanation"></p><div class="q-sar-grid"><div><h3>Halve the remaining search interval</h3><p class="note q-small">The blue marker is the held input. Each row shows the candidate codes left after that decision.</p><div id="q-search-intervals" class="q-intervals"></div></div><div class="q-sar-facts"><div class="quiet-info" id="q-sar-sample-info"></div><div class="quiet-info" id="q-sar-cost"></div><div class="quiet-info" id="q-sar-result"></div></div></div>
           <div class="q-table-scroll q-search-table-scroll"><table class="q-table q-search-table"><caption>Binary-search decisions for the inspected conversion</caption><thead><tr><th scope="col">Clock</th><th scope="col">Bit</th><th scope="col">Trial code</th><th scope="col">DAC voltage</th><th scope="col">Comparison</th><th scope="col">Decision</th><th scope="col">Codes left</th></tr></thead><tbody id="q-search-table"></tbody></table></div><p class="note q-small">Select a clock in the table to revisit that decision. Equality keeps the trial bit. Input acquisition is instantaneous in this model, followed by N decision clocks.</p>
         </div>
@@ -461,7 +503,7 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
 })(typeof globalThis === 'object' ? globalThis : this, function () {
   'use strict';
   const MAX_SAMPLES = 8192;
-  const DEFAULTS = Object.freeze({mode:'dc', inputRange:'bipolar', dc:0.25, offset:0, amplitude:0.65, frequency:8,
+  const DEFAULTS = Object.freeze({mode:'dc', inputRange:'bipolar', dc:0.25, offset:0, amplitude:0.65, frequency:8,rampClocks:256,
     vref:1, fs:4096, ratio:32});
   const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
   function range(c) {
@@ -470,17 +512,23 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
   }
   function validate(config) {
     const c = {...DEFAULTS, ...config};
-    if (!['dc','sine'].includes(c.mode)) throw new RangeError('Unknown input mode.');
+    if (!['dc','sine','ramp'].includes(c.mode)) throw new RangeError('Unknown input mode.');
     if (!['bipolar','single-ended'].includes(c.inputRange)) throw new RangeError('Unknown input range.');
     for (const key of Object.keys(DEFAULTS).filter(k => !['mode','inputRange'].includes(k))) {
       if (!Number.isFinite(c[key])) throw new TypeError(key+' must be a finite number.');
     }
     if (c.vref <= 0 || c.fs <= 0 || c.amplitude < 0 || c.frequency <= 0) throw new RangeError('Reference, clock, and frequency must be positive; amplitude cannot be negative.');
     if (!Number.isInteger(c.ratio) || c.ratio < 2 || c.ratio > 256) throw new RangeError('Decimation ratio must be an integer from 2 through 256.');
+    if (!Number.isInteger(c.rampClocks) || c.rampClocks < 16 || c.rampClocks > 1048576) throw new RangeError('Ramp rise time must be an integer from 16 through 1048576 clocks.');
     return c;
   }
   function inputAt(n, c) {
     if (c.mode === 'sine') return c.offset + c.amplitude * Math.sin(2*Math.PI*c.frequency*n/c.fs);
+    if (c.mode === 'ramp') {
+      // Both endpoints are sampled; the following clock restarts at the lower rail.
+      const rails = range(c), phase = n % (c.rampClocks + 1);
+      return phase === 0 ? rails.low : phase === c.rampClocks ? rails.high : rails.low + rails.span*phase/c.rampClocks;
+    }
     return c.dc;
   }
   class Simulator {
@@ -560,6 +608,7 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
   function signed(x,d=3) { x=clean(x); const a=Math.abs(x); return (x<0?'−':'+')+(a>0&&a<.5*10**(-d)?a.toExponential(1).replace('e-','e−'):a.toFixed(d)); }
   function volts(x) { return x===null||x===undefined?'—':signed(x)+' V'; }
   function compact(x) { return Number(x.toPrecision(5)).toLocaleString('en-US',{maximumFractionDigits:4}); }
+  function duration(seconds) { const value=seconds<1?seconds*1000:seconds<60?seconds:seconds<3600?seconds/60:seconds/3600;return Number(value.toPrecision(3))+(seconds<1?' ms':seconds<60?' s':seconds<3600?' min':' h'); }
   function shortTick(x) { if (Math.abs(x)<1e-9) return '0'; return (x<0?'−':'')+Number(Math.abs(x).toPrecision(3)); }
   function text(id,value) { const e=$(id); if (e.textContent!==String(value)) e.textContent=value; }
   function html(id,value) { const e=$(id); if(e.innerHTML!==value)e.innerHTML=value; }
@@ -618,12 +667,13 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
     }
     document.querySelectorAll('[data-range-end]').forEach(e=>e.textContent=volts(e.dataset.rangeEnd==='min'?(config.inputRange==='single-ended'?0:-1.25*v):1.25*v));
     text('dc-midpoint',volts(config.inputRange==='single-ended'?.625*v:0));
-    for(const key of ['vref','fs','ratio','frequency','inputRange'])$(key==='inputRange'?'input-range':key).value=String(config[key]);
+    for(const key of ['vref','fs','ratio','frequency','rampClocks','inputRange'])$(key==='inputRange'?'input-range':key).value=String(config[key]);
+    $('ramp-clocks').value=String(Math.log2(config.rampClocks));$('ramp-clocks').setAttribute('aria-valuetext',config.rampClocks.toLocaleString('en-US')+' clock intervals from lower to upper rail');
     for(const option of $('vref').options)option.textContent=(config.inputRange==='bipolar'?'±':'0…')+Number(option.value).toFixed(1)+' V';
     $('frequency').max=config.fs/4;
-    ['dc','sine'].forEach(mode=>$(mode+'-controls').hidden=config.mode!==mode);
+    ['dc','sine','ramp'].forEach(mode=>$(mode+'-controls').hidden=config.mode!==mode);
     document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===config.mode)));
-    text('source-heading',config.mode==='dc'?'Set the input voltage':'Build a sine wave');
+    text('source-heading',config.mode==='dc'?'Set the input voltage':config.mode==='ramp'?'Build a ramp':'Build a sine wave');
     $('zoom').value=String(state.window);
   }
   function rebuild() {
@@ -647,7 +697,9 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
     html('stat-rate',compact(rate)+' <span class="stat-unit">S/s</span>');
     text('node-decimator','↓'+c.ratio);text('filter-subtitle',c.ratio+'-sample average');
     text('noise-filter-info','R = '+c.ratio+'. First null: '+compact(rate)+' Hz. Group delay: '+num(1000*delayClocks/c.fs)+' ms.');
-    const rails=M.range(c), sourceLow=c.mode==='dc'?c.dc:c.offset-c.amplitude, sourceHigh=c.mode==='dc'?c.dc:c.offset+c.amplitude;
+    const rails=M.range(c), sourceLow=c.mode==='ramp'?rails.low:c.mode==='dc'?c.dc:c.offset-c.amplitude, sourceHigh=c.mode==='ramp'?rails.high:c.mode==='dc'?c.dc:c.offset+c.amplitude;
+    html('ramp-info','<strong>'+volts(rails.low)+' → '+volts(rails.high)+'</strong><br>Rises over '+c.rampClocks.toLocaleString('en-US')+' clocks, then restarts at the lower rail.');
+    text('ramp-timing',duration(c.rampClocks/c.fs)+' of signal time · '+duration(c.rampClocks/state.speed)+' of playback per rise. More clocks make the ramp slower. The filtered count follows with the selected averaging delay.'+(c.rampClocks>=M.MAX_SAMPLES?' A capture holds 8,192 clocks, so this rise is shown in part.':''));
     const single=c.inputRange==='single-ended';
     text('dac-logic-label','Logic 1 → +Vref · logic 0 → '+(single?'0 V':'−Vref'));
     nodeDescriptions.dac.equation=single?'d[n] = b[n]Vref':'d[n] = (2b[n] − 1)Vref';
@@ -672,7 +724,7 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
       switch(state.node){
         case 'input':
           value=volts(p.input);calculation='n = '+p.n+'; t = '+num(p.time*1000)+' ms';
-          status=c.mode==='sine'?'x[n] = '+num(c.offset)+' + '+num(c.amplitude)+' sin(2π × '+compact(c.frequency)+' × n / '+c.fs+') V.':'Constant source. Vin / Vref = '+signed(p.input/c.vref,4)+'.';break;
+          status=c.mode==='sine'?'x[n] = '+num(c.offset)+' + '+num(c.amplitude)+' sin(2π × '+compact(c.frequency)+' × n / '+c.fs+') V.':c.mode==='ramp'?'Ramp clock '+(p.n%(c.rampClocks+1))+' / '+c.rampClocks+'. Rise: '+volts(M.range(c).span/c.rampClocks)+' per clock; then restart at the lower rail.':'Constant source. Vin / Vref = '+signed(p.input/c.vref,4)+'.';break;
         case 'error':
           value=volts(p.error);calculation=signed(p.input)+' − ('+signed(p.previousDac)+') = '+signed(p.error)+' V';status=p.error>0?'Positive error raises the integrator.':p.error<0?'Negative error lowers the integrator.':'Zero error leaves the state unchanged.';break;
         case 'integrator':
@@ -709,7 +761,9 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
     text('read-input',p?'x = '+volts(p.input)+' · d = '+volts(currentDac?p.dac:p.previousDac):'—');text('read-error',p?volts(p.error):'—');text('read-integrator',p?volts(p.integrator):'—');text('read-bits',p?'b['+p.n+'] = '+p.bit:'—');text('read-output',p?'LP: '+volts(p.filtered)+' · out: '+volts(last?.voltage):'—');
     const bitsWidth=Math.ceil(Math.log2(c.ratio+1));
     text('word-label','Latest raw output word · '+bitsWidth+'-bit count storage');
-    text('word-code',last?last.count.toString(2).padStart(bitsWidth,'0')+'₂ = '+last.count:'No word yet');
+    const wordBits=last?last.count.toString(2).padStart(bitsWidth,'0'):'',previousWord=last?sim.samples[last.start-1]?.word:null;
+    const countLsbChanged=!!(last&&previousWord&&p.strobe&&((last.count^previousWord.count)&1));
+    html('word-code',last?wordBits.slice(0,-1)+'<span class="adc-lsb '+(countLsbChanged?'changed':'')+'" title="Least significant bit of the completed output count">'+wordBits.slice(-1)+'</span>₂ = '+last.count:'No word yet');
     text('word-equation',last?'V̂ = '+(c.inputRange==='single-ended'?'('+last.count+' / '+c.ratio+')':'(2 × '+last.count+' / '+c.ratio+' − 1)')+' × '+compact(c.vref)+' V = '+volts(last.voltage):'Code spacing: '+compact(M.range(c).span/c.ratio)+' V; '+(c.ratio+1)+' possible values.');
     const start=p?Math.max(0,p.n-31):0, recent=p?sim.samples.slice(start,p.n+1):[];
     const bits=recent.map(s=>'<span class="bit-cell '+(s.bit?'one ':'')+(s.n===p.n?'pinned':'')+'" title="n = '+s.n+'; b[n] = '+s.bit+'">'+s.bit+'</span>').join('');
@@ -824,7 +878,7 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
       ctx.stroke();ctx.setLineDash([]);
     }
     if(id==='input'){
-      curve(s=>state.node==='dac'?s.dac:s.previousDac,C.feedback,1.6,[5,3]);curve(s=>s.input,C.input,2.3,[],config.mode!=='sine');
+      curve(s=>state.node==='dac'?s.dac:s.previousDac,C.feedback,1.6,[5,3]);curve(s=>s.input,C.input,2.3,[],config.mode==='dc');
     }else if(id==='error')curve(s=>s.error,C.error,1.6);
     else if(id==='integrator')curve(s=>s.integrator,C.state,2.1);
     else if(id==='bits'){
@@ -834,7 +888,7 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
         for(const s of visible)ctx.fillText(String(s.bit),x(s.n)+pw/(state.window-1)*.5,y(1)+13);
       }
     }else if(id==='output'){
-      curve(s=>s.input,C.input+'a8',1.4,[4,4],config.mode!=='sine');
+      curve(s=>s.input,C.input+'a8',1.4,[4,4],config.mode==='dc');
       curve(s=>s.filtered,C.feedback,1.6,[],true);
       curve(s=>s.word?.voltage??null,C.bits,2.1,[],true);
       for(const s of visible)if(s.strobe){ctx.beginPath();ctx.arc(x(s.n),y(s.word.voltage),3.4,0,2*Math.PI);ctx.fillStyle=C.bits;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.stroke();}
@@ -894,6 +948,8 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
   for(const key of ['frequency'])$(key).addEventListener('change',()=>{
     config[key]=readNumber($(key),config[key]);rebuild();
   });
+  $('rampClocks').addEventListener('change',()=>{config.rampClocks=Math.round(readNumber($('rampClocks'),config.rampClocks));rebuild();});
+  $('ramp-clocks').addEventListener('input',()=>{config.rampClocks=Math.round(2**Number($('ramp-clocks').value));rebuild();});
   $('input-range').addEventListener('change',()=>{
     const old=M.range(config);config.inputRange=$('input-range').value;const next=M.range(config);
     for(const key of ['dc','offset'])config[key]=M.clamp(next.low+(config[key]-old.low)*next.span/old.span,config.inputRange==='single-ended'?0:-1.25*config.vref,1.25*config.vref);
@@ -909,7 +965,9 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
   document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{
     config.mode=b.dataset.mode;
     if(config.mode==='sine')state.window=512;
+    else if(config.mode==='ramp')state.window=256;
     rebuild();
+    if(config.mode==='ramp')state.cursor=sim.samples.length?0:-1;
     state.start=Math.max(0,state.cursor-state.window+1);
     schedule();
   }));
@@ -924,7 +982,7 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
   $('step-word').addEventListener('click',()=>{pause();const target=(Math.floor((state.cursor+1)/config.ratio)+1)*config.ratio-1;advance(target-state.cursor);});
   $('reset').addEventListener('click',()=>{pause();sim.reset();state.cursor=-1;state.hover=null;state.start=0;schedule();toast('Capture cleared. Settings preserved; next sample is n = 0.');});
   $('capture-more').addEventListener('click',()=>{pause();sim.run(Math.min(512,M.MAX_SAMPLES-sim.samples.length));state.cursor=sim.samples.length-1;state.hover=null;state.start=Math.max(0,sim.samples.length-state.window);schedule();});
-  $('speed').addEventListener('change',()=>{state.speed=Number($('speed').value);clockFraction=0;});
+  $('speed').addEventListener('change',()=>{state.speed=Number($('speed').value);clockFraction=0;schedule();});
   $('cursor').addEventListener('input',()=>setCursor(Number($('cursor').value)));
   $('cursor-number').addEventListener('change',()=>setCursor(readNumber($('cursor-number'),Math.max(0,state.cursor))));
   $('prev-sample').addEventListener('click',()=>setCursor(state.cursor-1));$('next-sample').addEventListener('click',()=>setCursor(state.cursor+1));
@@ -1089,13 +1147,13 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
 })(typeof globalThis === 'object' ? globalThis : this, function () {
   'use strict';
   const MAX_SAMPLES = 8192;
-  const DEFAULTS = Object.freeze({mode:'dc',inputRange:'bipolar',dc:0.25,offset:0,amplitude:0.65,frequency:8,
+  const DEFAULTS = Object.freeze({mode:'dc',inputRange:'bipolar',dc:0.25,offset:0,amplitude:0.65,frequency:8,rampClocks:256,
     stepFrom:-0.5,stepTo:0.5,stepAt:256,vref:1,fs:4096,bits:4,tolerance:1,resistance:1000,seed:1});
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
   function validate(config = {}) {
     const c = {...DEFAULTS, ...config};
-    if (!['dc','sine','step'].includes(c.mode)) throw new RangeError('Unknown input mode.');
+    if (!['dc','sine','ramp','step'].includes(c.mode)) throw new RangeError('Unknown input mode.');
     if (!['bipolar','single-ended'].includes(c.inputRange)) throw new RangeError('Unknown ADC input range.');
     for (const key of Object.keys(DEFAULTS).filter(key => key !== 'mode' && key !== 'inputRange')) {
       if (!Number.isFinite(c[key])) throw new TypeError(key + ' must be finite.');
@@ -1104,6 +1162,7 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
       throw new RangeError('Reference, clock, frequency, and resistance must be positive; amplitude must be nonnegative.');
     }
     if (!Number.isInteger(c.bits) || c.bits < 2 || c.bits > 12) throw new RangeError('Resolution must be 2 through 12 bits.');
+    if (!Number.isInteger(c.rampClocks) || c.rampClocks < 16 || c.rampClocks > 1048576) throw new RangeError('Ramp rise time must be an integer from 16 through 1048576 clocks.');
     if (!Number.isInteger(c.stepAt) || c.stepAt < 0) throw new RangeError('Step position must be a nonnegative integer.');
     if (c.tolerance < 0 || c.tolerance >= 100) throw new RangeError('Resistor tolerance must be at least zero and below 100 percent.');
     if (!Number.isInteger(c.seed) || c.seed < 0 || c.seed > 0xffffffff) throw new RangeError('Seed must be an unsigned 32-bit integer.');
@@ -1112,6 +1171,11 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
 
   function inputAt(n, c) {
     if (c.mode === 'sine') return c.offset + c.amplitude * Math.sin(2*Math.PI*c.frequency*n/c.fs);
+    if (c.mode === 'ramp') {
+      // Both endpoints are sampled; the following clock restarts at the lower rail.
+      const rails = range(c), phase = n % (c.rampClocks + 1);
+      return phase === 0 ? rails.low : phase === c.rampClocks ? rails.high : rails.low + rails.span*phase/c.rampClocks;
+    }
     if (c.mode === 'step') return n < c.stepAt ? c.stepFrom : c.stepTo;
     return c.dc;
   }
@@ -1236,6 +1300,106 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
 
 </script>
 <script>
+/* Flash and SAR block diagrams. Geometry and typography follow the Sigma–Delta view.
+ * These renderers only describe the selected model record; they do not advance it.
+ * Both diagrams use viewBox="0 0 1200 330".
+ */
+(function (root) {
+  'use strict';
+  const M=root.ADCModels;
+  const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+  const binary=(value,bits)=>Math.trunc(value).toString(2).padStart(bits,'0');
+  function formatter(c){
+    const digits=clamp(Math.ceil(-Math.log10(M.range(c).span/2**c.bits))+1,4,6);
+    return value=>value===null||value===undefined?'—':(value<0?'−':'+')+Math.abs(value).toFixed(digits)+' V';
+  }
+  function defs(prefix){
+    return '<defs>'+[['idle','#85929e'],['analog','#087f8c'],['feedback','#287a48'],['digital','#7b1113']].map(([key,color])=>
+      `<marker id="${prefix}-${key}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="${color}"/></marker>`).join('')+'</defs>';
+  }
+  function wire(prefix,path,kind='idle',arrow=true){
+    return `<path class="q-wire q-wire-${kind}" d="${path}"${arrow?` marker-end="url(#${prefix}-${kind})"`:''}/>`;
+  }
+  function block(x,y,width,height,active=false,extra=''){
+    return `<rect class="q-circuit-block${active?' q-block-active':''}${extra?' '+extra:''}" x="${x}" y="${y}" width="${width}" height="${height}" rx="9"/>`;
+  }
+  function label(x,y,value,kind='label',anchor='middle'){
+    return `<text class="q-svg-${kind}" x="${x}" y="${y}" text-anchor="${anchor}">${value}</text>`;
+  }
+  function domain(x,width,title){
+    return `<rect class="q-circuit-domain" x="${x}" y="20" width="${width}" height="290" rx="12"/>`+label(x+16,39,title,'domain','start');
+  }
+  function renderFlash(p,c,ladder){
+    const k=2**c.bits,r=M.range(c),volts=formatter(c),active=!!p,prefix='q-flash-flow';
+    const middle=clamp(p?.code??Math.floor(k/2),2,k-2),taps=[k-1,middle,1],ys=[92,172,252];
+    let svg='<title id="q-flash-circuit-title">Flash ADC: parallel comparisons and thermometer encoding</title><desc id="q-flash-circuit-desc">The input reaches every positive comparator terminal. Resistor-string taps reach the negative terminals. All comparators evaluate together; three labelled branches represent the bank. The encoder produces the complete output word.</desc>'+defs(prefix);
+    svg+=domain(150,610,'REFERENCE LADDER &amp; COMPARATOR BANK · fs')+domain(780,418,'THERMOMETER ENCODER &amp; OUTPUT');
+    // A small bridge separates the input wire from the resistor string it crosses.
+    svg+=wire(prefix,'M130 170H242Q250 158 258 170H390',active?'analog':'idle',false);
+    svg+=wire(prefix,'M390 80V240',active?'analog':'idle',false);
+    svg+=`<circle class="q-junction${active?' q-junction-active':''}" cx="390" cy="170" r="2.6"/>`;
+    svg+=wire(prefix,'M250 58V294','feedback',false);
+    svg+=block(10,132,120,76,active)+label(70,154,'Input · Vin','heading')+label(70,179,p?volts(p.input):'—','value')+label(70,197,'sample x[n]');
+    svg+=label(250,55,'+Vref · '+volts(r.high),'rail');
+    const resistorY=[65,133,213];
+    for(let i=0;i<3;i++){
+      const tap=taps[i],y=ys[i],bit=p?p.thermometer[tap-1]:null,upper=i===0?k:taps[i-1],segments=upper-tap;
+      svg+=`<rect class="q-svg-resistor" x="244" y="${resistorY[i]}" width="12" height="23"/>`+label(237,resistorY[i]+15,segments===1?'R'+upper:segments+' resistors','label','end');
+      svg+=wire(prefix,`M250 ${y+12}H491`,'feedback')+`<circle class="q-reference-junction" cx="250" cy="${y+12}" r="2.6"/>`;
+      svg+=label(265,y+30,'T'+tap+' = '+volts(ladder.thresholds[tap-1]),'label','start');
+      svg+=wire(prefix,`M390 ${y-12}H491`,active?'analog':'idle')+`<circle class="q-junction${active?' q-junction-active':''}" cx="390" cy="${y-12}" r="2.6"/>`;
+      svg+=`<polygon class="q-circuit-comparator${active?' q-comparator-active':''}" points="493,${y-28} 493,${y+28} 553,${y}"/>`;
+      svg+=label(505,y-8,'+','polarity')+label(505,y+18,'−','polarity')+label(524,y-35,'C'+tap,'label');
+      svg+=wire(prefix,`M554 ${y}H804`,bit===1?'digital':'idle');
+      svg+=`<rect class="q-circuit-bit${bit===1?' q-one':''}" x="647" y="${y-12}" width="28" height="24" rx="4"/>`+label(661,y+5,bit??'—',bit===1?'bit-one':'bit');
+    }
+    svg+='<rect class="q-svg-resistor" x="244" y="273" width="12" height="18"/>'+label(237,286,'R1','label','end');
+    svg+=label(250,307,(r.low===0?'Ground':'−Vref')+' · '+volts(r.low),'rail');
+    svg+=block(805,69,155,213,active)+label(882.5,134,'Thermometer','heading')+label(882.5,154,'encoder','heading');
+    svg+=label(882.5,181,p?p.code+' ones':'—','value')+label(882.5,205,(k-1)+' input bits');
+    svg+=wire(prefix,'M960 172H1020',active?'digital':'idle');
+    svg+=block(1022,134,166,76,active)+label(1105,155,'Output word','heading');
+    svg+=label(1105,179,p?binary(p.code,c.bits)+'₂':'—','value')+label(1105,198,p?'code '+p.code:c.bits+' output bits');
+    svg+=label(543,305,p?'All '+(k-1)+' comparators · n = '+p.n:'One clock evaluates the full bank','label');
+    const note=(k===4?'All three comparator branches are shown.':'Shown taps T'+taps.join(', T')+' represent '+(k-1)+' parallel comparators; the ladder below lists every tap.')+' Teal outlines identify evaluating comparators. Maroon paths carry 1; gray paths carry 0. Green paths carry reference voltages.';
+    return {svg,note};
+  }
+  function renderSAR(p,c){
+    const volts=formatter(c),active=!!p,prefix='q-sar-flow',output=p?.output;
+    let svg='<title id="q-sar-circuit-title">SAR ADC: held input, comparator, trial DAC, and register</title><desc id="q-sar-circuit-desc">The sample-and-hold drives the positive comparator input. The current DAC trial drives the negative input through the green feedback path. Each decision keeps or clears one bit. The displayed trial word is the word just compared, while the register shows the resulting bits. The output updates after the last bit.</desc>'+defs(prefix);
+    svg+=domain(150,500,'SAMPLE, HOLD &amp; COMPARE · fs')+domain(668,530,'SUCCESSIVE APPROXIMATION &amp; OUTPUT');
+    svg+=wire(prefix,'M130 132H190',active&&p.step===1?'analog':'idle');
+    svg+=wire(prefix,'M344 132H410V116H480',active?'analog':'idle');
+    svg+=wire(prefix,'M551 132H698',active?'digital':'idle');
+    svg+=wire(prefix,'M938 132H1030',p?.done?'digital':'idle');
+    svg+=wire(prefix,'M818 185V260H632',active?'feedback':'idle');
+    svg+=wire(prefix,'M460 260H420V148H480',active?'feedback':'idle');
+    svg+=block(10,94,120,76,active&&p.step===1)+label(70,116,'Input · Vin','heading')+label(70,142,p?volts(p.input):'—','value')+label(70,161,'source x[n]');
+    svg+=block(190,94,154,76,active)+label(267,116,'Sample &amp; hold','heading')+label(267,142,p?volts(p.held):'—','value')+label(267,161,p?'sampled at n = '+p.start:'acquire on first clock');
+    svg+=label(411,101,'Held input','label');
+    svg+=`<polygon class="q-circuit-comparator${active?' q-comparator-active':''}" points="481,98 481,166 550,132"/>`;
+    svg+=label(493,121,'+','polarity')+label(493,154,'−','polarity')+label(516,78,'Comparator','heading');
+    svg+=label(624,116,p?(p.accepted?'1 · keep':'0 · clear'):'decision','label');
+    svg+=block(698,94,240,91,active)+label(818,115,'SAR register','heading')+label(818,137,p?'b'+p.bitIndex+' · '+(p.accepted?'keep 1':'clear 0'):'resolve MSB to LSB','key');
+    svg+=label(818,160,p?binary(p.code,c.bits)+'₂ = '+p.code:'—','value')+label(818,177,'register after the comparison');
+    svg+=label(983,116,'latch at LSB','label');
+    svg+=block(1030,94,160,91,!!p?.done)+label(1110,115,'Output word','heading');
+    svg+=label(1110,142,output?binary(output.code,c.bits)+'₂':'—','value')+label(1110,162,output?'code '+output.code:'await complete code');
+    svg+=block(460,226,172,70,active,'q-feedback-block')+label(546,246,c.bits+'-bit trial DAC','heading')+label(546,271,p?volts(p.dac):'—','value')+label(546,287,'voltage just compared');
+    svg+=label(407,250,'DAC feedback','feedback','end');
+    svg+=label(807,242,'Trial word to DAC','feedback','end')+label(818,283,p?binary(p.trialCode,c.bits)+'₂ = '+p.trialCode:'set the MSB first','value');
+    svg+=label(169,305,p?'Decision '+p.step+' of '+c.bits+' · clock n = '+p.n:'One decision clock tests one bit','label','start');
+    svg+=label(1182,305,output?'Output held from n = '+output.n:'Output becomes valid after '+c.bits+' decisions','label','end');
+    const note=p?(p.step===1?'The first clock acquires Vin. ':'The sample-and-hold keeps the acquired voltage. ')+'Green feedback carries the DAC trial to the comparator’s − input. '+(p.done?'The LSB decision completes the conversion and updates the output word.':'This decision updates b'+p.bitIndex+'; the output holds its last completed code.'):'Step clock acquires the input, tests the MSB through the feedback DAC, and records the first decision. Each subsequent clock resolves one smaller bit.';
+    return {svg,note};
+  }
+  const api=Object.freeze({renderFlash,renderSAR});
+  root.ADCCircuits=api;
+  if(typeof module==='object'&&module.exports)module.exports=api;
+})(typeof globalThis==='object'?globalThis:this);
+
+</script>
+<script>
 /* Flash and SAR teaching views. All captures use the verified ADCModels module. */
 (function () {
   'use strict';
@@ -1243,6 +1407,7 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
   const $=id=>document.getElementById('q-'+id), all=selector=>root.querySelectorAll(selector);
   const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
   const num=(x,d=3)=>Number(x).toFixed(d), compact=x=>Number(Number(x).toPrecision(5)).toLocaleString('en-US');
+  const duration=seconds=>{const value=seconds<1?seconds*1000:seconds<60?seconds:seconds<3600?seconds/60:seconds/3600;return Number(value.toPrecision(3))+(seconds<1?' ms':seconds<60?' s':seconds<3600?' min':' h');};
   // Show at least one decimal place finer than an LSB, including high-resolution SAR trials.
   function voltageDigits(){const c=session().config;return clamp(Math.ceil(-Math.log10(M.range(c).span/2**c.bits))+1,4,6);}
   const volts=(x,digits=voltageDigits())=>x===null||x===undefined?'—':(x<0?'−':'+')+num(Math.abs(x),digits)+' V';
@@ -1314,15 +1479,16 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
         e.step=String(v*(suffix?.01:.005));e.value=String(Number(c[key].toFixed(6)));
       }
     }
-    for(const key of ['frequency','vref','fs','resistance','tolerance','seed'])$(key).value=String(c[key]);
+    for(const key of ['frequency','rampClocks','vref','fs','resistance','tolerance','seed'])$(key).value=String(c[key]);
+    $('ramp-clocks').value=String(Math.log2(c.rampClocks));$('ramp-clocks').setAttribute('aria-valuetext',c.rampClocks.toLocaleString('en-US')+' clock intervals from lower to upper rail');
     $('tolerance-range').value=String(c.tolerance);$('frequency').max=String(c.fs/4);
     $('bits').innerHTML=Array.from({length:architecture==='flash'?7:11},(_,i)=>'<option value="'+(i+2)+'">'+(i+2)+' bits</option>').join('');
     $('bits').value=String(c.bits);$('sar-panel').style.setProperty('--q-decision-count',c.bits);$('speed').value=String(s.speed);$('window').value=String(s.window);
     $('input-range').value=c.inputRange;text('range-min',c.inputRange==='single-ended'?'0 V':'−'+compact(1.25*v)+' V');text('range-mid',c.inputRange==='single-ended'?compact(.625*v)+' V':'0 V');text('range-max','+'+compact(1.25*v)+' V');
     text('code-convention',c.inputRange==='single-ended'?'Single-ended input · straight-binary code':'Bipolar input · offset-binary code');
-    for(const mode of ['dc','sine'])$(mode+'-controls').hidden=c.mode!==mode;
+    for(const mode of ['dc','sine','ramp'])$(mode+'-controls').hidden=c.mode!==mode;
     all('[data-q-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.qMode===c.mode)));
-    text('source-heading',c.mode==='dc'?'Set the input voltage':'Build a sine wave');
+    text('source-heading',c.mode==='dc'?'Set the input voltage':c.mode==='ramp'?'Build a ramp':'Build a sine wave');
     $('ladder-settings').hidden=architecture!=='flash';$('flash-panel').hidden=architecture!=='flash';$('sar-panel').hidden=architecture!=='sar';$('held-legend').hidden=architecture==='flash';
     text('chain-title',architecture==='flash'?'01 · Compare all thresholds in parallel':'01 · Find the code with binary search');
     text('clock-label',architecture==='flash'?'Conversion clock · fs':'Decision clock · fs');
@@ -1333,53 +1499,24 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
   function renderConfiguration(){
     const s=session(),c=s.config,k=2**c.bits,rate=c.fs/(architecture==='sar'?c.bits:1);
     html('rate-info','<strong>Output: '+compact(rate)+' samples/s</strong><br>'+ (architecture==='flash'?'All '+(k-1)+' comparators decide together.':'One comparator makes '+c.bits+' sequential decisions per code.'));
-    const r=M.range(c),minimum=c.mode==='dc'?c.dc:c.offset-c.amplitude,maximum=c.mode==='dc'?c.dc:c.offset+c.amplitude;
+    const r=M.range(c),minimum=c.mode==='ramp'?r.low:c.mode==='dc'?c.dc:c.offset-c.amplitude,maximum=c.mode==='ramp'?r.high:c.mode==='dc'?c.dc:c.offset+c.amplitude;
+    html('ramp-info','<strong>'+volts(r.low)+' → '+volts(r.high)+'</strong><br>Rises over '+c.rampClocks.toLocaleString('en-US')+' clocks, then restarts at the lower rail.');
+    text('ramp-timing',duration(c.rampClocks/c.fs)+' of signal time · '+duration(c.rampClocks/s.speed)+' of playback per rise. About '+compact(c.rampClocks/k)+' clocks per ideal code width. More clocks make the ramp slower.'+(c.rampClocks>=M.MAX_SAMPLES?' A capture holds 8,192 clocks, so this rise is shown in part.':''));
     const warnings=[];
     if(minimum<r.low||maximum>r.high)warnings.push('The input exceeds the '+volts(r.low)+' to '+volts(r.high)+' range. Output codes saturate at the end of the range.');
     if(c.mode==='sine'&&c.frequency>=rate/2)warnings.push('The signal is at or above the output Nyquist frequency ('+compact(rate/2)+' Hz). Its samples can alias.');
+    if(c.mode==='ramp'&&c.rampClocks<k*(architecture==='sar'?c.bits:1))warnings.push('The ramp moves more than one ideal code width per conversion. Some codes can be skipped. Increase the rise time to inspect individual LSB transitions.');
     $('warning').hidden=!warnings.length;text('warning',warnings.join(' '));
     text('stat-rate',compact(rate)+' S/s');text('stat-rate-note',architecture==='flash'?'1 clock / conversion':c.bits+' clocks / conversion');
-    text('wave-note',architecture==='flash'?'Each clock produces a complete code. The maroon trace decodes that code to the center of its nominal bin; resistor mismatch shifts the actual thresholds.':'The blue source can move while the teal sampled value stays fixed. The maroon output updates only after the LSB decision and holds until the next completed conversion.');
-  }
-  function circuitDefs(prefix){
-    return '<defs>'+[['analog','#087f8c'],['trial','#ad6a12'],['digital','#7b1113'],['idle','#a4aebb']].map(([key,color])=>'<marker id="'+prefix+'-'+key+'" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="'+color+'"/></marker>').join('')+'</defs>';
+    text('wave-note',(architecture==='flash'?'Each clock produces a complete code. The maroon trace decodes that code to the center of its nominal bin; resistor mismatch shifts the actual thresholds.':'The blue source can move while the teal sampled value stays fixed. The maroon output updates only after the LSB decision and holds until the next completed conversion.')+(c.mode==='ramp'?' Watch the outlined b0 / LSB digit; it highlights when a newly completed output changes that bit.':''));
   }
   function renderFlashCircuit(p){
-    const c=session().config,L=session().ladder,k=2**c.bits,r=M.range(c),active=!!p;
-    // Three explicitly labelled branches retain the full resistor-string topology.
-    // The detailed ladder below lists every segment and comparator.
-    const middle=clamp(p?.code??Math.floor(k/2),2,k-2),taps=[k-1,middle,1],ys=[91,181,271];
-    let svg='<title id="q-flash-circuit-title">Flash ADC: resistor string and parallel comparator bank</title><desc id="q-flash-circuit-desc">Input connects to the positive input of every comparator. Each negative input connects to one resistor-string threshold. All comparators evaluate together, and the thermometer encoder produces the binary code. Three representative branches are shown.</desc>'+circuitDefs('q-flash-arrow');
-    svg+='<text x="28" y="44" class="q-svg-heading">Vin</text><text x="28" y="65" class="q-svg-value">'+(p?volts(p.input):'No sample')+'</text>';
-    svg+='<path d="M 29 77 H 338 V 259" class="q-wire '+(active?'q-analog':'')+'"/><text x="190" y="25" text-anchor="middle" class="q-svg-heading">+Vref · '+volts(r.high)+'</text><path d="M 190 34 V 315" class="q-wire q-trial"/>';
-    svg+='<rect x="663" y="51" width="133" height="260" rx="10" class="q-circuit-block '+(active?'q-digital-block':'')+'"/><text x="729" y="149" text-anchor="middle" class="q-svg-heading">Thermometer</text><text x="729" y="171" text-anchor="middle" class="q-svg-heading">encoder</text><text x="729" y="197" text-anchor="middle" class="q-svg-value">'+(p?p.code+' ones':'Await clock')+'</text><text x="729" y="222" text-anchor="middle" class="q-svg-label">'+(k-1)+' input bits</text>';
-    for(let i=0;i<3;i++){
-      const tap=taps[i],y=ys[i],bit=p?p.thermometer[tap-1]:null,upper=i===0?k:taps[i-1],segments=upper-tap,ry=i===0?46:ys[i-1]+38;
-      svg+='<rect x="184" y="'+ry+'" width="12" height="23" class="q-svg-resistor"/><text x="175" y="'+(ry+15)+'" text-anchor="end" class="q-svg-label">'+(segments===1?'R'+upper:segments+' resistors')+'</text>';
-      svg+='<circle cx="190" cy="'+(y+12)+'" r="3.5" class="q-tap-dot"/><path d="M 190 '+(y+12)+' H 429" class="q-wire q-trial" marker-end="url(#q-flash-arrow-trial)"/><text x="205" y="'+(y+33)+'" class="q-svg-label">T'+tap+' = '+volts(L.thresholds[tap-1])+'</text>';
-      svg+='<path d="M 338 '+(y-12)+' H 429" class="q-wire '+(active?'q-analog':'')+'" marker-end="url(#q-flash-arrow-'+(active?'analog':'idle')+')"/><circle cx="338" cy="'+(y-12)+'" r="3.5" class="q-input-dot"/>';
-      svg+='<polygon points="431,'+(y-29)+' 431,'+(y+29)+' 491,'+y+'" class="q-circuit-comparator '+(active?'q-comparator-active':'')+'"/><text x="441" y="'+(y-7)+'" class="q-svg-polarity">+</text><text x="441" y="'+(y+18)+'" class="q-svg-polarity">−</text><text x="470" y="'+(y-36)+'" text-anchor="middle" class="q-svg-label">C'+tap+'</text>';
-      svg+='<path d="M 492 '+y+' H 662" class="q-wire '+(bit===1?'q-digital':active?'q-analog':'')+'" marker-end="url(#q-flash-arrow-'+(bit===1?'digital':active?'analog':'idle')+')"/><rect x="555" y="'+(y-13)+'" width="29" height="26" rx="5" class="q-circuit-bit '+(bit===1?'q-one':'')+'"/><text x="569" y="'+(y+5)+'" text-anchor="middle" class="q-svg-bit">'+(bit??'—')+'</text>';
-    }
-    svg+='<rect x="184" y="287" width="12" height="23" class="q-svg-resistor"/><text x="175" y="303" text-anchor="end" class="q-svg-label">R1</text><text x="190" y="341" text-anchor="middle" class="q-svg-heading">'+(r.low===0?'Ground':'−Vref')+' · '+volts(r.low)+'</text>';
-    svg+='<path d="M 796 181 H 928" class="q-wire '+(active?'q-digital':'')+'" marker-end="url(#q-flash-arrow-'+(active?'digital':'idle')+')"/><text x="864" y="150" text-anchor="middle" class="q-svg-heading">Code '+(p?p.code:'—')+'</text><text x="864" y="214" text-anchor="middle" class="q-svg-value">'+(p?binary(p.code,c.bits)+'₂':'N bits')+'</text><text x="483" y="341" text-anchor="middle" class="q-svg-label">'+(active?'All '+(k-1)+' comparators active at n = '+p.n:'Step clock activates all '+(k-1)+' comparators')+'</text>';
-    html('flash-circuit',svg);
-    text('flash-circuit-note',(k-1===3?'All 3 comparator branches are shown.':'Representative taps T'+taps.join(', T')+' are shown; the complete bank has '+(k-1)+' comparators.')+' Teal outlines mark every evaluating comparator. Maroon paths carry 1; teal paths carry 0. All decisions occur in the same clock.');
+    const s=session(),view=window.ADCCircuits.renderFlash(p,s.config,s.ladder);
+    html('flash-circuit',view.svg);text('flash-circuit-note',view.note);
   }
   function renderSARCircuit(p){
-    const c=session().config,active=!!p,analog=active?'q-analog':'',digital=active?'q-digital':'',trial=active?'q-trial':'',suffix=active?'analog':'idle';
-    let svg='<title id="q-sar-circuit-title">SAR ADC: sample and hold, comparator, register, and trial DAC</title><desc id="q-sar-circuit-desc">The held input drives the positive comparator input. The trial DAC drives its negative input. The comparator decides whether the SAR register keeps or clears the current trial bit. The result is latched after the last bit.</desc>'+circuitDefs('q-sar-arrow');
-    svg+='<text x="25" y="49" class="q-svg-heading">Source Vin</text><text x="25" y="73" class="q-svg-value">'+(p?volts(p.input):'No sample')+'</text><path d="M 26 112 H 173" class="q-wire '+(active&&p.step===1?'q-analog':'')+'" marker-end="url(#q-sar-arrow-'+(active&&p.step===1?'analog':'idle')+')"/>';
-    svg+='<rect x="177" y="69" width="153" height="88" rx="10" class="q-circuit-block '+(active?'q-analog-block':'')+'"/><text x="253" y="94" text-anchor="middle" class="q-svg-heading">Sample &amp; hold</text><text x="253" y="121" text-anchor="middle" class="q-svg-value">'+(p?volts(p.held):'Await input')+'</text><text x="253" y="144" text-anchor="middle" class="q-svg-label">'+(p?'Sampled at n = '+p.start:'Acquire on first clock')+'</text>';
-    svg+='<path d="M 331 112 H 463" class="q-wire '+analog+'" marker-end="url(#q-sar-arrow-'+suffix+')"/><text x="392" y="94" text-anchor="middle" class="q-svg-label">Held input</text>';
-    svg+='<polygon points="466,83 466,181 551,132" class="q-circuit-comparator '+(active?'q-comparator-active':'')+'"/><text x="478" y="118" class="q-svg-polarity">+</text><text x="478" y="159" class="q-svg-polarity">−</text><text x="509" y="64" text-anchor="middle" class="q-svg-heading">Comparator</text>';
-    svg+='<path d="M 552 132 H 667" class="q-wire '+digital+'" marker-end="url(#q-sar-arrow-'+(active?'digital':'idle')+')"/><text x="608" y="108" text-anchor="middle" class="q-svg-value">'+(p?(p.accepted?'1 · keep':'0 · clear'):'Decision')+'</text>';
-    svg+='<rect x="671" y="65" width="257" height="134" rx="10" class="q-circuit-block '+(active?'q-digital-block':'')+'"/><text x="799" y="89" text-anchor="middle" class="q-svg-heading">SAR register &amp; control</text><text x="799" y="116" text-anchor="middle" class="q-svg-value">'+(p?'Testing b'+p.bitIndex+' · '+(p.accepted?'keep 1':'clear 0'):'MSB first, then toward LSB')+'</text><text x="799" y="143" text-anchor="middle" class="q-svg-value">'+(p?binary(p.code,c.bits)+'₂ = '+p.code:'Unresolved register')+'</text><text x="799" y="172" text-anchor="middle" class="q-svg-label">Register after this comparison</text>';
-    svg+='<path d="M 799 199 V 276 H 620" class="q-wire '+trial+'" marker-end="url(#q-sar-arrow-'+(active?'trial':'idle')+')"/><text x="788" y="252" text-anchor="end" class="q-svg-label">Trial word sent to DAC</text><text x="799" y="301" text-anchor="middle" class="q-svg-value">'+(p?binary(p.trialCode,c.bits)+'₂ = '+p.trialCode:'Most significant bit set first')+'</text>';
-    svg+='<rect x="429" y="231" width="188" height="89" rx="10" class="q-circuit-block '+(active?'q-trial-block':'')+'"/><text x="523" y="257" text-anchor="middle" class="q-svg-heading">'+c.bits+'-bit trial DAC</text><text x="523" y="286" text-anchor="middle" class="q-svg-value">'+(p?volts(p.dac):'VDAC')+'</text><text x="523" y="308" text-anchor="middle" class="q-svg-label">Voltage just compared</text><path d="M 428 276 H 380 V 153 H 463" class="q-wire '+trial+'" marker-end="url(#q-sar-arrow-'+(active?'trial':'idle')+')"/><text x="363" y="249" text-anchor="end" class="q-svg-heading">DAC feedback</text>';
-    svg+='<text x="27" y="333" class="q-svg-label">'+(p?'Decision '+p.step+' of '+c.bits+' at clock n = '+p.n:'One decision clock tests one bit')+'</text><text x="928" y="341" text-anchor="end" class="q-svg-heading">Output latch: '+(p?.output?'code '+p.output.code:'await complete conversion')+'</text>';
-    html('sar-circuit',svg);
-    text('sar-circuit-note',p?(p.step===1?'The first clock samples Vin. ':'The sample-and-hold isolates the changing source. ')+'The highlighted DAC trial drives the comparator’s − input. '+(p.done?'The LSB decision completes the code and updates the output latch.':'The comparator result updates b'+p.bitIndex+'; the output latch holds its last complete code.'):'Step clock samples Vin and begins the first DAC trial. Follow the amber DAC feedback and the maroon comparator decision around the loop.');
+    const view=window.ADCCircuits.renderSAR(p,session().config);
+    html('sar-circuit',view.svg);text('sar-circuit-note',view.note);
   }
   function renderFlash(p){
     const s=session(),c=s.config,L=s.ladder,k=2**c.bits,r=M.range(c);
@@ -1434,7 +1571,10 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
     const s=session(),c=s.config,out=p?.output;
     text('clock-readout',p?'Pinned clock n = '+p.n+' · '+num(p.time*1000)+' ms':'Capture cleared');
     text('stat-input',p?volts(p.held):'—');text('stat-code',out?String(out.code):'—');
-    text('stat-binary',out?binary(out.code,c.bits)+'₂ · completed at n = '+out.n:'Waiting for a completed conversion');
+    const previous=out?s.records[(out.start??out.n)-1]?.output:null;
+    const lsbChanged=!!(out&&previous&&p.outputNew&&((out.code^previous.code)&1));
+    const word=out?binary(out.code,c.bits):'';
+    html('stat-binary',out?'<span class="mono">'+word.slice(0,-1)+'<span class="adc-lsb '+(lsbChanged?'changed':'')+'" title="b0: least significant bit'+(lsbChanged?', changed at this output':'')+'">'+word.slice(-1)+'</span>₂</span> <span class="adc-lsb-label">b0 / LSB</span><br>completed at n = '+out.n:'Waiting for a completed conversion');
     text('stat-decoded',out?volts(out.decoded):'—');text('stat-error',out?'Error vs '+volts(out.held)+' sampled at n = '+(out.start??out.n)+': '+volts(out.error):'');
     text('play',s.playing?'Ⅱ Pause':'▶ Run');$('play').setAttribute('aria-label',s.playing?'Pause simulation':'Run simulation');
     text('status',(s.playing?'Running':s.records.length===M.MAX_SAMPLES&&s.cursor===M.MAX_SAMPLES-1?'Capture full':'Paused')+' · '+s.records.length.toLocaleString('en-US')+' clocks');
@@ -1467,7 +1607,7 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
     ctx.textAlign='right';ctx.fillText('V',L-8,10);ctx.fillText('clock n',w-R,h-5);
     ctx.save();ctx.beginPath();ctx.rect(L,T,pw,ph);ctx.clip();
     function curve(get,color,step,dash=[]){ctx.strokeStyle=color;ctx.lineWidth=2;ctx.setLineDash(dash);ctx.beginPath();let old=null,started=false;for(const p of data){const value=get(p);if(value===null||value===undefined){old=null;started=false;continue;}if(!started){ctx.moveTo(x(p.n),y(value));started=true;}else{if(step)ctx.lineTo(x(p.n),y(old));ctx.lineTo(x(p.n),y(value));}old=value;}if(started&&data.length)ctx.lineTo(x(data[data.length-1].n+1),y(old));ctx.stroke();ctx.setLineDash([]);}
-    curve(p=>p.input,'#2568ad',c.mode!=='sine');
+    curve(p=>p.input,'#2568ad',c.mode==='dc');
     if(architecture==='sar')curve(p=>p.held,'#087f8c',true,[5,3]);
     curve(p=>p.output?.decoded??null,'#7b1113',true);
     for(const p of data)if(p.outputNew){ctx.fillStyle='#7b1113';ctx.beginPath();ctx.arc(x(p.n),y(p.output.decoded),2.4,0,2*Math.PI);ctx.fill();}
@@ -1478,24 +1618,26 @@ html{scroll-padding-top:calc(var(--toolbar-height,58px) + 24px)}
   function render(){const p=selected();renderConfiguration();architecture==='flash'?renderFlash(p):renderSAR(p);renderReadouts(p);drawWave();}
   function updateGuide(){
     const flash=architecture==='flash',c=session().config,r=M.range(c);text('guide-title',flash?'Learning guide · parallel thresholds and resistor mismatch':'Learning guide · successive approximation and binary search');
-    html('guide-content',flash?'<div><h3>How the resistor string sets the thresholds</h3><p>The string has 2ᴺ positive resistor segments between the lower and upper reference rails, Vlow and Vhigh. Its 2ᴺ − 1 internal taps drive one comparator each. Tap k is Vlow + (Vhigh − Vlow) × (R₁ + … + Rₖ) / Rtotal. Each comparator produces 1 when the input equals or exceeds that tap.</p><h3>From thermometer pattern to binary code</h3><p>The internal thresholds remain ordered because all resistances are positive. Counting the comparators that output 1 gives the unsigned digital code. The encoder resolves that parallel pattern into N output bits. Inputs below or above the reference range saturate at the endpoint code.</p><h3>What increasing N costs</h3><p>One more output bit requires twice as many resistor segments and approximately twice as many comparators. This model makes one complete conversion per clock. Real speed also depends on comparator delay, ladder settling, encoder delay, and input loading.</p></div><div><h3>Explore resistor tolerance</h3><p>Set tolerance to zero to obtain equally spaced thresholds. Increase it to move the internal boundaries while the endpoints stay fixed. The seed generates a repeatable set of independent uniform resistor deviations. Common scaling of every resistor changes current but leaves the tap ratios unchanged.</p><h3>Understand decoded voltage and error</h3><p>The plotted estimate is the center of the nominal code bin: Vlow + (code + ½) × (Vhigh − Vlow) / 2ᴺ. Actual bin boundaries come from the mismatched ladder. Error is decoded voltage minus sampled input. DNL and INL describe the threshold geometry; they do not measure all real converter errors.</p><h3>Model scope</h3><p>Comparator offset, noise, metastability, thermometer bubbles, and encoder propagation are idealized. The power readout covers the resistor string only. Comparator and encoder energy are not included.</p><p><a href="https://www.analog.com/en/resources/technical-articles/2022/07/16/07/24/understanding-flash-adcs.html" target="_blank" rel="noopener noreferrer">Analog Devices · Understanding Flash ADCs</a></p></div>':'<div><h3>A binary search in voltage</h3><p>The SAR first holds the input voltage, sets the most significant trial bit, and compares the input with the DAC. If the held input is at least the trial voltage, the bit stays 1. Otherwise it is cleared. Each successive trial resolves one smaller bit and removes half of the remaining candidate codes.</p><h3>Read the trial table</h3><p>The trial code includes the bit currently being tested. The register shows accepted bits, cleared bits, and unresolved bits. A partial register is a search state. A complete output code is latched only after the least significant bit has been tested.</p><h3>Hold the input while searching</h3><p>With a sine input, the source may change during the search. The comparator uses the value sampled at the first decision clock throughout that conversion. The output updates after N decisions, then the next conversion samples the source again.</p></div><div><h3>Resolution and conversion time</h3><p>N decisions distinguish 2ᴺ possible codes. This reuses one comparator and an N-bit DAC, in exchange for sequential conversion. The modeled output rate is fs / N. Input is acquired instantaneously on the first of those N decision clocks. A real converter also requires acquisition and settling time.</p><h3>The code convention</h3><p>The selected input range is '+volts(r.low)+' to '+volts(r.high)+'. The output uses '+(c.inputRange==='single-ended'?'straight binary':'offset binary')+'. Trial DAC voltage is Vlow + trial × (Vhigh − Vlow) / 2ᴺ. Equality keeps the trial bit. The plotted output is the center of the final nominal bin, and values outside the range saturate.</p><h3>Model scope</h3><p>The DAC, comparator, and sample-and-hold are ideal. DAC mismatch, comparator offset, charge injection, acquisition error, and clock jitter are omitted so each binary-search decision can be followed directly.</p><p><a href="https://www.analog.com/en/resources/technical-articles/successive-approximation-registers-sar-and-flash-adcs.html" target="_blank" rel="noopener noreferrer">Analog Devices · SAR and Flash ADCs</a></p></div>');
+    html('guide-content',flash?'<div><h3>How the resistor string sets the thresholds</h3><p>The string has 2ᴺ positive resistor segments between the lower and upper reference rails, Vlow and Vhigh. Its 2ᴺ − 1 internal taps drive one comparator each. Tap k is Vlow + (Vhigh − Vlow) × (R₁ + … + Rₖ) / Rtotal. Each comparator produces 1 when the input equals or exceeds that tap.</p><h3>From thermometer pattern to binary code</h3><p>The internal thresholds remain ordered because all resistances are positive. Counting the comparators that output 1 gives the unsigned digital code. The encoder resolves that parallel pattern into N output bits. Inputs below or above the reference range saturate at the endpoint code.</p><h3>Follow an LSB transition</h3><p>Select Ramp and increase its rise time to slow the voltage sweep. It starts at the lower rail, reaches the upper rail after the selected number of clocks, and restarts on the next clock. The outlined final binary digit is b0, the least significant bit. It highlights when a new completed output changes that bit. Resistor tolerance moves the Flash transition points.</p><h3>What increasing N costs</h3><p>One more output bit requires twice as many resistor segments and approximately twice as many comparators. This model makes one complete conversion per clock. Real speed also depends on comparator delay, ladder settling, encoder delay, and input loading.</p></div><div><h3>Explore resistor tolerance</h3><p>Set tolerance to zero to obtain equally spaced thresholds. Increase it to move the internal boundaries while the endpoints stay fixed. The seed generates a repeatable set of independent uniform resistor deviations. Common scaling of every resistor changes current but leaves the tap ratios unchanged.</p><h3>Understand decoded voltage and error</h3><p>The plotted estimate is the center of the nominal code bin: Vlow + (code + ½) × (Vhigh − Vlow) / 2ᴺ. Actual bin boundaries come from the mismatched ladder. Error is decoded voltage minus sampled input. DNL and INL describe the threshold geometry; they do not measure all real converter errors.</p><h3>Model scope</h3><p>Comparator offset, noise, metastability, thermometer bubbles, and encoder propagation are idealized. The power readout covers the resistor string only. Comparator and encoder energy are not included.</p><p><a href="https://www.analog.com/en/resources/technical-articles/2022/07/16/07/24/understanding-flash-adcs.html" target="_blank" rel="noopener noreferrer">Analog Devices · Understanding Flash ADCs</a></p></div>':'<div><h3>A binary search in voltage</h3><p>The SAR first holds the input voltage, sets the most significant trial bit, and compares the input with the DAC. If the held input is at least the trial voltage, the bit stays 1. Otherwise it is cleared. Each successive trial resolves one smaller bit and removes half of the remaining candidate codes.</p><h3>Read the trial table</h3><p>The trial code includes the bit currently being tested. The register shows accepted bits, cleared bits, and unresolved bits. A partial register is a search state. A complete output code is latched only after the least significant bit has been tested.</p><h3>Hold the input while searching</h3><p>With a sine or ramp input, the source may change during the search. The comparator uses the value sampled at the first decision clock throughout that conversion. The output updates after N decisions, then the next conversion samples the source again.</p></div><div><h3>Resolution and conversion time</h3><p>N decisions distinguish 2ᴺ possible codes. This reuses one comparator and an N-bit DAC, in exchange for sequential conversion. The modeled output rate is fs / N. Input is acquired instantaneously on the first of those N decision clocks. A real converter also requires acquisition and settling time.</p><h3>Slow the ramp for individual codes</h3><p>Rise time controls the number of clocks from the lower to the upper rail. Playback controls how quickly those clocks are shown. A sufficiently slow ramp lets the completed code advance one step at a time. The outlined b0 / LSB belongs to the latched output; the register above shows each intermediate trial.</p><h3>The code convention</h3><p>The selected input range is '+volts(r.low)+' to '+volts(r.high)+'. The output uses '+(c.inputRange==='single-ended'?'straight binary':'offset binary')+'. Trial DAC voltage is Vlow + trial × (Vhigh − Vlow) / 2ᴺ. Equality keeps the trial bit. The plotted output is the center of the final nominal bin, and values outside the range saturate.</p><h3>Model scope</h3><p>The DAC, comparator, and sample-and-hold are ideal. DAC mismatch, comparator offset, charge injection, acquisition error, and clock jitter are omitted so each binary-search decision can be followed directly.</p><p><a href="https://www.analog.com/en/resources/technical-articles/successive-approximation-registers-sar-and-flash-adcs.html" target="_blank" rel="noopener noreferrer">Analog Devices · SAR and Flash ADCs</a></p></div>');
   }
   for(const key of ['dc','offset','amplitude']){
     $(key).addEventListener('input',()=>{session().config[key]=Number($(key).value);rebuild();});
     $(key+'-value').addEventListener('change',()=>{session().config[key]=read($(key+'-value'),session().config[key]);rebuild();});
   }
   for(const key of ['frequency','resistance','tolerance','seed'])$(key).addEventListener('change',()=>{const s=session();s.config[key]=read($(key),s.config[key]);if(key==='seed')s.config[key]=Math.round(s.config[key]);rebuild();});
+  $('rampClocks').addEventListener('change',()=>{session().config.rampClocks=Math.round(read($('rampClocks'),session().config.rampClocks));rebuild();});
+  $('ramp-clocks').addEventListener('input',()=>{session().config.rampClocks=Math.round(2**Number($('ramp-clocks').value));rebuild();});
   $('tolerance-range').addEventListener('input',()=>{session().config.tolerance=Number($('tolerance-range').value);rebuild();});
   $('new-ladder').addEventListener('click',()=>{session().config.seed=session().config.seed%999999+1;rebuild();});
   $('input-range').addEventListener('change',()=>{const c=session().config,old=M.range(c);c.inputRange=$('input-range').value;const next=M.range(c);for(const key of ['dc','offset'])c[key]=clamp(next.low+(c[key]-old.low)*next.span/old.span,c.inputRange==='single-ended'?0:-1.25*c.vref,1.25*c.vref);c.amplitude*=next.span/old.span;rebuild();});
   $('vref').addEventListener('change',()=>{const c=session().config,v=Number($('vref').value),scale=v/c.vref;for(const key of ['dc','offset','amplitude'])c[key]*=scale;c.vref=v;rebuild();});
   $('fs').addEventListener('change',()=>{const c=session().config;c.fs=Number($('fs').value);c.frequency=Math.min(c.frequency,c.fs/4);rebuild();});
   $('bits').addEventListener('change',()=>{session().config.bits=Number($('bits').value);rebuild();});
-  all('[data-q-mode]').forEach(button=>button.addEventListener('click',()=>{session().config.mode=button.dataset.qMode;rebuild();}));
+  all('[data-q-mode]').forEach(button=>button.addEventListener('click',()=>{const s=session();s.config.mode=button.dataset.qMode;if(s.config.mode==='ramp')s.window=256;rebuild();if(s.config.mode==='ramp')s.cursor=s.records.length?0:-1;schedule();}));
   $('play').addEventListener('click',toggle);$('step').addEventListener('click',()=>{pause();advance();});
   $('next').addEventListener('click',()=>{pause();const s=session();advance(architecture==='flash'?1:s.config.bits-((s.cursor+1)%s.config.bits));});
   $('reset').addEventListener('click',()=>{pause();const s=session();s.records=[];s.current=null;s.output=null;s.cursor=-1;flashKey='';schedule();});
-  $('speed').addEventListener('change',()=>{session().speed=Number($('speed').value);fraction=0;});
+  $('speed').addEventListener('change',()=>{session().speed=Number($('speed').value);fraction=0;schedule();});
   $('window').addEventListener('change',()=>{session().window=Number($('window').value);schedule();});
   $('cursor').addEventListener('input',()=>setCursor(Number($('cursor').value)));
   $('cursor-number').addEventListener('change',()=>setCursor(read($('cursor-number'),session().cursor)));
