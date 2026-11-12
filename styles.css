@@ -1,8 +1,75 @@
 /* css styles */
 
 /* Homepage simulator groups and screenshot previews. */
-#tw-root .tool-group + .tool-group {
-  margin-top: 3rem;
+#interactive-tools .tool-groups {
+  display: grid;
+  gap: 3rem;
+}
+
+#interactive-tools .tool-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: .75rem;
+}
+
+#interactive-tools .tool-section-heading h2 {
+  margin: 0;
+}
+
+#interactive-tools .tool-topic-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+#interactive-tools .tool-topic-legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+#interactive-tools .tool-topic-switch label {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: .5rem;
+  background: white;
+  color: #374151;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#interactive-tools .tool-topic-switch input {
+  accent-color: #6B0D1A;
+}
+
+#interactive-tools .tool-topic-switch label:has(input:checked) {
+  background: #6B0D1A;
+  border-color: #6B0D1A;
+  color: white;
+}
+
+#interactive-tools .tool-topic-switch label:has(input:focus-visible) {
+  outline: 3px solid #6B0D1A;
+  outline-offset: 3px;
+}
+
+#interactive-tools:has(#tools-digital:checked) .tool-group[data-topic="other"],
+#interactive-tools:has(#tools-other:checked) .tool-group[data-topic="digital"] {
+  display: none;
 }
 
 #tw-root .simulator-preview {

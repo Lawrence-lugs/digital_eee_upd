@@ -92,12 +92,26 @@ include-in-header:
 ::: {}
 ```{=html}
 <!-- ─── INTERACTIVE TOOLS ─────────────────────────────────────────────────── -->
-<section class="py-16 px-8 bg-gray-50">
+<section id="interactive-tools" class="py-16 px-8 bg-gray-50">
   <div class="max-w-5xl mx-auto">
-    <h2 class="text-2xl font-bold text-gray-800 mb-1">Interactive Tools</h2>
+    <div class="tool-section-heading">
+      <h2 class="text-2xl font-bold text-gray-800">Interactive Tools</h2>
+      <fieldset class="tool-topic-switch">
+        <legend class="tool-topic-legend">Choose an Interactive Tools topic</legend>
+        <label>
+          <input type="radio" name="tool-topic" id="tools-digital" value="digital" checked>
+          <span>Digital Design</span>
+        </label>
+        <label>
+          <input type="radio" name="tool-topic" id="tools-other" value="other">
+          <span>Other EEE Topics</span>
+        </label>
+      </fieldset>
+    </div>
     <p class="text-gray-500 mb-8 text-sm">Browser-based tools — no installation needed</p>
 
-    <section class="tool-group" aria-labelledby="semiconductor-fundamentals">
+    <div class="tool-groups">
+    <section class="tool-group" data-topic="other" aria-labelledby="semiconductor-fundamentals">
       <h3 id="semiconductor-fundamentals" class="text-xl font-bold text-gray-800 mb-5">Semiconductor Fundamentals</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
@@ -129,7 +143,7 @@ include-in-header:
       </div>
     </section>
 
-    <section class="tool-group" aria-labelledby="mos-transistor-fundamentals">
+    <section class="tool-group" data-topic="other" aria-labelledby="mos-transistor-fundamentals">
       <h3 id="mos-transistor-fundamentals" class="text-xl font-bold text-gray-800 mb-5">MOS Transistor Fundamentals</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
@@ -161,7 +175,7 @@ include-in-header:
       </div>
     </section>
 
-    <section class="tool-group" aria-labelledby="signals-and-systems">
+    <section class="tool-group" data-topic="other" aria-labelledby="signals-and-systems">
       <h3 id="signals-and-systems" class="text-xl font-bold text-gray-800 mb-5">Signals and Systems</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
@@ -218,7 +232,7 @@ include-in-header:
       </div>
     </section>
 
-    <section class="tool-group" aria-labelledby="communication-systems">
+    <section class="tool-group" data-topic="other" aria-labelledby="communication-systems">
       <h3 id="communication-systems" class="text-xl font-bold text-gray-800 mb-5">Communication Systems</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
@@ -249,7 +263,37 @@ include-in-header:
       </div>
     </section>
 
-    <section class="tool-group" aria-labelledby="mixed-signal-fundamentals">
+    <section class="tool-group" data-topic="other" aria-labelledby="electromagnetics">
+      <h3 id="electromagnetics" class="text-xl font-bold text-gray-800 mb-5">Electromagnetics</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <a href="maxwell_equations.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/maxwell_equations.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Maxwell's Equations Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Explore three-dimensional electric and magnetic fields, flux, induction, displacement current, and electromagnetic waves.</p>
+          </div>
+        </a>
+
+        <a href="ac_motor_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/ac_motor_simulator.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">AC Motor Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Compare synchronous and induction AC motors with interactive 3D cutaways, rotating magnetic fields, rotor currents, and torque curves.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="tool-group" data-topic="other" aria-labelledby="mixed-signal-fundamentals">
       <h3 id="mixed-signal-fundamentals" class="text-xl font-bold text-gray-800 mb-5">Mixed Signal Fundamentals</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
@@ -281,7 +325,26 @@ include-in-header:
       </div>
     </section>
 
-    <section class="tool-group" aria-labelledby="digital-design-fundamentals">
+    <section class="tool-group" data-topic="digital" aria-labelledby="crash-course-digital-design">
+      <h3 id="crash-course-digital-design" class="text-xl font-bold text-gray-800 mb-5">Crash Course Digital Design</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <a href="adel-simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/adel-simulator.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">ADEL Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Explore the ADEL processor and step through program execution
+          to see how instructions change registers and memory.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="tool-group" data-topic="digital" aria-labelledby="digital-design-fundamentals">
       <h3 id="digital-design-fundamentals" class="text-xl font-bold text-gray-800 mb-5">Digital Design Fundamentals</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
@@ -338,20 +401,19 @@ include-in-header:
       </div>
     </section>
 
-    <section class="tool-group" aria-labelledby="computer-architecture">
+    <section class="tool-group" data-topic="digital" aria-labelledby="computer-architecture">
       <h3 id="computer-architecture" class="text-xl font-bold text-gray-800 mb-5">Computer Architecture</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-        <a href="adel-simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+        <a href="c-riscv-explorer.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
                   hover:shadow-md hover:border-red-300 transition-all group">
           <div class="simulator-preview">
-            <img src="static_apps/snapshots/adel-simulator.png" alt="" width="1280" height="720"
+            <img src="static_apps/snapshots/c-riscv-explorer.png" alt="" width="1280" height="720"
                  loading="lazy" decoding="async">
           </div>
           <div class="p-6">
-            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">ADEL Simulator</h4>
-            <p class="text-sm text-gray-500 leading-relaxed">Explore the ADEL processor and step through program execution
-          to see how instructions change registers and memory.</p>
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">C to RISC-V Explorer</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Compile C programs in your browser and connect source lines to RV32IM assembly and machine-code instruction encoding.</p>
           </div>
         </a>
 
@@ -422,7 +484,7 @@ include-in-header:
       </div>
     </section>
 
-    <section class="tool-group" aria-labelledby="hardware-for-machine-learning">
+    <section class="tool-group" data-topic="digital" aria-labelledby="hardware-for-machine-learning">
       <h3 id="hardware-for-machine-learning" class="text-xl font-bold text-gray-800 mb-5">Hardware for Machine Learning</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
@@ -453,6 +515,7 @@ include-in-header:
         </a>
       </div>
     </section>
+    </div>
   </div>
 </section>
 ```

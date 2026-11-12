@@ -28,6 +28,9 @@ project:
     - cp static_apps/memory_technology.html _site/
     - cp static_apps/riscv-simulator.html _site/
     - cp static_apps/adel-simulator.html _site/
+    - cp static_apps/c-riscv-explorer.html _site/
+    - cp static_apps/maxwell_equations.html _site/
+    - cp static_apps/ac_motor_simulator.html _site/
     - cp -r static_apps/ripes _site/
   resources:
     - "googleba81d2991a90411e.html"
@@ -81,11 +84,19 @@ website:
             text: Smith Chart Simulator
           - href: modulation_simulator.html
             text: Analog/Digital Modulation
+          - text: Electromagnetics
+          - href: maxwell_equations.html
+            text: Maxwell's Equations Simulator
+          - href: ac_motor_simulator.html
+            text: AC Motor Simulator
           - text: Mixed Signal Fundamentals
           - href: adc_simulator.html
             text: ADC Simulator
           - href: dac_simulator.html
             text: DAC Simulator
+          - text: Crash Course Digital Design
+          - href: adel-simulator.html
+            text: ADEL Simulator
           - text: Digital Design Fundamentals
           - href: kmapgameee
             text: kmap-gamEEE
@@ -96,8 +107,8 @@ website:
           - href: timing_simulatEEE.html
             text: Timing Simulator
           - text: Computer Architecture
-          - href: adel-simulator.html
-            text: ADEL Simulator
+          - href: c-riscv-explorer.html
+            text: C to RISC-V Explorer
           - href: ripes/
             text: RIPES
           - href: RV32I_encoding_simulator.html
