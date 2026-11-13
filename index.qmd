@@ -71,7 +71,7 @@ include-in-header:
       <a href="https://digital.eee.upd.edu.ph/dailydie/" target="_blank" rel="noopener noreferrer"
          class="font-semibold no-underline hover:text-red-800 transition-colors" style="color: #7B0D1E;">Open the full daily newspaper →</a>
     </p>
-    <iframe src="https://digital.eee.upd.edu.ph/dailydie/?embed=1&amp;theme=light&amp;carousel=1"
+    <iframe src="https://digital.eee.upd.edu.ph/dailydie/?embed=1&theme=light&carousel=1&autoplay=1"
             title="Today's Readables — The MicroLab Dice"
             width="100%" height="320" loading="lazy"
             style="border: 0; border-radius: 0.75rem; display: block;"></iframe>
