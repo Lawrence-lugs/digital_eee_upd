@@ -27,6 +27,11 @@ project:
     - cp static_apps/virtual_memory_simulator.html _site/
     - cp static_apps/memory_technology.html _site/
     - cp static_apps/riscv-simulator.html _site/
+    - cp static_apps/number_systems_simulator.html _site/
+    - cp static_apps/boolean_algebra_simulator.html _site/
+    - cp static_apps/binary_arithmetic_simulator.html _site/
+    - cp static_apps/mux_decoder_simulator.html _site/
+    - cp static_apps/flipflops_registers_simulator.html _site/
     - cp static_apps/adel-simulator.html _site/
     - cp static_apps/c-riscv-explorer.html _site/
     - cp static_apps/maxwell_equations.html _site/
@@ -95,6 +100,16 @@ website:
           - href: dac_simulator.html
             text: DAC Simulator
           - text: Crash Course Digital Design
+          - href: number_systems_simulator.html
+            text: Number Systems Simulator
+          - href: boolean_algebra_simulator.html
+            text: Boolean Algebra Simulator
+          - href: binary_arithmetic_simulator.html
+            text: Binary Arithmetic Simulator
+          - href: mux_decoder_simulator.html
+            text: Multiplexers and Decoders Simulator
+          - href: flipflops_registers_simulator.html
+            text: Flip-Flops and Registers Simulator
           - href: adel-simulator.html
             text: ADEL Simulator
           - text: Digital Design Fundamentals

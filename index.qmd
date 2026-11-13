@@ -329,6 +329,66 @@ include-in-header:
       <h3 id="crash-course-digital-design" class="text-xl font-bold text-gray-800 mb-5">Crash Course Digital Design</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
+        <a href="number_systems_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/number_systems_simulator.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Number Systems Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Practice conversions between binary, decimal, hexadecimal, and other bases with interactive exercises.</p>
+          </div>
+        </a>
+
+        <a href="boolean_algebra_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/boolean_algebra_simulator.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Boolean Algebra Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Simplify Boolean expressions and convert between expressions and truth tables with immediate feedback.</p>
+          </div>
+        </a>
+
+        <a href="binary_arithmetic_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/binary_arithmetic_simulator.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Binary Arithmetic Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Practice fixed-width binary addition and two's-complement subtraction.</p>
+          </div>
+        </a>
+
+        <a href="mux_decoder_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/mux_decoder_simulator.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Multiplexers and Decoders Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Trace multiplexers and decoders into truth tables, then build circuits from their truth tables.</p>
+          </div>
+        </a>
+
+        <a href="flipflops_registers_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/flipflops_registers_simulator.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Flip-Flops and Registers Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Trace D flip-flop and register waveforms, evaluate logic at clock edges, and practice simultaneous state updates.</p>
+          </div>
+        </a>
+
         <a href="adel-simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
                   hover:shadow-md hover:border-red-300 transition-all group">
           <div class="simulator-preview">
