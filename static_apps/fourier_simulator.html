@@ -476,9 +476,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 <script>(function () {
   'use strict';
   const M=window.FourierModel,N=M.N,$=id=>document.getElementById(id);
-  const COLORS=['#087f8c','#9560aa','#c07a18','#287a48','#4169b1','#be526a','#717d25','#53677e'];
+  const SPECTRUM_COLOR='#087f8c';
   const MARGIN=Object.freeze({left:52,right:16,top:20,bottom:38});
-  const color=k=>COLORS[(k-1)%COLORS.length];
   const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
   const fmt=(x,digits=3)=>(Math.abs(x)<0.5*10**-digits?0:x).toFixed(digits).replace('-','−');
   const state={samples:M.preset('square'),preset:'square',count:5,showExpected:false,selectedK:1,tool:null,range:32,editIndex:128,curvePoints:[],curveBase:null};
@@ -607,12 +606,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       if(!included.has(k)&&!state.showExpected)continue;
       const c=analysis.components[k-1],barWidth=Math.max(1,step*.62),aHeight=y(0)-y(c.amplitude);
       if(k===state.selectedK){ctx.fillStyle='#087f8c12';ctx.fillRect(x(k)-step/2,top,step,s.h-bottom-top);}
-      ctx.fillStyle=included.has(k)?color(k):'#cbd3dd';ctx.fillRect(x(k)-barWidth/2,y(c.amplitude),barWidth,Math.max(1,aHeight));
+      ctx.fillStyle=included.has(k)?SPECTRUM_COLOR:'#cbd3dd';ctx.fillRect(x(k)-barWidth/2,y(c.amplitude),barWidth,Math.max(1,aHeight));
       if(k===state.selectedK){ctx.strokeStyle='#263442';ctx.lineWidth=1.5;ctx.strokeRect(x(k)-Math.max(barWidth,4)/2,y(c.amplitude)-2,Math.max(barWidth,4),Math.max(3,aHeight+2));}
     }
     const py=v=>MARGIN.top+(180-v)/360*(phase.h-MARGIN.top-bottom),px=k=>left+(k-.5)*(phase.w-left-right)/state.range;
     for(const degree of [-180,0,180]){const yv=py(degree);phase.ctx.strokeStyle='#e8edf2';phase.ctx.beginPath();phase.ctx.moveTo(left,yv);phase.ctx.lineTo(phase.w-right,yv);phase.ctx.stroke();phase.ctx.fillStyle='#6c7784';phase.ctx.textAlign='right';phase.ctx.fillText(String(degree),left-8,yv+4);}
-    for(let k=1;k<=state.range;k++){if(!included.has(k)&&!state.showExpected)continue;const c=analysis.components[k-1];if(c.amplitude<1e-10)continue;phase.ctx.fillStyle=included.has(k)?color(k):'#cbd3dd';phase.ctx.beginPath();phase.ctx.arc(px(k),py(c.phase*180/Math.PI),k===state.selectedK?4:2.6,0,M.TAU);phase.ctx.fill();if(k===state.selectedK){phase.ctx.strokeStyle='#263442';phase.ctx.stroke();}}
+    for(let k=1;k<=state.range;k++){if(!included.has(k)&&!state.showExpected)continue;const c=analysis.components[k-1];if(c.amplitude<1e-10)continue;phase.ctx.fillStyle=included.has(k)?SPECTRUM_COLOR:'#cbd3dd';phase.ctx.beginPath();phase.ctx.arc(px(k),py(c.phase*180/Math.PI),k===state.selectedK?4:2.6,0,M.TAU);phase.ctx.fill();if(k===state.selectedK){phase.ctx.strokeStyle='#263442';phase.ctx.stroke();}}
     phase.ctx.fillStyle='#6c7784';phase.ctx.textAlign='center';for(const k of [1,state.range/2,state.range])phase.ctx.fillText(String(k),px(k),phase.h-12);
   }
   function pointerPosition(event){
