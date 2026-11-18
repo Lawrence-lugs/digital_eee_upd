@@ -67,45 +67,6 @@ website:
             text: Logic Labs
       - text: Simulators
         menu:
-          - text: Semiconductor Fundamentals
-          - href: diode_characterization.html
-            text: Diode Characterization
-          - href: bjt_characterization.html
-            text: BJT Characterization
-          - text: MOS Transistor Fundamentals
-          - href: transistor_fabrication.html
-            text: MOS Transistor Fabrication
-          - href: transistor_characterization.html
-            text: MOS Transistor Characterization
-          - text: Signals and Systems
-          - href: bode_simulator.html
-            text: Bode Plot Simulator
-          - href: root_locus_simulator.html
-            text: Root Locus Simulator
-          - href: signal_visualizations.html
-            text: Signal Visualizations
-          - href: fourier_simulator.html
-            text: Fourier Transform Simulator
-          - text: Filter Design
-          - href: analog_filter_designer.html
-            text: Analog Filter Designer
-          - href: digital_filter_designer.html
-            text: Digital Filter Designer
-          - text: Communication Systems
-          - href: smith_chart_simulator.html
-            text: Smith Chart Simulator
-          - href: modulation_simulator.html
-            text: Analog/Digital Modulation
-          - text: Electromagnetics
-          - href: maxwell_equations.html
-            text: Maxwell's Equations Simulator
-          - href: ac_motor_simulator.html
-            text: AC Motor Simulator
-          - text: Mixed Signal Fundamentals
-          - href: adc_simulator.html
-            text: ADC Simulator
-          - href: dac_simulator.html
-            text: DAC Simulator
           - text: Crash Course Digital Design
           - href: number_systems_simulator.html
             text: Number Systems Simulator
@@ -148,6 +109,45 @@ website:
             text: Systolic Array Simulator
           - href: convolution_simulator.html
             text: Convolution Simulator
+          - text: Semiconductor Fundamentals
+          - href: diode_characterization.html
+            text: Diode Characterization
+          - href: bjt_characterization.html
+            text: BJT Characterization
+          - text: MOS Transistor Fundamentals
+          - href: transistor_fabrication.html
+            text: MOS Transistor Fabrication
+          - href: transistor_characterization.html
+            text: MOS Transistor Characterization
+          - text: Signals and Systems
+          - href: bode_simulator.html
+            text: Bode Plot Simulator
+          - href: root_locus_simulator.html
+            text: Root Locus Simulator
+          - href: signal_visualizations.html
+            text: Signal Visualizations
+          - href: fourier_simulator.html
+            text: Fourier Transform Simulator
+          - text: Filter Design
+          - href: analog_filter_designer.html
+            text: Analog Filter Designer
+          - href: digital_filter_designer.html
+            text: Digital Filter Designer
+          - text: Communication Systems
+          - href: smith_chart_simulator.html
+            text: Smith Chart Simulator
+          - href: modulation_simulator.html
+            text: Analog/Digital Modulation
+          - text: Electromagnetics
+          - href: maxwell_equations.html
+            text: Maxwell's Equations Simulator
+          - href: ac_motor_simulator.html
+            text: AC Motor Simulator
+          - text: Mixed Signal Fundamentals
+          - href: adc_simulator.html
+            text: ADC Simulator
+          - href: dac_simulator.html
+            text: DAC Simulator
       - href: contributing.qmd
         text: Contribute
       - href: pages/about.qmd
