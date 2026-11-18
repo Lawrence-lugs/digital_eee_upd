@@ -13,6 +13,8 @@ project:
     - cp static_apps/root_locus_simulator.html _site/
     - cp static_apps/signal_visualizations.html _site/
     - cp static_apps/fourier_simulator.html _site/
+    - cp static_apps/analog_filter_designer.html _site/
+    - cp static_apps/digital_filter_designer.html _site/
     - cp static_apps/modulation_simulator.html _site/
     - cp static_apps/smith_chart_simulator.html _site/
     - cp static_apps/adc_simulator.html _site/
@@ -84,6 +86,11 @@ website:
             text: Signal Visualizations
           - href: fourier_simulator.html
             text: Fourier Transform Simulator
+          - text: Filter Design
+          - href: analog_filter_designer.html
+            text: Analog Filter Designer
+          - href: digital_filter_designer.html
+            text: Digital Filter Designer
           - text: Communication Systems
           - href: smith_chart_simulator.html
             text: Smith Chart Simulator

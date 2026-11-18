@@ -232,6 +232,38 @@ include-in-header:
       </div>
     </section>
 
+    <section class="tool-group" data-topic="other" aria-labelledby="filter-design">
+      <h3 id="filter-design" class="text-xl font-bold text-gray-800 mb-5">Filter Design</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <a href="analog_filter_designer.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/analog_filter_designer.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Analog Filter Designer</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Design and compare analog filters with live frequency response,
+          poles, zeros, and step response.</p>
+          </div>
+        </a>
+
+        <a href="digital_filter_designer.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/digital_filter_designer.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Digital Filter Designer</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Design FIR and IIR filters, inspect their coefficients and digital
+          architectures, and filter quantized signals in real time.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
     <section class="tool-group" data-topic="other" aria-labelledby="communication-systems">
       <h3 id="communication-systems" class="text-xl font-bold text-gray-800 mb-5">Communication Systems</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
