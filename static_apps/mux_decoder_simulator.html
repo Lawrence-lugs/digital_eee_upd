@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#7b1113">
-<title>Multiplexers and Decoders Simulator</title>
+<title>Multiplexers and Decoders Skill Trainer</title>
 
 <!-- Embedded font licenses
 Copyright 2020 The Inter Project Authors (https://github.com/rsms/inter)
@@ -252,11 +252,12 @@ header.simulator-banner .banner-wrap{max-width:1180px}
 .practice-stat>span,.practice-stat>.stat-label{display:block;margin-top:4px;font:400 10px/1.4 var(--ui-font);letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
 .practice-settings .practice-round{flex:1 0 100%;width:100%;margin:0}
 .practice-layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:22px;align-items:start}
-.practice-layout>.card,.practice-layout>.notes-sidebar>.card,.practice-layout>.notes-sidebar.card{min-width:0;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 28px rgba(28,39,49,.07)}
+.practice-layout>.card,.practice-layout>.notes-sidebar>.card,.practice-layout>.notes-sidebar.card,.practice-right-column>.notes-sidebar.card{min-width:0;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 28px rgba(28,39,49,.07)}
 .practice-layout>.card{padding:24px}
 .notes-sidebar{min-width:0;display:grid;gap:18px;align-content:start}
-.notes-sidebar>.card,.practice-layout>.notes-sidebar.card{padding:24px}
-.practice-layout>.notes-sidebar.card{display:block}
+.notes-sidebar>.card,.practice-layout>.notes-sidebar.card,.practice-right-column>.notes-sidebar.card{padding:24px}
+.practice-layout>.notes-sidebar.card,.practice-right-column>.notes-sidebar.card{display:block}
+.practice-right-column{min-width:0;display:flex;flex-direction:column;gap:18px;align-self:stretch}
 .notes-sidebar h2,.notes-sidebar h3{font:700 17px/1.35 var(--ui-font);margin:0 0 12px;letter-spacing:normal}
 .question-toolbar{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;padding:0;margin:0 0 18px;border:0;background:transparent}
 .question-toolbar>div{min-width:0;flex:1 1 200px}
@@ -320,20 +321,44 @@ textarea.practice-answer-input{resize:vertical}
 .notes-sidebar .notes-reference th,.notes-sidebar .notes-reference td{padding:5px 3px;border-bottom:1px solid var(--line);text-align:center}
 .notes-sidebar .step,.notes-sidebar .hint-step{margin:12px 0 0;padding:10px 12px;border:0;border-left:3px solid var(--up-maroon);border-radius:0;background:#faf1f2;font:400 14px/1.55 var(--ui-font)}
 .notes-sidebar .step p:last-child,.notes-sidebar .hint-step p:last-child{margin-bottom:0}
-.practice-footer{display:flex;justify-content:space-between;gap:15px;max-width:none;width:auto;margin:25px 0 0;padding:0;border:0;background:transparent;color:var(--muted);font:400 12px/1.55 var(--ui-font)}
-.practice-footer .key{padding:1px 5px;border:1px solid #ccd6de;border-radius:4px;background:#e9edf1;color:var(--muted);font:400 12px var(--mono-font)}
-.tutorial-steps{display:grid;gap:10px;list-style:none;margin:0 0 22px;padding:0;max-height:300px;overflow:auto;position:relative}.tutorial-steps li{padding:12px 14px;border:1px solid var(--line);border-radius:9px;background:#f8fafb}.tutorial-steps li.active{border-color:var(--up-maroon);background:#faf1f2}.tutorial-steps li.accepted{border-color:#ead59f;background:#fff8e6}.tutorial-steps li.complete{border-color:#bbdfd0;background:#edf9f3}.tutorial-steps .step-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px;font-size:14px}.tutorial-steps .step-status{font-size:11px;color:var(--muted);white-space:nowrap}.tutorial-steps .step-bits{display:block;margin-top:7px;font:15px/1.5 var(--mono-font);overflow-wrap:anywhere}
+.question-hints{display:grid;gap:10px;margin-top:16px;color:var(--ink);font:400 14px/1.55 var(--ui-font)}
+.question-hints:empty{display:none}
+.question-hints .step,.question-hints .hint-step{margin:0;padding:12px 14px;border:0;border-left:3px solid var(--up-maroon);border-radius:0 9px 9px 0;background:#faf1f2;font:400 14px/1.55 var(--ui-font)}
+.question-hints p{margin:0 0 6px}.question-hints p:last-child{margin-bottom:0}
+.question-hints code{font-family:var(--mono-font);white-space:pre-wrap;overflow-wrap:anywhere}
+.worked-solution{min-width:0;padding-top:18px;border-top:1px solid var(--line);color:var(--ink);font:400 14px/1.55 var(--ui-font)}
+.worked-solution .worked-heading{display:block;max-width:none;margin:0 0 16px;padding:0;background:none;color:var(--ink);border:0;box-shadow:none}
+.worked-heading h3{margin:0 0 4px;font:750 18px/1.4 var(--ui-font)}.worked-heading p{margin:0;color:var(--muted);font:400 13px/1.5 var(--ui-font)}
+.worked-solution .worked-steps{display:grid;gap:12px;list-style:none;margin:0;padding:0;overflow:visible;max-height:none}
+.worked-solution .worked-step,.tutorial-steps .worked-step{display:grid;grid-template-columns:32px minmax(0,1fr);align-items:start;gap:12px;margin:0;padding:14px;border:1px solid var(--line);border-radius:10px;background:#f8fafb;min-width:0}
+.worked-number{display:grid;place-items:center;width:32px;height:32px;border:1px solid #e7cfd1;border-radius:50%;background:#faf1f2;color:var(--up-maroon);font:750 14px/1 var(--ui-font);font-variant-numeric:tabular-nums}
+.worked-content{min-width:0;overflow-wrap:anywhere}.worked-content h4{margin:4px 0 8px;font:700 14px/1.5 var(--ui-font)}.worked-content p{margin:0 0 8px;white-space:pre-wrap}.worked-content p:last-child{margin-bottom:0}
+.worked-content .worked-expression{display:block;margin:0 0 10px;padding:9px 11px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);font:400 14px/1.6 var(--mono-font);white-space:pre-wrap;overflow-wrap:anywhere}
+.worked-final{margin-top:16px;padding:16px 18px;border:1px solid #bbdfd0;border-left:4px solid #347554;border-radius:10px;background:#edf9f3;color:#24583f;overflow-wrap:anywhere}
+.worked-final h4{margin:0 0 8px;font:750 14px/1.4 var(--ui-font)}.worked-final .worked-final-answer{display:block;margin:0;font:600 20px/1.55 var(--mono-font);white-space:pre-wrap;overflow-wrap:anywhere}.worked-final p{margin:8px 0 0;font:400 13px/1.55 var(--ui-font)}
+@media(max-width:480px){.worked-solution .worked-step,.tutorial-steps .worked-step{grid-template-columns:28px minmax(0,1fr);gap:10px;padding:12px}.worked-number{width:28px;height:28px}.worked-final{padding:14px}.worked-final .worked-final-answer{font-size:18px}}
+.scratch-paper{min-width:0;margin:0;border:1px solid #e4d69c;border-radius:14px;background:#fff8d8;color:#5b4c21;box-shadow:0 6px 18px #74612610;overflow:hidden}
+.scratch-heading{display:flex;align-items:stretch;min-height:48px}
+.scratch-heading .scratch-toggle,.scratch-heading .scratch-move{margin:0;border:0;border-radius:0;background:transparent;color:#5b4c21;font:700 14px/1.4 var(--ui-font)}
+.scratch-heading .scratch-toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:1;min-width:0;padding:14px 16px;text-align:left;cursor:pointer}
+.scratch-heading .scratch-move{flex:0 0 42px;width:42px;padding:10px;border-left:1px solid #eadfaa;font-size:20px;cursor:ns-resize;touch-action:none;user-select:none}
+.scratch-heading button:hover,.scratch-resize:hover,.scratch-paper .is-dragging{background:#fff0b8}
+.scratch-body{border-top:1px solid #eadfaa;padding:12px 12px 0}
+.scratch-body .scratch-text{display:block;box-sizing:border-box;min-width:0;width:100%;height:240px;min-height:120px;max-height:1200px;padding:10px 11px;margin:0;border:1px solid #e4d69c;border-radius:8px;resize:none;overflow:auto;background:#fffbea;color:#51451f;font:400 14px/1.6 var(--mono-font)}
+.scratch-text::placeholder{color:#918259;opacity:1}
+.scratch-body .scratch-resize{display:block;width:100%;height:28px;min-height:0;margin:0;padding:0;border:0;border-radius:0;background:transparent;color:#9a8546;font:700 22px/1 var(--ui-font);cursor:ns-resize;touch-action:none;user-select:none}
+.tutorial-steps{display:grid;gap:12px;list-style:none;margin:0 0 22px;padding:0;max-height:360px;overflow:auto;position:relative;font:400 14px/1.55 var(--ui-font)}.tutorial-steps .worked-step.active{border-color:var(--up-maroon);background:#faf1f2}.tutorial-steps .worked-step.accepted{border-color:#ead59f;background:#fff8e6}.tutorial-steps .step-title{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:4px 10px}.tutorial-steps .step-title h4{flex:1;min-width:0}.tutorial-steps .step-status{font:400 11px/1.5 var(--ui-font);color:var(--muted);white-space:nowrap}.tutorial-steps .worked-expression:last-child{margin-bottom:0}.tutorial-final{margin:0 0 22px}.tutorial-final .worked-final{margin-top:0}
 button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #edae3d;outline-offset:3px;box-shadow:none}
 @media(max-width:950px){.practice-layout{grid-template-columns:minmax(0,1fr) 270px}.practice-settings{gap:16px}}
-@media(max-width:760px){body>main{padding:16px 17px 25px}.practice-layout{grid-template-columns:minmax(0,1fr)}.practice-settings{padding:18px}.practice-stats{flex-basis:100%;margin:0;padding-top:14px;border-top:1px solid var(--line);justify-content:space-between;gap:12px}.practice-stat>strong,.practice-stat>b,.practice-stat>.stat-value{font-size:22px}.practice-stat>span,.practice-stat>.stat-label{font-size:9px}.practice-layout>.card,.notes-sidebar>.card,.practice-layout>.notes-sidebar.card{padding:20px}.question-toolbar .generate-question{max-width:100%}}
-@media(max-width:760px){.practice-timer .practice-round-note{flex:1 1 150px}.practice-answer-row{flex-wrap:wrap}.practice-answer .practice-answer-input{flex-basis:100%}.practice-answer-row>.practice-primary{width:100%}.practice-footer{flex-direction:column;gap:6px}}
+@media(max-width:760px){body>main{padding:16px 17px 25px}.practice-layout{grid-template-columns:minmax(0,1fr)}.practice-settings{padding:18px}.practice-stats{flex-basis:100%;margin:0;padding-top:14px;border-top:1px solid var(--line);justify-content:space-between;gap:12px}.practice-stat>strong,.practice-stat>b,.practice-stat>.stat-value{font-size:22px}.practice-stat>span,.practice-stat>.stat-label{font-size:9px}.practice-layout>.card,.notes-sidebar>.card,.practice-layout>.notes-sidebar.card,.practice-right-column>.notes-sidebar.card{padding:20px}.question-toolbar .generate-question{max-width:100%}}
+@media(max-width:760px){.practice-timer .practice-round-note{flex:1 1 150px}.practice-answer-row{flex-wrap:wrap}.practice-answer .practice-answer-input{flex-basis:100%}.practice-answer-row>.practice-primary{width:100%}}
 </style>
 </head>
 <body>
-<header class="simulator-banner"><div class="banner-wrap"><div class="banner-copy"><h1>Multiplexers and Decoders Simulator</h1><p class="banner-subtitle"><span class="banner-mainline">Trace a circuit into a truth table, then work backward to build the circuit yourself.</span><span class="banner-course">Designed for digital design fundamentals practice.</span><span class="banner-credit">Conceptualized by Adelson Chua</span></p></div></div></header>
+<header class="simulator-banner"><div class="banner-wrap"><div class="banner-copy"><h1>Multiplexers and Decoders Skill Trainer</h1><p class="banner-subtitle"><span class="banner-mainline">Trace a circuit into a truth table, then work backward to build the circuit yourself.</span><span class="banner-course">Designed for digital design fundamentals practice.</span><span class="banner-credit">Conceptualized by Adelson Chua</span></p></div></div></header>
 <main>
 <section class="practice-settings" aria-label="Practice settings and scores">
-<div class="field"><span class="field-label" id="mode-label">Practice mode</span><div class="mode-pills" role="group" aria-labelledby="mode-label"><button data-mode="relaxed" class="active" aria-pressed="true">Relaxed</button><button data-mode="pressure" aria-pressed="false">Pressure</button><button data-mode="tutorial" aria-pressed="false">Tutorial</button></div></div>
+<div class="field"><span class="field-label" id="mode-label">Practice mode</span><div class="mode-pills" role="group" aria-labelledby="mode-label"><button data-mode="tutorial" aria-pressed="false">Tutorial</button><button data-mode="relaxed" class="active" aria-pressed="true">Practice</button><button data-mode="pressure" aria-pressed="false">Pressure</button></div></div>
 <label class="control">Exercise<select id="exercise"><option value="mux-trace">Mux → truth table</option><option value="mux-build">Truth table → mux</option><option value="decoder-trace">Decoder → truth table</option><option value="decoder-build">Truth table → decoder</option></select></label>
 <label class="control">Level<select id="level"><option value="2">Foundation · 2 inputs</option><option value="3" selected>Core · 3 inputs</option><option value="4">Advanced · 4 inputs</option></select></label>
 <div class="practice-stats" aria-label="Practice statistics"><div class="practice-stat"><b id="solved">0</b><span>Solved</span></div><div class="practice-stat"><b id="accuracy">—</b><span>Accuracy</span></div><div class="practice-stat"><b id="streak">0</b><span>Streak</span></div></div>
@@ -344,14 +369,34 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 <section class="card"><div class="question-toolbar"><div><span class="question-number" id="questionNumber">Question 01</span><h2 id="workspaceTitle">Signal workspace</h2></div><button id="generate" class="primary generate-question">Generate a question</button></div>
 <div class="question-intro"><span class="tag" id="kindTag">MUX TRACE</span><h2 id="prompt"></h2><p id="convention"></p></div>
 <div class="circuit practice-question-surface" id="circuit"></div>
-<div class="workspace"><div class="work-grid"><div><h3 id="tableTitle">Your truth table</h3><div class="table-wrap" id="truthTable"></div></div><div class="answer-panel"><div id="visualEditor"></div><ol id="tutorialSteps" class="tutorial-steps" aria-label="Tutorial steps" hidden></ol><form id="answerForm" class="practice-answer"><label id="answerLabel" class="practice-answer-label" for="answer">Output bits, from top to bottom</label><div class="practice-answer-row"><input id="answer" class="practice-answer-input" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="answerHelp feedback"><button type="submit" class="practice-primary" id="check">Check answer <span aria-hidden="true">↵</span></button></div><p class="practice-answer-help" id="answerHelp"></p></form><div id="feedback" class="feedback" role="status" aria-live="polite">Follow each selected signal to the output.</div><div class="practice-actions"><button type="button" id="hint">Show a hint</button><button type="button" id="reveal">Show worked answer</button></div></div></div></div>
+<div class="workspace"><ol id="tutorialSteps" class="tutorial-steps" aria-label="Tutorial steps" role="list" hidden></ol><div id="tutorialFinal" class="tutorial-final" hidden></div><div class="work-grid"><div><h3 id="tableTitle">Your truth table</h3><div class="table-wrap" id="truthTable"></div></div><div class="answer-panel"><div id="visualEditor"></div><form id="answerForm" class="practice-answer"><label id="answerLabel" class="practice-answer-label" for="answer">Output bits, from top to bottom</label><div class="practice-answer-row"><input id="answer" class="practice-answer-input" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="answerHelp feedback"><button type="submit" class="practice-primary" id="check">Check answer <span aria-hidden="true">↵</span></button></div><p class="practice-answer-help" id="answerHelp"></p></form><div id="feedback" class="feedback" role="status" aria-live="polite">Follow each selected signal to the output.</div><div class="practice-actions"><button type="button" id="hint">Show a hint</button><button type="button" id="reveal">Show worked answer</button></div></div></div><div id="questionHints" class="question-hints" aria-live="polite"></div></div>
 </section>
-<aside class="card notes-sidebar" aria-label="Study notes"><div class="eyebrow" id="guideLabel">Study notes</div><h2 id="guideTitle">Method</h2><div id="guide" class="notes-method"></div><p class="notes-help">Use Show a hint for extra guidance.</p><details class="notes-reference"><summary>Quick reference</summary><p>Truth-table columns stay in A, B, C, D order, with A as the MSB. Circuit select and address assignments vary and are labelled on each question.</p><p><code>I0</code> is selected by all-zero select bits.<br><code>X′</code> is the complement of X.<br>Decoders use active-high outputs and an active-high enable fixed at 1.</p><p>For mux synthesis, choose one signal per data input. For decoder synthesis, list the output numbers that feed the OR gate.</p></details></aside>
+<div class="practice-right-column"><aside class="card notes-sidebar" aria-label="Study notes"><div class="eyebrow" id="guideLabel">Study notes</div><h2 id="guideTitle">Method</h2><div id="guide" class="notes-method"></div><p class="notes-help" id="notesHelp">Use Show a hint for extra guidance.</p><details class="notes-reference"><summary>Quick reference</summary><p>Truth-table columns stay in A, B, C, D order, with A as the MSB. Circuit select and address assignments vary and are labelled on each question.</p><p><code>I0</code> is selected by all-zero select bits.<br><code>X′</code> is the complement of X.<br>Decoders use active-high outputs and an active-high enable fixed at 1.</p><p>For mux synthesis, choose one signal per data input. For decoder synthesis, list the output numbers that feed the OR gate.</p></details></aside>
+<section class="scratch-paper" id="scratchPaper" aria-label="Scratch paper">
+<div class="scratch-heading"><button type="button" class="scratch-toggle" id="scratchToggle" aria-expanded="false" aria-controls="scratchBody"><span>Scratch paper</span><span class="scratch-chevron" aria-hidden="true">▸</span></button><button type="button" class="scratch-move" id="scratchMove" aria-label="Move scratch paper vertically" title="Drag vertically, or use the Up and Down arrow keys">↕</button></div>
+<div class="scratch-body" id="scratchBody" hidden><textarea id="scratchText" class="scratch-text" aria-label="Scratch notes" placeholder="Write your temporary work here" spellcheck="false"></textarea><button type="button" class="scratch-resize" id="scratchResize" aria-label="Resize scratch paper vertically" title="Drag to resize, or use the Up and Down arrow keys"><span aria-hidden="true">━</span></button></div>
+</section></div>
 </div>
-<footer class="practice-footer"><span><span class="key">Enter</span> checks your answer. Press it again after success for the next question.</span><span>Works offline · No account required</span></footer></main>
+</main>
 <script>
 (() => {
 'use strict';
+
+function tutorialStepMarkup(index,title,expression='',status='Next',kind=''){
+  const safe=value=>String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  const state=kind==='accepted'?'accepted':kind==='active'?'active':'';
+  return '<li class="worked-step '+state+'"'+(state==='active'?' aria-current="step"':'')+'><span class="worked-number" aria-hidden="true">'+safe(index)+'</span><div class="worked-content"><div class="step-title"><h4>'+safe(title)+'</h4><span class="step-status">'+safe(status)+'</span></div>'+(expression?'<code class="worked-expression">'+safe(expression)+'</code>':'')+'</div></li>';
+}
+function finalAnswerMarkup(answer,note=''){
+  const safe=value=>String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  return '<div class="worked-final" aria-label="Final answer"><h4>Final answer</h4><code class="worked-final-answer">'+safe(answer)+'</code>'+(note?'<p>'+safe(note)+'</p>':'')+'</div>';
+}
+function workedSolutionMarkup(steps,finalAnswer,finalNote='',status='This question is revealed and earns no solve.'){
+  const safe=value=>String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  const items=steps.map((step,index)=>'<li class="worked-step"><span class="worked-number" aria-hidden="true">'+(index+1)+'</span><div class="worked-content"><h4>'+safe(step.title)+'</h4>'+(step.expression?'<code class="worked-expression">'+safe(step.expression)+'</code>':'')+(step.paragraphs||[]).map(text=>'<p>'+safe(text)+'</p>').join('')+'</div></li>').join('');
+  return '<section class="worked-solution" aria-label="Worked solution"><header class="worked-heading"><h3>Worked solution</h3><p>'+safe(status)+'</p></header><ol class="worked-steps" aria-label="Solution steps" role="list">'+items+'</ol><div class="worked-final" aria-label="Final answer"><h4>Final answer</h4><code class="worked-final-answer">'+safe(finalAnswer)+'</code>'+(finalNote?'<p>'+safe(finalNote)+'</p>':'')+'</div></section>';
+}
+
 const $=id=>document.getElementById(id), letters='ABCD';
 const bitRow=(row,n)=>Array.from({length:n},(_,i)=>(row>>(n-1-i))&1);
 const tokenValue=(token,x)=>token==='0'?0:token==='1'?1:token.endsWith("'")?1-x:x;
@@ -413,6 +458,63 @@ function tutorialSteps(q){
   }
   return steps;
 }
+function tutorialHintLevels(q,step){
+  const x=q.dataVar,inputs=letters.slice(0,q.n),pins=q.pinOrder.join('');let working;
+  if(q.type==='mux-trace'){
+    const row=step.row,index=addressForRow(row,q.n,q.selectors),selectBits=q.selectors.map(v=>variableBit(row,q.n,v)).join('');
+    working=`For ${inputs}=${bitRow(row,q.n).join('')}, ${q.selectors.join('')}=${selectBits} selects I${index}. Its signal is ${q.signals[index].replace("'",'′')}; this row has ${x}=${variableBit(row,q.n,x)}. Evaluate that signal to find Y.`;
+  }else if(step.kind==='signal'){
+    const rows=step.rows,pair=rows.map(row=>q.table[row]).join('');
+    working=`For I${step.index}, row ${rows[0]} has ${x}=0 and Y=${q.table[rows[0]]}; row ${rows[1]} has ${x}=1 and Y=${q.table[rows[1]]}. The required output pair is ${pair}. Match it to 0, 1, ${x}, or ${x}′.`;
+  }else if(step.kind==='address'){
+    const row=step.row,bits=q.pinOrder.map(v=>variableBit(row,q.n,v)).join(''),terms=q.pinOrder.map((v,i)=>`${variableBit(row,q.n,v)}×${2**(q.n-1-i)}`).join(' + ');
+    working=`Row ${row} is ${inputs}=${bitRow(row,q.n).join('')}. Reorder the bits as ${pins}=${bits}; its decimal address is ${terms}. Add these terms to find the output number.`;
+  }else if(step.kind==='bit'){
+    const address=addressForRow(step.row,q.n,q.pinOrder);
+    working=`EN=1 activates output ${address}. The OR gate is connected to outputs ${q.minterms.join(', ')||'none'}. Check whether ${address} is in that list to choose Y.`;
+  }else{
+    const mappings=q.table.flatMap((value,row)=>value?[`row ${row} → output ${addressForRow(row,q.n,q.pinOrder)}`]:[]);
+    working=mappings.length?`The accepted mappings are ${mappings.join('; ')}. Combine those output numbers once each; their order does not matter.`:'Every target row has Y=0. Leave every decoder output unconnected and enter none.';
+  }
+  return [step.hint,working,`Step answer: ${step.answer}. Press Enter to check this step.`];
+}
+function workedSolution(q){
+  const lines=[],inputs=letters.slice(0,q.n),x=q.dataVar,pins=q.pinOrder.join('');
+  if(q.type==='mux-trace'){
+    lines.push(`Read the truth table in ${inputs} order, with A as its MSB. Read mux select bits in ${q.selectors.join('')} order.`);
+    q.table.forEach((value,row)=>{const index=addressForRow(row,q.n,q.selectors),selectBits=q.selectors.map(v=>variableBit(row,q.n,v)).join(''),signal=q.signals[index],data=variableBit(row,q.n,x),evaluation=signal==="0"||signal==="1"?`the constant stays ${signal}`:signal.endsWith("'")?`${x}′=1−${data}=${1-data}`:`${x}=${data}`;lines.push(`Row ${row}: ${inputs}=${bitRow(row,q.n).join('')}. Select ${q.selectors.join('')}=${selectBits} chooses I${index}=${signal.replace("'",'′')}. With ${x}=${data}, ${evaluation}, so Y=${value}.`);});
+    lines.push(`Final output bits, from row 0 downward: ${q.table.join('')}.`);
+  }else if(q.type==='mux-build'){
+    lines.push(`For each data input, hold ${q.selectors.join('')} fixed and compare the two rows with ${x}=0 then ${x}=1. Pairs 00, 01, 10, and 11 require 0, ${x}, ${x}′, and 1 respectively.`);
+    q.signals.forEach((signal,index)=>{const rows=[rowForIndex(index,0,q.n,q.selectors,x),rowForIndex(index,1,q.n,q.selectors,x)],pair=rows.map(row=>q.table[row]).join('');lines.push(`I${index}: select ${q.selectors.join('')}=${index.toString(2).padStart(q.selectors.length,'0')}. Row ${rows[0]} (${inputs}=${bitRow(rows[0],q.n).join('')}, ${x}=0) requires Y=${q.table[rows[0]]}; row ${rows[1]} (${inputs}=${bitRow(rows[1],q.n).join('')}, ${x}=1) requires Y=${q.table[rows[1]]}. Pair ${pair} matches ${signal.replace("'",'′')}, so connect I${index} to ${signal.replace("'",'′')}.`);});
+    lines.push(`Final data inputs, I0 through I${q.signals.length-1}: ${q.signals.join(', ')}.`);
+  }else{
+    lines.push(`EN=1 and the decoder outputs are active high. Read each table row in ${inputs} order, then read the labelled decoder pins in ${pins} order to find the one active output.`);
+    q.table.forEach((value,row)=>{const bits=q.pinOrder.map(v=>variableBit(row,q.n,v)).join(''),address=addressForRow(row,q.n,q.pinOrder),terms=q.pinOrder.map((v,i)=>`${variableBit(row,q.n,v)}×${2**(q.n-1-i)}`).join(' + '),action=q.type==='decoder-trace'?`Output ${address} is ${q.minterms.includes(address)?'connected to':'not connected to'} OR, so Y=${value}.`:`Target Y=${value}, so ${value?'connect':'leave unconnected'} output ${address}${value?' to OR':''}.`;lines.push(`Row ${row}: ${inputs}=${bitRow(row,q.n).join('')}. Decoder ${pins}=${bits} gives ${terms}=${address}; output ${address} is active. ${action}`);});
+    lines.push(q.type==='decoder-trace'?`Final output bits, from row 0 downward: ${q.table.join('')}.`:`Final OR connections: ${q.minterms.join(', ')||'none'}. The OR output is 1 exactly for the target rows marked 1.`);
+  }
+  return lines;
+}
+function workedSolutionView(q){
+  const lines=workedSolution(q),inputs=letters.slice(0,q.n),mux=q.type.startsWith('mux'),trace=q.type.endsWith('trace');
+  const steps=[{title:mux?(trace?'Follow the select order':'Match the target pairs'):'Read the decoder addresses',paragraphs:[lines[0]]}];
+  lines.slice(1,-1).forEach((text,index)=>{
+    let title,expression;
+    if(q.type==='mux-build'){
+      title=`Choose data input I${index}`;expression=`I${index} = ${q.signals[index]}`;
+    }else if(q.type==='mux-trace'){
+      const selected=addressForRow(index,q.n,q.selectors),bits=q.selectors.map(v=>variableBit(index,q.n,v)).join('');
+      title=`Evaluate row ${index}`;expression=`${q.selectors.join('')}=${bits} → I${selected}=${q.signals[selected]} → Y=${q.table[index]}`;
+    }else{
+      const bits=q.pinOrder.map(v=>variableBit(index,q.n,v)).join(''),address=addressForRow(index,q.n,q.pinOrder);
+      title=trace?`Trace row ${index}`:`Map target row ${index}`;expression=`${q.pinOrder.join('')}=${bits} → output ${address} → Y=${q.table[index]}`;
+    }
+    steps.push({title,expression,paragraphs:[text.replace(/^(?:Row \d+|I\d+): /,'')]});
+  });
+  const finalAnswer=trace?q.table.join(''):mux?q.signals.join(', '):q.minterms.join(', ')||'none';
+  const finalNote=trace?`Output bits follow ${inputs} input rows from ${'0'.repeat(q.n)} to ${'1'.repeat(q.n)}, with A as the MSB.`:mux?`Listed in I0 through I${q.signals.length-1} order. Select bits ${q.selectors.join('')} run from most to least significant.`:`Connect these decoder outputs to OR. Output numbers use ${q.pinOrder.join('')} address order, from most to least significant.`;
+  return {steps,finalAnswer,finalNote};
+}
 function checkTutorialStep(text,q,step){
   let value;
   if(step.kind==='bit'){
@@ -435,11 +537,12 @@ function setEnabled(enabled){$('generate').disabled=!enabled;$('answer').disable
 function permitted(){if(mode!=='pressure')return true;if(round.active&&performance.now()>=round.deadline)endRound();return round.active;}
 function titleFor(type){return {'mux-trace':'Find the output for every input combination.','mux-build':'Choose the data signals that reproduce this truth table.','decoder-trace':'Read the connected decoder outputs and complete the table.','decoder-build':'Connect decoder outputs to reproduce this truth table.'}[type];}
 function resetQuestionInteraction(){
+  $('questionHints').innerHTML='';
   Object.assign(question,{solved:false,revealed:false,hints:0,hadError:false,draft:Array(2**question.n).fill(null)});
   delete question.tutorial;
-  if(mode==='tutorial')question.tutorial={steps:tutorialSteps(question),index:0,accepted:[],signals:Array(question.signals.length).fill(null),connections:[]};
+  if(mode==='tutorial')question.tutorial={steps:tutorialSteps(question),index:0,hintLevel:0,accepted:[],signals:Array(question.signals.length).fill(null),connections:[]};
 }
-function generate(focus=true,{reuse=false,resetNumber=false}={}){if(question&&!question.solved&&!question.revealed){session.streak=0;updateStats();}const compatible=question&&question.n===Number($('level').value)&&question.type===$('exercise').value;if(!reuse||!compatible){question=makeQuestion(Number($('level').value),$('exercise').value);questionCount=resetNumber?1:questionCount+1;}resetQuestionInteraction();$('questionNumber').textContent='Question '+String(questionCount).padStart(2,'0');$('kindTag').textContent=(isMux()?topologyLabel().toUpperCase():'DECODER')+' '+(isTrace()?'TRACE':'SYNTHESIS');$('prompt').textContent=titleFor(question.type);$('convention').textContent=`Inputs ${letters.slice(0,question.n).split('').join(', ')} · A is the truth-table MSB · Row order ${'0'.repeat(question.n)} → ${'1'.repeat(question.n)}. ${isMux()?`Mux index: ${question.selectors.join('')} (MSB → LSB); data variable: ${question.dataVar}.`:`Decoder address: ${question.pinOrder.join('')} (MSB → LSB).`}`;$('answer').value='';$('check').textContent='Check answer ↵';$('tableTitle').textContent=isTrace()?'Your truth table':'Target truth table';$('answerLabel').textContent=isTrace()?'Output bits, from top to bottom':isMux()?`Data inputs I0 through I${question.signals.length-1}`:'Decoder outputs connected to OR';$('answer').placeholder=isTrace()?'e.g. '+('01'.repeat(2**(question.n-1))):isMux()?question.signals.map(()=>'?').join(', '):'e.g. 0, 2, 5';$('answerHelp').textContent=isTrace()?`Type ${question.table.length} bits or click the Y cells. Spaces are accepted.`:isMux()?`Use 0, 1, ${question.dataVar}, or ${question.dataVar}'. Separate signals with commas. The first signal is I0.`:`List output numbers from 0 to ${question.table.length-1}. Their order does not matter. Use none for no connections.`;renderCircuit();renderTable();renderEditor();renderGuide();renderTutorial();feedback(mode==='pressure'&&!round.active?'Press Start round to begin the timed challenge.':mode==='tutorial'?'Answer the current step in the textbox, then press Enter. Each correct step unlocks the next.':'Your circuit is ready. Trace one row at a time.');setEnabled(mode!=='pressure'||round.active);if(focus&&(mode!=='pressure'||round.active))$('answer').focus();}
+function generate(focus=true,{reuse=false,resetNumber=false}={}){if(question&&!question.solved&&!question.revealed){session.streak=0;updateStats();}const compatible=question&&question.n===Number($('level').value)&&question.type===$('exercise').value;if(!reuse||!compatible){question=makeQuestion(Number($('level').value),$('exercise').value);questionCount=resetNumber?1:questionCount+1;window.practiceScratch?.reset();}resetQuestionInteraction();$('questionNumber').textContent='Question '+String(questionCount).padStart(2,'0');$('kindTag').textContent=(isMux()?topologyLabel().toUpperCase():'DECODER')+' '+(isTrace()?'TRACE':'SYNTHESIS');$('prompt').textContent=titleFor(question.type);$('convention').textContent=`Inputs ${letters.slice(0,question.n).split('').join(', ')} · A is the truth-table MSB · Row order ${'0'.repeat(question.n)} → ${'1'.repeat(question.n)}. ${isMux()?`Mux index: ${question.selectors.join('')} (MSB → LSB); data variable: ${question.dataVar}.`:`Decoder address: ${question.pinOrder.join('')} (MSB → LSB).`}`;$('answer').value='';$('check').textContent='Check answer ↵';$('tableTitle').textContent=isTrace()?'Your truth table':'Target truth table';$('answerLabel').textContent=isTrace()?'Output bits, from top to bottom':isMux()?`Data inputs I0 through I${question.signals.length-1}`:'Decoder outputs connected to OR';$('answer').placeholder=isTrace()?'e.g. '+('01'.repeat(2**(question.n-1))):isMux()?question.signals.map(()=>'?').join(', '):'e.g. 0, 2, 5';$('answerHelp').textContent=isTrace()?`Type ${question.table.length} bits or click the Y cells. Spaces are accepted.`:isMux()?`Use 0, 1, ${question.dataVar}, or ${question.dataVar}'. Separate signals with commas. The first signal is I0.`:`List output numbers from 0 to ${question.table.length-1}. Their order does not matter. Use none for no connections.`;renderCircuit();renderTable();renderEditor();renderGuide();renderTutorial();feedback(mode==='pressure'&&!round.active?'Press Start round to begin the timed challenge.':mode==='tutorial'?'Answer the current step in the textbox, then press Enter. Each correct step unlocks the next.':'Your circuit is ready. Trace one row at a time.');setEnabled(mode!=='pressure'||round.active);if(focus&&(mode!=='pressure'||round.active))$('answer').focus();}
 const svgText=(x,y,text,cls='')=>`<text x="${x}" y="${y}" class="${cls}">${text}</text>`;
 function muxBlock(x,y,w,h,count,values,selector,title,offset=0){let s=`<path class="block" d="M${x},${y} L${x+w},${y+17} L${x+w},${y+h-17} L${x},${y+h} Z"/>`;values.forEach((v,i)=>{let yy=y+23+i*(h-46)/Math.max(1,count-1);s+=`<path class="wire" d="M${x-62},${yy} H${x}"/>`+svgText(x-60,yy-7,v,'out')+svgText(x+6,yy+4,`I${offset+i}`,'small');});s+=svgText(x+w*.39,y+h*.5,title)+`<path class="wire" d="M${x+w/2},${y+h-9} V${y+h+20}"/>`+svgText(x+w/2-35,y+h+37,selector,'small');return s;}
 function muxTree(values,selectors){
@@ -496,6 +599,7 @@ function renderTable(wrongRow=-1){let h='<table><thead><tr><th scope="col">Row</
 function renderEditor(){const el=$('visualEditor');el.innerHTML='';el.hidden=mode==='tutorial';if(isTrace()||mode==='tutorial')return;if(isMux()){el.innerHTML='<h3>Set data inputs</h3><div class="entry-grid">'+question.signals.map((_,i)=>`<label for="input${i}">I${i}<select id="input${i}" data-index="${i}" aria-label="Data input I${i}"><option value="">?</option>${['0','1',question.dataVar,question.dataVar+"'"].map(v=>`<option>${v}</option>`).join('')}</select></label>`).join('')+'</div>';el.querySelectorAll('select').forEach(select=>select.onchange=()=>{if(mode==='tutorial'||!permitted())return;$('answer').value=[...el.querySelectorAll('select')].map(x=>x.value||'?').join(', ');syncEditors();});}else{el.innerHTML='<h3>Connect outputs</h3><div class="minterm-buttons">'+question.table.map((_,i)=>`<button type="button" data-minterm="${i}" aria-pressed="false" aria-label="Connect decoder output ${i}">${i}</button>`).join('')+'</div>';el.querySelectorAll('button').forEach(button=>button.onclick=()=>{if(mode==='tutorial'||!permitted())return;const nums=getDraftMinterms(),v=Number(button.dataset.minterm),next=nums.includes(v)?nums.filter(x=>x!==v):[...nums,v].sort((a,b)=>a-b);$('answer').value=next.length?next.join(', '):'none';syncEditors();});}}
 function syncEditors(){if(mode==='tutorial'&&!question.revealed)return;if(isTrace()){const raw=$('answer').value.replace(/[\s,|_]/g,'');question.draft=Array.from({length:question.table.length},(_,i)=>raw[i]==='0'?0:raw[i]==='1'?1:null);renderTable();}else if(isMux()){const vals=$('answer').value.trim().toUpperCase().replace(/[’′]/g,"'").split(/[\s,;]+/);document.querySelectorAll('#visualEditor select').forEach((el,i)=>{el.value=vals[i]||'';});renderCircuit();}else{const nums=getDraftMinterms();document.querySelectorAll('[data-minterm]').forEach(el=>{const on=nums.includes(Number(el.dataset.minterm));el.classList.toggle('on',on);el.setAttribute('aria-pressed',String(on));});renderCircuit();}}
 function renderGuide(){
+  $('hint').hidden=mode==='pressure';$('notesHelp').textContent=mode==='pressure'?'Use Show worked answer to review the solution.':'Use Show a hint for extra guidance.';
   const n=question.n,x=question.dataVar,index=question.selectors.join(''),pins=question.pinOrder.join('');
   const steps=isMux()?[
     ['Read this circuit’s select bits',`Read ${index} from most to least significant to find I0 through I${question.signals.length-1}. ${question.topology==='banks'?`${question.selectors[0]} selects the bank.`:question.topology==='tree'?'At each 2:1 mux, select 0 follows its upper input and select 1 follows its lower input.':''}`],
@@ -509,18 +613,21 @@ function renderGuide(){
   $('guide').innerHTML='<ol class="method-steps">'+steps.map(([t,d])=>`<li><strong>${t}</strong><p>${d}</p></li>`).join('')+'</ol>';
 }
 function renderTutorial(){
-  const tutorial=question.tutorial,list=$('tutorialSteps');list.hidden=mode!=='tutorial';
+  const tutorial=question.tutorial,list=$('tutorialSteps'),final=$('tutorialFinal');
+  list.hidden=mode!=='tutorial'||question.revealed;final.hidden=true;final.innerHTML='';
   if(mode!=='tutorial'){list.innerHTML='';return;}
+  if(question.revealed){list.innerHTML='';$('answerLabel').textContent='Worked tutorial · no point awarded';$('answerHelp').textContent='Press Enter for the next question.';return;}
   const total=tutorial.steps.length,step=tutorial.steps[tutorial.index];
-  if(step&&!question.revealed&&!question.solved){$('answerLabel').textContent=`Step ${tutorial.index+1} of ${total} · ${step.title}`;$('check').textContent='Check step ↵';$('answerHelp').textContent=step.prompt;$('answer').placeholder=step.kind==='bit'?'0 or 1':step.kind==='address'?`Output number, 0–${2**question.n-1}`:step.kind==='signal'?`0, 1, ${question.dataVar}, or ${question.dataVar}′`:'Decoder output numbers';}
-  else{$('answerLabel').textContent=question.revealed?'Worked tutorial · no point awarded':`Tutorial complete · ${total} steps accepted`;$('answerHelp').textContent='Press Enter for the next question.';}
-  list.innerHTML=tutorial.steps.map((item,i)=>{
-    const accepted=i<tutorial.index,current=i===tutorial.index&&!question.solved&&!question.revealed;
-    const kind=question.revealed?'revealed':question.solved?'complete':accepted?'accepted':current?'active':'';
-    const status=question.revealed?'Shown':question.solved?'Complete':accepted?'Accepted':current?'Current step':'Next';
-    const value=question.revealed?item.answer:accepted?tutorial.accepted[i]:'';
-    return `<li class="${kind}"${current?' aria-current="step"':''}><div class="step-title"><strong>Step ${i+1} · ${item.title}</strong><span class="step-status">${status}</span></div>${value?`<code class="step-bits">${value}</code>`:''}</li>`;
+  if(step&&!question.solved){$('answerLabel').textContent=`Step ${tutorial.index+1} of ${total} · ${step.title}`;$('check').textContent='Check step ↵';$('answerHelp').textContent=step.prompt;$('answer').placeholder=step.kind==='bit'?'0 or 1':step.kind==='address'?`Output number, 0–${2**question.n-1}`:step.kind==='signal'?`0, 1, ${question.dataVar}, or ${question.dataVar}′`:'Decoder output numbers';}
+  else{$('answerLabel').textContent=`Step ${total} of ${total} · Complete`;$('answerHelp').textContent='Press Enter for the next question.';}
+  list.innerHTML=tutorial.steps.slice(0,Math.min(tutorial.index+1,total)).map((item,i)=>{
+    const accepted=i<tutorial.index,current=i===tutorial.index&&!question.solved;
+    const kind=accepted?'accepted':current?'active':'',status=accepted?'Accepted':`Step ${i+1} of ${total}`;
+    const label=item.kind==='bit'?'Y':item.kind==='signal'?`I${item.index}`:item.kind==='address'?'Decoder output':'OR outputs';
+    const expression=accepted?`${label} = ${tutorial.accepted[i]}`:'';
+    return tutorialStepMarkup(i+1,item.title,expression,status,kind);
   }).join('');
+  if(question.solved){const solution=workedSolutionView(question);final.innerHTML=finalAnswerMarkup(solution.finalAnswer,solution.finalNote);final.hidden=false;}
   const active=list.querySelector?.('[aria-current="step"]');
   if(active){const top=active.getBoundingClientRect().top-list.getBoundingClientRect().top+list.scrollTop;list.scrollTop=Math.max(0,top-list.clientHeight/3);}
 }
@@ -529,7 +636,7 @@ function checkTutorial(){
   if(result.syntax){feedback(result.message,'error');return;}
   session.attempts++;
   if(!result.correct){question.hadError=true;session.streak=0;feedback(result.message,'error');updateStats();return;}
-  session.correct++;tutorial.accepted.push(result.value);tutorial.index++;
+  session.correct++;$('questionHints').innerHTML='';tutorial.hintLevel=0;tutorial.accepted.push(result.value);tutorial.index++;
   if(step.kind==='bit'&&isTrace())question.draft[step.row]=Number(result.value);
   if(step.kind==='signal')tutorial.signals[step.index]=result.value;
   if(question.type==='decoder-build'&&step.kind==='address')tutorial.connections.push(Number(result.value));
@@ -537,8 +644,20 @@ function checkTutorial(){
   if(tutorial.index<tutorial.steps.length){$('answer').value='';$('hint').disabled=false;renderTutorial();feedback(`Step ${tutorial.index} accepted. Continue with step ${tutorial.index+1}.`,'progress');updateStats();$('answer').focus();return;}
   question.solved=true;session.solved++;session.streak=question.hadError?0:session.streak+1;updateStats();renderTutorial();feedback(`Correct. All ${tutorial.steps.length} steps agree with the circuit and truth table. Press Enter for the next question.`,'success');$('check').textContent='Next question ↵';$('hint').disabled=true;$('reveal').disabled=true;$('answer').focus();
 }
+function addQuestionHint(text,title=''){
+  const escape=value=>String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'),safe=escape(text);
+  $('questionHints').innerHTML+='<div class="step">'+(title?'<strong>'+escape(title)+'</strong><p>'+safe+'</p>':safe)+'</div>';
+}
 function hint(){
-  if(!permitted()||question.solved||question.revealed)return;if(mode==='tutorial'){feedback(question.tutorial.steps[question.tutorial.index].hint,'hint');$('hint').disabled=true;return;}question.hints++;
+  if(mode==='pressure'||!permitted()||question.solved||question.revealed)return;
+  if(mode==='tutorial'){
+    const tutorial=question.tutorial,step=tutorial.steps[tutorial.index],levels=tutorialHintLevels(question,step);
+    if(tutorial.hintLevel>=levels.length)return;
+    const level=tutorial.hintLevel++;addQuestionHint(levels[level],`Hint ${level+1} of ${levels.length}`);
+    if(tutorial.hintLevel===levels.length){$('answer').value=step.answer;$('answer').focus({preventScroll:true});}
+    $('hint').disabled=tutorial.hintLevel>=levels.length;return;
+  }
+  question.hints++;
   const n=question.n,x=question.dataVar,r=question.table.findIndex(v=>v===1),pairRows=[rowForIndex(0,0,n,question.selectors,x),rowForIndex(0,1,n,question.selectors,x)],pair=pairRows.map(row=>question.table[row]).join('');let hints;
   if(isMux()){
     hints=[`Group rows with the same ${question.selectors.join('')} bits. Each group contains ${x}=0 and ${x}=1, and corresponds to one data input.`,
@@ -550,18 +669,47 @@ function hint(){
       isTrace()?`Connected outputs are ${question.minterms.join(', ')}. For each table row, calculate its decoder address and check whether that address appears in this list.`:`The first target row with Y=1 is row ${r} (${letters.slice(0,n)}=${bitRow(r,n).join('')}). Its ${question.pinOrder.join('')} address is ${address}, so choose output ${address}.`,
       `Worked row: all-zero inputs activate output 0. ${isTrace()?`Output 0 is ${question.minterms.includes(0)?'connected':'unconnected'}, so Y=${question.table[0]}.`:`The target is Y=${question.table[0]}, so ${question.table[0]?'connect':'leave unconnected'} output 0.`}`];
   }
-  feedback(hints[Math.min(question.hints-1,hints.length-1)],'hint');
+  if(question.hints<=hints.length)addQuestionHint(hints[question.hints-1]);$('hint').disabled=question.hints>=hints.length;
 }
 function check(event){event?.preventDefault();if(!permitted()){feedback('Press Start round to answer timed questions.');return;}if(question.solved||question.revealed){generate();return;}if(mode==='tutorial'){checkTutorial();return;}let table;try{table=isTrace()?parseBits($('answer').value,question.n):isMux()?muxTable(parseSignals($('answer').value,question.n,question.dataVar),question.n,question.selectors,question.dataVar):decoderTable(parseMinterms($('answer').value,question.n),question.n,question.pinOrder);}catch(error){feedback(error.message,'error');return;}session.attempts++;const wrong=table.findIndex((v,i)=>v!==question.table[i]);if(wrong!==-1){question.hadError=true;session.streak=0;feedback(`Check row ${wrong} (${bitRow(wrong,question.n).join('')}). Your ${isTrace()?'output':'circuit output'} is ${table[wrong]}; the ${isTrace()?'given circuit':'target table'} requires ${question.table[wrong]}.`,'error');if(isTrace())renderTable(wrong);updateStats();return;}question.solved=true;session.solved++;session.correct++;session.streak=question.hadError?0:session.streak+1;if(round.active)round.score++;updateStats();feedback(`Correct. ${question.table.length} rows agree. ${round.active?'Point earned. ':''}Press Enter for the next question.`,'success');$('check').textContent='Next question ↵';$('hint').disabled=true;$('reveal').disabled=true;document.querySelectorAll('#visualEditor select,#visualEditor button,.bit').forEach(el=>el.disabled=true);}
-function reveal(){if(!permitted()||question.solved||question.revealed)return;question.revealed=true;session.streak=0;$('answer').value=isTrace()?question.table.join(''):isMux()?question.signals.join(', '):question.minterms.join(', ')||'none';syncEditors();renderTutorial();setEnabled(true);document.querySelectorAll('#visualEditor select,#visualEditor button,.bit').forEach(el=>el.disabled=true);$('hint').disabled=true;$('reveal').disabled=true;$('check').textContent='Next question ↵';feedback('Answer revealed. This question earns no points. Trace the solution, then press Enter to continue.','hint');updateStats();}
+function reveal(){if(!permitted()||question.solved||question.revealed)return;question.revealed=true;session.streak=0;const solution=workedSolutionView(question);$('questionHints').innerHTML=workedSolutionMarkup(solution.steps,solution.finalAnswer,solution.finalNote);$('answer').value=solution.finalAnswer;syncEditors();renderTutorial();setEnabled(true);document.querySelectorAll('#visualEditor select,#visualEditor button,.bit').forEach(el=>el.disabled=true);$('hint').disabled=true;$('reveal').disabled=true;$('check').textContent='Next question ↵';feedback('Answer revealed. This question earns no points. Trace the solution, then press Enter to continue.','hint');updateStats();}
 function tick(){if(!round.active)return;const remain=Math.max(0,round.deadline-performance.now()),seconds=Math.ceil(remain/1000);$('time').textContent=seconds+'s';$('roundbar').classList.toggle('danger',seconds<=10);if(remain<=0)endRound();}
 function startRound(){if(mode!=='pressure')return;clearInterval(timer);round={active:true,deadline:performance.now()+Number($('duration').value)*1000,duration:Number($('duration').value),score:0,key:`digital-mux-best-${$('duration').value}-${$('level').value}-${$('exercise').value}`};session={solved:0,attempts:0,correct:0,streak:0};$('start').textContent='End round';$('duration').disabled=true;$('roundStatus').textContent='One point per solved question. The clock keeps running if you switch tabs.';$('roundSummary').hidden=true;$('roundSummaryText').textContent='';$('roundBest').textContent='';$('roundBest').hidden=true;generate(true,{reuse:true});updateStats();tick();timer=setInterval(tick,100);}
 function endRound(manual=false){if(!round.active)return;round.active=false;clearInterval(timer);timer=null;$('start').textContent='Start another round';$('duration').disabled=false;setEnabled(false);$('roundStatus').textContent='Round complete. Review the summary and start again.';$('time').textContent='0s';$('roundbar').classList.toggle('danger',false);$('roundSummaryTitle').textContent=manual?'Round ended early.':'Time is up.';$('roundSummaryText').textContent=`${round.score} solved · ${session.attempts} answer checks. Accuracy: ${session.attempts?Math.round(session.correct/session.attempts*100)+'%':'—'}.`;$('roundBest').textContent='';$('roundBest').hidden=true;try{const best=Math.max(Number(localStorage.getItem(round.key)||0),round.score);localStorage.setItem(round.key,String(best));$('roundBest').textContent=`Personal best: ${best} solved.`;$('roundBest').hidden=false;}catch{}$('roundSummary').hidden=false;feedback('Round complete. Start another round to continue.');}
 function resetForSettings(drawQuestion=false){if(round.active)endRound(true);clearInterval(timer);timer=null;round={active:false,deadline:0,duration:Number($('duration').value),score:0};session={solved:0,attempts:0,correct:0,streak:0};$('roundStatus').textContent='Start a round when you are ready. Each solved question earns one point.';$('time').textContent=$('duration').value+'s';$('roundbar').classList.toggle('danger',false);$('duration').disabled=false;$('start').textContent='Start round';$('roundSummary').hidden=true;$('roundSummaryText').textContent='';$('roundBest').textContent='';$('roundBest').hidden=true;updateStats();generate(false,{reuse:!drawQuestion,resetNumber:drawQuestion});}
 document.querySelectorAll('[data-mode]').forEach(button=>button.onclick=()=>{if(mode===button.dataset.mode)return;if(round.active)endRound(true);mode=button.dataset.mode;document.querySelectorAll('[data-mode]').forEach(el=>{el.classList.toggle('active',el===button);el.setAttribute('aria-pressed',String(el===button));});$('roundbar').hidden=mode!=='pressure';resetForSettings();});
 ['exercise','level'].forEach(id=>$(id).addEventListener('change',()=>resetForSettings(true)));$('duration').addEventListener('change',()=>resetForSettings());$('generate').onclick=()=>{if(round.active&&!permitted())return;generate(false);};$('answerForm').addEventListener('submit',check);$('answer').addEventListener('input',()=>{if(question.solved||question.revealed)return;syncEditors();});$('hint').onclick=hint;$('reveal').onclick=reveal;$('start').onclick=()=>{if(round.active)endRound(performance.now()<round.deadline);else startRound();};document.addEventListener('visibilitychange',()=>{if(round.active)tick();});
-window.simulatorTest={bitRow,tokenValue,variableBit,addressForRow,rowForIndex,muxTable,signalsFromTable,parseBits,parseSignals,parseMinterms,decoderTable,buildMuxNetwork,createQuestionGenerator,makeQuestion,tutorialSteps,checkTutorialStep,getState:()=>({mode,question:JSON.parse(JSON.stringify(question)),session:{...session},round:{...round}}),expireRound:()=>{round.deadline=performance.now()-1;tick();}};
+window.simulatorTest={bitRow,tokenValue,variableBit,addressForRow,rowForIndex,muxTable,signalsFromTable,parseBits,parseSignals,parseMinterms,decoderTable,buildMuxNetwork,createQuestionGenerator,makeQuestion,tutorialSteps,tutorialHintLevels,workedSolution,workedSolutionView,workedSolutionMarkup,tutorialStepMarkup,finalAnswerMarkup,checkTutorialStep,getState:()=>({mode,question:JSON.parse(JSON.stringify(question)),session:{...session},round:{...round}}),expireRound:()=>{round.deadline=performance.now()-1;tick();}};
 generate(false);
+})();
+</script>
+<script>
+// Shared scratch paper: typed working stays with the current question.
+(()=>{
+  'use strict';
+  const panel=document.getElementById('scratchPaper');
+  if(!panel)return;
+  const toggle=document.getElementById('scratchToggle'),body=document.getElementById('scratchBody'),notes=document.getElementById('scratchText'),move=document.getElementById('scratchMove'),resize=document.getElementById('scratchResize');
+  let offset=0,height=240;
+  const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
+  function setOffset(value){offset=clamp(value,0,1200);panel.style.marginTop=offset+'px';}
+  function setHeight(value){height=clamp(value,120,1200);notes.style.height=height+'px';}
+  function setOpen(open){body.hidden=!open;toggle.setAttribute('aria-expanded',String(open));toggle.querySelector('.scratch-chevron').textContent=open?'▾':'▸';}
+  toggle.addEventListener('click',()=>setOpen(body.hidden));
+  function verticalHandle(handle,read,write,min,max){
+    let drag=null;
+    handle.addEventListener('pointerdown',event=>{
+      if(event.button!==0)return;
+      event.preventDefault();drag={pointer:event.pointerId,y:event.clientY,value:read()};handle.setPointerCapture(event.pointerId);handle.classList.add('is-dragging');
+    });
+    handle.addEventListener('pointermove',event=>{if(drag&&event.pointerId===drag.pointer)write(drag.value+event.clientY-drag.y);});
+    const end=event=>{if(!drag||event.pointerId!==drag.pointer)return;const id=drag.pointer;drag=null;handle.classList.remove('is-dragging');if(handle.hasPointerCapture(id))handle.releasePointerCapture(id);};
+    handle.addEventListener('pointerup',end);handle.addEventListener('pointercancel',end);handle.addEventListener('lostpointercapture',()=>{drag=null;handle.classList.remove('is-dragging');});
+    handle.addEventListener('keydown',event=>{const step=event.shiftKey?100:20;let value;if(event.key==='ArrowUp')value=read()-step;else if(event.key==='ArrowDown')value=read()+step;else if(event.key==='Home')value=min;else if(event.key==='End')value=max;else return;event.preventDefault();write(value);});
+  }
+  verticalHandle(move,()=>offset,setOffset,0,1200);verticalHandle(resize,()=>height,setHeight,120,1200);
+  // Reset content only; the student's open state, size, and position are preferences.
+  window.practiceScratch={reset(){notes.value='';notes.scrollTop=0;}};
 })();
 </script>
 </body>

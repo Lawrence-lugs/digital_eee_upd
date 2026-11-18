@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>Binary Arithmetic Simulator</title><!-- Embedded font licenses
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>Binary Arithmetic Skill Trainer</title><!-- Embedded font licenses
 Copyright 2020 The Inter Project Authors (https://github.com/rsms/inter)
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
@@ -227,11 +227,12 @@ header.simulator-banner .banner-wrap{max-width:1180px}
 .practice-stat>span,.practice-stat>.stat-label{display:block;margin-top:4px;font:400 10px/1.4 var(--ui-font);letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
 .practice-settings .practice-round{flex:1 0 100%;width:100%;margin:0}
 .practice-layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:22px;align-items:start}
-.practice-layout>.card,.practice-layout>.notes-sidebar>.card,.practice-layout>.notes-sidebar.card{min-width:0;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 28px rgba(28,39,49,.07)}
+.practice-layout>.card,.practice-layout>.notes-sidebar>.card,.practice-layout>.notes-sidebar.card,.practice-right-column>.notes-sidebar.card{min-width:0;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 28px rgba(28,39,49,.07)}
 .practice-layout>.card{padding:24px}
 .notes-sidebar{min-width:0;display:grid;gap:18px;align-content:start}
-.notes-sidebar>.card,.practice-layout>.notes-sidebar.card{padding:24px}
-.practice-layout>.notes-sidebar.card{display:block}
+.notes-sidebar>.card,.practice-layout>.notes-sidebar.card,.practice-right-column>.notes-sidebar.card{padding:24px}
+.practice-layout>.notes-sidebar.card,.practice-right-column>.notes-sidebar.card{display:block}
+.practice-right-column{min-width:0;display:flex;flex-direction:column;gap:18px;align-self:stretch}
 .notes-sidebar h2,.notes-sidebar h3{font:700 17px/1.35 var(--ui-font);margin:0 0 12px;letter-spacing:normal}
 .question-toolbar{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;padding:0;margin:0 0 18px;border:0;background:transparent}
 .question-toolbar>div{min-width:0;flex:1 1 200px}
@@ -295,26 +296,69 @@ textarea.practice-answer-input{resize:vertical}
 .notes-sidebar .notes-reference th,.notes-sidebar .notes-reference td{padding:5px 3px;border-bottom:1px solid var(--line);text-align:center}
 .notes-sidebar .step,.notes-sidebar .hint-step{margin:12px 0 0;padding:10px 12px;border:0;border-left:3px solid var(--up-maroon);border-radius:0;background:#faf1f2;font:400 14px/1.55 var(--ui-font)}
 .notes-sidebar .step p:last-child,.notes-sidebar .hint-step p:last-child{margin-bottom:0}
-.practice-footer{display:flex;justify-content:space-between;gap:15px;max-width:none;width:auto;margin:25px 0 0;padding:0;border:0;background:transparent;color:var(--muted);font:400 12px/1.55 var(--ui-font)}
-.practice-footer .key{padding:1px 5px;border:1px solid #ccd6de;border-radius:4px;background:#e9edf1;color:var(--muted);font:400 12px var(--mono-font)}
-.tutorial-steps{display:grid;gap:10px;list-style:none;margin:0 0 22px;padding:0;max-height:300px;overflow:auto;position:relative}.tutorial-steps li{padding:12px 14px;border:1px solid var(--line);border-radius:9px;background:#f8fafb}.tutorial-steps li.active{border-color:var(--up-maroon);background:#faf1f2}.tutorial-steps li.accepted{border-color:#ead59f;background:#fff8e6}.tutorial-steps li.complete{border-color:#bbdfd0;background:#edf9f3}.tutorial-steps .step-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px;font-size:14px}.tutorial-steps .step-status{font-size:11px;color:var(--muted);white-space:nowrap}.tutorial-steps .step-bits{display:block;margin-top:7px;font:15px/1.5 var(--mono-font);overflow-wrap:anywhere}
+.question-hints{display:grid;gap:10px;margin-top:16px;color:var(--ink);font:400 14px/1.55 var(--ui-font)}
+.question-hints:empty{display:none}
+.question-hints .step,.question-hints .hint-step{margin:0;padding:12px 14px;border:0;border-left:3px solid var(--up-maroon);border-radius:0 9px 9px 0;background:#faf1f2;font:400 14px/1.55 var(--ui-font)}
+.question-hints p{margin:0 0 6px}.question-hints p:last-child{margin-bottom:0}
+.question-hints code{font-family:var(--mono-font);white-space:pre-wrap;overflow-wrap:anywhere}
+.worked-solution{min-width:0;padding-top:18px;border-top:1px solid var(--line);color:var(--ink);font:400 14px/1.55 var(--ui-font)}
+.worked-solution .worked-heading{display:block;max-width:none;margin:0 0 16px;padding:0;background:none;color:var(--ink);border:0;box-shadow:none}
+.worked-heading h3{margin:0 0 4px;font:750 18px/1.4 var(--ui-font)}.worked-heading p{margin:0;color:var(--muted);font:400 13px/1.5 var(--ui-font)}
+.worked-solution .worked-steps{display:grid;gap:12px;list-style:none;margin:0;padding:0;overflow:visible;max-height:none}
+.worked-solution .worked-step,.tutorial-steps .worked-step{display:grid;grid-template-columns:32px minmax(0,1fr);align-items:start;gap:12px;margin:0;padding:14px;border:1px solid var(--line);border-radius:10px;background:#f8fafb;min-width:0}
+.worked-number{display:grid;place-items:center;width:32px;height:32px;border:1px solid #e7cfd1;border-radius:50%;background:#faf1f2;color:var(--up-maroon);font:750 14px/1 var(--ui-font);font-variant-numeric:tabular-nums}
+.worked-content{min-width:0;overflow-wrap:anywhere}.worked-content h4{margin:4px 0 8px;font:700 14px/1.5 var(--ui-font)}.worked-content p{margin:0 0 8px;white-space:pre-wrap}.worked-content p:last-child{margin-bottom:0}
+.worked-content .worked-expression{display:block;margin:0 0 10px;padding:9px 11px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);font:400 14px/1.6 var(--mono-font);white-space:pre-wrap;overflow-wrap:anywhere}
+.worked-final{margin-top:16px;padding:16px 18px;border:1px solid #bbdfd0;border-left:4px solid #347554;border-radius:10px;background:#edf9f3;color:#24583f;overflow-wrap:anywhere}
+.worked-final h4{margin:0 0 8px;font:750 14px/1.4 var(--ui-font)}.worked-final .worked-final-answer{display:block;margin:0;font:600 20px/1.55 var(--mono-font);white-space:pre-wrap;overflow-wrap:anywhere}.worked-final p{margin:8px 0 0;font:400 13px/1.55 var(--ui-font)}
+@media(max-width:480px){.worked-solution .worked-step,.tutorial-steps .worked-step{grid-template-columns:28px minmax(0,1fr);gap:10px;padding:12px}.worked-number{width:28px;height:28px}.worked-final{padding:14px}.worked-final .worked-final-answer{font-size:18px}}
+.scratch-paper{min-width:0;margin:0;border:1px solid #e4d69c;border-radius:14px;background:#fff8d8;color:#5b4c21;box-shadow:0 6px 18px #74612610;overflow:hidden}
+.scratch-heading{display:flex;align-items:stretch;min-height:48px}
+.scratch-heading .scratch-toggle,.scratch-heading .scratch-move{margin:0;border:0;border-radius:0;background:transparent;color:#5b4c21;font:700 14px/1.4 var(--ui-font)}
+.scratch-heading .scratch-toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:1;min-width:0;padding:14px 16px;text-align:left;cursor:pointer}
+.scratch-heading .scratch-move{flex:0 0 42px;width:42px;padding:10px;border-left:1px solid #eadfaa;font-size:20px;cursor:ns-resize;touch-action:none;user-select:none}
+.scratch-heading button:hover,.scratch-resize:hover,.scratch-paper .is-dragging{background:#fff0b8}
+.scratch-body{border-top:1px solid #eadfaa;padding:12px 12px 0}
+.scratch-body .scratch-text{display:block;box-sizing:border-box;min-width:0;width:100%;height:240px;min-height:120px;max-height:1200px;padding:10px 11px;margin:0;border:1px solid #e4d69c;border-radius:8px;resize:none;overflow:auto;background:#fffbea;color:#51451f;font:400 14px/1.6 var(--mono-font)}
+.scratch-text::placeholder{color:#918259;opacity:1}
+.scratch-body .scratch-resize{display:block;width:100%;height:28px;min-height:0;margin:0;padding:0;border:0;border-radius:0;background:transparent;color:#9a8546;font:700 22px/1 var(--ui-font);cursor:ns-resize;touch-action:none;user-select:none}
+.tutorial-steps{display:grid;gap:12px;list-style:none;margin:0 0 22px;padding:0;max-height:360px;overflow:auto;position:relative;font:400 14px/1.55 var(--ui-font)}.tutorial-steps .worked-step.active{border-color:var(--up-maroon);background:#faf1f2}.tutorial-steps .worked-step.accepted{border-color:#ead59f;background:#fff8e6}.tutorial-steps .step-title{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:4px 10px}.tutorial-steps .step-title h4{flex:1;min-width:0}.tutorial-steps .step-status{font:400 11px/1.5 var(--ui-font);color:var(--muted);white-space:nowrap}.tutorial-steps .worked-expression:last-child{margin-bottom:0}.tutorial-final{margin:0 0 22px}.tutorial-final .worked-final{margin-top:0}
 button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #edae3d;outline-offset:3px;box-shadow:none}
 @media(max-width:950px){.practice-layout{grid-template-columns:minmax(0,1fr) 270px}.practice-settings{gap:16px}}
-@media(max-width:760px){body>main{padding:16px 17px 25px}.practice-layout{grid-template-columns:minmax(0,1fr)}.practice-settings{padding:18px}.practice-stats{flex-basis:100%;margin:0;padding-top:14px;border-top:1px solid var(--line);justify-content:space-between;gap:12px}.practice-stat>strong,.practice-stat>b,.practice-stat>.stat-value{font-size:22px}.practice-stat>span,.practice-stat>.stat-label{font-size:9px}.practice-layout>.card,.notes-sidebar>.card,.practice-layout>.notes-sidebar.card{padding:20px}.question-toolbar .generate-question{max-width:100%}}
-@media(max-width:760px){.practice-timer .practice-round-note{flex:1 1 150px}.practice-answer-row{flex-wrap:wrap}.practice-answer .practice-answer-input{flex-basis:100%}.practice-answer-row>.practice-primary{width:100%}.practice-footer{flex-direction:column;gap:6px}}
+@media(max-width:760px){body>main{padding:16px 17px 25px}.practice-layout{grid-template-columns:minmax(0,1fr)}.practice-settings{padding:18px}.practice-stats{flex-basis:100%;margin:0;padding-top:14px;border-top:1px solid var(--line);justify-content:space-between;gap:12px}.practice-stat>strong,.practice-stat>b,.practice-stat>.stat-value{font-size:22px}.practice-stat>span,.practice-stat>.stat-label{font-size:9px}.practice-layout>.card,.notes-sidebar>.card,.practice-layout>.notes-sidebar.card,.practice-right-column>.notes-sidebar.card{padding:20px}.question-toolbar .generate-question{max-width:100%}}
+@media(max-width:760px){.practice-timer .practice-round-note{flex:1 1 150px}.practice-answer-row{flex-wrap:wrap}.practice-answer .practice-answer-input{flex-basis:100%}.practice-answer-row>.practice-primary{width:100%}}
 </style></head>
-<body><header class="simulator-banner"><div class="banner-wrap"><div class="banner-copy"><h1>Binary Arithmetic Simulator</h1><p class="banner-subtitle"><span class="banner-mainline">Practice n-bit addition and two’s-complement subtraction, keeping the result at the selected width.</span><span class="banner-course">Designed for digital design fundamentals practice.</span><span class="banner-credit">Conceptualized by Adelson Chua</span></p></div></div></header>
-<main class="container"><section class="toolbar practice-settings" aria-label="Practice settings"><div class="field mode-field"><label>Practice mode</label><div class="mode-tabs" role="group" aria-label="Practice mode"><button data-mode="relaxed" aria-pressed="true">Relaxed</button><button data-mode="pressure" aria-pressed="false">Pressure</button><button data-mode="tutorial" aria-pressed="false">Tutorial</button></div></div><div class="field"><label for="operation">Operation</label><select class="config" id="operation"><option value="mixed">Add & subtract</option><option value="add">Addition</option><option value="sub">Subtraction</option></select></div><div class="field"><label for="representation">Addition operands</label><select class="config" id="representation"><option value="signed">Two’s complement</option><option value="unsigned">Unsigned</option><option value="mixed">Mixed representations</option></select></div><div class="field"><label for="width">Width</label><select class="config" id="width"><option value="4">4 bits</option><option value="6">6 bits</option><option value="8">8 bits</option><option value="mixed">Mixed · 4 / 6 / 8 bits</option></select></div><div class="stats practice-stats" aria-label="Practice statistics"><div class="stat practice-stat"><strong id="score">0</strong><span>Solved</span></div><div class="stat practice-stat"><strong id="accuracy">—</strong><span>Accuracy</span></div><div class="stat practice-stat"><strong id="streak">0</strong><span>Streak</span></div></div>
+<body><header class="simulator-banner"><div class="banner-wrap"><div class="banner-copy"><h1>Binary Arithmetic Skill Trainer</h1><p class="banner-subtitle"><span class="banner-mainline">Practice binary addition and two’s-complement subtraction, one bit at a time.</span><span class="banner-course">Designed for digital design fundamentals practice.</span><span class="banner-credit">Conceptualized by Adelson Chua</span></p></div></div></header>
+<main class="container"><section class="toolbar practice-settings" aria-label="Practice settings"><div class="field mode-field"><label>Practice mode</label><div class="mode-tabs" role="group" aria-label="Practice mode"><button data-mode="tutorial" aria-pressed="false">Tutorial</button><button data-mode="relaxed" aria-pressed="true">Practice</button><button data-mode="pressure" aria-pressed="false">Pressure</button></div></div><div class="field"><label for="operation">Operation</label><select class="config" id="operation"><option value="add">Add</option><option value="sub">Subtract</option><option value="mixed">Add & subtract</option></select></div><div class="field"><label for="representation">Addition operands</label><select class="config" id="representation"><option value="signed">Two’s complement</option><option value="unsigned">Unsigned</option><option value="mixed">Mixed representations</option></select></div><div class="field"><label for="width">Width</label><select class="config" id="width"><option value="4">4 bits</option><option value="6">6 bits</option><option value="8">8 bits</option><option value="mixed">Mixed · 4 / 6 / 8 bits</option></select></div><div class="stats practice-stats" aria-label="Practice statistics"><div class="stat practice-stat"><strong id="score">0</strong><span>Solved</span></div><div class="stat practice-stat"><strong id="accuracy">—</strong><span>Accuracy</span></div><div class="stat practice-stat"><strong id="streak">0</strong><span>Streak</span></div></div>
 <div class="roundbar practice-timer practice-round" id="roundbar" hidden><strong class="practice-time" id="timer" aria-label="Seconds remaining">120s</strong><span class="practice-round-note" id="roundnote">Start a round when you are ready. Each solved question earns one point.</span><label for="duration">Round</label><select id="duration"><option value="60">60 seconds</option><option value="120" selected>120 seconds</option><option value="180">180 seconds</option></select><button class="primary practice-primary" id="startRound">Start round</button></div>
 <div id="summary" class="round-summary practice-summary practice-round" role="status" hidden></div></section>
-<div class="layout practice-layout"><section class="card"><div class="question-head question-toolbar"><div><div class="question-number" id="questionNo">Question 01</div><h2 id="taskTitle">Calculate the result</h2></div><button id="generate" class="primary generate-question">Generate a question</button></div><div id="problem" class="problem practice-question-surface"></div><ol id="tutorialSteps" class="tutorial-steps" aria-label="Tutorial steps" hidden></ol>
+<div class="layout practice-layout"><section class="card"><div class="question-head question-toolbar"><div><div class="question-number" id="questionNo">Question 01</div><h2 id="taskTitle">Calculate the result</h2></div><button id="generate" class="primary generate-question">Generate a question</button></div><div id="problem" class="problem practice-question-surface"></div><ol id="tutorialSteps" class="tutorial-steps" aria-label="Tutorial steps" role="list" hidden></ol><div id="tutorialFinal" class="tutorial-final" hidden></div>
 <form id="answerForm" class="answer-form practice-answer" autocomplete="off"><label class="practice-answer-label" for="answer" id="answerLabel">Your answer</label><div class="answer-row practice-answer-row"><input class="practice-answer-input" id="answer" type="text" spellcheck="false" autocapitalize="characters" aria-describedby="answerHelp feedback"><button id="check" class="primary practice-primary" type="submit">Check answer ↵</button></div><div class="help practice-answer-help" id="answerHelp"></div></form>
-<div id="feedback" class="feedback" role="status" aria-live="polite">Type your answer and press Enter.</div><div class="actions practice-actions"><button id="hint">Show a hint</button><button id="reveal">Show worked answer</button></div>
+<div id="feedback" class="feedback" role="status" aria-live="polite">Type your answer and press Enter.</div><div class="actions practice-actions"><button id="hint">Show a hint</button><button id="reveal">Show worked answer</button></div><div class="question-hints" id="hints" aria-live="polite"></div>
 </section>
-<aside class="card notes-sidebar" aria-label="Study notes"><div class="eyebrow">Study notes</div><h2 id="guideTitle">Method</h2><div class="notes-method" id="guideBody"></div><div class="steps" id="hints"></div><p class="notes-help">Use Show a hint for extra guidance.</p><details class="notes-reference"><summary>Quick reference</summary><p>Unsigned n-bit range: 0 through 2<sup>n</sup> − 1. Signed two’s-complement range: −2<sup>n−1</sup> through 2<sup>n−1</sup> − 1.</p><p>Subtraction always uses two’s-complement operands. To compute A − B, invert every bit of B, add 1 at width n, and add the resulting word to A.</p><p>Every answer contains exactly n bits. Keep the low n bits of the result. Arithmetic wraps modulo 2<sup>n</sup>, including when the exact result lies outside the available range.</p><p>The Addition operands setting applies to addition questions. Subtraction always uses signed two’s-complement notation.</p></details></aside></div>
-<footer class="practice-footer"><span><span class="key">Enter</span> checks your answer. Press it again after success for the next question.</span><span>Works offline · No account required</span></footer></main><noscript>This practice simulator needs JavaScript enabled.</noscript>
+<div class="practice-right-column"><aside class="card notes-sidebar" aria-label="Study notes"><div class="eyebrow">Study notes</div><h2 id="guideTitle">Method</h2><div class="notes-method" id="guideBody"></div><p class="notes-help" id="notesHelp">Use Show a hint for extra guidance.</p><details class="notes-reference"><summary>Quick reference</summary><p>Unsigned n-bit range: 0 through 2<sup>n</sup> − 1. Signed two’s-complement range: −2<sup>n−1</sup> through 2<sup>n−1</sup> − 1.</p><p>Subtraction always uses two’s-complement operands. To compute A − B, invert every bit of B, add 1 at width n, and add the resulting word to A.</p><p>Keep the low n result bits, including leading zeros. For unsigned addition, a leading carry of 1 may also be included in the final answer. Signed addition and subtraction require exactly n bits.</p><p>The Addition operands setting applies to addition questions. Subtraction always uses signed two’s-complement notation.</p></details></aside><section class="scratch-paper" id="scratchPaper" aria-label="Scratch paper">
+<div class="scratch-heading"><button type="button" class="scratch-toggle" id="scratchToggle" aria-expanded="false" aria-controls="scratchBody"><span>Scratch paper</span><span class="scratch-chevron" aria-hidden="true">▸</span></button><button type="button" class="scratch-move" id="scratchMove" aria-label="Move scratch paper vertically" title="Drag vertically, or use the Up and Down arrow keys">↕</button></div>
+<div class="scratch-body" id="scratchBody" hidden><textarea id="scratchText" class="scratch-text" aria-label="Scratch notes" placeholder="Write your temporary work here" spellcheck="false"></textarea><button type="button" class="scratch-resize" id="scratchResize" aria-label="Resize scratch paper vertically" title="Drag to resize, or use the Up and Down arrow keys"><span aria-hidden="true">━</span></button></div>
+</section></div></div>
+</main><noscript>This practice simulator needs JavaScript enabled.</noscript>
 <script>
 'use strict';
+
+function tutorialStepMarkup(index,title,expression='',status='Next',kind=''){
+  const safe=value=>String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  const state=kind==='accepted'?'accepted':kind==='active'?'active':'';
+  return '<li class="worked-step '+state+'"'+(state==='active'?' aria-current="step"':'')+'><span class="worked-number" aria-hidden="true">'+safe(index)+'</span><div class="worked-content"><div class="step-title"><h4>'+safe(title)+'</h4><span class="step-status">'+safe(status)+'</span></div>'+(expression?'<code class="worked-expression">'+safe(expression)+'</code>':'')+'</div></li>';
+}
+function finalAnswerMarkup(answer,note=''){
+  const safe=value=>String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  return '<div class="worked-final" aria-label="Final answer"><h4>Final answer</h4><code class="worked-final-answer">'+safe(answer)+'</code>'+(note?'<p>'+safe(note)+'</p>':'')+'</div>';
+}
+function workedSolutionMarkup(steps,finalAnswer,finalNote='',status='This question is revealed and earns no solve.'){
+  const safe=value=>String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  const items=steps.map((step,index)=>'<li class="worked-step"><span class="worked-number" aria-hidden="true">'+(index+1)+'</span><div class="worked-content"><h4>'+safe(step.title)+'</h4>'+(step.expression?'<code class="worked-expression">'+safe(step.expression)+'</code>':'')+(step.paragraphs||[]).map(text=>'<p>'+safe(text)+'</p>').join('')+'</div></li>').join('');
+  return '<section class="worked-solution" aria-label="Worked solution"><header class="worked-heading"><h3>Worked solution</h3><p>'+safe(status)+'</p></header><ol class="worked-steps" aria-label="Solution steps" role="list">'+items+'</ol><div class="worked-final" aria-label="Final answer"><h4>Final answer</h4><code class="worked-final-answer">'+safe(finalAnswer)+'</code>'+(finalNote?'<p>'+safe(finalNote)+'</p>':'')+'</div></section>';
+}
+
 const $ = id => document.getElementById(id);
 const rand = (a,b) => a + Math.floor(Math.random() * (b-a+1));
 function shuffle(items){for(let i=items.length-1;i>0;i--){const j=rand(0,i);[items[i],items[j]]=[items[j],items[i]];}return items;}
@@ -367,11 +411,15 @@ function makeArithmeticQuestion(width,signed,op){
   let a=Math.floor(code/count),b=code%count;if(op==='add'&&rand(0,1))[a,b]=[b,a];
   const q=arithmeticQuestion(a,b,width,signed,op);q.practiceCategory=category;return q;
 }
+function unsignedAddition(q){return q.op==='add'&&!q.signed;}
+function hasUnsignedCarry(q){return unsignedAddition(q)&&q.aRaw+q.bRaw>=2**q.width;}
+function arithmeticAnswerHelp(q){return 'Enter the low '+q.width+' result bits, including leading zeros.'+(unsignedAddition(q)?' You may include a leading carry of 1 when it occurs.':' Keep exactly '+q.width+' bits.');}
 function arithmeticCheck(text,q){
   const bits=text.trim().replace(/[\s_]/g,'');
-  if(!/^[01]+$/.test(bits))return {syntax:true,message:'Enter only the '+q.width+' result bits, such as '+('0'.repeat(q.width))+'. Spaces and underscores are accepted.'};
-  if(bits.length!==q.width)return {syntax:true,message:'Use exactly '+q.width+' bits, including leading zeros when needed.'};
-  if(bits===q.answer)return {correct:true,message:'Correct. '+q.a+(q.op==='add'?' + ':' − ')+q.b+' = '+q.exact+'. The '+q.width+'-bit result is '+q.answer+'.'+(q.outOfRange?' Keep the low '+q.width+' bits when the exact result exceeds the available range.':'')};
+  if(!/^[01]+$/.test(bits))return {syntax:true,message:'Enter binary result bits. Spaces and underscores are accepted. '+arithmeticAnswerHelp(q)};
+  const extended=hasUnsignedCarry(q)&&bits.length===q.width+1&&bits[0]==='1';
+  if(bits.length!==q.width&&!extended)return {syntax:true,message:arithmeticAnswerHelp(q)};
+  if(bits===q.answer||extended&&bits==='1'+q.answer)return {correct:true,answer:bits,message:'Correct. '+q.a+(q.op==='add'?' + ':' − ')+q.b+' = '+q.exact+'. '+(extended?'Including the leading carry, the unsigned sum is '+bits+'.':'The '+q.width+'-bit result is '+q.answer+'.'+(hasUnsignedCarry(q)?' The full unsigned sum is 1'+q.answer+'.':q.outOfRange?' Keep the low '+q.width+' bits when the exact result exceeds the available range.':''))};
   return {correct:false,message:'Recheck the result bits. '+(q.op==='sub'?'Invert every bit of B, add 1, then add that word to A and keep '+q.width+' bits.':'Add from right to left and keep the low '+q.width+' bits.')};
 }
 function subtractionSteps(q){
@@ -400,38 +448,73 @@ function additionSteps(q){
     steps.push({title:'Add column '+(column+1)+' from the right',expression:a+' + '+b+' + incoming carry '+carry,answer:result,width:column+1,placeholder:'0'.repeat(column+1),help:'Find this column’s result bit and place it before the accepted lower bits. Enter the low '+(column+1)+' result bit'+(column?'s':'')+'.',hint:'A column total of 0 or 2 gives result bit 0; a total of 1 or 3 gives bit 1. Keep the accepted lower bits in place.'});
     carry=Math.floor(total/2);
   }
+  if(unsignedAddition(q))steps[steps.length-1].help+=' You may include a leading carry of 1 in this final answer when it occurs.';
   return steps;
 }
 function arithmeticSteps(q){return q.op==='sub'?subtractionSteps(q):additionSteps(q);}
 function checkArithmeticStep(text,q,index){
   if(q.op==='sub')return checkSubtractionStep(text,q,index);
   const step=additionSteps(q)[index];if(!step)return {syntax:true,message:'Generate an addition question to begin the tutorial.'};
+  if(index===q.width-1)return arithmeticCheck(text,q);
   const bits=text.trim().replace(/[\s_]/g,'');
   if(!/^[01]+$/.test(bits)||bits.length!==step.width)return {syntax:true,message:'Enter exactly '+step.width+' result bit'+(step.width===1?'':'s')+', including leading zeros. Spaces and underscores are accepted.'};
   const correct=bits===step.answer;
   return {correct,message:correct?(index===q.width-1?arithmeticCheck(bits,q).message:'Correct. The low '+step.width+' result bit'+(step.width===1?' is':'s are')+' complete. Continue one column to the left.'):'Recheck this column and the accepted lower bits. '+step.hint};
 }
+function binaryColumns(aRaw,bRaw,width){
+  const columns=[];let carry=0,result='';
+  for(let i=0;i<width;i++){
+    const a=(aRaw>>i)&1,b=(bRaw>>i)&1,total=a+b+carry,bit=total%2,nextCarry=Math.floor(total/2);
+    result=bit+result;columns.push({a,b,carry,total,bit,nextCarry,result});carry=nextCarry;
+  }
+  return columns;
+}
+function columnWorking(column,index){return 'Column '+(index+1)+' from the right: '+column.a+' + '+column.b+' + incoming carry '+column.carry+' = '+column.total+'. Write '+column.bit+' in this column and carry '+column.nextCarry+' to the left. The low '+(index+1)+' result bit'+(index?'s are ':' is ')+column.result+'.';}
+function arithmeticWorking(q,index){
+  if(q.op==='add')return columnWorking(binaryColumns(q.aRaw,q.bRaw,q.width)[index],index);
+  const steps=subtractionSteps(q);
+  if(index===0){const b=bitString(q.bRaw,q.width);return 'B is '+b+'. From left to right, change '+[...b].map(bit=>bit+' → '+(bit==='0'?'1':'0')).join(', ')+'. Keep the same bit positions.';}
+  const left=index===1?parseInt(steps[0].answer,2):q.aRaw,right=index===1?1:parseInt(steps[1].answer,2);
+  return 'Add '+bitString(left,q.width)+' + '+bitString(right,q.width)+'. '+columnWorking(binaryColumns(left,right,q.width)[0],0)+' Continue through all '+q.width+' columns and keep the low '+q.width+' bits.';
+}
 function arithWorked(q){
- const result=[],w=q.width;
- result.push('Interpret the operands: A = '+q.a+' and B = '+q.b+'. The exact result is '+q.a+(q.op==='add'?' + ':' − ')+q.b+' = '+q.exact+'.');
- if(q.op==='sub'){const bbits=bitString(q.b,w),inverted=[...bbits].map(b=>b==='0'?'1':'0').join(''),negated=bitString(-q.b,w);result.push('Form the two’s complement of B at width '+w+': invert '+bbits+' to '+inverted+', then add 1 to get '+negated+'.');result.push('Add '+bitString(q.a,w)+' + '+negated+' and keep '+w+' bits: '+q.answer+'.');}
- else result.push('Add the operands and keep the low '+w+' result bits: '+q.answer+'.');
- if(q.outOfRange)result.push('The exact result is outside the '+w+'-bit '+(q.signed?'signed':'unsigned')+' range. The required word wraps modulo '+2**w+' and represents '+(q.signed?signedValue(parseInt(q.answer,2),w):parseInt(q.answer,2))+'.');
- return result;
+  const result=[],w=q.width,a=bitString(q.aRaw,w),b=bitString(q.bRaw,w);let second=q.bRaw;
+  result.push('Start with A = '+a+' and B = '+b+'. '+(q.op==='sub'?'To calculate A − B, form the two’s complement of B using invert + 1.':'Add the operands from right to left, starting with carry 0.'));
+  if(q.op==='sub'){
+    const inverted=(2**w-1)^q.bRaw;second=mod(-q.bRaw,2**w);
+    result.push('Invert every bit of B: '+b+' → '+bitString(inverted,w)+'.');
+    binaryColumns(inverted,1,w).forEach((column,i)=>result.push('Add 1 to the inverted word. '+columnWorking(column,i)));
+    result.push('Keep the low '+w+' bits after adding 1: '+bitString(second,w)+'. This is the two’s complement of B. Now add it to A: '+a+' + '+bitString(second,w)+'.');
+  }
+  binaryColumns(q.aRaw,second,w).forEach((column,i)=>result.push(columnWorking(column,i)));
+  result.push('Final '+w+'-bit answer: '+q.answer+'. '+(q.signed?'Keep exactly '+w+' bits.':'Include every result bit, including leading zeros.'));
+  if(hasUnsignedCarry(q))result.push('The full unsigned sum includes a leading carry of 1: 1'+q.answer+'. Both '+q.answer+' and 1'+q.answer+' are accepted.');
+  result.push('Decimal check: '+q.a+(q.op==='add'?' + ':' − ')+q.b+' = '+q.exact+'.'+(q.outOfRange?' The exact result exceeds the selected '+w+'-bit '+(q.signed?'signed':'unsigned')+' range; the low '+w+' bits are '+q.answer+'.':''));
+  return result;
+}
+function arithmeticWorkedLayout(q){
+  const steps=arithWorked(q).filter(text=>!text.startsWith('Final ')&&!text.startsWith('The full unsigned sum')).map(text=>{
+    const column=/Column (\d+) from the right/.exec(text);
+    const title=column?(text.startsWith('Add 1')?'Add 1':'Add the operands')+' · column '+column[1]:text.startsWith('Start with')?'Prepare the operands':text.startsWith('Invert')?'Invert B':text.startsWith('Keep the low')?'Use the two’s complement of B':'Check in decimal';
+    return {title,paragraphs:[text]};
+  });
+  return {steps,answer:q.answer,note:hasUnsignedCarry(q)?'The full unsigned sum '+('1'+q.answer)+' is also accepted.':'Keep all '+q.width+' result bits, including leading zeros.'};
 }
 const app={id:'binary-arithmetic',
  tutorialSteps:arithmeticSteps,
+ tutorialWorking:arithmeticWorking,
  checkTutorialStep:checkArithmeticStep,
  settings(){$('representation').disabled=$('operation').value==='sub';},
  generate:()=>makeArithmeticQuestion($('width').value==='mixed'?'mixed':Number($('width').value),$('representation').value==='mixed'?'mixed':$('representation').value==='signed',$('operation').value),
- render(q){$('taskTitle').textContent=q.op==='add'?'Add the binary operands':'Subtract using two’s complement';$('problem').innerHTML='<div class="eyebrow">'+q.width+'-bit '+(q.signed?'two’s complement':'unsigned')+' operands</div><div class="operation"><div>'+bitString(q.aRaw,q.width)+'</div><div>'+(q.op==='add'?'+ ':'− ')+bitString(q.bRaw,q.width)+'</div><div>'+'?'.repeat(q.width)+'</div></div><div class="badge-row"><span>Keep '+q.width+' bits</span><span>'+(q.signed?'Signed two’s complement':'Unsigned addition')+'</span></div>';$('answerLabel').textContent='Your '+q.width+'-bit result';$('answer').placeholder='0'.repeat(q.width);$('answerHelp').textContent='Enter exactly '+q.width+' result bits. Keep the low '+q.width+' bits, including leading zeros when needed.';},
+ render(q){$('taskTitle').textContent=q.op==='add'?'Add the binary operands':'Subtract using two’s complement';$('problem').innerHTML='<div class="eyebrow">'+q.width+'-bit '+(q.signed?'two’s complement':'unsigned')+' operands</div><div class="operation"><div>'+bitString(q.aRaw,q.width)+'</div><div>'+(q.op==='add'?'+ ':'− ')+bitString(q.bRaw,q.width)+'</div><div>'+'?'.repeat(q.width)+'</div></div><div class="badge-row"><span>'+q.width+' result bits'+(unsignedAddition(q)?' · optional leading carry':'')+'</span><span>'+(q.signed?'Signed two’s complement':'Unsigned addition')+'</span></div>';$('answerLabel').textContent=unsignedAddition(q)?'Your binary sum':'Your '+q.width+'-bit result';$('answer').placeholder='0'.repeat(q.width);$('answerHelp').textContent=arithmeticAnswerHelp(q);},
  check:arithmeticCheck,
- guide(q){return '<p>'+(q.signed?'To form the two’s complement, invert every bit and add 1. Keep exactly '+q.width+' bits.':'Each operand is unsigned and ranges from 0 to '+(2**q.width-1)+'.')+'</p><ol class="method-steps"><li>'+(q.op==='sub'?'For A − B, invert every bit of B and add 1 at width '+q.width+'.':'Add from right to left, carrying into the next column.')+'</li><li>'+(q.op==='sub'?'Add A to the two’s-complement word you formed.':'Continue through all '+q.width+' columns.')+'</li><li>Keep the low '+q.width+' result bits, including leading zeros.</li></ol>';},
- hints(q){return [(q.signed?'A leading 1 indicates a negative operand. To find its magnitude, invert every bit and add 1, keeping '+q.width+' bits. Read that word as an unsigned value.':'Read each operand as an unsigned binary value.'),q.op==='sub'?'Invert every bit of B and add 1 at width '+q.width+'. Then add that word to A.':'For each column: sum 0 → bit 0, sum 1 → bit 1, sum 2 → bit 0 carry 1, sum 3 → bit 1 carry 1.','Write exactly '+q.width+' bits. Keep the low '+q.width+' bits of the sum, including leading zeros.'];},
+ guide(q){return '<p>'+(q.signed?'To form the two’s complement, invert every bit and add 1. Keep exactly '+q.width+' bits.':'Each operand is unsigned and ranges from 0 to '+(2**q.width-1)+'.')+'</p><ol class="method-steps"><li>'+(q.op==='sub'?'For A − B, invert every bit of B and add 1 at width '+q.width+'.':'Add from right to left, carrying into the next column.')+'</li><li>'+(q.op==='sub'?'Add A to the two’s-complement word you formed.':'Continue through all '+q.width+' columns.')+'</li><li>'+arithmeticAnswerHelp(q)+'</li></ol>';},
+ hints(q){return [(q.signed?'A leading 1 indicates a negative operand. To find its magnitude, invert every bit and add 1, keeping '+q.width+' bits. Read that word as an unsigned value.':'Read each operand as an unsigned binary value.'),q.op==='sub'?'Invert every bit of B and add 1 at width '+q.width+'. Then add that word to A.':'For each column: sum 0 → bit 0, sum 1 → bit 1, sum 2 → bit 0 carry 1, sum 3 → bit 1 carry 1.',arithmeticAnswerHelp(q)];},
  checkpoint(q){return {prompt:'Checkpoint: what is operand A in decimal?',check:s=>/^-?\d+$/.test(s.trim())&&Number(s)===q.a,success:'Correct: A = '+q.a+'. Decode B in the same way, then calculate the result.',help:q.signed?'For a leading 1, invert every bit and add 1 to find the magnitude, then apply a minus sign. For a leading 0, read the word as unsigned.':'Add the place values for each 1 bit.'};},
  solution:q=>q.answer,
  worked:arithWorked,
- test:{mod,bitString,signedValue,arithmeticQuestion,makeArithmeticQuestion,arithmeticCheck,subtractionSteps,checkSubtractionStep,additionSteps,arithmeticSteps,checkArithmeticStep,arithmeticCategory,resetGenerationHistory:()=>{questionDecks.clear();arithmeticDecks.clear();}}
+ workedLayout:arithmeticWorkedLayout,
+ test:{mod,bitString,signedValue,arithmeticQuestion,makeArithmeticQuestion,arithmeticCheck,unsignedAddition,hasUnsignedCarry,subtractionSteps,checkSubtractionStep,additionSteps,arithmeticSteps,checkArithmeticStep,arithmeticWorking,binaryColumns,arithWorked,arithmeticCategory,resetGenerationHistory:()=>{questionDecks.clear();arithmeticDecks.clear();}}
 };
 
 const state={mode:'relaxed',q:null,number:0,score:0,attempts:0,correct:0,streak:0,skipped:0,solved:false,revealed:false,hadError:false,hints:0,tutorialStep:0,running:false,ended:false,deadline:0};
@@ -440,15 +523,15 @@ let best=0; try{best=Number(localStorage.getItem(storageKey))||0}catch{}
 function feedback(text,kind=''){ $('feedback').textContent=text; $('feedback').className='feedback '+kind; }
 function stats(){ $('score').textContent=state.score; $('accuracy').textContent=state.attempts?Math.round(100*state.correct/state.attempts)+'%':'—'; $('streak').textContent=state.streak; }
 function resetStats(){Object.assign(state,{score:0,attempts:0,correct:0,streak:0,skipped:0});stats();}
-function syncPressureControls(){const locked=state.mode==='pressure'&&!state.running;$('answer').disabled=locked;$('check').disabled=locked;$('generate').disabled=locked;if(locked){$('hint').disabled=true;$('reveal').disabled=true;}}
+function syncPressureControls(){const pressure=state.mode==='pressure',locked=pressure&&!state.running;$('hint').hidden=pressure;if(pressure)$('hint').disabled=true;$('notesHelp').textContent=pressure?'Use Show worked answer to review the solution.':'Use Show a hint for extra guidance.';$('answer').disabled=locked;$('check').disabled=locked;$('generate').disabled=locked;if(locked){$('hint').disabled=true;$('reveal').disabled=true;}}
 function generate(focus=true){
   if(state.running && !tick())return;
   if(state.q && !state.solved && !state.revealed){state.skipped++;state.streak=0;}
-  state.q=app.generate();state.number++;restartQuestion(focus);
+  state.q=app.generate();state.number++;window.practiceScratch?.reset();restartQuestion(focus);
 }
 function restartQuestion(focus=false){
   if(!state.q){generate(focus);return;}
-  Object.assign(state,{solved:false,revealed:false,hadError:false,hints:0,tutorialStep:0});
+  Object.assign(state,{solved:false,revealed:false,hadError:false,hints:0,tutorialStep:0,acceptedAnswer:''});
   $('questionNo').textContent='Question '+String(state.number).padStart(2,'0');
   $('answer').value='';$('answer').readOnly=false;$('check').textContent='Check answer ↵';$('hints').innerHTML='';$('reveal').disabled=false;$('hint').disabled=false;
   app.render(state.q);renderTutorial();renderGuide();stats();syncPressureControls();
@@ -457,24 +540,32 @@ function restartQuestion(focus=false){
 }
 function guidedSteps(){return state.mode==='tutorial'&&app.tutorialSteps?app.tutorialSteps(state.q):[];}
 function renderTutorial(){
-  const steps=guidedSteps(),list=$('tutorialSteps');list.hidden=!steps.length;list.innerHTML='';if(!steps.length)return;
-  list.innerHTML=steps.map((step,i)=>{
+  const steps=guidedSteps(),list=$('tutorialSteps'),final=$('tutorialFinal');list.hidden=!steps.length||state.revealed;list.innerHTML='';final.hidden=true;final.innerHTML='';if(list.hidden)return;
+  if(state.solved){const solution=app.workedLayout(state.q);final.hidden=false;final.innerHTML=finalAnswerMarkup(app.id==='binary-arithmetic'?state.acceptedAnswer||solution.answer:solution.answer,solution.note);}
+  list.innerHTML=steps.slice(0,Math.min(state.tutorialStep+1,steps.length)).map((step,i)=>{
     const accepted=i<state.tutorialStep,current=i===state.tutorialStep&&!state.solved&&!state.revealed;
-    if(!state.solved&&!state.revealed&&i>state.tutorialStep+1)return '';
-    const kind=state.revealed?'':accepted?(state.solved&&i===steps.length-1?'complete':'accepted'):current?'active':'';
-    const status=state.revealed?'Worked answer':accepted?'Correct':current?'Current step':'Next';
-    const bits=accepted||state.revealed?step.expression+' = '+step.answer:current?step.expression:'';
-    return '<li class="'+kind+'"'+(current?' aria-current="step"':'')+'><div class="step-title"><strong>'+escapeHTML('Step '+(i+1)+' · '+step.title)+'</strong><span class="step-status">'+status+'</span></div>'+(bits?'<code class="step-bits">'+escapeHTML(bits)+'</code>':'')+'</li>';
+    const kind=accepted?'accepted':current?'active':'';
+    const status=accepted?'Accepted':'Step '+(i+1)+' of '+steps.length;
+    const acceptedWord=state.solved&&i===steps.length-1?state.acceptedAnswer||step.answer:step.answer;
+    const bits=accepted||state.revealed?step.expression+' = '+acceptedWord:current?step.expression:'';
+    return tutorialStepMarkup(i+1,step.title,bits,status,kind);
   }).join('');
   list.scrollTop=list.scrollHeight;
-  if(state.solved||state.revealed){$('answerLabel').textContent='Completed answer';$('answer').value=state.q.answer;$('answerHelp').textContent='Press Enter for the next question.';return;}
+  if(state.solved||state.revealed){$('answerLabel').textContent='Step '+steps.length+' of '+steps.length+' · Complete';$('answer').value=state.solved?state.acceptedAnswer||state.q.answer:state.q.answer;$('answerHelp').textContent='Press Enter for the next question.';return;}
   const step=steps[state.tutorialStep];$('answerLabel').textContent='Step '+(state.tutorialStep+1)+' of '+steps.length+' · '+step.title;
   $('answerHelp').textContent=step.help;$('answer').placeholder=step.placeholder||'Type this step’s answer';$('check').textContent='Check step ↵';
 }
 function renderGuide(){$('guideBody').innerHTML=app.guide(state.q);}
 function showHint(){
-  if(state.mode==='pressure' && (!state.running || !tick()))return;
-  const steps=guidedSteps();if(steps.length){const step=steps[state.tutorialStep];if(!step||state.revealed||state.hints)return;const el=document.createElement('div');el.className='step';el.textContent=step.hint;$('hints').append(el);state.hints=1;$('hint').disabled=true;return;}
+  if(state.mode==='pressure'||state.solved||state.revealed)return;
+  const steps=guidedSteps();
+  if(steps.length){
+    const step=steps[state.tutorialStep];if(!step||state.hints>=3)return;
+    const levels=[step.hint,app.tutorialWorking(state.q,state.tutorialStep),'Step answer: '+step.answer+'. Press Enter to check this step.'];
+    const level=state.hints++,el=document.createElement('div'),title=document.createElement('strong'),body=document.createElement('p');el.className='step';title.textContent='Hint '+(level+1)+' of 3';body.textContent=levels[level];el.append(title,body);$('hints').append(el);
+    $('hint').disabled=state.hints>=3;
+    if(level===2){$('answer').value=step.answer;$('answer').focus({preventScroll:true});}return;
+  }
   const hints=app.hints(state.q);
   if(state.hints<hints.length){const el=document.createElement('div');el.className='step';el.textContent=hints[state.hints++];$('hints').append(el);}
   $('hint').disabled=state.hints>=hints.length;
@@ -491,7 +582,7 @@ function check(e){
     state.correct++;
     if(step){state.tutorialStep++;state.hints=0;$('hints').innerHTML='';$('hint').disabled=false;}
     if(step&&state.tutorialStep<steps.length){$('answer').value='';renderTutorial();feedback(result.message+' Continue with step '+(state.tutorialStep+1)+'.','progress');stats();$('answer').focus();return;}
-    state.solved=true;state.score++;state.streak=state.hadError?0:state.streak+1;$('answer').readOnly=true;$('check').textContent='Next question ↵';$('reveal').disabled=true;renderTutorial();if(step)$('hint').disabled=true;feedback(result.message+' Press Enter for the next question.','good');
+    state.acceptedAnswer=result.answer||state.q.answer;if(result.answer)$('answer').value=result.answer;state.solved=true;state.score++;state.streak=state.hadError?0:state.streak+1;$('answer').readOnly=true;$('check').textContent='Next question ↵';$('reveal').disabled=true;renderTutorial();if(step)$('hint').disabled=true;feedback(result.message+' Press Enter for the next question.','good');
   }
   else{state.hadError=true;state.streak=0;feedback(result.message,'bad');$('answer').select();}
   stats();
@@ -499,10 +590,11 @@ function check(e){
 function reveal(){
   if(state.mode==='pressure'&&(!state.running||!tick()))return;
   if(state.solved||state.revealed)return;
-  state.revealed=true;state.streak=0;state.skipped++;$('answer').readOnly=true;$('check').textContent='Next question ↵';$('reveal').disabled=true;
-  if(guidedSteps().length){$('answer').value=app.solution(state.q);$('hint').disabled=true;renderTutorial();}
-  feedback('Worked answer: '+app.solution(state.q)+'. This question earns no point. Press Enter for the next question.');
-  $('hints').innerHTML='';for(const text of app.worked(state.q)){const div=document.createElement('div');div.className='step';div.textContent=text;$('hints').append(div);}stats();
+  state.revealed=true;state.streak=0;state.skipped++;$('answer').value=state.q.answer;$('answer').readOnly=true;$('hint').disabled=true;$('check').textContent='Next question ↵';$('reveal').disabled=true;
+  if(guidedSteps().length){renderTutorial();$('answerLabel').textContent='Completed answer';$('answerHelp').textContent='Press Enter for the next question.';}
+  feedback('The step-by-step solution is shown below. This question earns no point. Press Enter for the next question.');
+  const solution=app.workedLayout(state.q);$('tutorialSteps').hidden=true;
+  $('hints').innerHTML=workedSolutionMarkup(solution.steps,solution.answer,solution.note);stats();
 }
 function endRound(reason='Time is up.'){state.running=false;state.ended=true;$('roundbar').classList.remove('danger');$('startRound').textContent='Start another round';$('duration').disabled=false;$('timer').textContent='0s';$('roundnote').textContent='Round complete. Review the summary and start again.';if(state.score>best){best=state.score;try{localStorage.setItem(storageKey,String(best))}catch{}}$('summary').hidden=false;$('summary').innerHTML='<h2>'+escapeHTML(reason)+'</h2><p>'+state.score+' solved · '+state.attempts+' answer checks · '+state.skipped+' skipped or revealed. Accuracy: '+(state.attempts?Math.round(state.correct/state.attempts*100)+'%':'—')+'.</p><p class="tiny">Best round: '+best+'. This record includes all settings and durations.</p>';feedback('Round complete. Start another round to continue.');stats();syncPressureControls();}
 function tick(){if(!state.running)return false;const remaining=Math.max(0,Math.ceil((state.deadline-performance.now())/1000));$('timer').textContent=remaining+'s';$('roundbar').classList.toggle('danger',remaining<=10);if(!remaining){endRound();return false;}return true;}
@@ -515,4 +607,32 @@ $('answerForm').addEventListener('submit',check);$('generate').addEventListener(
 setInterval(tick,150);document.addEventListener('visibilitychange',()=>{if(state.running)tick();});
 window.simulatorTest={...app.test,getQuestion:()=>state.q,getState:()=>({...state}),checkAnswer:(text,q)=>app.check(text,q),app};
 settingsChanged();
+</script><script>
+// Shared scratch paper: typed working stays with the current question.
+(()=>{
+  'use strict';
+  const panel=document.getElementById('scratchPaper');
+  if(!panel)return;
+  const toggle=document.getElementById('scratchToggle'),body=document.getElementById('scratchBody'),notes=document.getElementById('scratchText'),move=document.getElementById('scratchMove'),resize=document.getElementById('scratchResize');
+  let offset=0,height=240;
+  const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
+  function setOffset(value){offset=clamp(value,0,1200);panel.style.marginTop=offset+'px';}
+  function setHeight(value){height=clamp(value,120,1200);notes.style.height=height+'px';}
+  function setOpen(open){body.hidden=!open;toggle.setAttribute('aria-expanded',String(open));toggle.querySelector('.scratch-chevron').textContent=open?'▾':'▸';}
+  toggle.addEventListener('click',()=>setOpen(body.hidden));
+  function verticalHandle(handle,read,write,min,max){
+    let drag=null;
+    handle.addEventListener('pointerdown',event=>{
+      if(event.button!==0)return;
+      event.preventDefault();drag={pointer:event.pointerId,y:event.clientY,value:read()};handle.setPointerCapture(event.pointerId);handle.classList.add('is-dragging');
+    });
+    handle.addEventListener('pointermove',event=>{if(drag&&event.pointerId===drag.pointer)write(drag.value+event.clientY-drag.y);});
+    const end=event=>{if(!drag||event.pointerId!==drag.pointer)return;const id=drag.pointer;drag=null;handle.classList.remove('is-dragging');if(handle.hasPointerCapture(id))handle.releasePointerCapture(id);};
+    handle.addEventListener('pointerup',end);handle.addEventListener('pointercancel',end);handle.addEventListener('lostpointercapture',()=>{drag=null;handle.classList.remove('is-dragging');});
+    handle.addEventListener('keydown',event=>{const step=event.shiftKey?100:20;let value;if(event.key==='ArrowUp')value=read()-step;else if(event.key==='ArrowDown')value=read()+step;else if(event.key==='Home')value=min;else if(event.key==='End')value=max;else return;event.preventDefault();write(value);});
+  }
+  verticalHandle(move,()=>offset,setOffset,0,1200);verticalHandle(resize,()=>height,setHeight,120,1200);
+  // Reset content only; the student's open state, size, and position are preferences.
+  window.practiceScratch={reset(){notes.value='';notes.scrollTop=0;}};
+})();
 </script></body></html>

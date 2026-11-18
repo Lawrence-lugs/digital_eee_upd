@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="color-scheme" content="light"><title>Boolean Algebra Simulator</title>
+<meta name="color-scheme" content="light"><title>Boolean Algebra Skill Trainer</title>
 <!-- Embedded font licenses
 Copyright 2020 The Inter Project Authors (https://github.com/rsms/inter)
 
@@ -275,11 +275,12 @@ header.simulator-banner .banner-wrap{max-width:1180px}
 .practice-stat>span,.practice-stat>.stat-label{display:block;margin-top:4px;font:400 10px/1.4 var(--ui-font);letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
 .practice-settings .practice-round{flex:1 0 100%;width:100%;margin:0}
 .practice-layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:22px;align-items:start}
-.practice-layout>.card,.practice-layout>.notes-sidebar>.card,.practice-layout>.notes-sidebar.card{min-width:0;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 28px rgba(28,39,49,.07)}
+.practice-layout>.card,.practice-layout>.notes-sidebar>.card,.practice-layout>.notes-sidebar.card,.practice-right-column>.notes-sidebar.card{min-width:0;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 28px rgba(28,39,49,.07)}
 .practice-layout>.card{padding:24px}
 .notes-sidebar{min-width:0;display:grid;gap:18px;align-content:start}
-.notes-sidebar>.card,.practice-layout>.notes-sidebar.card{padding:24px}
-.practice-layout>.notes-sidebar.card{display:block}
+.notes-sidebar>.card,.practice-layout>.notes-sidebar.card,.practice-right-column>.notes-sidebar.card{padding:24px}
+.practice-layout>.notes-sidebar.card,.practice-right-column>.notes-sidebar.card{display:block}
+.practice-right-column{min-width:0;display:flex;flex-direction:column;gap:18px;align-self:stretch}
 .notes-sidebar h2,.notes-sidebar h3{font:700 17px/1.35 var(--ui-font);margin:0 0 12px;letter-spacing:normal}
 .question-toolbar{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;padding:0;margin:0 0 18px;border:0;background:transparent}
 .question-toolbar>div{min-width:0;flex:1 1 200px}
@@ -343,22 +344,46 @@ textarea.practice-answer-input{resize:vertical}
 .notes-sidebar .notes-reference th,.notes-sidebar .notes-reference td{padding:5px 3px;border-bottom:1px solid var(--line);text-align:center}
 .notes-sidebar .step,.notes-sidebar .hint-step{margin:12px 0 0;padding:10px 12px;border:0;border-left:3px solid var(--up-maroon);border-radius:0;background:#faf1f2;font:400 14px/1.55 var(--ui-font)}
 .notes-sidebar .step p:last-child,.notes-sidebar .hint-step p:last-child{margin-bottom:0}
-.practice-footer{display:flex;justify-content:space-between;gap:15px;max-width:none;width:auto;margin:25px 0 0;padding:0;border:0;background:transparent;color:var(--muted);font:400 12px/1.55 var(--ui-font)}
-.practice-footer .key{padding:1px 5px;border:1px solid #ccd6de;border-radius:4px;background:#e9edf1;color:var(--muted);font:400 12px var(--mono-font)}
-.tutorial-steps{display:grid;gap:10px;list-style:none;margin:0 0 22px;padding:0;max-height:300px;overflow:auto;position:relative}.tutorial-steps li{padding:12px 14px;border:1px solid var(--line);border-radius:9px;background:#f8fafb}.tutorial-steps li.active{border-color:var(--up-maroon);background:#faf1f2}.tutorial-steps li.accepted{border-color:#ead59f;background:#fff8e6}.tutorial-steps li.complete{border-color:#bbdfd0;background:#edf9f3}.tutorial-steps .step-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px;font-size:14px}.tutorial-steps .step-status{font-size:11px;color:var(--muted);white-space:nowrap}.tutorial-steps .step-bits{display:block;margin-top:7px;font:15px/1.5 var(--mono-font);overflow-wrap:anywhere}
+.question-hints{display:grid;gap:10px;margin-top:16px;color:var(--ink);font:400 14px/1.55 var(--ui-font)}
+.question-hints:empty{display:none}
+.question-hints .step,.question-hints .hint-step{margin:0;padding:12px 14px;border:0;border-left:3px solid var(--up-maroon);border-radius:0 9px 9px 0;background:#faf1f2;font:400 14px/1.55 var(--ui-font)}
+.question-hints p{margin:0 0 6px}.question-hints p:last-child{margin-bottom:0}
+.question-hints code{font-family:var(--mono-font);white-space:pre-wrap;overflow-wrap:anywhere}
+.worked-solution{min-width:0;padding-top:18px;border-top:1px solid var(--line);color:var(--ink);font:400 14px/1.55 var(--ui-font)}
+.worked-solution .worked-heading{display:block;max-width:none;margin:0 0 16px;padding:0;background:none;color:var(--ink);border:0;box-shadow:none}
+.worked-heading h3{margin:0 0 4px;font:750 18px/1.4 var(--ui-font)}.worked-heading p{margin:0;color:var(--muted);font:400 13px/1.5 var(--ui-font)}
+.worked-solution .worked-steps{display:grid;gap:12px;list-style:none;margin:0;padding:0;overflow:visible;max-height:none}
+.worked-solution .worked-step,.tutorial-steps .worked-step{display:grid;grid-template-columns:32px minmax(0,1fr);align-items:start;gap:12px;margin:0;padding:14px;border:1px solid var(--line);border-radius:10px;background:#f8fafb;min-width:0}
+.worked-number{display:grid;place-items:center;width:32px;height:32px;border:1px solid #e7cfd1;border-radius:50%;background:#faf1f2;color:var(--up-maroon);font:750 14px/1 var(--ui-font);font-variant-numeric:tabular-nums}
+.worked-content{min-width:0;overflow-wrap:anywhere}.worked-content h4{margin:4px 0 8px;font:700 14px/1.5 var(--ui-font)}.worked-content p{margin:0 0 8px;white-space:pre-wrap}.worked-content p:last-child{margin-bottom:0}
+.worked-content .worked-expression{display:block;margin:0 0 10px;padding:9px 11px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);font:400 14px/1.6 var(--mono-font);white-space:pre-wrap;overflow-wrap:anywhere}
+.worked-final{margin-top:16px;padding:16px 18px;border:1px solid #bbdfd0;border-left:4px solid #347554;border-radius:10px;background:#edf9f3;color:#24583f;overflow-wrap:anywhere}
+.worked-final h4{margin:0 0 8px;font:750 14px/1.4 var(--ui-font)}.worked-final .worked-final-answer{display:block;margin:0;font:600 20px/1.55 var(--mono-font);white-space:pre-wrap;overflow-wrap:anywhere}.worked-final p{margin:8px 0 0;font:400 13px/1.55 var(--ui-font)}
+@media(max-width:480px){.worked-solution .worked-step,.tutorial-steps .worked-step{grid-template-columns:28px minmax(0,1fr);gap:10px;padding:12px}.worked-number{width:28px;height:28px}.worked-final{padding:14px}.worked-final .worked-final-answer{font-size:18px}}
+.scratch-paper{min-width:0;margin:0;border:1px solid #e4d69c;border-radius:14px;background:#fff8d8;color:#5b4c21;box-shadow:0 6px 18px #74612610;overflow:hidden}
+.scratch-heading{display:flex;align-items:stretch;min-height:48px}
+.scratch-heading .scratch-toggle,.scratch-heading .scratch-move{margin:0;border:0;border-radius:0;background:transparent;color:#5b4c21;font:700 14px/1.4 var(--ui-font)}
+.scratch-heading .scratch-toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:1;min-width:0;padding:14px 16px;text-align:left;cursor:pointer}
+.scratch-heading .scratch-move{flex:0 0 42px;width:42px;padding:10px;border-left:1px solid #eadfaa;font-size:20px;cursor:ns-resize;touch-action:none;user-select:none}
+.scratch-heading button:hover,.scratch-resize:hover,.scratch-paper .is-dragging{background:#fff0b8}
+.scratch-body{border-top:1px solid #eadfaa;padding:12px 12px 0}
+.scratch-body .scratch-text{display:block;box-sizing:border-box;min-width:0;width:100%;height:240px;min-height:120px;max-height:1200px;padding:10px 11px;margin:0;border:1px solid #e4d69c;border-radius:8px;resize:none;overflow:auto;background:#fffbea;color:#51451f;font:400 14px/1.6 var(--mono-font)}
+.scratch-text::placeholder{color:#918259;opacity:1}
+.scratch-body .scratch-resize{display:block;width:100%;height:28px;min-height:0;margin:0;padding:0;border:0;border-radius:0;background:transparent;color:#9a8546;font:700 22px/1 var(--ui-font);cursor:ns-resize;touch-action:none;user-select:none}
+.tutorial-steps{display:grid;gap:12px;list-style:none;margin:0 0 22px;padding:0;max-height:360px;overflow:auto;position:relative;font:400 14px/1.55 var(--ui-font)}.tutorial-steps .worked-step.active{border-color:var(--up-maroon);background:#faf1f2}.tutorial-steps .worked-step.accepted{border-color:#ead59f;background:#fff8e6}.tutorial-steps .step-title{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:4px 10px}.tutorial-steps .step-title h4{flex:1;min-width:0}.tutorial-steps .step-status{font:400 11px/1.5 var(--ui-font);color:var(--muted);white-space:nowrap}.tutorial-steps .worked-expression:last-child{margin-bottom:0}.tutorial-final{margin:0 0 22px}.tutorial-final .worked-final{margin-top:0}
 button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #edae3d;outline-offset:3px;box-shadow:none}
 @media(max-width:950px){.practice-layout{grid-template-columns:minmax(0,1fr) 270px}.practice-settings{gap:16px}}
-@media(max-width:760px){body>main{padding:16px 17px 25px}.practice-layout{grid-template-columns:minmax(0,1fr)}.practice-settings{padding:18px}.practice-stats{flex-basis:100%;margin:0;padding-top:14px;border-top:1px solid var(--line);justify-content:space-between;gap:12px}.practice-stat>strong,.practice-stat>b,.practice-stat>.stat-value{font-size:22px}.practice-stat>span,.practice-stat>.stat-label{font-size:9px}.practice-layout>.card,.notes-sidebar>.card,.practice-layout>.notes-sidebar.card{padding:20px}.question-toolbar .generate-question{max-width:100%}}
-@media(max-width:760px){.practice-timer .practice-round-note{flex:1 1 150px}.practice-answer-row{flex-wrap:wrap}.practice-answer .practice-answer-input{flex-basis:100%}.practice-answer-row>.practice-primary{width:100%}.practice-footer{flex-direction:column;gap:6px}}
+@media(max-width:760px){body>main{padding:16px 17px 25px}.practice-layout{grid-template-columns:minmax(0,1fr)}.practice-settings{padding:18px}.practice-stats{flex-basis:100%;margin:0;padding-top:14px;border-top:1px solid var(--line);justify-content:space-between;gap:12px}.practice-stat>strong,.practice-stat>b,.practice-stat>.stat-value{font-size:22px}.practice-stat>span,.practice-stat>.stat-label{font-size:9px}.practice-layout>.card,.notes-sidebar>.card,.practice-layout>.notes-sidebar.card,.practice-right-column>.notes-sidebar.card{padding:20px}.question-toolbar .generate-question{max-width:100%}}
+@media(max-width:760px){.practice-timer .practice-round-note{flex:1 1 150px}.practice-answer-row{flex-wrap:wrap}.practice-answer .practice-answer-input{flex-basis:100%}.practice-answer-row>.practice-primary{width:100%}}
 
 </style>
 </head>
 <body>
-<header class="simulator-banner"><div class="banner-wrap"><div class="banner-copy"><h1>Boolean Algebra Simulator</h1><p class="banner-subtitle"><span class="banner-mainline">Simplify Boolean expressions and convert between expressions and truth tables, with each answer checked as you practice.</span><span class="banner-course">Designed for digital design fundamentals practice.</span><span class="banner-credit">Conceptualized by Adelson Chua</span></p></div></div></header>
+<header class="simulator-banner"><div class="banner-wrap"><div class="banner-copy"><h1>Boolean Algebra Skill Trainer</h1><p class="banner-subtitle"><span class="banner-mainline">Simplify Boolean expressions and convert between expressions and truth tables, with each answer checked as you practice.</span><span class="banner-course">Designed for digital design fundamentals practice.</span><span class="banner-credit">Conceptualized by Adelson Chua</span></p></div></div></header>
 <main>
 
 <section class="control-card practice-settings" aria-label="Practice settings">
-<div class="field"><span class="field-label">Practice mode</span><div class="mode-controls" role="group" aria-label="Practice mode"><button type="button" data-mode="relaxed" aria-pressed="true">Relaxed</button><button type="button" data-mode="pressure" aria-pressed="false">Pressure</button><button type="button" data-mode="tutorial" aria-pressed="false">Tutorial</button></div></div>
+<div class="field"><span class="field-label">Practice mode</span><div class="mode-controls" role="group" aria-label="Practice mode"><button type="button" data-mode="tutorial" aria-pressed="false">Tutorial</button><button type="button" data-mode="relaxed" aria-pressed="true">Practice</button><button type="button" data-mode="pressure" aria-pressed="false">Pressure</button></div></div>
 <div class="field"><label for="exercise">Exercise</label><select id="exercise"><option value="simplify">Minimum SOP simplification</option><option value="simplify-pos">Minimum POS simplification</option><option value="table-to-expression">Truth table → expression</option><option value="expression-to-table">Simplified expression → truth table</option></select></div>
 <div class="field"><label for="difficulty">Difficulty</label><select id="difficulty"><option value="2">Foundation · 2 variables</option><option value="3" selected>Core · 3 variables</option><option value="4">Advanced · 4 variables</option></select></div>
 <div class="stats practice-stats" aria-label="Practice statistics"><div class="practice-stat"><div class="stat-value" id="solvedCount">0</div><div class="stat-label">Solved</div></div><div class="practice-stat"><div class="stat-value" id="accuracyCount">—</div><div class="stat-label">Accuracy</div></div><div class="practice-stat"><div class="stat-value" id="streakCount">0</div><div class="stat-label">Streak</div></div></div>
@@ -369,15 +394,34 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 <div class="layout practice-layout"><section class="card" aria-labelledby="questionTitle">
 <div class="question-top question-toolbar"><div class="question-heading"><div class="question-number" id="questionNumber">Question 01</div><h2 class="prompt" id="questionTitle">Reduce this expression to a minimum SOP.</h2></div><button id="generate" type="button" class="primary generate-question">Generate a question</button></div>
 <div class="question-context"><span class="badge" id="questionBadge">3-variable practice</span></div><div class="original practice-question-surface" id="originalExpression"></div><p class="subtle" id="questionInstructions">Use the fewest product terms, then the fewest literals. Equivalent minimum answers are accepted in any term order.</p><div class="question-truth-wrap practice-question-surface" id="questionTable" hidden></div>
-<ol class="tutorial-steps" id="tutorialSteps" aria-label="Tutorial steps" hidden></ol>
+<ol class="tutorial-steps worked-steps" id="tutorialSteps" aria-label="Tutorial steps" role="list" hidden></ol>
+<div class="tutorial-final" id="tutorialFinal" hidden></div>
 <ol class="steps" id="steps" aria-label="Your accepted steps"></ol>
 <form id="answerForm" class="practice-answer" novalidate><label class="practice-answer-label" id="answerLabel" for="answer">Your next equivalent expression</label><div class="practice-answer-row"><input class="practice-answer-input" id="answer" name="answer" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="400" placeholder="e.g. A + B'C" aria-describedby="syntax"><button class="practice-primary" id="checkAnswer" type="submit">Check step ↵</button></div><p class="syntax practice-answer-help" id="syntax"><code>+</code> OR &nbsp; <code>'</code> NOT &nbsp; <code>AB</code> AND &nbsp; <code>( )</code> or <code>[ ]</code> grouping. Use <code>0</code> and <code>1</code> for constants. An <code>F=</code> prefix is optional.</p></form>
 <div id="feedback" class="feedback" role="status" aria-live="polite">Enter an equivalent expression and press Enter. Each accepted line becomes part of your working.</div>
 <div class="practice-actions"><button id="hintButton" type="button">Show a hint</button><button id="reveal" type="button">Show worked answer</button></div>
-</section><aside class="card notes-sidebar" aria-label="Study notes"><div class="eyebrow">Study notes</div><h2 id="guideTitle">Method</h2><div id="guide" class="notes-method"></div><p class="notes-help">Use Show a hint for extra guidance.</p><dl class="notes-definitions"><dt>SOP · Sum of products</dt><dd>OR together product terms, with AND inside each term. Example: <code>A + B'C</code>.</dd><dt>POS · Product of sums</dt><dd>AND together sum clauses, with OR inside each clause. Example: <code>(A+B')(A+C)</code>.</dd></dl><details class="notes-reference"><summary>Quick reference</summary><h3>Boolean identities</h3><div class="rules"><div class="rule"><span>Absorption</span><code>X + XY = X</code></div><div class="rule"><span>Combine</span><code>XY + XY' = X</code></div><div class="rule"><span>Complement</span><code>X + X' = 1</code></div><div class="rule"><span>Identity</span><code>X + 0 = X, X1 = X</code></div><div class="rule"><span>Zero product</span><code>XX' = 0, X0 = 0</code></div><div class="rule"><span>Distribute · SOP</span><code>X(Y+Z) = XY+XZ</code></div><div class="rule"><span>Distribute · POS</span><code>X+YZ = (X+Y)(X+Z)</code></div><div class="rule"><span>Combine sums</span><code>(X+Y)(X+Y') = X</code></div><div class="rule"><span>De Morgan</span><code>(XY)' = X'+Y'</code></div></div><h3>What counts as SOP?</h3><p>A sum of products uses OR between terms and AND between literals, such as <code>A + B'C</code>. Factored forms can be valid intermediate steps.</p><p>A literal is one variable or its complement. The constants <code>0</code> and <code>1</code> are valid final answers.</p><details id="truthDetails"><summary>Inspect the reference truth table</summary><div class="truth-wrap" id="truthTable"></div></details></details></aside></div><footer class="practice-footer"><span><span class="key">Enter</span> checks your answer. Press it again after success for the next question.</span><span>Works offline · No account required</span></footer>
+<div id="questionHints" class="question-hints" aria-live="polite"></div>
+</section><div class="practice-right-column"><aside class="card notes-sidebar" aria-label="Study notes"><div class="eyebrow">Study notes</div><h2 id="guideTitle">Method</h2><div id="guide" class="notes-method"></div><p id="notesHelp" class="notes-help">Use Show a hint for extra guidance.</p><dl class="notes-definitions"><dt>SOP · Sum of products</dt><dd>OR together product terms, with AND inside each term. Example: <code>A + B'C</code>.</dd><dt>POS · Product of sums</dt><dd>AND together sum clauses, with OR inside each clause. Example: <code>(A+B')(A+C)</code>.</dd></dl><details class="notes-reference"><summary>Quick reference</summary><h3>Boolean identities</h3><div class="rules"><div class="rule"><span>Absorption</span><code>X + XY = X</code></div><div class="rule"><span>Combine</span><code>XY + XY' = X</code></div><div class="rule"><span>Complement</span><code>X + X' = 1</code></div><div class="rule"><span>Identity</span><code>X + 0 = X, X1 = X</code></div><div class="rule"><span>Zero product</span><code>XX' = 0, X0 = 0</code></div><div class="rule"><span>Distribute · SOP</span><code>X(Y+Z) = XY+XZ</code></div><div class="rule"><span>Distribute · POS</span><code>X+YZ = (X+Y)(X+Z)</code></div><div class="rule"><span>Combine sums</span><code>(X+Y)(X+Y') = X</code></div><div class="rule"><span>De Morgan</span><code>(XY)' = X'+Y'</code></div></div><h3>What counts as SOP?</h3><p>A sum of products uses OR between terms and AND between literals, such as <code>A + B'C</code>. Factored forms can be valid intermediate steps.</p><p>A literal is one variable or its complement. The constants <code>0</code> and <code>1</code> are valid final answers.</p><details id="truthDetails"><summary>Inspect the reference truth table</summary><div class="truth-wrap" id="truthTable"></div></details></details></aside><section class="scratch-paper" id="scratchPaper" aria-label="Scratch paper">
+<div class="scratch-heading"><button type="button" class="scratch-toggle" id="scratchToggle" aria-expanded="false" aria-controls="scratchBody"><span>Scratch paper</span><span class="scratch-chevron" aria-hidden="true">▸</span></button><button type="button" class="scratch-move" id="scratchMove" aria-label="Move scratch paper vertically" title="Drag vertically, or use the Up and Down arrow keys">↕</button></div>
+<div class="scratch-body" id="scratchBody" hidden><textarea id="scratchText" class="scratch-text" aria-label="Scratch notes" placeholder="Write your temporary work here" spellcheck="false"></textarea><button type="button" class="scratch-resize" id="scratchResize" aria-label="Resize scratch paper vertically" title="Drag to resize, or use the Up and Down arrow keys"><span aria-hidden="true">━</span></button></div>
+</section></div></div>
 </main>
 <script>
 'use strict';
+function tutorialStepMarkup(index,title,expression='',status='Next',kind=''){
+  const safe=value=>String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  const state=kind==='accepted'?'accepted':kind==='active'?'active':'';
+  return '<li class="worked-step '+state+'"'+(state==='active'?' aria-current="step"':'')+'><span class="worked-number" aria-hidden="true">'+safe(index)+'</span><div class="worked-content"><div class="step-title"><h4>'+safe(title)+'</h4><span class="step-status">'+safe(status)+'</span></div>'+(expression?'<code class="worked-expression">'+safe(expression)+'</code>':'')+'</div></li>';
+}
+function finalAnswerMarkup(answer,note=''){
+  const safe=value=>String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  return '<div class="worked-final" aria-label="Final answer"><h4>Final answer</h4><code class="worked-final-answer">'+safe(answer)+'</code>'+(note?'<p>'+safe(note)+'</p>':'')+'</div>';
+}
+function workedSolutionMarkup(steps,finalAnswer,finalNote='',status='This question is revealed and earns no solve.'){
+  const safe=value=>String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  const items=steps.map((step,index)=>'<li class="worked-step"><span class="worked-number" aria-hidden="true">'+(index+1)+'</span><div class="worked-content"><h4>'+safe(step.title)+'</h4>'+(step.expression?'<code class="worked-expression">'+safe(step.expression)+'</code>':'')+(step.paragraphs||[]).map(text=>'<p>'+safe(text)+'</p>').join('')+'</div></li>').join('');
+  return '<section class="worked-solution" aria-label="Worked solution"><header class="worked-heading"><h3>Worked solution</h3><p>'+safe(status)+'</p></header><ol class="worked-steps" aria-label="Solution steps" role="list">'+items+'</ol><div class="worked-final" aria-label="Final answer"><h4>Final answer</h4><code class="worked-final-answer">'+safe(finalAnswer)+'</code>'+(finalNote?'<p>'+safe(finalNote)+'</p>':'')+'</div></section>';
+}
 const $=id=>document.getElementById(id);
 function parseExpression(source,variables){
   const text=String(source).toUpperCase().replace(/[’′]/g,"'").replace(/\s+/g,'').replace(/^F=/,'');
@@ -591,10 +635,26 @@ function makeExerciseQuestion(exercise,n,options={}){
 
 function mintermForRow(q,row){return q.variables.map((v,j)=>v+(((row>>(q.variables.length-1-j))&1)?'':"'")).join('');}
 function assignmentForRow(q,row){return q.variables.map((v,j)=>v+'='+((row>>(q.variables.length-1-j))&1)).join(', ');}
+function remainingRouteSteps(q,route,seen=[]){
+  const accepted=new Set(seen);let remaining=0;
+  for(const entry of route){const result=inspect(entry.expression,q);if(result.minimum)return remaining+1;if(!accepted.has(result.text)){accepted.add(result.text);remaining++;}}
+  throw new Error('The guided route must end at a minimum answer.');
+}
+function tutorialProgress(q,t){
+  const completed=t.history.length;if(t.history.at(-1)?.final)return {number:completed,total:completed,remaining:0};
+  const count=2**q.variables.length;let remaining;
+  if(t.phase==='row')remaining=count-t.cursor+1;
+  else if(t.phase==='column'||t.phase==='constant')remaining=1;
+  else if(t.phase==='minterm')remaining=t.mintermRows.length-t.cursor+t.combinationSteps;
+  else if(t.phase==='combine')remaining=t.combinationSteps;
+  else remaining=remainingRouteSteps(q,t.route.length?t.route:equivalenceSolution(t.current,q).slice(1),t.seen);
+  return {number:completed+1,total:completed+remaining,remaining};
+}
 function createTutorialState(q){
   const mintermRows=Array.from({length:2**q.variables.length},(_,row)=>row).filter(row=>(q.mask>>row)&1);
   const phase=q.exercise==='expression-to-table'?'row':q.exercise==='table-to-expression'?(mintermRows.length?'minterm':'constant'):'simplify';
-  return {phase,cursor:0,mintermRows,minterms:[],current:phase==='simplify'?q.expression:'',history:[],seen:phase==='simplify'?[parseExpression(q.expression,q.variables).text]:[],hinted:false};
+  const canonical=phase==='minterm'?canonicalSOP(q.mask,q.variables):'',combinationSteps=canonical?1+(inspect(canonical,q).minimum?0:remainingRouteSteps(q,equivalenceSolution(canonical,q).slice(1),[parseExpression(canonical,q.variables).text])):0;
+  return {phase,cursor:0,mintermRows,minterms:[],current:phase==='simplify'?q.expression:'',history:[],seen:phase==='simplify'?[parseExpression(q.expression,q.variables).text]:[],hintCount:0,route:phase==='simplify'?equivalenceSolution(q.expression,q).slice(1):[],combinationSteps};
 }
 function flattenTargets(node,type,path=[]){return node.type===type?[...flattenTargets(node.left,type,[...path,'left']),...flattenTargets(node.right,type,[...path,'right'])]:[{node,path}];}
 function reductionLaw(node,path,rule){
@@ -657,13 +717,13 @@ function simplificationAdvice(expression,q){
   return advice(cost?'Reorganize the complete '+form+' cover':'Write the function as '+(pos?'a POS':'an SOP'),pos?'POS equivalence: preserve exactly the output-0 rows':'Coverage equivalence: preserve exactly the output-1 rows',cost?'Compare the whole marked cover. Expand and regroup '+(pos?'sum clauses':'products')+' as needed to reduce the number of '+unit+' or literals.':pos?'Build sum clauses for the output-0 input combinations and AND those clauses.':'Consider the whole marked function. Build products for its output-1 input combinations and use OR between the products.',[[]],cost?'Your '+form+' has '+cost.terms+' '+unit+' and '+cost.literals+' literals. A minimum uses '+q.minimum.terms+' '+unit+' and '+q.minimum.literals+' literals. Compare the cases and seek a smaller equivalent cover.':pos?'For a row where F=0, use a plain literal for input 0 and a complemented literal for input 1, then OR them. AND the clauses.':'Use a product for each output-1 input case. Constants 0 and 1 are valid final answers when every row has the same output.');
 }
 function tutorialStep(q,t){
-  const count=2**q.variables.length,number=t.history.length+1;
-  if(t.phase==='row')return {kind:'row',number,total:count+1,row:t.cursor,title:'Evaluate row '+t.cursor+' · '+assignmentForRow(q,t.cursor),help:'Substitute these inputs into F = '+q.displayExpression+'. Enter one output bit: 0 or 1.',hint:'Complement each marked literal, AND the literals within each product, then OR the products. A constant keeps its value in every row.'};
-  if(t.phase==='column')return {kind:'column',number,total:count+1,title:'Write the complete output column',help:'Read your accepted rows from top to bottom. Enter all '+count+' output bits, including leading zeros.',hint:'Keep the listed binary input order, with '+q.variables[0]+' as the most significant input bit. Spaces, commas, and underscores may separate output bits.'};
-  if(t.phase==='minterm'){const row=t.mintermRows[t.cursor];return {kind:'minterm',number,row,title:'Build minterm '+(t.cursor+1)+' of '+t.mintermRows.length,help:'For the output-1 row '+assignmentForRow(q,row)+', write one product containing every input variable exactly once.',hint:'Use a complemented literal for input 0 and a plain literal for input 1. Join the literals with AND (adjacency). Variable order and grouping do not change a product.'};}
-  if(t.phase==='combine')return {kind:'combine',number,title:'Combine your accepted minterms',help:'OR the accepted minterms into one expression for the complete table. An equivalent simplified expression is also accepted.',hint:'Place + between products. Cover all output-1 rows and exclude every output-0 row. Simplify further if the combined SOP is not minimal.'};
-  if(t.phase==='constant')return {kind:'constant',number,total:1,title:'Identify the constant function',help:'The target table contains no output-1 rows. Enter the constant that represents the whole table.',hint:'A constant function has the same value in every row. Write that value as a single constant.'};
-  return {kind:'simplify',number,...simplificationAdvice(t.current,q),work:t.current};
+  const count=2**q.variables.length,{number,total}=tutorialProgress(q,t);
+  if(t.phase==='row')return {kind:'row',number,total,row:t.cursor,title:'Evaluate row '+t.cursor+' · '+assignmentForRow(q,t.cursor),help:'Substitute these inputs into F = '+q.displayExpression+'. Enter one output bit: 0 or 1.',hint:'Complement each marked literal, AND the literals within each product, then OR the products. A constant keeps its value in every row.'};
+  if(t.phase==='column')return {kind:'column',number,total,title:'Write the complete output column',help:'Read your accepted rows from top to bottom. Enter all '+count+' output bits, including leading zeros.',hint:'Keep the listed binary input order, with '+q.variables[0]+' as the most significant input bit. Spaces, commas, and underscores may separate output bits.'};
+  if(t.phase==='minterm'){const row=t.mintermRows[t.cursor];return {kind:'minterm',number,total,row,title:'Build minterm '+(t.cursor+1)+' of '+t.mintermRows.length,help:'For the output-1 row '+assignmentForRow(q,row)+', write one product containing every input variable exactly once.',hint:'Use a complemented literal for input 0 and a plain literal for input 1. Join the literals with AND (adjacency). Variable order and grouping do not change a product.'};}
+  if(t.phase==='combine')return {kind:'combine',number,total,title:'Combine your accepted minterms',help:'OR the accepted minterms into one expression for the complete table. An equivalent simplified expression is also accepted.',hint:'Place + between products. Cover all output-1 rows and exclude every output-0 row. Simplify further if the combined SOP is not minimal.'};
+  if(t.phase==='constant')return {kind:'constant',number,total,title:'Identify the constant function',help:'The target table contains no output-1 rows. Enter the constant that represents the whole table.',hint:'A constant function has the same value in every row. Write that value as a single constant.'};
+  return {kind:'simplify',number,total,...simplificationAdvice(t.current,q),work:t.current};
 }
 function checkTutorialAnswer(text,q,t){
   const step=tutorialStep(q,t);
@@ -682,11 +742,76 @@ function checkTutorialAnswer(text,q,t){
   return {correct:true,text:parsed.text,final:minimum,cost};
 }
 function advanceTutorial(q,t,result){
-  const step=tutorialStep(q,t);t.history.push({title:step.title,text:result.text,final:!!result.final});t.hinted=false;
+  const step=tutorialStep(q,t);t.history.push({title:step.title,text:result.text,final:!!result.final});t.hintCount=0;
   if(step.kind==='row'){t.cursor++;if(t.cursor===2**q.variables.length)t.phase='column';}
   else if(step.kind==='minterm'){t.minterms.push(result.text);t.cursor++;if(t.cursor===t.mintermRows.length)t.phase='combine';}
-  else if(step.kind==='combine'||step.kind==='simplify'){t.current=result.text;t.seen.push(result.text);t.phase='simplify';}
+  else if(step.kind==='combine'||step.kind==='simplify'){const index=t.route.findIndex(entry=>parseExpression(entry.expression,q.variables).text===result.text);t.route=result.final?[]:index>=0?t.route.slice(index+1):equivalenceSolution(result.text,q).slice(1);t.current=result.text;t.seen.push(result.text);t.phase='simplify';}
   return !!result.final;
+}
+
+function rowWorking(q,row){
+  const values=Object.fromEntries(q.variables.map((v,j)=>[v,(row>>(q.variables.length-1-j))&1])),ast=q.displayAst||parseExpression(q.displayExpression,q.variables).ast;
+  const products=flatten(ast,'or').map(term=>{const factors=flatten(term,'and'),bits=factors.map(factor=>evaluate(factor,values));return {expression:formatExpression(term),value:evaluate(term,values),detail:factors.map((factor,i)=>formatExpression(factor)+'='+bits[i]).join(', ')+'; '+bits.join(' · ')+' = '+evaluate(term,values)};});
+  return {row,value:evaluate(ast,values),detail:products.map(product=>product.expression+': '+product.detail).join('. ')+'; OR the product results: '+products.map(product=>product.value).join(' + ')+' = '+evaluate(ast,values)+'.'};
+}
+function coverCombinationSteps(q){
+  const pos=targetForm(q)==='POS',op=pos?'':' + ',target=pos?0:1,rows=Array.from({length:2**q.variables.length},(_,row)=>row).filter(row=>((q.mask>>row)&1)===target),steps=[];
+  const bits=row=>q.variables.map((_,j)=>(row>>(q.variables.length-1-j))&1);
+  function cubeText(cube){const literals=cube.flatMap((bit,j)=>bit===-1?[]:[q.variables[j]+(bit===(pos?1:0)?"'":'')]);return literals.length?(pos&&literals.length>1?'('+literals.join(' + ')+')':literals.join('')):pos?'0':'1';}
+  function expression(groups){return groups.length?groups.map(group=>group.length>1?'('+group.map(cubeText).join(op)+')':cubeText(group[0])).join(op):pos?'1':'0';}
+  function add(rule,groups,detail=''){const text=expression(groups);if(maskOf(text,q.variables)!==q.mask)throw new Error('A worked cover step changed the function.');steps.push({kind:'equivalence',rule,expression:text,detail});}
+  add(pos?'Canonical maxterm expansion':'Canonical minterm expansion',rows.length?[rows.map(bits)]:[],pos?'Each sum clause is 0 for one output-0 row; AND all these clauses.':'Each product is 1 for one output-1 row; OR all these products.');
+  if(!rows.length)return steps;
+  const full=2**(2**q.variables.length)-1,cover=q.mask===0||q.mask===full?[{cube:q.variables.map(()=>-1),cover:full}]:(pos?minimalPOS(q.mask,q.variables).zeroCubes:minimalSOP(q.mask,q.variables).cubes);
+  const groups=cover.map(part=>rows.filter(row=>part.cover&(1<<row)).map(bits));
+  add('Associativity and idempotence: group the cover',groups,'Reorder the '+(pos?'maxterms':'minterms')+' and repeat shared ones when needed. X'+(pos?'X':' + X')+' = X keeps repeated coverage equivalent.');
+  for(let index=0;index<groups.length;index++)while(groups[index].length>1){
+    const group=groups[index];let pair=null;
+    for(let i=0;i<group.length&&!pair;i++)for(let j=i+1;j<group.length;j++){const differences=group[i].map((bit,k)=>bit===group[j][k]?-1:k).filter(k=>k!==-1);if(differences.length===1&&group[i][differences[0]]!==-1&&group[j][differences[0]]!==-1){pair={i,j,k:differences[0]};break;}}
+    if(!pair)throw new Error('A cover group could not be combined.');
+    const a=group[pair.i],b=group[pair.j],combined=a.map((bit,k)=>k===pair.k?-1:bit),detail='In group '+(index+1)+', '+cubeText(a)+' and '+cubeText(b)+' combine to '+cubeText(combined)+'.';
+    groups[index]=[...group.filter((_,i)=>i!==pair.i&&i!==pair.j),combined];
+    add(pos?"Combine complements: (X + Y)(X + Y') = X":"Combine complements: XY + XY' = X",groups,detail);
+  }
+  return steps;
+}
+function equivalenceSolution(expression,q){
+  const steps=[{kind:'equivalence',rule:'Starting expression',expression}],seen=new Set([parseExpression(expression,q.variables).text]);let current=parseExpression(expression,q.variables).ast;
+  for(let i=0;i<32&&!inspect(formatExpression(current),q).minimum;i++){
+    const next=nextRewriteForForm(current,targetForm(q));if(!next)break;const text=formatExpression(next.ast);if(text.length>360)break;const normalized=parseExpression(text,q.variables).text;if(seen.has(normalized)||truthMask(next.ast,q.variables)!==q.mask)break;
+    const law=locateLawTargetForForm(current,targetForm(q)),change=changedSubexpression(current,next.ast),complement=law&&(law.law==="X + X' = 1"||law.law==="XX' = 0"),remaining=complement&&change.beforeAst.type!=='not'&&flatten(change.beforeAst,change.beforeAst.type).length>2,domination=remaining?(change.beforeAst.type==='or'?'1 + Y = 1':'0Y = 0'):'';
+    steps.push({kind:'equivalence',rule:next.rule+(remaining?'; then apply domination':''),expression:text,detail:(law?law.law+'. '+law.explanation:'')+(remaining?' Then '+domination+' removes the remaining '+(change.beforeAst.type==='or'?'OR terms.':'AND factors.'):'')});seen.add(normalized);current=next.ast;
+  }
+  if(!inspect(formatExpression(current),q).minimum)steps.push(...coverCombinationSteps(q));
+  const final=steps.at(-1).expression;if(!inspect(final,q).minimum)throw new Error('The worked solution did not reach the requested minimum.');
+  steps.push({kind:'equivalence',rule:'Minimum '+targetForm(q),expression:final,detail:q.minimum.terms+' '+(targetForm(q)==='POS'?'sum clauses':'product terms')+' and '+q.minimum.literals+' literals. This is the exact minimum cost.'});return steps;
+}
+function workedSolution(q,accepted=[]){
+  if(q.exercise==='expression-to-table')return [...Array.from({length:2**q.variables.length},(_,row)=>{const work=rowWorking(q,row);return {kind:'row',row,value:work.value,rule:'Row '+row+' · '+assignmentForRow(q,row),expression:'F = '+work.value,detail:work.detail};}),{kind:'column',rule:'Complete output column',expression:q.answerBits||truthBits(q.mask,q.variables.length),detail:'Read the row outputs from all-zero inputs to all-one inputs.'}];
+  const steps=[],start=q.exercise==='table-to-expression'?canonicalSOP(q.mask,q.variables):q.expression;
+  if(q.exercise==='table-to-expression')for(let row=0;row<2**q.variables.length;row++)if((q.mask>>row)&1)steps.push({kind:'minterm',row,rule:'Output-1 row · '+assignmentForRow(q,row),expression:mintermForRow(q,row),detail:'Complement inputs that are 0, keep inputs that are 1, and AND the literals.'});
+  steps.push({kind:'equivalence',rule:q.exercise==='table-to-expression'?'OR all required minterms':'Original expression',expression:start,detail:q.exercise==='table-to-expression'&&!q.mask?'There are no output-1 rows, so the function is 0.':''});
+  let current=start;for(const text of accepted){try{if(maskOf(text,q.variables)===q.mask&&parseExpression(text,q.variables).text!==parseExpression(current,q.variables).text){steps.push({kind:'equivalence',rule:'Your accepted equivalent step',expression:text});current=text;}}catch{}}
+  return [...steps,...equivalenceSolution(current,q).slice(1)];
+}
+function changedSubexpression(before,after){
+  const keys=before.child&&after.child?['child']:before.left&&after.left?['left','right']:[];
+  const changed=keys.filter(key=>astKey(before[key])!==astKey(after[key]));
+  return before.type===after.type&&changed.length===1?changedSubexpression(before[changed[0]],after[changed[0]]):{before:formatExpression(before),after:formatExpression(after),beforeAst:before,afterAst:after};
+}
+function tutorialHintPlan(q,t){
+  const step=tutorialStep(q,t);let answer,working;
+  if(step.kind==='row'){const work=rowWorking(q,step.row);answer=String(work.value);working=assignmentForRow(q,step.row)+'. '+work.detail;}
+  else if(step.kind==='column'){answer=q.answerBits||truthBits(q.mask,q.variables.length);working='Accepted rows in order: '+t.history.filter(entry=>entry.title.startsWith('Evaluate row')).map(entry=>entry.text).join(', ')+'. Keep this order in the complete column.';}
+  else if(step.kind==='minterm'){answer=mintermForRow(q,step.row);working=q.variables.map((v,j)=>v+'='+((step.row>>(q.variables.length-1-j))&1)+' selects '+v+(((step.row>>(q.variables.length-1-j))&1)?'':"'")).join('; ')+'. AND these literals.';}
+  else if(step.kind==='constant'){answer='0';working='There are '+(2**q.variables.length)+' output rows, and each is 0. A single constant represents the table.';}
+  else if(step.kind==='combine'){answer=canonicalSOP(q.mask,q.variables);working='Your accepted minterms are '+t.minterms.join(', ')+'. Place + between these products to cover all output-1 rows.';}
+  else{
+    const route=t.route.length?t.route:equivalenceSolution(t.current,q).slice(1),index=route.findIndex(entry=>!t.seen.includes(parseExpression(entry.expression,q.variables).text)),choice=route[index<0?route.length-1:index];answer=choice.expression;
+    const change=changedSubexpression(parseExpression(t.current,q.variables).ast,parseExpression(answer,q.variables).ast);working=index>0?'Continue the verified equivalent working: '+route.slice(0,index+1).map(entry=>entry.rule+': F = '+entry.expression+(entry.detail?'. '+entry.detail:'')).join(' → '):choice.rule+': '+change.before+' → '+change.after+'. '+(choice.detail||'Keep the rest of the expression unchanged.');
+  }
+  const checked=checkTutorialAnswer(answer,q,t);if(!checked.correct)throw new Error('A tutorial hint answer was not valid for the active step.');
+  return {answer,stages:[step.law?'Law: '+step.law+'. '+step.explanation:step.hint,working,'Step answer: '+answer+'. Press Enter to check this step.']};
 }
 
 let state={mode:'relaxed',exercise:'simplify',question:null,number:0,solved:0,valid:0,correct:0,attempts:0,streak:0,complete:false,revealed:false,hadError:false,hints:0,accepted:new Set(),tableDraft:[],tableButtons:[],running:false,ended:false,deadline:0,duration:120,tutorial:null};
@@ -728,7 +853,7 @@ function renderQuestion(){
   $('questionTable').hidden=isExpressionExercise();$('questionTable').replaceChildren();state.tableButtons=[];
   if(!isExpressionExercise())$('questionTable').append(makeTruthTable(isTableAnswer()));
   $('questionTitle').textContent=isTableAnswer()?'Complete the truth table for this simplified expression.':state.exercise==='table-to-expression'?'Write a minimum SOP for this truth table.':'Reduce this expression to a minimum '+form+'.';
-  $('questionInstructions').textContent=isTableAnswer()?order+(state.mode==='tutorial'?' Answer one row at a time in the main textbox. Checked outputs appear below; then enter the complete column.':' Enter one output bit per row, or fill the output cells below.'):(state.exercise==='table-to-expression'?order+' ':'')+'Use the fewest '+(form==='POS'?'sum clauses':'product terms')+', then the fewest literals. Equivalent minimum answers are accepted in any order.';
+  $('questionInstructions').textContent=isTableAnswer()?order+(state.mode==='tutorial'?' Answer one row at a time in the main textbox. Checked outputs appear below; then enter the complete column.':' Enter one output bit per row, or fill the output cells below.'):(state.exercise==='table-to-expression'?order+' ':'')+'Use the fewest '+(form==='POS'?'sum clauses':'product terms')+', then the fewest literals. Equivalent minimum answers are accepted in any order.'+(state.mode==='tutorial'?' The step total follows your current route.':'');
   $('answerLabel').textContent=isTableAnswer()?'Your '+(2**n)+' output bits, in the listed row order':state.exercise==='table-to-expression'?'Your expression or next simplified line':'Your next equivalent expression';
   $('answer').placeholder=isTableAnswer()?'Enter '+(2**n)+' output bits':form==='POS'?"e.g. (A+B')(A+C)":"e.g. A + B'C";$('answer').setAttribute('inputmode',isTableAnswer()?'numeric':'text');
   $('syntax').innerHTML=isTableAnswer()?'Use <code>0</code> or <code>1</code> for each output. Spaces, commas, and underscores are accepted. A <code>?</code> marks an unfinished cell.':'<code>+</code> OR &nbsp; <code>\'</code> NOT &nbsp; <code>AB</code> AND &nbsp; <code>( )</code> or <code>[ ]</code> grouping. Use <code>0</code> and <code>1</code> for constants. An <code>F=</code> prefix is optional.';
@@ -737,22 +862,31 @@ function renderQuestion(){
 }
 
 function renderTutorial(){
-  const list=$('tutorialSteps');list.replaceChildren();list.hidden=state.mode!=='tutorial';$('steps').hidden=state.mode==='tutorial';if(list.hidden)return;
+  const list=$('tutorialSteps'),final=$('tutorialFinal');list.replaceChildren();final.replaceChildren();final.hidden=true;list.hidden=state.mode!=='tutorial'||state.revealed;$('steps').hidden=state.mode==='tutorial'||state.revealed;if(list.hidden)return;
   const t=state.tutorial;
-  function item(title,text,status,kind,coaching){const li=document.createElement('li'),head=document.createElement('div'),strong=document.createElement('strong'),badge=document.createElement('span');li.className=kind;if(kind==='active')li.setAttribute('aria-current','step');head.className='step-title';strong.textContent=title;badge.className='step-status';badge.textContent=status;head.append(strong,badge);li.append(head);if(text){const detail=document.createElement('code');detail.className='step-bits';if(coaching&&coaching.highlight){detail.append('Current expression: ');coaching.highlight.parts.forEach(part=>{if(part.path===null)detail.append(part.text);else{const mark=document.createElement('mark');mark.className='law-target';mark.textContent=part.text;mark.setAttribute('aria-label','Highlighted part: '+part.text);mark.setAttribute('data-target-path',part.path.join('.')||'root');detail.append(mark);}});}else detail.textContent=text;li.append(detail);}if(coaching&&coaching.law){const note=document.createElement('p'),label=document.createElement('strong'),law=document.createElement('code');note.className='law-explanation';label.textContent='Law: ';law.textContent=coaching.law;note.append(label,law,'. '+coaching.explanation);li.append(note);}list.append(li);list.scrollTop=list.scrollHeight;}
-  t.history.forEach((entry,i)=>item('Step '+(i+1)+' · '+entry.title,entry.text,entry.final?'Complete':'Correct',entry.final?'complete':'accepted'));
-  if(state.revealed){item('Worked answer',isTableAnswer()?state.question.answerBits:(state.exercise==='table-to-expression'?'Canonical SOP: '+state.question.canonicalExpression+'; minimum SOP: ':'Minimum '+targetForm(state.question)+': ')+state.question.minimum.expression,'Revealed · no solve','');return;}
-  if(state.complete){$('syntax').textContent='Press Enter for the next question.';return;}
-  const step=tutorialStep(state.question,t),label='Step '+step.number+(step.total?' of '+step.total:'')+' · '+step.title;
-  item(label,step.work?'Current expression: '+step.work:step.help,'Current step','active',step);$('answerLabel').textContent=label;$('syntax').textContent=step.help;
+  function item(number,title,text,status,kind,coaching){
+    const li=document.createElement('li'),index=document.createElement('span'),content=document.createElement('div'),head=document.createElement('div'),heading=document.createElement('h4'),badge=document.createElement('span');
+    li.className='worked-step '+kind;if(kind==='active')li.setAttribute('aria-current','step');index.className='worked-number';index.setAttribute('aria-hidden','true');index.textContent=number;content.className='worked-content';head.className='step-title';heading.textContent=title;badge.className='step-status';badge.textContent=status;head.append(heading,badge);content.append(head);
+    if(text){const detail=document.createElement('code');detail.className='worked-expression step-bits';if(coaching&&coaching.highlight){detail.append('Current expression: ');coaching.highlight.parts.forEach(part=>{if(part.path===null)detail.append(part.text);else{const mark=document.createElement('mark');mark.className='law-target';mark.textContent=part.text;mark.setAttribute('aria-label','Highlighted part: '+part.text);mark.setAttribute('data-target-path',part.path.join('.')||'root');detail.append(mark);}});}else detail.textContent=text;content.append(detail);}
+    if(coaching&&coaching.law){const note=document.createElement('p'),label=document.createElement('strong'),law=document.createElement('code');note.className='law-explanation';label.textContent='Law: ';law.textContent=coaching.law;note.append(label,law,'. '+coaching.explanation);content.append(note);}
+    li.append(index,content);list.append(li);list.scrollTop=list.scrollHeight;
+  }
+  t.history.forEach((entry,i)=>item(i+1,entry.title,entry.text,'Accepted','accepted'));
+  if(state.complete){const q=state.question,answer=t.history.at(-1)?.text||q.minimum.expression,note=isTableAnswer()?'All output rows are correct in binary input order.':q.minimum.terms===0?'Minimum '+targetForm(q)+'. This constant applies to every input row.':'Minimum '+targetForm(q)+': '+q.minimum.terms+' '+(targetForm(q)==='POS'?'sum clauses':'product terms')+' and '+q.minimum.literals+' literals.';final.innerHTML=finalAnswerMarkup(answer,note);final.hidden=false;$('answerLabel').textContent='Step '+t.history.length+' of '+t.history.length+' · Complete';$('syntax').textContent='Press Enter for the next question.';return;}
+  const step=tutorialStep(state.question,t),progress='Step '+step.number+' of '+step.total,label=progress+' · '+step.title;
+  item(step.number,step.title,step.work?'Current expression: '+step.work:step.help,progress,'active',step);$('answerLabel').textContent=label;$('syntax').textContent=step.help;
   $('answer').placeholder=step.kind==='row'?'0 or 1':step.kind==='column'?'Enter '+(2**state.question.variables.length)+' output bits':step.kind==='constant'?'0 or 1':step.kind==='minterm'?'Enter one product term':targetForm(state.question)==='POS'?"e.g. (A+B')(A+C)":"e.g. A + B'C";
   $('answer').setAttribute('inputmode',step.kind==='row'||step.kind==='column'?'numeric':'text');$('checkAnswer').textContent='Check step ↵';
 }
 function renderTutorialGuide(){
-  const guide=$('guide');guide.replaceChildren();
-  const p=document.createElement('p');p.textContent=state.revealed?'The worked answer is shown. Generate a fresh question to continue practicing.':state.complete?'You completed every required stage. Press Enter for the next question.':tutorialStep(state.question,state.tutorial).help;guide.append(p);
-  if(!state.complete&&state.tutorial.hinted){const div=document.createElement('div');div.className='hint-step';div.textContent=tutorialStep(state.question,state.tutorial).hint;guide.append(div);}
-  $('hintButton').textContent='Show a hint';$('hintButton').disabled=state.complete||state.tutorial.hinted;
+  const hints=$('questionHints');hints.replaceChildren();
+  if(!state.complete&&state.tutorial.hintCount){const plan=tutorialHintPlan(state.question,state.tutorial);plan.stages.slice(0,state.tutorial.hintCount).forEach((text,index)=>{const div=document.createElement('div'),title=document.createElement('strong'),p=document.createElement('p');div.className='hint-step';title.textContent='Hint '+(index+1)+' of 3';p.textContent=text;div.append(title,p);hints.append(div);});}
+  $('hintButton').textContent='Show a hint';$('hintButton').disabled=state.complete||state.tutorial.hintCount>=3;
+}
+function renderWorkedSolution(){
+  const worked=state.worked||[],final=worked.at(-1)||{expression:'',detail:''};
+  const steps=worked.slice(0,-1).map(step=>({title:step.rule,expression:step.expression,paragraphs:step.detail?[step.detail]:[]}));
+  $('questionHints').innerHTML=workedSolutionMarkup(steps,final.expression,final.detail||'');
 }
 function checkGuidedAnswer(){
   const q=state.question,t=state.tutorial,step=tutorialStep(q,t),result=checkTutorialAnswer($('answer').value,q,t);
@@ -765,19 +899,19 @@ function checkGuidedAnswer(){
   else{$('answer').value='';setFeedback('Correct. Continue with step '+(t.history.length+1)+'.','progress');enableControls();}
   stats();$('answer').focus();
 }
-function renderGuide(){if(state.mode==='tutorial'){renderTutorialGuide();return;}const guide=$('guide');guide.replaceChildren();const methods=isTableAnswer()?['Read the input rows in binary order, with A as the most significant bit.','Complement marked literals, AND each product, then OR the products.','Enter one output bit per row in the listed order.']:state.exercise==='table-to-expression'?['Find each row with output 1.','Build a product that selects each such row, then OR the products.','Simplify the complete function to a minimum SOP.']:['Find an identity that applies to a group, factor, or term.','Rewrite one equivalent expression at a time.','Finish with the fewest '+targetForm(state.question)+(targetForm(state.question)==='POS'?' sum clauses':' terms')+', then the fewest literals.'];const method=document.createElement('ol');method.className='method-steps';methods.forEach(text=>{const li=document.createElement('li');li.textContent=text;method.append(li);});guide.append(method);if(state.hints){state.question.hints.slice(0,state.hints).forEach((hint,i)=>{const div=document.createElement('div');div.className='hint-step';const title=document.createElement('p');title.textContent=(i+1)+'. '+hint[0];const detail=document.createElement('p');detail.className='subtle';detail.textContent=hint[1];div.append(title,detail);guide.append(div);});}const all=state.hints>=state.question.hints.length;$('hintButton').textContent='Show a hint';$('hintButton').disabled=all||state.complete||pressureLocked();}
+function renderGuide(){const guide=$('guide'),hints=$('questionHints');guide.replaceChildren();hints.replaceChildren();$('hintButton').hidden=state.mode==='pressure';$('notesHelp').textContent=state.mode==='pressure'?'Use Show worked answer to review the solution.':'Use Show a hint for extra guidance.';const methods=isTableAnswer()?['Read the input rows in binary order, with A as the most significant bit.','Complement marked literals, AND each product, then OR the products.','Enter one output bit per row in the listed order.']:state.exercise==='table-to-expression'?['Find each row with output 1.','Build a product that selects each such row, then OR the products.','Simplify the complete function to a minimum SOP.']:['Find an identity that applies to a group, factor, or term.','Rewrite one equivalent expression at a time.','Finish with the fewest '+targetForm(state.question)+(targetForm(state.question)==='POS'?' sum clauses':' terms')+', then the fewest literals.'];const method=document.createElement('ol');method.className='method-steps';methods.forEach(text=>{const li=document.createElement('li');li.textContent=text;method.append(li);});guide.append(method);if(state.revealed){renderWorkedSolution();$('hintButton').disabled=true;return;}if(state.mode==='pressure'){$('hintButton').disabled=true;return;}if(state.mode==='tutorial'){renderTutorialGuide();return;}if(state.hints){state.question.hints.slice(0,state.hints).forEach((hint,i)=>{const div=document.createElement('div');div.className='hint-step';const title=document.createElement('p');title.textContent=(i+1)+'. '+hint[0];const detail=document.createElement('p');detail.className='subtle';detail.textContent=hint[1];div.append(title,detail);hints.append(div);});}const all=state.hints>=state.question.hints.length;$('hintButton').textContent='Show a hint';$('hintButton').disabled=all||state.complete||pressureLocked();}
 function pressureLocked(){return state.mode==='pressure'&&!state.running;}
 function enableControls(){renderTutorial();const locked=pressureLocked();$('answer').disabled=locked||state.revealed;$('answer').readOnly=state.complete;$('checkAnswer').disabled=locked||state.revealed;$('generate').disabled=locked;$('reveal').disabled=locked||state.complete;renderGuide();refreshTableDraft();}
 function resetQuestion(focus=false){
   if(!state.question){newQuestion(focus);return;}state.exercise=state.question.exercise;
-  state.complete=false;state.revealed=false;state.hadError=false;state.hints=state.mode==='tutorial'?1:0;state.accepted=new Set();state.tableDraft=Array(2**state.question.variables.length).fill('?');state.tutorial=state.mode==='tutorial'?createTutorialState(state.question):null;
+  state.complete=false;state.revealed=false;state.worked=null;state.hadError=false;state.hints=state.mode==='tutorial'?1:0;state.accepted=new Set();state.tableDraft=Array(2**state.question.variables.length).fill('?');state.tutorial=state.mode==='tutorial'?createTutorialState(state.question):null;
   $('questionNumber').textContent='Question '+String(state.number).padStart(2,'0');$('questionBadge').textContent=state.question.variables.length+'-variable practice';$('steps').replaceChildren();$('answer').value='';$('generate').textContent='Generate a question';renderQuestion();
   setFeedback(state.mode==='tutorial'?'Answer the active step below. Press Enter to check it; a correct answer unlocks the next step.':isTableAnswer()?'Fill the output column or type its bits, then press Enter to check the complete table.':state.exercise==='table-to-expression'?'Build an expression from the table, then simplify it. Each equivalent line is checked against every table row.':'Enter an equivalent expression and press Enter. Each accepted line becomes part of your working.');enableControls();stats();if(focus&&!pressureLocked())$('answer').focus();
 }
 function newQuestion(focus=true){
   if(state.mode==='pressure'&&state.running&&!checkClock())return;
   if(state.question&&!state.complete&&state.number>0)state.streak=0;
-  state.exercise=$('exercise').value||'simplify';state.question=makeExerciseQuestion(state.exercise,Number($('difficulty').value));state.number++;resetQuestion(focus);
+  state.exercise=$('exercise').value||'simplify';state.question=makeExerciseQuestion(state.exercise,Number($('difficulty').value));state.number++;window.practiceScratch?.reset();resetQuestion(focus);
 }
 function mismatchDescription(mask){const q=state.question,diff=mask^q.mask;let row=0;while(!(diff&(1<<row)))row++;const assignment=q.variables.map((v,j)=>v+'='+((row>>(q.variables.length-1-j))&1)).join(', ');return `Check ${assignment}: the ${state.exercise==='table-to-expression'?'table':'original'} gives ${(q.mask>>row)&1}, while your expression gives ${(mask>>row)&1}.`;}
 function appendWorking(text,complete,label){const li=document.createElement('li'),index=document.createElement('span'),code=document.createElement('code'),mark=document.createElement('span');li.className=complete?'final-step':'intermediate-step';index.className='step-index';index.textContent=state.accepted.size;code.textContent=text;mark.className='step-mark';mark.textContent=label;li.append(index,code,mark);$('steps').append(li);}
@@ -799,7 +933,7 @@ function checkAnswer(event){
   else{let message=result.cost?`Equivalent. Your ${targetForm(state.question)} has ${result.cost.terms} ${targetForm(state.question)==='POS'?'sum clauses':'terms'} and ${result.cost.literals} literals. Keep simplifying.`:'Equivalent. Keep simplifying, and finish with '+(targetForm(state.question)==='POS'?'AND between sum clauses.':'OR between product terms.');setFeedback(message,'progress');if(state.mode==='tutorial'&&state.hints<state.question.hints.length){state.hints++;renderGuide();}$('answer').value='';}
   stats();$('answer').focus();
 }
-function revealSolution(){if(!checkClock()||pressureLocked()||state.complete)return;state.revealed=true;state.complete=true;state.streak=0;state.hints=state.question.hints.length;let answer='One minimum '+targetForm(state.question)+' is '+state.question.minimum.expression+'.';if(isTableAnswer()){state.tableDraft=[...state.question.answerBits];$('answer').value=state.question.answerBits;answer='The output bits in the listed row order are '+state.question.answerBits+'.';}setFeedback(answer+' This question is marked as revealed and earns no solve. Generate a question to continue.','info');enableControls();stats();}
+function revealSolution(){if(!checkClock()||pressureLocked()||state.complete)return;state.worked=workedSolution(state.question,state.mode==='tutorial'?state.tutorial.history.map(entry=>entry.text):[...state.accepted]);state.revealed=true;state.complete=true;state.streak=0;state.hints=state.question.hints.length;let answer='One minimum '+targetForm(state.question)+' is '+state.question.minimum.expression+'.';if(isTableAnswer()){state.tableDraft=[...state.question.answerBits];$('answer').value=state.question.answerBits;answer='The output bits in the listed row order are '+state.question.answerBits+'.';}setFeedback(answer+' This question is marked as revealed and earns no solve. Generate a question to continue.','info');enableControls();stats();}
 function timeText(seconds){return seconds+'s';}
 function updateClock(){const remaining=state.running?Math.max(0,Math.ceil((state.deadline-performance.now())/1000)):state.ended?0:Number($('duration').value);$('clockNumber').textContent=timeText(remaining);$('clockPanel').classList.toggle('danger',state.running&&remaining<=10);if(state.running&&remaining<=0)finishRound();}
 function checkClock(){if(state.mode!=='pressure')return true;if(state.running&&performance.now()>=state.deadline){finishRound();return false;}return state.running;}
@@ -824,7 +958,37 @@ function startRound(){
   enableControls();setFeedback(isTableAnswer()?'The clock is running. Enter the output bits and press Enter.':'The clock is running. Enter an equivalent step and press Enter.');updateClock();$('answer').focus();
 }
 document.querySelectorAll('[data-mode]').forEach(button=>button.addEventListener('click',()=>{if(button.dataset.mode===state.mode)return;state.mode=button.dataset.mode;document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===state.mode)));$('clockPanel').hidden=state.mode!=='pressure';resetSession(false);}));
-$('exercise').addEventListener('change',()=>resetSession(true));$('difficulty').addEventListener('change',()=>resetSession(true));$('duration').addEventListener('change',()=>resetSession(false));$('answer').addEventListener('input',syncTableFromInput);$('answerForm').addEventListener('submit',checkAnswer);$('generate').addEventListener('click',()=>{if(!pressureLocked())newQuestion(false);});$('hintButton').addEventListener('click',()=>{if(!checkClock()||pressureLocked())return;if(state.mode==='tutorial'){if(!state.complete){state.tutorial.hinted=true;renderGuide();}return;}state.hints=Math.min(state.hints+1,state.question.hints.length);renderGuide();});$('reveal').addEventListener('click',revealSolution);$('startRound').addEventListener('click',startRound);document.addEventListener('visibilitychange',updateClock);setInterval(()=>{if(state.mode==='pressure')updateClock();},200);
-window.simulatorTest={parseExpression,evaluate,truthMask,maskOf,minimalSOP,minimalPOS,sopCost,posCost,dualAST,targetForm,formCost,inspect,makeQuestion,createQuestionHistory,buildTutorial,buildPOSTutorial,nextRewrite,nextRewriteForForm,formatExpression,astShape,astSize,astDepth,maxNotChain,truthBits,canonicalSOP,parseTruthBits,checkTruthAnswer,makeExerciseQuestion,mintermForRow,assignmentForRow,createTutorialState,tutorialStep,checkTutorialAnswer,advanceTutorial,simplificationAdvice,flattenTargets,locateLawTarget,locateLawTargetForForm,formatHighlightedExpression,getState:()=>state};
+$('exercise').addEventListener('change',()=>resetSession(true));$('difficulty').addEventListener('change',()=>resetSession(true));$('duration').addEventListener('change',()=>resetSession(false));$('answer').addEventListener('input',syncTableFromInput);$('answerForm').addEventListener('submit',checkAnswer);$('generate').addEventListener('click',()=>{if(!pressureLocked())newQuestion(false);});$('hintButton').addEventListener('click',()=>{if(state.mode==='pressure'||!checkClock()||pressureLocked()||state.complete)return;if(state.mode==='tutorial'){if(state.tutorial.hintCount<3){state.tutorial.hintCount++;if(state.tutorial.hintCount===3){$('answer').value=tutorialHintPlan(state.question,state.tutorial).answer;$('answer').focus({preventScroll:true});}renderGuide();}return;}state.hints=Math.min(state.hints+1,state.question.hints.length);renderGuide();});$('reveal').addEventListener('click',revealSolution);$('startRound').addEventListener('click',startRound);document.addEventListener('visibilitychange',updateClock);setInterval(()=>{if(state.mode==='pressure')updateClock();},200);
+window.simulatorTest={tutorialStepMarkup,finalAnswerMarkup,workedSolutionMarkup,parseExpression,evaluate,truthMask,maskOf,minimalSOP,minimalPOS,sopCost,posCost,dualAST,targetForm,formCost,inspect,makeQuestion,createQuestionHistory,buildTutorial,buildPOSTutorial,nextRewrite,nextRewriteForForm,formatExpression,astShape,astSize,astDepth,maxNotChain,truthBits,canonicalSOP,parseTruthBits,checkTruthAnswer,makeExerciseQuestion,mintermForRow,assignmentForRow,remainingRouteSteps,tutorialProgress,createTutorialState,tutorialStep,checkTutorialAnswer,advanceTutorial,simplificationAdvice,rowWorking,coverCombinationSteps,equivalenceSolution,workedSolution,tutorialHintPlan,flattenTargets,locateLawTarget,locateLawTargetForForm,formatHighlightedExpression,getState:()=>state};
 newQuestion(false);
-</script></body></html>
+</script>
+<script>
+// Shared scratch paper: typed working stays with the current question.
+(()=>{
+  'use strict';
+  const panel=document.getElementById('scratchPaper');
+  if(!panel)return;
+  const toggle=document.getElementById('scratchToggle'),body=document.getElementById('scratchBody'),notes=document.getElementById('scratchText'),move=document.getElementById('scratchMove'),resize=document.getElementById('scratchResize');
+  let offset=0,height=240;
+  const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
+  function setOffset(value){offset=clamp(value,0,1200);panel.style.marginTop=offset+'px';}
+  function setHeight(value){height=clamp(value,120,1200);notes.style.height=height+'px';}
+  function setOpen(open){body.hidden=!open;toggle.setAttribute('aria-expanded',String(open));toggle.querySelector('.scratch-chevron').textContent=open?'▾':'▸';}
+  toggle.addEventListener('click',()=>setOpen(body.hidden));
+  function verticalHandle(handle,read,write,min,max){
+    let drag=null;
+    handle.addEventListener('pointerdown',event=>{
+      if(event.button!==0)return;
+      event.preventDefault();drag={pointer:event.pointerId,y:event.clientY,value:read()};handle.setPointerCapture(event.pointerId);handle.classList.add('is-dragging');
+    });
+    handle.addEventListener('pointermove',event=>{if(drag&&event.pointerId===drag.pointer)write(drag.value+event.clientY-drag.y);});
+    const end=event=>{if(!drag||event.pointerId!==drag.pointer)return;const id=drag.pointer;drag=null;handle.classList.remove('is-dragging');if(handle.hasPointerCapture(id))handle.releasePointerCapture(id);};
+    handle.addEventListener('pointerup',end);handle.addEventListener('pointercancel',end);handle.addEventListener('lostpointercapture',()=>{drag=null;handle.classList.remove('is-dragging');});
+    handle.addEventListener('keydown',event=>{const step=event.shiftKey?100:20;let value;if(event.key==='ArrowUp')value=read()-step;else if(event.key==='ArrowDown')value=read()+step;else if(event.key==='Home')value=min;else if(event.key==='End')value=max;else return;event.preventDefault();write(value);});
+  }
+  verticalHandle(move,()=>offset,setOffset,0,1200);verticalHandle(resize,()=>height,setHeight,120,1200);
+  // Reset content only; the student's open state, size, and position are preferences.
+  window.practiceScratch={reset(){notes.value='';notes.scrollTop=0;}};
+})();
+</script>
+</body></html>

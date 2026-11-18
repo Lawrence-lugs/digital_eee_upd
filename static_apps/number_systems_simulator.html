@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>Number Systems Simulator</title><!-- Embedded font licenses
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>Number Systems Skill Trainer</title><!-- Embedded font licenses
 Copyright 2020 The Inter Project Authors (https://github.com/rsms/inter)
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
@@ -227,11 +227,12 @@ header.simulator-banner .banner-wrap{max-width:1180px}
 .practice-stat>span,.practice-stat>.stat-label{display:block;margin-top:4px;font:400 10px/1.4 var(--ui-font);letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
 .practice-settings .practice-round{flex:1 0 100%;width:100%;margin:0}
 .practice-layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:22px;align-items:start}
-.practice-layout>.card,.practice-layout>.notes-sidebar>.card,.practice-layout>.notes-sidebar.card{min-width:0;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 28px rgba(28,39,49,.07)}
+.practice-layout>.card,.practice-layout>.notes-sidebar>.card,.practice-layout>.notes-sidebar.card,.practice-right-column>.notes-sidebar.card{min-width:0;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 28px rgba(28,39,49,.07)}
 .practice-layout>.card{padding:24px}
 .notes-sidebar{min-width:0;display:grid;gap:18px;align-content:start}
-.notes-sidebar>.card,.practice-layout>.notes-sidebar.card{padding:24px}
-.practice-layout>.notes-sidebar.card{display:block}
+.notes-sidebar>.card,.practice-layout>.notes-sidebar.card,.practice-right-column>.notes-sidebar.card{padding:24px}
+.practice-layout>.notes-sidebar.card,.practice-right-column>.notes-sidebar.card{display:block}
+.practice-right-column{min-width:0;display:flex;flex-direction:column;gap:18px;align-self:stretch}
 .notes-sidebar h2,.notes-sidebar h3{font:700 17px/1.35 var(--ui-font);margin:0 0 12px;letter-spacing:normal}
 .question-toolbar{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;padding:0;margin:0 0 18px;border:0;background:transparent}
 .question-toolbar>div{min-width:0;flex:1 1 200px}
@@ -295,26 +296,69 @@ textarea.practice-answer-input{resize:vertical}
 .notes-sidebar .notes-reference th,.notes-sidebar .notes-reference td{padding:5px 3px;border-bottom:1px solid var(--line);text-align:center}
 .notes-sidebar .step,.notes-sidebar .hint-step{margin:12px 0 0;padding:10px 12px;border:0;border-left:3px solid var(--up-maroon);border-radius:0;background:#faf1f2;font:400 14px/1.55 var(--ui-font)}
 .notes-sidebar .step p:last-child,.notes-sidebar .hint-step p:last-child{margin-bottom:0}
-.practice-footer{display:flex;justify-content:space-between;gap:15px;max-width:none;width:auto;margin:25px 0 0;padding:0;border:0;background:transparent;color:var(--muted);font:400 12px/1.55 var(--ui-font)}
-.practice-footer .key{padding:1px 5px;border:1px solid #ccd6de;border-radius:4px;background:#e9edf1;color:var(--muted);font:400 12px var(--mono-font)}
-.tutorial-steps{display:grid;gap:10px;list-style:none;margin:0 0 22px;padding:0;max-height:300px;overflow:auto;position:relative}.tutorial-steps li{padding:12px 14px;border:1px solid var(--line);border-radius:9px;background:#f8fafb}.tutorial-steps li.active{border-color:var(--up-maroon);background:#faf1f2}.tutorial-steps li.accepted{border-color:#ead59f;background:#fff8e6}.tutorial-steps li.complete{border-color:#bbdfd0;background:#edf9f3}.tutorial-steps .step-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px;font-size:14px}.tutorial-steps .step-status{font-size:11px;color:var(--muted);white-space:nowrap}.tutorial-steps .step-bits{display:block;margin-top:7px;font:15px/1.5 var(--mono-font);overflow-wrap:anywhere}
+.question-hints{display:grid;gap:10px;margin-top:16px;color:var(--ink);font:400 14px/1.55 var(--ui-font)}
+.question-hints:empty{display:none}
+.question-hints .step,.question-hints .hint-step{margin:0;padding:12px 14px;border:0;border-left:3px solid var(--up-maroon);border-radius:0 9px 9px 0;background:#faf1f2;font:400 14px/1.55 var(--ui-font)}
+.question-hints p{margin:0 0 6px}.question-hints p:last-child{margin-bottom:0}
+.question-hints code{font-family:var(--mono-font);white-space:pre-wrap;overflow-wrap:anywhere}
+.worked-solution{min-width:0;padding-top:18px;border-top:1px solid var(--line);color:var(--ink);font:400 14px/1.55 var(--ui-font)}
+.worked-solution .worked-heading{display:block;max-width:none;margin:0 0 16px;padding:0;background:none;color:var(--ink);border:0;box-shadow:none}
+.worked-heading h3{margin:0 0 4px;font:750 18px/1.4 var(--ui-font)}.worked-heading p{margin:0;color:var(--muted);font:400 13px/1.5 var(--ui-font)}
+.worked-solution .worked-steps{display:grid;gap:12px;list-style:none;margin:0;padding:0;overflow:visible;max-height:none}
+.worked-solution .worked-step,.tutorial-steps .worked-step{display:grid;grid-template-columns:32px minmax(0,1fr);align-items:start;gap:12px;margin:0;padding:14px;border:1px solid var(--line);border-radius:10px;background:#f8fafb;min-width:0}
+.worked-number{display:grid;place-items:center;width:32px;height:32px;border:1px solid #e7cfd1;border-radius:50%;background:#faf1f2;color:var(--up-maroon);font:750 14px/1 var(--ui-font);font-variant-numeric:tabular-nums}
+.worked-content{min-width:0;overflow-wrap:anywhere}.worked-content h4{margin:4px 0 8px;font:700 14px/1.5 var(--ui-font)}.worked-content p{margin:0 0 8px;white-space:pre-wrap}.worked-content p:last-child{margin-bottom:0}
+.worked-content .worked-expression{display:block;margin:0 0 10px;padding:9px 11px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);font:400 14px/1.6 var(--mono-font);white-space:pre-wrap;overflow-wrap:anywhere}
+.worked-final{margin-top:16px;padding:16px 18px;border:1px solid #bbdfd0;border-left:4px solid #347554;border-radius:10px;background:#edf9f3;color:#24583f;overflow-wrap:anywhere}
+.worked-final h4{margin:0 0 8px;font:750 14px/1.4 var(--ui-font)}.worked-final .worked-final-answer{display:block;margin:0;font:600 20px/1.55 var(--mono-font);white-space:pre-wrap;overflow-wrap:anywhere}.worked-final p{margin:8px 0 0;font:400 13px/1.55 var(--ui-font)}
+@media(max-width:480px){.worked-solution .worked-step,.tutorial-steps .worked-step{grid-template-columns:28px minmax(0,1fr);gap:10px;padding:12px}.worked-number{width:28px;height:28px}.worked-final{padding:14px}.worked-final .worked-final-answer{font-size:18px}}
+.scratch-paper{min-width:0;margin:0;border:1px solid #e4d69c;border-radius:14px;background:#fff8d8;color:#5b4c21;box-shadow:0 6px 18px #74612610;overflow:hidden}
+.scratch-heading{display:flex;align-items:stretch;min-height:48px}
+.scratch-heading .scratch-toggle,.scratch-heading .scratch-move{margin:0;border:0;border-radius:0;background:transparent;color:#5b4c21;font:700 14px/1.4 var(--ui-font)}
+.scratch-heading .scratch-toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:1;min-width:0;padding:14px 16px;text-align:left;cursor:pointer}
+.scratch-heading .scratch-move{flex:0 0 42px;width:42px;padding:10px;border-left:1px solid #eadfaa;font-size:20px;cursor:ns-resize;touch-action:none;user-select:none}
+.scratch-heading button:hover,.scratch-resize:hover,.scratch-paper .is-dragging{background:#fff0b8}
+.scratch-body{border-top:1px solid #eadfaa;padding:12px 12px 0}
+.scratch-body .scratch-text{display:block;box-sizing:border-box;min-width:0;width:100%;height:240px;min-height:120px;max-height:1200px;padding:10px 11px;margin:0;border:1px solid #e4d69c;border-radius:8px;resize:none;overflow:auto;background:#fffbea;color:#51451f;font:400 14px/1.6 var(--mono-font)}
+.scratch-text::placeholder{color:#918259;opacity:1}
+.scratch-body .scratch-resize{display:block;width:100%;height:28px;min-height:0;margin:0;padding:0;border:0;border-radius:0;background:transparent;color:#9a8546;font:700 22px/1 var(--ui-font);cursor:ns-resize;touch-action:none;user-select:none}
+.tutorial-steps{display:grid;gap:12px;list-style:none;margin:0 0 22px;padding:0;max-height:360px;overflow:auto;position:relative;font:400 14px/1.55 var(--ui-font)}.tutorial-steps .worked-step.active{border-color:var(--up-maroon);background:#faf1f2}.tutorial-steps .worked-step.accepted{border-color:#ead59f;background:#fff8e6}.tutorial-steps .step-title{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:4px 10px}.tutorial-steps .step-title h4{flex:1;min-width:0}.tutorial-steps .step-status{font:400 11px/1.5 var(--ui-font);color:var(--muted);white-space:nowrap}.tutorial-steps .worked-expression:last-child{margin-bottom:0}.tutorial-final{margin:0 0 22px}.tutorial-final .worked-final{margin-top:0}
 button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #edae3d;outline-offset:3px;box-shadow:none}
 @media(max-width:950px){.practice-layout{grid-template-columns:minmax(0,1fr) 270px}.practice-settings{gap:16px}}
-@media(max-width:760px){body>main{padding:16px 17px 25px}.practice-layout{grid-template-columns:minmax(0,1fr)}.practice-settings{padding:18px}.practice-stats{flex-basis:100%;margin:0;padding-top:14px;border-top:1px solid var(--line);justify-content:space-between;gap:12px}.practice-stat>strong,.practice-stat>b,.practice-stat>.stat-value{font-size:22px}.practice-stat>span,.practice-stat>.stat-label{font-size:9px}.practice-layout>.card,.notes-sidebar>.card,.practice-layout>.notes-sidebar.card{padding:20px}.question-toolbar .generate-question{max-width:100%}}
-@media(max-width:760px){.practice-timer .practice-round-note{flex:1 1 150px}.practice-answer-row{flex-wrap:wrap}.practice-answer .practice-answer-input{flex-basis:100%}.practice-answer-row>.practice-primary{width:100%}.practice-footer{flex-direction:column;gap:6px}}
+@media(max-width:760px){body>main{padding:16px 17px 25px}.practice-layout{grid-template-columns:minmax(0,1fr)}.practice-settings{padding:18px}.practice-stats{flex-basis:100%;margin:0;padding-top:14px;border-top:1px solid var(--line);justify-content:space-between;gap:12px}.practice-stat>strong,.practice-stat>b,.practice-stat>.stat-value{font-size:22px}.practice-stat>span,.practice-stat>.stat-label{font-size:9px}.practice-layout>.card,.notes-sidebar>.card,.practice-layout>.notes-sidebar.card,.practice-right-column>.notes-sidebar.card{padding:20px}.question-toolbar .generate-question{max-width:100%}}
+@media(max-width:760px){.practice-timer .practice-round-note{flex:1 1 150px}.practice-answer-row{flex-wrap:wrap}.practice-answer .practice-answer-input{flex-basis:100%}.practice-answer-row>.practice-primary{width:100%}}
 </style></head>
-<body><header class="simulator-banner"><div class="banner-wrap"><div class="banner-copy"><h1>Number Systems Simulator</h1><p class="banner-subtitle"><span class="banner-mainline">Move between bases, recognise patterns, and make every digit count.</span><span class="banner-course">Designed for digital design fundamentals practice.</span><span class="banner-credit">Conceptualized by Adelson Chua</span></p></div></div></header>
-<main class="container"><section class="toolbar practice-settings" aria-label="Practice settings"><div class="field mode-field"><label>Practice mode</label><div class="mode-tabs" role="group" aria-label="Practice mode"><button data-mode="relaxed" aria-pressed="true">Relaxed</button><button data-mode="pressure" aria-pressed="false">Pressure</button><button data-mode="tutorial" aria-pressed="false">Tutorial</button></div></div><div class="field"><label for="family">Conversion</label><select class="config" id="family"><option value="binary">Binary ↔ decimal</option><option value="hex">Hex ↔ decimal</option><option value="bridge">Binary ↔ hex</option><option value="mixed">Mixed core bases</option><option value="advanced">Advanced · bases 2–16</option></select></div><div class="field"><label for="bits">Value range</label><select class="config" id="bits"><option value="4">Starter · 0–15</option><option value="8" selected>Standard · 0–255</option><option value="12">Challenge · 0–4095</option></select></div><div class="stats practice-stats" aria-label="Practice statistics"><div class="stat practice-stat"><strong id="score">0</strong><span>Solved</span></div><div class="stat practice-stat"><strong id="accuracy">—</strong><span>Accuracy</span></div><div class="stat practice-stat"><strong id="streak">0</strong><span>Streak</span></div></div>
+<body><header class="simulator-banner"><div class="banner-wrap"><div class="banner-copy"><h1>Number Systems Skill Trainer</h1><p class="banner-subtitle"><span class="banner-mainline">Move between bases, recognise patterns, and make every digit count.</span><span class="banner-course">Designed for digital design fundamentals practice.</span><span class="banner-credit">Conceptualized by Adelson Chua</span></p></div></div></header>
+<main class="container"><section class="toolbar practice-settings" aria-label="Practice settings"><div class="field mode-field"><label>Practice mode</label><div class="mode-tabs" role="group" aria-label="Practice mode"><button data-mode="tutorial" aria-pressed="false">Tutorial</button><button data-mode="relaxed" aria-pressed="true">Practice</button><button data-mode="pressure" aria-pressed="false">Pressure</button></div></div><div class="field"><label for="family">Conversion</label><select class="config" id="family"><option value="binary">Binary ↔ decimal</option><option value="hex">Hex ↔ decimal</option><option value="bridge">Binary ↔ hex</option><option value="mixed">Mixed core bases</option><option value="advanced">Advanced · bases 2–16</option></select></div><div class="field"><label for="bits">Value range</label><select class="config" id="bits"><option value="4">Starter · 0–15</option><option value="8" selected>Standard · 0–255</option><option value="12">Challenge · 0–4095</option></select></div><div class="stats practice-stats" aria-label="Practice statistics"><div class="stat practice-stat"><strong id="score">0</strong><span>Solved</span></div><div class="stat practice-stat"><strong id="accuracy">—</strong><span>Accuracy</span></div><div class="stat practice-stat"><strong id="streak">0</strong><span>Streak</span></div></div>
 <div class="roundbar practice-timer practice-round" id="roundbar" hidden><strong class="practice-time" id="timer" aria-label="Seconds remaining">120s</strong><span class="practice-round-note" id="roundnote">Start a round when you are ready. Each solved question earns one point.</span><label for="duration">Round</label><select id="duration"><option value="60">60 seconds</option><option value="120" selected>120 seconds</option><option value="180">180 seconds</option></select><button class="primary practice-primary" id="startRound">Start round</button></div>
 <div id="summary" class="round-summary practice-summary practice-round" role="status" hidden></div></section>
-<div class="layout practice-layout"><section class="card"><div class="question-head question-toolbar"><div><div class="question-number" id="questionNo">Question 01</div><h2 id="taskTitle">Convert the number</h2></div><button id="generate" class="primary generate-question">Generate a question</button></div><div id="problem" class="problem practice-question-surface"></div><ol id="tutorialSteps" class="tutorial-steps" aria-label="Tutorial steps" hidden></ol>
+<div class="layout practice-layout"><section class="card"><div class="question-head question-toolbar"><div><div class="question-number" id="questionNo">Question 01</div><h2 id="taskTitle">Convert the number</h2></div><button id="generate" class="primary generate-question">Generate a question</button></div><div id="problem" class="problem practice-question-surface"></div><ol id="tutorialSteps" class="tutorial-steps" aria-label="Tutorial steps" role="list" hidden></ol><div id="tutorialFinal" class="tutorial-final" hidden></div>
 <form id="answerForm" class="answer-form practice-answer" autocomplete="off"><label class="practice-answer-label" for="answer" id="answerLabel">Your answer</label><div class="answer-row practice-answer-row"><input class="practice-answer-input" id="answer" type="text" spellcheck="false" autocapitalize="characters" aria-describedby="answerHelp feedback"><button id="check" class="primary practice-primary" type="submit">Check answer ↵</button></div><div class="help practice-answer-help" id="answerHelp"></div></form>
-<div id="feedback" class="feedback" role="status" aria-live="polite">Type your answer and press Enter.</div><div class="actions practice-actions"><button id="hint">Show a hint</button><button id="reveal">Show worked answer</button></div>
+<div id="feedback" class="feedback" role="status" aria-live="polite">Type your answer and press Enter.</div><div class="actions practice-actions"><button id="hint">Show a hint</button><button id="reveal">Show worked answer</button></div><div class="question-hints" id="hints" aria-live="polite"></div>
 </section>
-<aside class="card notes-sidebar" aria-label="Study notes"><div class="eyebrow">Study notes</div><h2 id="guideTitle">Method</h2><div class="notes-method" id="guideBody"></div><div class="steps" id="hints"></div><p class="notes-help">Use Show a hint for extra guidance.</p><details class="notes-reference"><summary>Quick reference</summary><p>A digit in position k contributes digit × base<sup>k</sup>. The rightmost position is k = 0.</p><table><tr><th>Decimal</th><th>10</th><th>11</th><th>12</th><th>13</th><th>14</th><th>15</th></tr><tr><th>Hex digit</th><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td></tr></table><p>For binary → hexadecimal, group bits in fours from the right. Add leading zeros to complete the leftmost group.</p><p>For a larger question pool, choose Standard (256 values) or Challenge (4,096 values). Starter contains 16 values.</p></details></aside></div>
-<footer class="practice-footer"><span><span class="key">Enter</span> checks your answer. Press it again after success for the next question.</span><span>Works offline · No account required</span></footer></main><noscript>This practice simulator needs JavaScript enabled.</noscript>
+<div class="practice-right-column"><aside class="card notes-sidebar" aria-label="Study notes"><div class="eyebrow">Study notes</div><h2 id="guideTitle">Method</h2><div class="notes-method" id="guideBody"></div><p class="notes-help" id="notesHelp">Use Show a hint for extra guidance.</p><details class="notes-reference"><summary>Quick reference</summary><p>A digit in position k contributes digit × base<sup>k</sup>. The rightmost position is k = 0.</p><table><tr><th>Decimal</th><th>10</th><th>11</th><th>12</th><th>13</th><th>14</th><th>15</th></tr><tr><th>Hex digit</th><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td></tr></table><p>For binary → hexadecimal, group bits in fours from the right. Add leading zeros to complete the leftmost group.</p><p>For a larger question pool, choose Standard (256 values) or Challenge (4,096 values). Starter contains 16 values.</p></details></aside><section class="scratch-paper" id="scratchPaper" aria-label="Scratch paper">
+<div class="scratch-heading"><button type="button" class="scratch-toggle" id="scratchToggle" aria-expanded="false" aria-controls="scratchBody"><span>Scratch paper</span><span class="scratch-chevron" aria-hidden="true">▸</span></button><button type="button" class="scratch-move" id="scratchMove" aria-label="Move scratch paper vertically" title="Drag vertically, or use the Up and Down arrow keys">↕</button></div>
+<div class="scratch-body" id="scratchBody" hidden><textarea id="scratchText" class="scratch-text" aria-label="Scratch notes" placeholder="Write your temporary work here" spellcheck="false"></textarea><button type="button" class="scratch-resize" id="scratchResize" aria-label="Resize scratch paper vertically" title="Drag to resize, or use the Up and Down arrow keys"><span aria-hidden="true">━</span></button></div>
+</section></div></div>
+</main><noscript>This practice simulator needs JavaScript enabled.</noscript>
 <script>
 'use strict';
+
+function tutorialStepMarkup(index,title,expression='',status='Next',kind=''){
+  const safe=value=>String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  const state=kind==='accepted'?'accepted':kind==='active'?'active':'';
+  return '<li class="worked-step '+state+'"'+(state==='active'?' aria-current="step"':'')+'><span class="worked-number" aria-hidden="true">'+safe(index)+'</span><div class="worked-content"><div class="step-title"><h4>'+safe(title)+'</h4><span class="step-status">'+safe(status)+'</span></div>'+(expression?'<code class="worked-expression">'+safe(expression)+'</code>':'')+'</div></li>';
+}
+function finalAnswerMarkup(answer,note=''){
+  const safe=value=>String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  return '<div class="worked-final" aria-label="Final answer"><h4>Final answer</h4><code class="worked-final-answer">'+safe(answer)+'</code>'+(note?'<p>'+safe(note)+'</p>':'')+'</div>';
+}
+function workedSolutionMarkup(steps,finalAnswer,finalNote='',status='This question is revealed and earns no solve.'){
+  const safe=value=>String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  const items=steps.map((step,index)=>'<li class="worked-step"><span class="worked-number" aria-hidden="true">'+(index+1)+'</span><div class="worked-content"><h4>'+safe(step.title)+'</h4>'+(step.expression?'<code class="worked-expression">'+safe(step.expression)+'</code>':'')+(step.paragraphs||[]).map(text=>'<p>'+safe(text)+'</p>').join('')+'</div></li>').join('');
+  return '<section class="worked-solution" aria-label="Worked solution"><header class="worked-heading"><h3>Worked solution</h3><p>'+safe(status)+'</p></header><ol class="worked-steps" aria-label="Solution steps" role="list">'+items+'</ol><div class="worked-final" aria-label="Final answer"><h4>Final answer</h4><code class="worked-final-answer">'+safe(finalAnswer)+'</code>'+(finalNote?'<p>'+safe(finalNote)+'</p>':'')+'</div></section>';
+}
+
 const $ = id => document.getElementById(id);
 const rand = (a,b) => a + Math.floor(Math.random() * (b-a+1));
 function shuffle(items){for(let i=items.length-1;i>0;i--){const j=rand(0,i);[items[i],items[j]]=[items[j],items[i]];}return items;}
@@ -363,6 +407,35 @@ function numberSteps(q){
   if(q.to!==10)steps.push({title:'Write the converted number',expression:q.source+' (base '+q.from+') → base '+q.to,answer:q.answer,base:q.to,final:true,help:q.from===2&&q.to===16?'Join the accepted hex digits in their original group order.':q.from===16&&q.to===2?'Join the accepted four-bit groups from left to right. Leading zeros are accepted.':'Read your remainders from last to first. Use A through F for values 10 through 15.',hint:q.from===2&&q.to===16||q.from===16&&q.to===2?'Keep the groups in source order.':'The last remainder is the leftmost digit. Keep zero remainders between other digits.',placeholder:'Final base-'+q.to+' value'});
   return steps;
 }
+function numberWorking(q,index){
+  const steps=numberSteps(q),step=steps[index];
+  if(step.final){
+    if(q.from===2&&q.to===16||q.from===16&&q.to===2)return 'Join the accepted groups from left to right: '+steps.slice(0,-1).map(s=>s.answer).join(' | ')+'. Leading zeros do not change the value.';
+    return 'The remainders, from the first division to the last, are '+steps.filter(s=>s.kind==='division').map(s=>s.answer.split(' ')[1]).join(', ')+'. Reverse their order and write each as a base-'+q.to+' digit.';
+  }
+  if(q.from===2&&q.to===16){
+    const group=q.source.padStart(Math.ceil(q.source.length/4)*4,'0').slice(index*4,index*4+4);
+    return 'For '+group+', the weights give '+[...group].map((b,i)=>b+' × '+[8,4,2,1][i]).join(' + ')+' = '+parseInt(group,2)+'. Convert that value to one hexadecimal digit.';
+  }
+  if(q.from===16&&q.to===2){
+    const digit=q.source[index],value=parseInt(digit,16),weights=[8,4,2,1].filter((w,i)=>step.answer[i]==='1');
+    return digit+' represents '+value+' in decimal. '+value+' = '+(weights.join(' + ')||'0')+'. Write 1 for these weights and 0 for the remaining positions, in 8, 4, 2, 1 order.';
+  }
+  if(step.kind==='division'){
+    const [quotient,remainder]=step.answer.split(' ').map(Number),dividend=quotient*q.to+remainder;
+    return 'The whole-number quotient is '+quotient+'. Its product with '+q.to+' is '+(quotient*q.to)+'. Subtract that product from '+dividend+' to find the remainder.';
+  }
+  if(index<q.source.length){const exponent=q.source.length-index-1,digit=parseInt(q.source[index],16);return 'The place weight is '+q.from+'^'+exponent+' = '+q.from**exponent+'. The digit '+q.source[index]+' has decimal value '+digit+'. Multiply '+digit+' × '+q.from**exponent+'.';}
+  return 'Add the accepted contributions: '+steps.slice(0,q.source.length).map(s=>s.answer).join(' + ')+'.';
+}
+function numberWorked(q){
+  const steps=numberSteps(q);
+  return steps.map((step,i)=>step.title+'. '+numberWorking(q,i)+' '+(step.kind==='division'?(()=>{const [quotient,remainder]=step.answer.split(' ').map(Number);return (quotient*q.to+remainder)+' ÷ '+q.to+' = '+quotient+', remainder '+remainder+'.';})():step.expression+' = '+step.answer+'.'))
+    .concat('Final answer: '+q.source+' (base '+q.from+') = '+q.answer+' (base '+q.to+').');
+}
+function numberWorkedLayout(q){
+  return {steps:numberSteps(q).map((step,i)=>({title:step.title,expression:step.kind==='division'?(()=>{const [quotient,remainder]=step.answer.split(' ').map(Number);return (quotient*q.to+remainder)+' ÷ '+q.to+' = '+quotient+', remainder '+remainder;})():step.expression+' = '+step.answer,paragraphs:[numberWorking(q,i)]})),answer:q.answer+' (base '+q.to+')',note:q.source+' (base '+q.from+') and '+q.answer+' (base '+q.to+') represent the same value.'};
+}
 function checkNumberStep(text,q,index){
   const step=numberSteps(q)[index];if(!step)return {syntax:true,message:'Generate a question to begin the tutorial.'};
   if(step.kind==='division'){
@@ -379,6 +452,7 @@ function checkNumberStep(text,q,index){
 }
 const app={id:'number-systems',
  tutorialSteps:numberSteps,
+ tutorialWorking:numberWorking,
  checkTutorialStep:checkNumberStep,
  generate:()=>makeNumberQuestion($('family').value,Number($('bits').value)),
  render(q){$('taskTitle').textContent='Convert to base '+q.to;$('problem').innerHTML='<div class="eyebrow">Same value. A different representation.</div><div class="number-line"><span>'+q.source+'<sub>'+q.from+'</sub></span><span class="arrow">→</span><span>?<sub>'+q.to+'</sub></span></div><div class="badge-row"><span>Base '+q.from+' → base '+q.to+'</span><span>Whole numbers</span></div>';$('answerLabel').textContent='Your answer in base '+q.to;$('answer').placeholder=q.to===2?'e.g. 1010':q.to===16?'e.g. 2F':'Type the converted value';$('answerHelp').textContent='Use digits '+('0123456789ABCDEF'.slice(0,q.to))+'. Spaces, lowercase letters, and leading zeros are accepted.';},
@@ -387,8 +461,9 @@ const app={id:'number-systems',
  hints(q){const hints=['The rightmost source digit has weight 1. Each move left multiplies the weight by '+q.from+'.','Expand the source: '+expansion(q)+'.'];if(q.to!==10)hints.push('Divide your decimal total by '+q.to+'. Keep every remainder, including zeros, then read them upward.');else hints.push('Add the terms in your expansion. Check that each digit is multiplied by its own weight.');return hints;},
  checkpoint(q){const exponent=q.source.length-1,weight=q.from**exponent;return {prompt:'Checkpoint: what is the decimal weight of the leftmost source position?',check:s=>/^\d+$/.test(s.trim())&&Number(s)===weight,success:'Correct: '+q.from+'^'+exponent+' = '+weight+'. Multiply this weight by the leftmost digit, then continue right.',help:'There are '+q.source.length+' positions. Use '+q.from+' raised to '+exponent+'.'};},
  solution:q=>q.answer+' (base '+q.to+')',
- worked(q){return [expansion(q)+' = '+q.value+' (decimal).',...(q.to===10?[]:divisions(q)),q.to===10?'The decimal total is '+q.answer+'.':'Read the remainders from last to first: '+q.answer+'.'];},
- test:{parseBase,makeNumberQuestion,divisions,numberSteps,checkNumberStep,resetGenerationHistory:()=>questionDecks.clear()}
+ worked:numberWorked,
+ workedLayout:numberWorkedLayout,
+ test:{parseBase,makeNumberQuestion,divisions,numberSteps,numberWorking,numberWorked,checkNumberStep,resetGenerationHistory:()=>questionDecks.clear()}
 };
 
 const state={mode:'relaxed',q:null,number:0,score:0,attempts:0,correct:0,streak:0,skipped:0,solved:false,revealed:false,hadError:false,hints:0,tutorialStep:0,running:false,ended:false,deadline:0};
@@ -397,15 +472,15 @@ let best=0; try{best=Number(localStorage.getItem(storageKey))||0}catch{}
 function feedback(text,kind=''){ $('feedback').textContent=text; $('feedback').className='feedback '+kind; }
 function stats(){ $('score').textContent=state.score; $('accuracy').textContent=state.attempts?Math.round(100*state.correct/state.attempts)+'%':'—'; $('streak').textContent=state.streak; }
 function resetStats(){Object.assign(state,{score:0,attempts:0,correct:0,streak:0,skipped:0});stats();}
-function syncPressureControls(){const locked=state.mode==='pressure'&&!state.running;$('answer').disabled=locked;$('check').disabled=locked;$('generate').disabled=locked;if(locked){$('hint').disabled=true;$('reveal').disabled=true;}}
+function syncPressureControls(){const pressure=state.mode==='pressure',locked=pressure&&!state.running;$('hint').hidden=pressure;if(pressure)$('hint').disabled=true;$('notesHelp').textContent=pressure?'Use Show worked answer to review the solution.':'Use Show a hint for extra guidance.';$('answer').disabled=locked;$('check').disabled=locked;$('generate').disabled=locked;if(locked){$('hint').disabled=true;$('reveal').disabled=true;}}
 function generate(focus=true){
   if(state.running && !tick())return;
   if(state.q && !state.solved && !state.revealed){state.skipped++;state.streak=0;}
-  state.q=app.generate();state.number++;restartQuestion(focus);
+  state.q=app.generate();state.number++;window.practiceScratch?.reset();restartQuestion(focus);
 }
 function restartQuestion(focus=false){
   if(!state.q){generate(focus);return;}
-  Object.assign(state,{solved:false,revealed:false,hadError:false,hints:0,tutorialStep:0});
+  Object.assign(state,{solved:false,revealed:false,hadError:false,hints:0,tutorialStep:0,acceptedAnswer:''});
   $('questionNo').textContent='Question '+String(state.number).padStart(2,'0');
   $('answer').value='';$('answer').readOnly=false;$('check').textContent='Check answer ↵';$('hints').innerHTML='';$('reveal').disabled=false;$('hint').disabled=false;
   app.render(state.q);renderTutorial();renderGuide();stats();syncPressureControls();
@@ -414,24 +489,32 @@ function restartQuestion(focus=false){
 }
 function guidedSteps(){return state.mode==='tutorial'&&app.tutorialSteps?app.tutorialSteps(state.q):[];}
 function renderTutorial(){
-  const steps=guidedSteps(),list=$('tutorialSteps');list.hidden=!steps.length;list.innerHTML='';if(!steps.length)return;
-  list.innerHTML=steps.map((step,i)=>{
+  const steps=guidedSteps(),list=$('tutorialSteps'),final=$('tutorialFinal');list.hidden=!steps.length||state.revealed;list.innerHTML='';final.hidden=true;final.innerHTML='';if(list.hidden)return;
+  if(state.solved){const solution=app.workedLayout(state.q);final.hidden=false;final.innerHTML=finalAnswerMarkup(app.id==='binary-arithmetic'?state.acceptedAnswer||solution.answer:solution.answer,solution.note);}
+  list.innerHTML=steps.slice(0,Math.min(state.tutorialStep+1,steps.length)).map((step,i)=>{
     const accepted=i<state.tutorialStep,current=i===state.tutorialStep&&!state.solved&&!state.revealed;
-    if(!state.solved&&!state.revealed&&i>state.tutorialStep+1)return '';
-    const kind=state.revealed?'':accepted?(state.solved&&i===steps.length-1?'complete':'accepted'):current?'active':'';
-    const status=state.revealed?'Worked answer':accepted?'Correct':current?'Current step':'Next';
-    const bits=accepted||state.revealed?step.expression+' = '+step.answer:current?step.expression:'';
-    return '<li class="'+kind+'"'+(current?' aria-current="step"':'')+'><div class="step-title"><strong>'+escapeHTML('Step '+(i+1)+' · '+step.title)+'</strong><span class="step-status">'+status+'</span></div>'+(bits?'<code class="step-bits">'+escapeHTML(bits)+'</code>':'')+'</li>';
+    const kind=accepted?'accepted':current?'active':'';
+    const status=accepted?'Accepted':'Step '+(i+1)+' of '+steps.length;
+    const acceptedWord=state.solved&&i===steps.length-1?state.acceptedAnswer||step.answer:step.answer;
+    const bits=accepted||state.revealed?step.expression+' = '+acceptedWord:current?step.expression:'';
+    return tutorialStepMarkup(i+1,step.title,bits,status,kind);
   }).join('');
   list.scrollTop=list.scrollHeight;
-  if(state.solved||state.revealed){$('answerLabel').textContent='Completed answer';$('answer').value=state.q.answer;$('answerHelp').textContent='Press Enter for the next question.';return;}
+  if(state.solved||state.revealed){$('answerLabel').textContent='Step '+steps.length+' of '+steps.length+' · Complete';$('answer').value=state.solved?state.acceptedAnswer||state.q.answer:state.q.answer;$('answerHelp').textContent='Press Enter for the next question.';return;}
   const step=steps[state.tutorialStep];$('answerLabel').textContent='Step '+(state.tutorialStep+1)+' of '+steps.length+' · '+step.title;
   $('answerHelp').textContent=step.help;$('answer').placeholder=step.placeholder||'Type this step’s answer';$('check').textContent='Check step ↵';
 }
 function renderGuide(){$('guideBody').innerHTML=app.guide(state.q);}
 function showHint(){
-  if(state.mode==='pressure' && (!state.running || !tick()))return;
-  const steps=guidedSteps();if(steps.length){const step=steps[state.tutorialStep];if(!step||state.revealed||state.hints)return;const el=document.createElement('div');el.className='step';el.textContent=step.hint;$('hints').append(el);state.hints=1;$('hint').disabled=true;return;}
+  if(state.mode==='pressure'||state.solved||state.revealed)return;
+  const steps=guidedSteps();
+  if(steps.length){
+    const step=steps[state.tutorialStep];if(!step||state.hints>=3)return;
+    const levels=[step.hint,app.tutorialWorking(state.q,state.tutorialStep),'Step answer: '+step.answer+'. Press Enter to check this step.'];
+    const level=state.hints++,el=document.createElement('div'),title=document.createElement('strong'),body=document.createElement('p');el.className='step';title.textContent='Hint '+(level+1)+' of 3';body.textContent=levels[level];el.append(title,body);$('hints').append(el);
+    $('hint').disabled=state.hints>=3;
+    if(level===2){$('answer').value=step.answer;$('answer').focus({preventScroll:true});}return;
+  }
   const hints=app.hints(state.q);
   if(state.hints<hints.length){const el=document.createElement('div');el.className='step';el.textContent=hints[state.hints++];$('hints').append(el);}
   $('hint').disabled=state.hints>=hints.length;
@@ -448,7 +531,7 @@ function check(e){
     state.correct++;
     if(step){state.tutorialStep++;state.hints=0;$('hints').innerHTML='';$('hint').disabled=false;}
     if(step&&state.tutorialStep<steps.length){$('answer').value='';renderTutorial();feedback(result.message+' Continue with step '+(state.tutorialStep+1)+'.','progress');stats();$('answer').focus();return;}
-    state.solved=true;state.score++;state.streak=state.hadError?0:state.streak+1;$('answer').readOnly=true;$('check').textContent='Next question ↵';$('reveal').disabled=true;renderTutorial();if(step)$('hint').disabled=true;feedback(result.message+' Press Enter for the next question.','good');
+    state.acceptedAnswer=result.answer||state.q.answer;if(result.answer)$('answer').value=result.answer;state.solved=true;state.score++;state.streak=state.hadError?0:state.streak+1;$('answer').readOnly=true;$('check').textContent='Next question ↵';$('reveal').disabled=true;renderTutorial();if(step)$('hint').disabled=true;feedback(result.message+' Press Enter for the next question.','good');
   }
   else{state.hadError=true;state.streak=0;feedback(result.message,'bad');$('answer').select();}
   stats();
@@ -456,10 +539,11 @@ function check(e){
 function reveal(){
   if(state.mode==='pressure'&&(!state.running||!tick()))return;
   if(state.solved||state.revealed)return;
-  state.revealed=true;state.streak=0;state.skipped++;$('answer').readOnly=true;$('check').textContent='Next question ↵';$('reveal').disabled=true;
-  if(guidedSteps().length){$('answer').value=app.solution(state.q);$('hint').disabled=true;renderTutorial();}
-  feedback('Worked answer: '+app.solution(state.q)+'. This question earns no point. Press Enter for the next question.');
-  $('hints').innerHTML='';for(const text of app.worked(state.q)){const div=document.createElement('div');div.className='step';div.textContent=text;$('hints').append(div);}stats();
+  state.revealed=true;state.streak=0;state.skipped++;$('answer').value=state.q.answer;$('answer').readOnly=true;$('hint').disabled=true;$('check').textContent='Next question ↵';$('reveal').disabled=true;
+  if(guidedSteps().length){renderTutorial();$('answerLabel').textContent='Completed answer';$('answerHelp').textContent='Press Enter for the next question.';}
+  feedback('The step-by-step solution is shown below. This question earns no point. Press Enter for the next question.');
+  const solution=app.workedLayout(state.q);$('tutorialSteps').hidden=true;
+  $('hints').innerHTML=workedSolutionMarkup(solution.steps,solution.answer,solution.note);stats();
 }
 function endRound(reason='Time is up.'){state.running=false;state.ended=true;$('roundbar').classList.remove('danger');$('startRound').textContent='Start another round';$('duration').disabled=false;$('timer').textContent='0s';$('roundnote').textContent='Round complete. Review the summary and start again.';if(state.score>best){best=state.score;try{localStorage.setItem(storageKey,String(best))}catch{}}$('summary').hidden=false;$('summary').innerHTML='<h2>'+escapeHTML(reason)+'</h2><p>'+state.score+' solved · '+state.attempts+' answer checks · '+state.skipped+' skipped or revealed. Accuracy: '+(state.attempts?Math.round(state.correct/state.attempts*100)+'%':'—')+'.</p><p class="tiny">Best round: '+best+'. This record includes all settings and durations.</p>';feedback('Round complete. Start another round to continue.');stats();syncPressureControls();}
 function tick(){if(!state.running)return false;const remaining=Math.max(0,Math.ceil((state.deadline-performance.now())/1000));$('timer').textContent=remaining+'s';$('roundbar').classList.toggle('danger',remaining<=10);if(!remaining){endRound();return false;}return true;}
@@ -472,4 +556,32 @@ $('answerForm').addEventListener('submit',check);$('generate').addEventListener(
 setInterval(tick,150);document.addEventListener('visibilitychange',()=>{if(state.running)tick();});
 window.simulatorTest={...app.test,getQuestion:()=>state.q,getState:()=>({...state}),checkAnswer:(text,q)=>app.check(text,q),app};
 settingsChanged();
+</script><script>
+// Shared scratch paper: typed working stays with the current question.
+(()=>{
+  'use strict';
+  const panel=document.getElementById('scratchPaper');
+  if(!panel)return;
+  const toggle=document.getElementById('scratchToggle'),body=document.getElementById('scratchBody'),notes=document.getElementById('scratchText'),move=document.getElementById('scratchMove'),resize=document.getElementById('scratchResize');
+  let offset=0,height=240;
+  const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
+  function setOffset(value){offset=clamp(value,0,1200);panel.style.marginTop=offset+'px';}
+  function setHeight(value){height=clamp(value,120,1200);notes.style.height=height+'px';}
+  function setOpen(open){body.hidden=!open;toggle.setAttribute('aria-expanded',String(open));toggle.querySelector('.scratch-chevron').textContent=open?'▾':'▸';}
+  toggle.addEventListener('click',()=>setOpen(body.hidden));
+  function verticalHandle(handle,read,write,min,max){
+    let drag=null;
+    handle.addEventListener('pointerdown',event=>{
+      if(event.button!==0)return;
+      event.preventDefault();drag={pointer:event.pointerId,y:event.clientY,value:read()};handle.setPointerCapture(event.pointerId);handle.classList.add('is-dragging');
+    });
+    handle.addEventListener('pointermove',event=>{if(drag&&event.pointerId===drag.pointer)write(drag.value+event.clientY-drag.y);});
+    const end=event=>{if(!drag||event.pointerId!==drag.pointer)return;const id=drag.pointer;drag=null;handle.classList.remove('is-dragging');if(handle.hasPointerCapture(id))handle.releasePointerCapture(id);};
+    handle.addEventListener('pointerup',end);handle.addEventListener('pointercancel',end);handle.addEventListener('lostpointercapture',()=>{drag=null;handle.classList.remove('is-dragging');});
+    handle.addEventListener('keydown',event=>{const step=event.shiftKey?100:20;let value;if(event.key==='ArrowUp')value=read()-step;else if(event.key==='ArrowDown')value=read()+step;else if(event.key==='Home')value=min;else if(event.key==='End')value=max;else return;event.preventDefault();write(value);});
+  }
+  verticalHandle(move,()=>offset,setOffset,0,1200);verticalHandle(resize,()=>height,setHeight,120,1200);
+  // Reset content only; the student's open state, size, and position are preferences.
+  window.practiceScratch={reset(){notes.value='';notes.scrollTop=0;}};
+})();
 </script></body></html>
