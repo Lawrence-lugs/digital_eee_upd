@@ -421,6 +421,18 @@ include-in-header:
           </div>
         </a>
 
+        <a href="adel_datapath_explorer.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/adel_datapath_explorer.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">ADEL Datapath Explorer</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Explore how the ADEL processor is built from multiplexers, logic gates, memories, and flip-flops, then practice tracing its datapath.</p>
+          </div>
+        </a>
+
         <a href="adel-simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
                   hover:shadow-md hover:border-red-300 transition-all group">
           <div class="simulator-preview">
@@ -571,6 +583,24 @@ include-in-header:
             <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">RISC-V Processor and I/O Simulator</h4>
             <p class="text-sm text-gray-500 leading-relaxed">Write and run RV32IM assembly programs, inspect registers and memory,
           and explore configurable I/O and machine interrupts.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="tool-group" data-topic="digital" aria-labelledby="embedded-systems">
+      <h3 id="embedded-systems" class="text-xl font-bold text-gray-800 mb-5">Embedded Systems</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <a href="timer_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/timer_simulator.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Timer Peripheral Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Explore a microcontroller timer with linked period-register and prescaler controls, an interactive counter circuit, and timing diagrams.</p>
           </div>
         </a>
       </div>

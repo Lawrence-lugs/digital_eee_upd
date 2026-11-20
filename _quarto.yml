@@ -34,6 +34,8 @@ project:
     - cp static_apps/binary_arithmetic_simulator.html _site/
     - cp static_apps/mux_decoder_simulator.html _site/
     - cp static_apps/flipflops_registers_simulator.html _site/
+    - cp static_apps/adel_datapath_explorer.html _site/
+    - cp static_apps/timer_simulator.html _site/
     - cp static_apps/adel-simulator.html _site/
     - cp static_apps/c-riscv-explorer.html _site/
     - cp static_apps/maxwell_equations.html _site/
@@ -78,6 +80,8 @@ website:
             text: Multiplexers and Decoders Simulator
           - href: flipflops_registers_simulator.html
             text: Flip-Flops and Registers Simulator
+          - href: adel_datapath_explorer.html
+            text: ADEL Datapath Explorer
           - href: adel-simulator.html
             text: ADEL Simulator
           - text: Digital Design Fundamentals
@@ -104,6 +108,9 @@ website:
             text: Memory Technology Simulator
           - href: riscv-simulator.html
             text: RISC-V Processor and I/O Simulator
+          - text: Embedded Systems
+          - href: timer_simulator.html
+            text: Timer Peripheral Simulator
           - text: Hardware for Machine Learning
           - href: systolic_array_simulator.html
             text: Systolic Array Simulator
