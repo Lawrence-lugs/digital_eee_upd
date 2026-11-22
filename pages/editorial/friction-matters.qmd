@@ -13,6 +13,14 @@ number-sections: false
 
 *AI-use disclosure: I have used ChatGPT to help me proofread this editorial and refine the wording of my own ideas. All ideas contained in this article are a result of my discussions with colleagues and my own reflections.*
 
+::: {.callout-tip title="A quick summary of this editorial"}
+AI can now answer every question in my past exams and problem sets 100% correctly, with detailed explanations. That makes the purpose of those exercises more urgent: **students need to develop the reasoning behind the answers.**
+
+**Friction matters.** Understanding grows through attempting a problem, finding mistakes, and trying again, with appropriate guidance. Use AI to generate practice problems, ask for hints, and get feedback. **Work through the solutions yourself**, then check whether you can solve a related problem independently.
+
+Teachers share this responsibility. Problem-solving assessments and live explanations help us see what students understand. Clear AI-use policies should guide students toward productive assistance and make expectations and consequences explicit. **Our students are future engineers.** They need to solve problems, justify decisions, and take responsibility for their work.
+:::
+
 ## A correct answer is now easy to obtain
 
 I recently asked ChatGPT to work through years' worth of past exams and problem sets from all the courses I have taught, mainly on digital logic design and computer architecture. It got 100% correct.
