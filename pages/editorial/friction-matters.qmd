@@ -1,0 +1,219 @@
+---
+title: "Friction Matters"
+subtitle: "Desirable difficulties and learning in the age of AI"
+author: "Adelson Chua"
+date: 2026-11-16
+description: "When AI can produce the answer, university education must pay closer attention to the thinking students learn to do for themselves."
+categories: [Teaching, Learning, Artificial Intelligence]
+toc: true
+number-sections: false
+---
+
+*A note on my perspective: My formal training is in engineering. I earned my PhD in Electrical Engineering and Computer Sciences at the University of California, Berkeley, and I write here as a university teacher who cares deeply about how students learn. I work to give students the resources they need to understand and appreciate the subjects I teach, while maintaining academic standards that I benchmark against comparable undergraduate courses at UC Berkeley and MIT. This editorial draws on my experience and my reading of research on learning.*
+
+*AI-use disclosure: I have used ChatGPT to help me proofread this editorial and refine the wording of my own ideas. All ideas contained in this article are a result of my discussions with colleagues and my own reflections.*
+
+## A correct answer is now easy to obtain
+
+I recently asked ChatGPT to work through years' worth of past exams and problem sets from all the courses I have taught, mainly on digital logic design and computer architecture. It got 100% correct.
+
+**Yes, one hundred percent.** It provided detailed explanations and justifications for every answer. Every single detail, every step, every assumption, and every design choice was correct. It even suggested a few improvements to the way I had written the questions.
+
+The outcome made the situation clear: [students now have access to a tool that can complete the very work through which they are meant to develop understanding.]{.underline}
+
+As an engineer, I find that capability remarkable. I still remember when AI would hallucinate, produce a nonsensical answer, or fail to follow a simple instruction. Now, a student can ask a chatbot to solve a problem, explain the solution, and justify the reasoning behind it. The result is often correct, complete, and well-structured.
+
+As a teacher, though, **I feel a responsibility to protect the learning these exercises are meant to develop.** I assign problem sets so students practice choosing and applying ideas. I assign design exercises so they connect lecture concepts to something they can build, test, and explain.
+
+**The learning happens in the decisions students make along the way:** interpreting a requirement, selecting an approach, testing an assumption, finding an error, and revising a solution. When AI supplies those decisions, students lose an opportunity to practice making them.
+
+This semester, fellow instructors have shared accounts of students submitting fully functional programs or designs, [then struggling to explain the decisions behind them]{.underline}. Why was a particular approach chosen? What assumption does it depend on? How would the design change if the requirements changed? Students who have worked through an exercise should be able to discuss these questions. The concern also extends to circuit design, where AI can help produce solutions that students may not be prepared to justify.
+
+The program runs. The design works. Yet the student may still be missing the reasoning that would allow them to create, modify, or troubleshoot it independently.
+
+Years ago, before AI tools became widely available, when a student submitted a fully functional program and failed to explain it, I would assume they had copied it from a classmate. Because academic dishonesty has significant repercussions at the university, I would investigate. The student could even end up failing the course outright. Now, a student can submit a correct program produced by AI and still fail to explain it. What happens then? The gap in understanding is the same, but the source of the work is different.
+
+A functioning program is a useful outcome, but that alone is not proof of understanding. The student should also be able to **explain how it works, justify its design, and adapt it to a new requirement.** Those abilities give the exercise its [purpose]{.underline}.
+
+## Practice has a purpose
+
+For my lecture classes, I upload exams and problem sets from previous offerings without their corresponding solutions. **I want students to attempt the problems first, make decisions about how to proceed, and identify the ideas they need help understanding.**
+
+We also have a class forum on [Piazza](https://piazza.com/), where I allow completely anonymous questions. Students can ask freely, with their identities protected. My one requirement is that they show an attempt first. That attempt gives the instructors a view of their reasoning and a starting point for guidance. Even a partial or mistaken attempt gives us something useful to work with.
+
+Years ago, a lot of my students would ask for help with the practice problems through the same platform. They would show their initial attempts and ask whether they were on the right track. I would offer hints and clarifications until they arrived at the correct answer themselves. In fact, other students would help answer the questions as well, as if competing with me to see who could answer first. My email would always be swamped with notifications of new questions and follow-ups.
+
+Now, the questions are few and far between.
+
+I have heard that students paste the practice problems into AI and read the solutions it produces. The answer can be correct. It can be complete. It can be well explained. And it can arrive immediately, without requiring the student to make any decisions or take responsibility for their own reasoning.
+
+The appeal of an immediate solution is easy to understand. A chatbot is available whenever a student is studying, responds without apparent judgment, and can explain the same idea repeatedly. That convenience is substantial for students managing several deadlines.
+
+Silence on a forum does not establish exactly what students are doing. But the gap I have seen is concerning. Students have performed extremely poorly on in-person exams even when the underlying concepts were already represented in the practice materials. The questions are, of course, set up differently, but the fundamental concepts needed to solve the problems are the same.
+
+If the students had practiced the reasoning by working through the problems themselves, they might have been able to apply it to the new situation. If they had relied on AI to produce the answer, they might not have developed that ability. **Getting the correct answer is easy. Understanding how to get it is not.**
+
+Having access to an explanation is only part of what practice is supposed to accomplish. Students also need opportunities to decide how to begin, discover that an approach fails, identify a mistaken assumption, and try again. If every difficult moment immediately triggers a request for a complete solution, those opportunities can disappear.
+
+**Each of these moments (attempting, failing, and trying again) is an opportunity to learn.** Understanding grows through reasoning, and we need to preserve these opportunities whenever we introduce assistance.
+
+## Understanding grows through reasoning
+
+*Cognitive offloading* describes using something outside ourselves to reduce the mental work a task requires. We do this routinely when we write down intermediate values or use a reminder. Offloading can free attention for other thinking.[^offloading]
+
+Its educational value depends on **which part of the thinking we hand over.**
+
+Consider an assembly exercise that asks students to trace how a loop changes registers and accesses memory. Writing intermediate register values in a table supports the reasoning. Asking AI to generate the complete trace before attempting it hands that reasoning to the tool. The student then receives the result of a process they were meant to practice.
+
+A complete explanation can then make the result seem obvious. Of course, the pointer changes here. Of course, that branch is taken. Of course, this value is loaded. With every step already supplied, the student can follow the path without having to choose it.
+
+Now change the loop condition, the access pattern, or the initial register values. Solving the new problem requires the student to interpret the instructions, track the changing state, and decide what happens next. That is the understanding I want the exercise to develop.
+
+Research has long documented a gap between the feeling of learning and demonstrated understanding. In a randomized study of university physics instruction, Deslauriers et al. found that students in active classes performed better on immediate tests while reporting a lower sense of learning than students receiving polished lectures on the same material. This classroom experiment illustrates how an experience that feels smooth can give students a misleading impression of their progress.[^deslauriers]
+
+AI makes polished explanations readily available. **My concern is that students may mistake their ability to follow those explanations for an ability they have not yet developed: [producing and defending the reasoning themselves.]{.underline}**
+
+## Friction matters
+
+For several semesters, I have shared the Bjorks' chapter on *desirable difficulties* with students at the start of the course. Their central distinction is between performance during practice and learning that supports later retention and application. Conditions that make practice feel easy do not necessarily produce the most durable learning. Spacing practice, retrieving information, and varying the conditions under which we use an idea can make the immediate task harder while helping us retain what we learn.[^bjork]
+
+I started sharing that chapter partly because I heard that students were preparing for exams only by reviewing the lecture slides and the practice problems included in them. The slides are clear, well-structured, and complete. I designed the slides that way. Reviewing those slides would give students a sense of familiarity with the material. They would recall how I had solved a particular problem during the lecture. **But that familiarity does not guarantee that they can apply the ideas to a new problem.** When exam time came, they would be surprised by the questions, even though they had already seen the underlying concepts in the practice materials.
+
+This is why reviewing for an exam cannot consist only of rereading slides. Familiarity with material on a screen is an unreliable measure of what we can retrieve and use without it. **Reading a chatbot's explanation can create a similar sense of readiness.** That sense of readiness can be even more misleading when the chatbot supplies a complete solution to each new problem a student brings to it. The student may feel confident, having followed the solutions and explanations for different problems, but that confidence may not be grounded in the ability to reason through a problem independently.
+
+This brings me to the central point of this editorial:
+
+[**Friction matters.**]{.underline}
+
+Learning asks us to read carefully, stay with a difficult idea, notice a contradiction, and revise what we thought we understood. The effort of deciding which principle applies and explaining why it applies is part of developing the ability to solve problems. A few minutes spent attempting the problem can be more educationally valuable than immediately reading a complete answer.
+
+**Understanding develops through sustained, attentive practice: by trying, failing, and trying again.**
+
+For every problem you solve on your own, you build the skills and knowledge needed to tackle more complex challenges. That's when you start seeing the patterns, the relationships, and the principles that make a solution work. You start to understand the *why* behind the *how*. You start to see the connections between different ideas and how they fit together. You start to develop a mental model of the system you are working with, which allows you to predict how it will behave in new situations.
+
+The word *desirable* gives this argument its direction. Useful difficulty engages knowledge and skills that a learner can bring to the task. The Bjorks emphasize the importance of that foundation. Clear instruction, appropriate examples, and timely feedback help students respond successfully to a challenge.[^bjork] When the difficulty is too great, the learner cannot make progress and the challenge becomes frustrating.
+
+The goal is to create a challenge the learner can overcome with effort and appropriate support. That's why I encourage students to attempt a problem first, then ask for help. The attempt gives them a starting point and a sense of what they understand and where they need help. That help gives them guidance to move forward while preserving the opportunity to reason through the problem themselves.
+
+This is where AI can contribute to learning by helping students work through the reasoning. It can provide hints, feedback, and explanations that guide students to the correct answer while still requiring them to engage with the material and make decisions about how to proceed.
+
+Use an explanation actively. Ask why each step is justified. Predict the next step. Close the explanation and attempt a related problem. Seek help when you reach a gap in your understanding, then use that help to continue reasoning.
+
+I judge the value of a challenge by **the understanding students develop.** A worthwhile challenge gives students useful intellectual work and the guidance they need to make progress.
+
+## Research shows why the process matters
+
+Recent research gives us concrete reasons to pay attention to how students use AI during practice.
+
+In a 2026 working paper, Strömberg et al. studied records from 26,811 students in grades 7–12 in one county in China. Comparing changes among AI adopters with a comparison group, they estimated that by about six months after adoption, homework scores rose by 18% while monthly closed-book exam scores fell by 20%, relative to baseline means. Homework also took less time. The divergence between homework and exam performance is a clear reason to examine what students learn through AI-assisted work.[^penalty]
+
+A randomized study by Bastani et al., published in *PNAS* in 2025, found a related pattern among nearly a thousand high-school mathematics students in Turkey. Access to a general GPT-4 chat interface improved practice performance and was followed by scores about 17% lower, relative to the comparison group, on the immediately following unassisted tests. A version using teacher-designed hints and safeguards largely avoided the detected penalty. Its independent-test scores showed no statistically significant difference from the comparison group's. These findings concern short-term learning and demonstrate the importance of how assistance is designed.[^bastani]
+
+Evidence is also emerging from university programming. A September 2026 preprint by Bergh et al., based on a study of 55 undergraduate computer science students, reported higher coding scores with ChatGPT alongside lower recall of the work immediately afterward and after 48 hours. This small, single-university study offers preliminary evidence about students' recall of the tasks they completed.[^programming]
+
+*Carefully designed* AI tutoring has also produced encouraging results. In a randomized study of introductory university physics, Kestin et al. found that an AI tutor with structured instructional support produced higher immediate postlesson scores than an active-learning class. The experiment covered two lessons and assessed learning immediately afterward. It provides evidence that AI can support learning when its design promotes productive engagement with the material.[^kestin]
+
+Taken together, these studies make a case for examining what students actually do while using AI and what they can do afterward. The label *“AI-assisted”* tells us too little. **A student working through a sequence of questions with feedback is having a different learning experience from a student requesting a finished solution.**
+
+Working through questions, explaining an attempt, and responding to feedback are all forms of active practice. We should design and encourage AI use that sustains those activities.
+
+## Use AI to generate problems
+
+This semester, I am teaching freshmen who are beginning university with very capable AI already available to them. I care about the habits they build now because those habits will shape how they learn throughout their degrees. My advice starts here:
+
+**Use AI to generate problems and work through the solutions yourself.**
+
+This puts the principle that friction matters into practice. Students can use AI while taking responsibility for their own reasoning. They can ask for more practice on a concept, a variation on a problem they have solved, or a question that exposes a particular misunderstanding.
+
+For example:
+
+> Give me one assembly programming problem involving a loop and memory accesses, using the instruction set and conventions in these course notes. Keep the solution hidden until I have made an attempt. Ask me to explain my reasoning, then give me feedback. If I am stuck, give me one hint at a time.
+
+After completing a problem, they can ask:
+
+> Give me another problem that tests the same concept and requires a fresh approach. Vary an assumption, condition, or requirement so I have to reconsider how to solve it. Keep the solution hidden until I have tried it.
+
+Then, once they feel confident in their understanding:
+
+> Give me another problem with boundary cases or unusual conditions so I can test my mastery. Give me feedback on whether I am still on the right track as I work through it. If I am wrong, allow me to explain my reasoning so you can pinpoint the misunderstanding or careless mistake. Do not give me any hints unless I ask for them.
+
+These prompts put practice at the center of the interaction. Students should check the generated questions and feedback against the course material. An explanation that conflicts with what was taught is a useful question to bring to an instructor. Checking such conflicts is itself an opportunity to strengthen understanding.
+
+The habit I want students to build is straightforward:
+
+1. **Make an attempt.** Write down the relevant principles, assumptions, and the point where you need help.
+2. **Ask for targeted help.** Request a hint or feedback on your reasoning, and use it to take the next step.
+3. **Work through the correction.** Explain why the original approach failed and why the revised one works.
+4. **Try again independently.** Close the explanation, return to the topic later, and solve a changed problem.
+
+Use a worked example when you need a starting point. Gradually reduce the assistance as your understanding grows. Give yourself repeated opportunities to think, receive feedback, and discover **what you can now do yourself.**
+
+The same approach applies to the simulators I have developed on this site. Before stepping through a program, predict what will happen to a register. Before advancing a circuit simulation, predict the output. Then compare the prediction with the result and explain any mismatch. The simulator makes the behavior visible; the learner supplies a prediction that can be tested.
+
+## Our responsibility as teachers
+
+It would be inadequate to give students this advice and leave our teaching unchanged. We share responsibility for making this work. These changes call for us to examine how we teach and assess learning.
+
+We need assessments that reveal understanding. A short explanation of a design choice, a small modification to a submitted program, or a prediction about an unfamiliar case gives students an opportunity to demonstrate the reasoning behind their work. These should be ordinary parts of learning, with clear expectations and support.
+
+This is why I value assessments where students work through a problem and show their reasoning. I want to see how they begin, which principles they choose, what assumptions they make, and how they check their result. **The approach tells us something the final answer alone cannot.**
+
+With a multiple-choice question, a wrong answer alone can leave us guessing. Did the student misunderstand the concept? Did they make a careless mistake along the way? Or did they simply guess? When students show their work, we can follow their reasoning, identify where it went wrong, and give credit for what they understood. We can also give them feedback that addresses the actual difficulty.
+
+**Our students are future engineers, and engineers solve problems.** Their work will require them to define a problem, develop a solution, and justify the decisions behind it. Our assessments should give them practice in that work, beyond choosing an answer from a fixed set of four options.
+
+This semester, I am the faculty member in charge of a course with more than 300 students. My fellow instructors and I have agreed to use only problem-solving exams because they let us assess what students truly understand. Reviewing solutions from more than 300 students for each of three exams is a lot of work, but it is a sacrifice we are willing to make to see what students are learning.
+
+We also need to be more vigilant when reviewing student submissions. AI can produce a correct program or design and supply correct explanations for every decision. It can generate the accompanying documentation just as easily. A polished submission gives us something to evaluate, but we still need to establish what the student understands.
+
+**Documentation can be generated. Students still need to explain and defend their work themselves.** In a live oral discussion, we can ask follow-up questions, change an assumption, and ask the student to reason through the consequences. That exchange gives us a clearer view of the understanding behind the submitted work.
+
+This brings me back to the question I raised earlier: **if a student submits work completed entirely by AI and cannot explain it, what should the repercussions be?** What are we giving credit for, and what responsibility does the student have for the work they submit?
+
+We need a clear AI-use policy that addresses these questions before students begin an assignment. The policy should explain which uses support the learning goals, how students should disclose AI assistance, and what they must be able to explain and do independently. It should also make the consequences of violating those expectations clear, so we can apply them consistently.
+
+**The purpose of that policy should be to guide students toward AI use that strengthens their learning.** Students can use AI to generate practice problems, ask for hints, and get feedback on an attempt. We should help them use that assistance while keeping them responsible for the reasoning. The standard remains the same: students should understand the work they submit and be able to defend the decisions behind it.
+
+## What should remain with the student?
+
+Behind these expectations is a fundamental question: *if AI can do the work, why should students still learn to do it?*
+
+AI's capabilities make the purpose of university education especially urgent. We need to be clear about the abilities we want students to carry into their work and their lives.
+
+In engineering, I want graduates who can decide what needs to be built, recognize an unreasonable assumption, evaluate whether a result makes sense, and explain the consequences of a design choice. Tools can help with each of these activities. A strong foundation enables graduates to use those tools with judgment and take responsibility for their decisions.
+
+The value of a foundational exercise therefore extends beyond the artifact it produces. A small assembly program may have little practical value once the exercise is over. The ability to trace a computation, reason about state, and locate an error can become part of how a student approaches much larger systems.
+
+A student who finishes an exercise should leave with something more than a file to submit: a stronger explanation, a better question, a mistake they now understand, or a method they can use in a new situation.
+
+I remember telling students almost ten years ago that the concepts they had studied at university might not be directly applicable to their future careers. They might not use the exact equations or algorithms they learned. They might not have to write any programs at all. They might never work with computer architecture concepts like caches and virtual memory again.
+
+[However, the ways they learned to think about problems, analyze situations, and make decisions as they worked through university would be invaluable.]{.underline} Reasoning through a complex problem, identifying what matters, and communicating findings clearly are skills that will serve them well in any field.
+
+**Those are outcomes worth protecting.**
+
+AI gives us powerful ways to create additional questions, feedback, and examples. We can use that capability to expand students' opportunities to practice and deepen their understanding. Doing so requires a clear commitment to the learner's active role in the work.
+
+AI makes it easier than ever to obtain the visible products of education. That makes it essential to be clear about what we expect those products to represent and what we hope students will carry with them after the course is over.
+
+I want students to leave my courses with **confidence grounded in what they can explain and do.** I want them to appreciate the subjects they have studied, approach unfamiliar problems with curiosity, and have the foundations to keep learning.
+
+That is what I care about as a teacher. That is what I want every exercise, every explanation, and every tool to help students achieve. These commitments should guide the way we teach, assess, and use AI.
+
+They bring us back to a question every university community should take seriously:
+
+**What is education for?**
+
+[^offloading]: Risko, E. F., & Gilbert, S. J. (2016). [Cognitive offloading](https://doi.org/10.1016/j.tics.2016.07.002). *Trends in Cognitive Sciences, 20*(9), 676–688.
+
+[^deslauriers]: Deslauriers, L., McCarty, L. S., Miller, K., Callaghan, K., & Kestin, G. (2019). [Measuring actual learning versus feeling of learning in response to being actively engaged in the classroom](https://doi.org/10.1073/pnas.1821936116). *Proceedings of the National Academy of Sciences, 116*(39), 19251–19257.
+
+[^bjork]: Bjork, E. L., & Bjork, R. A. (2011). [Making things hard on yourself, but in a good way: Creating desirable difficulties to enhance learning](https://bjorklab.psych.ucla.edu/wp-content/uploads/sites/13/2016/04/EBjork_RBjork_2011.pdf). In M. A. Gernsbacher et al. (Eds.), *Psychology and the Real World: Essays Illustrating Fundamental Contributions to Society* (pp. 56–64). Worth Publishers.
+
+[^penalty]: Strömberg, D., Lei, V., & Wu, Y. (2026). [The generative AI learning penalty: Evidence from Chinese secondary education](https://cepr.org/publications/dp21577). CEPR Discussion Paper No. 21577. Working paper. See also the [authors' September 2026 summary](https://cepr.org/voxeu/columns/generative-ai-learning-penalty-secondary-school).
+
+[^bastani]: Bastani, H., Bastani, O., Sungu, A., Ge, H., Kabakcı, Ö., & Mariman, R. (2025). [Generative AI without guardrails can harm learning: Evidence from high school mathematics](https://doi.org/10.1073/pnas.2422633122). *Proceedings of the National Academy of Sciences, 122*(26), e2422633122. The 17% relative decline corresponds to approximately 5.4 percentage points in the study's score scale.
+
+[^programming]: Bergh, C., Tag, B., Vassar, A., & Renzella, J. (2026). [Your programming students' cognition with ChatGPT: Higher performance, lower retention, and reduced ownership](https://arxiv.org/abs/2609.21194). arXiv:2609.21194, version 1, September 18. Preprint. Participants were pseudo-randomly assigned to balance gender across conditions.
+
+[^kestin]: Kestin, G., Miller, K., Klales, A., Milbourne, T., & Ponti, G. (2025). [AI tutoring outperforms in-class active learning: An RCT introducing a novel research-based design in an authentic educational setting](https://doi.org/10.1038/s41598-025-97652-6). *Scientific Reports, 15*, 17458.

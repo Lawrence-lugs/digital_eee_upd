@@ -155,6 +155,10 @@ website:
             text: ADC Simulator
           - href: dac_simulator.html
             text: DAC Simulator
+      - text: Editorials
+        menu:
+          - href: pages/editorial/friction-matters.qmd
+            text: Friction Matters
       - href: contributing.qmd
         text: Contribute
       - href: pages/about.qmd
