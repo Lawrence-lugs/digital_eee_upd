@@ -1806,6 +1806,24 @@ select { min-height:40px; }
 .menu-popover label:not(.menu-item),.menu-field { display:grid; gap:7px; margin:7px 9px 12px; font-size:14px; font-weight:600; }
 .menu-popover select { width:100%; max-width:100%; font-size:16px; }
 .menu-popover>select,.example-menu>select { width:calc(100% - 18px); margin:0 9px 10px; }
+#settings-menu .menu-popover { width:360px; }
+.ram-settings { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:7px 12px; margin:7px 9px 12px; }
+.menu-popover .ram-settings label { margin:0; font-size:16px; }
+.ram-settings label[for=data-base] { grid-column:1; grid-row:1; }
+.ram-settings label[for=ram-size] { grid-column:2; grid-row:1; }
+#data-base { grid-column:1; grid-row:2; }
+#ram-size { grid-column:2; grid-row:2; }
+.ram-settings p { grid-column:1 / -1; }
+.ram-settings input { width:100%; min-height:42px; padding:8px 10px; border:1px solid var(--line); border-radius:7px; background:var(--surface); color:var(--ink); font:16px var(--mono); }
+.ram-settings p { margin:9px 0; color:var(--muted); font-size:14px; line-height:1.5; }
+.ram-settings .form-error { color:var(--danger,#b3261e); }
+#mmio-memory-dialog { width:min(680px,calc(100vw - 32px)); }
+#mmio-memory-base { display:block; width:100%; margin-top:8px; font-family:var(--mono); }
+#mmio-memory-preview { max-height:32vh; overflow:auto; }
+#mmio-memory-preview table { width:100%; border-collapse:collapse; font-size:16px; }
+#mmio-memory-preview th,#mmio-memory-preview td { padding:10px 8px; text-align:left; border-bottom:1px solid var(--line); font-size:16px; }
+#mmio-memory-preview code { white-space:nowrap; }
+.undo-setting input { width:20px; height:20px; flex-shrink:0; accent-color:var(--maroon,#7b2d3b); cursor:pointer; }
 .example-menu { border-top:1px solid var(--line); padding-top:5px; margin-top:5px; }
 .example-menu>summary { padding:9px 11px; font-size:16px; cursor:pointer; }
 .example-menu .menu-item { padding-left:22px; }
@@ -2475,9 +2493,16 @@ body[data-theme="dark"] .button.soft-danger:hover:not(:disabled) { background:#6
         <button type="button" class="menu-item" data-example="draft">Restore saved draft</button>
         <button id="save-project" class="menu-item">Save Project… <kbd>Ctrl+S</kbd></button><button id="download-source" class="menu-item">Save Assembly…</button>
       </div></details>
-      <details id="view-menu" class="app-menu"><summary>View</summary><div class="menu-popover">
+      <details id="settings-menu" class="app-menu"><summary>Settings</summary><div class="menu-popover">
+        <form id="ram-settings-form" class="ram-settings">
+          <label for="data-base">Data section start</label><input id="data-base" type="text" spellcheck="false" autocomplete="off" title="Word-aligned address within RAM, in decimal or hex" required>
+          <label for="ram-size">RAM size</label><input id="ram-size" type="text" spellcheck="false" autocomplete="off" title="Bytes or hex; k, M, G use powers of 1024; maximum 4G" required>
+          <p id="ram-settings-error" class="form-error" role="alert" hidden></p>
+        </form>
+        <hr>
         <label for="theme-select">Appearance</label><select id="theme-select" aria-label="Color theme"><option value="light">Light mode</option><option value="dark">Dark mode</option></select>
-        <label for="speed">Simulation speed</label><select id="speed"><option value="2">2 ticks/s</option><option value="20">20 ticks/s</option><option value="500" selected>500 ticks/s</option><option value="50000">50k ticks/s</option></select>
+        <label for="speed">Simulation speed</label><select id="speed"><option value="2">2 ticks/s</option><option value="20">20 ticks/s</option><option value="500" selected>500 ticks/s</option><option value="50000">50k ticks/s</option><option value="turbo">Turbo · as fast as possible</option></select>
+        <label class="menu-item undo-setting" for="undo-enabled"><span>Enable Undo</span><input id="undo-enabled" type="checkbox" checked></label>
       </div></details>
       <details id="help-menu" class="app-menu"><summary>Help</summary><div class="menu-popover">
         <button class="menu-item" data-help-topic="overview">Getting started</button>
@@ -2530,6 +2555,18 @@ body[data-theme="dark"] .button.soft-danger:hover:not(:disabled) { background:#6
       <details class="connected-map"><summary>Address map and assembly symbols</summary><div id="address-map"></div><button id="download-config" class="text-button">Save I/O configuration</button></details>
     </section>
   </main>
+  <dialog id="mmio-memory-dialog" aria-labelledby="mmio-memory-title">
+    <form id="mmio-memory-form">
+      <div class="dialog-heading"><h2 id="mmio-memory-title">Reserve space for I/O</h2><button type="button" class="text-button" data-close="mmio-memory-dialog" aria-label="Close memory mapping">×</button></div>
+      <p>The new RAM space reaches I/O addresses. Choose where the reserved MMIO range starts. Addresses in this range are used for peripherals.</p>
+      <label for="mmio-memory-base">MMIO starting base address</label><input id="mmio-memory-base" spellcheck="false" autocomplete="off" required>
+      <p id="mmio-memory-range" class="dialog-note"></p>
+      <div id="mmio-memory-preview"></div>
+      <p class="dialog-note">Corresponding .equ addresses update automatically. Your remaining assembly code is preserved.</p>
+      <p id="mmio-memory-error" class="form-error" role="alert"></p>
+      <div class="dialog-actions"><button id="mmio-memory-cancel" type="button" class="button" data-close="mmio-memory-dialog">Cancel</button><button id="mmio-memory-apply" type="submit" class="button primary">Use memory mapping</button></div>
+    </form>
+  </dialog>
   <dialog id="save-project-dialog" aria-labelledby="save-project-title"><form id="save-project-form"><div class="dialog-heading"><h2 id="save-project-title">Save Project</h2><button type="button" class="text-button" data-close="save-project-dialog" aria-label="Close save project">×</button></div><label for="project-name">Project name</label><input id="project-name" value="Untitled project" maxlength="120" aria-label="Project name" autocomplete="off" required><div class="dialog-actions"><button type="button" class="button" data-close="save-project-dialog">Cancel</button><button type="submit" class="button primary">Save project file</button></div></form></dialog>
   <dialog id="replace-project-dialog" aria-labelledby="replace-project-title"><div class="dialog-heading"><h2 id="replace-project-title">Save your project changes?</h2></div><p>Your current assembly and I/O mapping have unsaved changes. Save a project file before opening another project or source.</p><div class="dialog-actions"><button id="project-cancel" class="button">Cancel</button><button id="project-discard" class="button soft-danger">Continue without saving</button><button id="project-save-continue" class="button primary">Save and continue</button></div></dialog>
   <dialog id="mapping-dialog" aria-labelledby="mapping-title"><div class="dialog-heading"><h2 id="mapping-title">Add I/O peripheral</h2><button class="text-button" type="button" data-close="mapping-dialog" aria-label="Close peripheral setup">✕</button></div>
@@ -2569,7 +2606,7 @@ body[data-theme="dark"] .button.soft-danger:hover:not(:disabled) { background:#6
     <section data-help-section="io" hidden>
       <p>A peripheral exposes memory-mapped registers. Your program uses ordinary loads and stores to read inputs, set outputs, and configure the device.</p>
       <ol class="guide-steps">
-        <li><strong>Choose an address.</strong> Connect a device outside RAM and other mapped ranges. The setup dialog checks overlaps and shows its register offsets.</li>
+        <li><strong>Choose an address.</strong> Connect a device in the reserved MMIO range. Existing custom mappings outside RAM also work. The setup dialog checks overlaps and shows its register offsets.</li>
         <li><strong>Declare the mapped addresses.</strong> The device ID becomes an uppercase base symbol. Its register symbols appear under <strong>Address map and assembly symbols</strong>. Examples include explicit <code>.equ</code> declarations for the current mapping. Changing a peripheral address updates the corresponding declarations and preserves your instructions and comments.</li>
         <li><strong>Read the register reference.</strong> Expand the device's register details for access widths, control bits, status flags, and protocol commands.</li>
         <li><strong>Load a focused example.</strong> Use the device's <strong>Load example</strong> control to try it with the current mapping. Every interrupt-capable device offers an <strong>Interrupt example</strong> with a direct handler.</li>
@@ -2585,11 +2622,13 @@ body[data-theme="dark"] .button.soft-danger:hover:not(:disabled) { background:#6
         <tr><th scope="row">Undo</th><td>Pause and restore the previous tick or input action, including registers, memory, interrupts, and device state.</td></tr>
         <tr><th scope="row">Reset</th><td>Reload the assembled program at its entry point and reset the machine and peripherals.</td></tr>
         <tr><th scope="row">Breakpoints</th><td>Click a source line number to stop execution before its instruction. Click again to remove the breakpoint.</td></tr>
-        <tr><th scope="row">View → Simulation speed</th><td>Choose scheduler ticks per second. The setting controls playback; simulated peripheral timing uses the same tick sequence.</td></tr>
+        <tr><th scope="row">Settings → Memory</th><td>RAM starts at 0x0 and supports up to 4G. Sizes accept bytes, hex, or k/M/G suffixes using powers of 1024. RAM allocates 4 KiB pages as needed. The word-aligned data start defaults to 0x2000. Press Enter or leave a field to apply. Increasing RAM into I/O addresses opens a mapping dialog; its reserved range is excluded from RAM. Default MMIO starts at 0x10000000 with 64 KiB reserved. Corresponding .equ declarations update with the mapping. RAM_TOP is the initial stack boundary and stays below a reservation at the top of memory.</td></tr>
+        <tr><th scope="row">Settings → Simulation speed</th><td>Choose scheduler ticks per second, or Turbo to run as fast as the browser allows. Turbo yields regularly for controls and I/O. Simulated peripheral timing uses the same tick sequence.</td></tr>
         <tr><th scope="row">Panel size</th><td>Drag the divider between Assembly and Machine state to adjust their widths. Drag the divider below them to resize both heights together. On a narrow screen the panels stack vertically.</td></tr>
         <tr><th scope="row">Remove all I/O</th><td>Disconnect every peripheral and clear its layout and simulation state while keeping your assembly source.</td></tr>
         <tr><th scope="row">Peripheral windows</th><td>Drag an I/O title bar to reorder its window, or drag a corner to resize it. The top-right × disconnects that device. Pushbuttons can use configured keys when their Keyboard toggle is enabled.</td></tr>
-        <tr><th scope="row">View → Appearance</th><td>Choose light or dark mode for the workbench, peripherals, and dialogs.</td></tr>
+        <tr><th scope="row">Settings → Appearance</th><td>Choose light or dark mode for the workbench, peripherals, and dialogs.</td></tr>
+        <tr><th scope="row">Settings → Enable Undo</th><td>Enabled by default. Turn off to release saved history and skip recording CPU, memory, and I/O checkpoints. Turn on to record subsequent actions.</td></tr>
         <tr><th scope="row">Save Project <kbd>Ctrl+S</kbd></th><td>Choose a project name and save the source, I/O configuration, breakpoints, and view settings together.</td></tr>
       </tbody></table></div>
       <div class="guide-note"><h3>Machine inspectors</h3><p><strong>Registers</strong> switches between hexadecimal, binary, signed decimal, and unsigned decimal. <strong>Memory</strong> shows bytes in ascending addresses and lets you interpret words in little- or big-endian order. <strong>CSRs</strong> shows interrupt and trap state. Changed values flash briefly and remain highlighted.</p><p><strong>Machine code</strong> lists the assembled hexadecimal words. Select a row to explore its colored instruction fields; select the immediate field to show its reconstruction. The source follows the current instruction during execution, and the menu stays visible while you scroll to your connected devices.</p></div>
@@ -4891,9 +4930,23 @@ function normalizeFixedPeripheralOptions(type, options = {}) {
   return {displayOrder};
 }
 
+/** Upper usable RAM boundary for a descending stack, including a top MMIO hole. */
+function ramTop(config = {}) {
+  // A one-past-the-end 4 GiB pointer cannot be represented in an RV32 register.
+  let end = Math.min((config.ramBase ?? 0) + (config.ramSize ?? 65536), 0xfffffff0);
+  const mmioBase = config.mmioBase ?? 0x10000000;
+  const mmioEnd = mmioBase + (config.mmioSize ?? 0x10000);
+  const alignedStack = Math.floor(end / 16) * 16;
+  // Check after the RV32 cap and stack alignment. A pointer at MMIO's upper
+  // boundary also needs moving: the next descending stack write enters MMIO.
+  const entersMMIO = boundary => mmioBase < boundary && boundary <= mmioEnd;
+  if (entersMMIO(end) || entersMMIO(alignedStack)) end = mmioBase;
+  return end;
+}
+
 /** Symbols follow configured IDs, so remapping never requires numeric source edits. */
 function assemblyConstants(config = {}) {
-  const constants = { RAM_TOP: ((config.ramBase ?? 0) + (config.ramSize ?? 65536)) >>> 0 };
+  const constants = { RAM_TOP: ramTop(config) };
   for (const item of normalizePeripheralConfig(config.peripherals)) {
     const prefix = item.id.toUpperCase();
     if (Object.hasOwn(constants, prefix)) throw new Error(`Assembly symbol collision: ${prefix}.`);
@@ -5128,7 +5181,7 @@ function createPeripheral(config) {
   device.reset();
   return descriptor.hasInput ? withInputInterrupts(device,config) : device;
 }
-return Object.freeze({ PERIPHERAL_CATALOG, DEFAULT_PERIPHERALS, normalizePeripheralConfig, assemblyConstants, createPeripheral });
+return Object.freeze({ PERIPHERAL_CATALOG, DEFAULT_PERIPHERALS, normalizePeripheralConfig, ramTop, assemblyConstants, createPeripheral });
 })();
 modules["equ-remap"] = (() => {
 const { assemblyConstants, DEFAULT_PERIPHERALS } = modules["peripherals"];
@@ -6768,13 +6821,16 @@ function assemble(source, options = {}) {
 return Object.freeze({ REGISTER_NAMES, INSTRUCTIONS, assemble });
 })();
 modules["core"] = (() => {
-const { DEFAULT_PERIPHERALS, normalizePeripheralConfig, createPeripheral, assemblyConstants } = modules["peripherals"];
+const { DEFAULT_PERIPHERALS, normalizePeripheralConfig, createPeripheral, assemblyConstants, ramTop } = modules["peripherals"];
 const { validateInstrumentConnections } = modules["peripherals-instruments"];
 
 /** Shared RV32IM interpreter and an extensible memory-mapped board. */
 const DEFAULT_CONFIG = Object.freeze({
   ramBase: 0,
   ramSize: 65536,
+  dataBase: 0x2000,
+  mmioBase: 0x10000000,
+  mmioSize: 0x10000,
   trapOnEbreak: false,
   peripherals: DEFAULT_PERIPHERALS,
 });
@@ -6826,6 +6882,107 @@ function overlaps(a, b) {
   return a.base < b.base + b.size && b.base < a.base + a.size;
 }
 
+/** Zero-filled logical RAM. Only pages containing nonzero bytes consume storage. */
+class SparseRAM {
+  constructor(length) {
+    if (!Number.isSafeInteger(length) || length < 0 || length > U32_LIMIT) throw new RangeError('Invalid sparse RAM length.');
+    this.length = length;
+    this.pages = new Map();
+  }
+
+  get pageCount() { return this.pages.size; }
+  get allocatedBytes() { return this.pages.size * 4096; }
+  get byteLength() { return this.length; }
+
+  read(index) {
+    if (!Number.isInteger(index) || index < 0 || index >= this.length) return undefined;
+    return this.pages.get(Math.floor(index / 4096))?.bytes[index % 4096] ?? 0;
+  }
+
+  write(index, value) {
+    if (!Number.isInteger(index) || index < 0 || index >= this.length) return;
+    const pageIndex = Math.floor(index / 4096), offset = index % 4096;
+    value = Number(value) & 255;
+    let page = this.pages.get(pageIndex);
+    if (!page) {
+      if (!value) return;
+      page = { bytes: new Uint8Array(4096), nonzero: 0 };
+      this.pages.set(pageIndex, page);
+    }
+    const old = page.bytes[offset];
+    if (old === value) return;
+    page.nonzero += Number(value !== 0) - Number(old !== 0);
+    page.bytes[offset] = value;
+    if (!page.nonzero) this.pages.delete(pageIndex);
+  }
+
+  clear() { this.pages.clear(); }
+
+  set(source, offset = 0) {
+    if (!source || !Number.isSafeInteger(source.length) || !Number.isSafeInteger(offset) || offset < 0 || offset + source.length > this.length) throw new RangeError('RAM data is outside its logical range.');
+    // Copy only the caller's supplied bytes, never the unallocated logical span.
+    for (let index = 0; index < source.length; index++) this.write(offset + index, source[index]);
+  }
+
+  slice(start = 0, end = this.length) {
+    const relative = value => {
+      value = Math.trunc(Number(value)) || 0;
+      return value < 0 ? Math.max(this.length + value, 0) : Math.min(value, this.length);
+    };
+    start = relative(start); end = relative(end);
+    const length = Math.max(0, end - start);
+    if (length > 64 * 1024 * 1024) throw new RangeError('Read sparse RAM in slices of at most 64 MiB.');
+    const result = new Uint8Array(length);
+    for (const [pageIndex, page] of this.pages) {
+      const pageStart = pageIndex * 4096;
+      const from = Math.max(start, pageStart), to = Math.min(end, pageStart + 4096);
+      if (from < to) result.set(page.bytes.subarray(from - pageStart, to - pageStart), from - start);
+    }
+    return result;
+  }
+
+  fill(value, start = 0, end = this.length) {
+    if (!Number.isSafeInteger(start) || !Number.isSafeInteger(end) || start < 0 || end > this.length || end < start) throw new RangeError('Invalid RAM fill range.');
+    value = Number(value) & 255;
+    if (!value && start === 0 && end === this.length) { this.clear(); return this; }
+    if (!value) {
+      for (const [pageIndex] of this.pages) {
+        const pageStart = pageIndex * 4096;
+        for (let index = Math.max(start, pageStart); index < Math.min(end, pageStart + 4096); index++) this.write(index, 0);
+      }
+    } else {
+      for (let index = start; index < end; index++) this.write(index, value);
+    }
+    return this;
+  }
+
+  snapshot() {
+    return { byteLength: this.allocatedBytes, pages: new Map(Array.from(this.pages, ([index, page]) => [index, {bytes:page.bytes.slice(), nonzero:page.nonzero}])) };
+  }
+
+  restore(snapshot) {
+    this.pages = new Map(Array.from(snapshot.pages, ([index, page]) => [index, {bytes:page.bytes.slice(), nonzero:page.nonzero}]));
+  }
+
+  /** Preserve the small array-style inspection API without trapping hot CPU reads. */
+  arrayView() {
+    const indexOf = key => typeof key === 'string' && /^(?:0|[1-9]\d*)$/.test(key) ? Number(key) : null;
+    return new Proxy(this, {
+      get(target, key) {
+        const index = indexOf(key);
+        if (index !== null) return target.read(index);
+        const value = Reflect.get(target, key, target);
+        return typeof value === 'function' ? value.bind(target) : value;
+      },
+      set(target, key, value) {
+        const index = indexOf(key);
+        if (index !== null) { target.write(index, value); return true; }
+        return Reflect.set(target, key, value, target);
+      },
+    });
+  }
+}
+
 /** Devices are address ranges with read/write callbacks and an optional side-effect-free peek. */
 class Bus {
   constructor(config = {}) {
@@ -6835,15 +6992,27 @@ class Bus {
     if (config.boardEnabled === true) throw new TypeError('The original pushbutton board was removed. Add dedicated buttons and raw7seg peripherals instead.');
     if (config.buttonInputMode !== undefined && !['poll','interrupt'].includes(config.buttonInputMode)) throw new TypeError('buttonInputMode must be poll or interrupt.');
     const { boardEnabled, sevenSegmentBase, buttonBase, buttonInputMode, ...activeConfig } = config;
-    this.config = Object.freeze({ ...DEFAULT_CONFIG, ...activeConfig, peripherals });
+    const effective = { ...DEFAULT_CONFIG, ...activeConfig, peripherals };
+    // Older configurations omit the assembly data origin. Preserve their
+    // existing placement, including small RAM and low-level relocated maps.
+    if (!Object.hasOwn(activeConfig, 'dataBase')) effective.dataBase = effective.ramBase + Math.min(0x2000, Math.floor(effective.ramSize / 8) * 4);
+    this.config = Object.freeze(effective);
     assemblyConstants(this.config); // Reject IDs whose generated symbols collide.
     const c = this.config;
     if (typeof c.trapOnEbreak !== 'boolean') throw new TypeError('trapOnEbreak must be a boolean.');
-    configRange(c.ramBase, c.ramSize, 'RAM');
-    if (c.ramSize < 16 || c.ramSize > 64 * 1024 * 1024) {
-      throw new RangeError('RAM size must be between 16 bytes and 64 MiB.');
+    if (!Number.isSafeInteger(c.ramSize) || c.ramSize < 16 || c.ramSize > U32_LIMIT) {
+      throw new RangeError('RAM size must be between 16 bytes and 4 GiB.');
     }
-    this.ram = new Uint8Array(c.ramSize);
+    configRange(c.ramBase, c.ramSize, 'RAM');
+    configRange(c.mmioBase, c.mmioSize, 'Reserved MMIO');
+    this.reservedMMIO = Object.freeze({ base: c.mmioBase, size: c.mmioSize });
+    unsignedAddress(c.dataBase, 'Data section start');
+    if (c.dataBase % 4 || c.dataBase < c.ramBase || c.dataBase >= c.ramBase + c.ramSize) {
+      throw new RangeError('Data section start must be word-aligned and inside RAM.');
+    }
+    if (overlaps({base:c.dataBase, size:4}, this.reservedMMIO)) throw new RangeError('Data section start is inside reserved MMIO.');
+    this._ram = new SparseRAM(c.ramSize);
+    this.ram = this._ram.arrayView();
     this.devices = Object.create(null);
     this.mappings = [];
     this._mappingVersion = 0;
@@ -6861,7 +7030,8 @@ class Bus {
     configRange(device.base, device.size, `Device ${device.name}`);
     if (typeof device.read !== 'function') throw new TypeError('A device requires a read(offset, width) callback.');
     const ram = { base: this.config.ramBase, size: this.config.ramSize };
-    if (overlaps(device, ram) || this.mappings.some(other => overlaps(device, other))) {
+    const inReserved = device.base >= this.reservedMMIO.base && device.base + device.size <= this.reservedMMIO.base + this.reservedMMIO.size;
+    if ((overlaps(device, ram) && !inReserved) || this.mappings.some(other => overlaps(device, other))) {
       throw new RangeError(`Device ${device.name} overlaps an existing address range.`);
     }
     this.mappings.push(device);
@@ -6872,7 +7042,7 @@ class Bus {
 
   reset() {
     if (this._writeJournal) throw new Error('Reset and load cannot run inside an Undo action.');
-    this.ram.fill(0);
+    this._ram.clear();
     for (const device of this.mappings) device.reset?.();
   }
 
@@ -6906,18 +7076,21 @@ class Bus {
       throw new BusFault('access', address, 'Address is outside the 32-bit address space.');
     }
     if (address % width) throw new BusFault('misaligned', address, `Misaligned ${width}-byte access at ${hex(address)}.`);
+    const reserved = overlaps({base:address,size:width}, this.reservedMMIO);
     const offset = address - this.config.ramBase;
-    if (offset >= 0 && offset + width <= this.ram.length) return { offset, device: null };
+    // Mapping validation guarantees that only the reserved hole can overlay RAM.
+    if (!reserved && offset >= 0 && offset + width <= this._ram.length) return { offset, device: null };
     const device = this.mappings.find(d => address >= d.base && address + width <= d.base + d.size);
-    if (!device) throw new BusFault('access', address, `Unmapped address ${hex(address)}.`);
-    return { offset: address - device.base, device };
+    if (device) return { offset: address - device.base, device };
+    if (reserved) throw new BusFault('access', address, `Unmapped reserved MMIO address ${hex(address)}.`);
+    throw new BusFault('access', address, `Unmapped address ${hex(address)}.`);
   }
 
   read(address, width = 4) {
     const { offset, device } = this._locate(address, width);
     if (device) return this._readDevice(device, 'read', offset, width, address);
     let value = 0;
-    for (let i = 0; i < width; i++) value |= this.ram[offset + i] << (8 * i);
+    for (let i = 0; i < width; i++) value |= this._ram.read(offset + i) << (8 * i);
     return value >>> 0;
   }
 
@@ -6949,15 +7122,15 @@ class Bus {
     }
     for (let i = 0; i < width; i++) {
       const index = offset + i;
-      if (this._writeJournal && !this._writeJournal.has(index)) this._writeJournal.set(index, this.ram[index]);
-      this.ram[index] = value >>> (8 * i);
+      if (this._writeJournal && !this._writeJournal.has(index)) this._writeJournal.set(index, this._ram.read(index));
+      this._ram.write(index, value >>> (8 * i));
     }
   }
 
   fetch(address) {
     const { offset, device } = this._locate(address, 4);
     if (device) throw new BusFault('access', address, 'Peripheral memory is not executable.');
-    return (this.ram[offset] | (this.ram[offset + 1] << 8) | (this.ram[offset + 2] << 16) | (this.ram[offset + 3] << 24)) >>> 0;
+    return (this._ram.read(offset) | (this._ram.read(offset + 1) << 8) | (this._ram.read(offset + 2) << 16) | (this._ram.read(offset + 3) << 24)) >>> 0;
   }
 }
 
@@ -6978,7 +7151,7 @@ class Machine {
     this.bus.reset();
     this._generation = (this._generation ?? 0) + 1;
     this.regs.fill(0);
-    this.regs[2] = (this.bus.config.ramBase + this.bus.config.ramSize) & ~15;
+    this.regs[2] = Math.floor(ramTop(this.bus.config) / 16) * 16;
     this.pc = this.bus.config.ramBase;
     this._cycles = 0n;
     this._retired = 0n;
@@ -7016,7 +7189,7 @@ class Machine {
       }
       return { device, state };
     });
-    const ram = includeMemory ? this.bus.ram.slice() : null;
+    const ram = includeMemory ? this.bus._ram.snapshot() : null;
     const checkpoint = Object.freeze({ byteLength: 1024 + (ram?.byteLength ?? 0) + devices.reduce((sum, item) => sum + item.state.byteLength, 0) });
     machineCheckpoints.set(checkpoint, {
       owner: this, mappingVersion: this.bus._mappingVersion, devices, ram,
@@ -7036,9 +7209,9 @@ class Machine {
     }
     if (this.bus._writeJournal) throw new Error('Cannot restore a checkpoint during an Undo action.');
     for (const item of state.devices) item.device.restoreState(item.state);
-    if (state.ram) this.bus.ram.set(state.ram);
+    if (state.ram) this.bus._ram.restore(state.ram);
     if (state.ramUndo) {
-      for (let i = 0; i < state.ramUndo.offsets.length; i++) this.bus.ram[state.ramUndo.offsets[i]] = state.ramUndo.bytes[i];
+      for (let i = 0; i < state.ramUndo.offsets.length; i++) this.bus._ram.write(state.ramUndo.offsets[i], state.ramUndo.bytes[i]);
     }
     this.regs.set(state.regs);
     this.pc = state.pc;
@@ -7084,6 +7257,7 @@ class Machine {
       const offset = segment.address - this.bus.config.ramBase;
       if (offset < 0 || offset + segment.bytes.length > this.bus.ram.length) throw new RangeError(`Program segment at ${hex(segment.address)} is outside RAM.`);
       const range = { base: segment.address, size: segment.bytes.length };
+      if (range.size && overlaps(range, this.bus.reservedMMIO)) throw new RangeError(`Program segment at ${hex(segment.address)} overlaps reserved MMIO.`);
       if (range.size && ranges.some(other => overlaps(range, other))) throw new RangeError('Program segments overlap.');
       if (range.size) ranges.push(range);
     }
@@ -7092,8 +7266,9 @@ class Machine {
     if (entry % 4 || entry < this.bus.config.ramBase || entry + 4 > this.bus.config.ramBase + this.bus.config.ramSize) {
       throw new RangeError('Entry point must be word-aligned and inside RAM.');
     }
+    if (overlaps({base:entry,size:4},this.bus.reservedMMIO)) throw new RangeError('Entry point is inside reserved MMIO.');
     this.reset();
-    for (const segment of image.segments) this.bus.ram.set(segment.bytes, segment.address - this.bus.config.ramBase);
+    for (const segment of image.segments) this.bus._ram.set(segment.bytes, segment.address - this.bus.config.ramBase);
     this.pc = entry;
     this.sourceMap = image.sourceMap || [];
     return this;
@@ -7357,7 +7532,7 @@ class Machine {
     };
   }
 }
-return Object.freeze({ DEFAULT_CONFIG, CSR, hex, Bus, Machine });
+return Object.freeze({ DEFAULT_CONFIG, CSR, hex, SparseRAM, Bus, Machine });
 })();
 modules["project"] = (() => {
 const { Machine } = modules["core"];
@@ -7367,7 +7542,7 @@ const PROJECT_FORMAT = 'riscv-io-project';
 const PROJECT_VERSION = 1;
 const MAX_PROJECT_BYTES = 8 * 1024 * 1024;
 const MAX_SOURCE_BYTES = 1024 * 1024;
-const CONFIG_KEYS = ['ramBase', 'ramSize', 'trapOnEbreak', 'peripherals'];
+const CONFIG_KEYS = ['ramBase', 'ramSize', 'dataBase', 'mmioBase', 'mmioSize', 'trapOnEbreak', 'peripherals'];
 const LEGACY_CONFIG_KEYS = ['sevenSegmentBase', 'buttonBase', 'buttonInputMode', 'boardEnabled'];
 const encoder = new TextEncoder();
 
@@ -7395,7 +7570,7 @@ function record(value, label, keys) {
 
 function normalizeConfig(config) {
   record(config, 'Project config', [...CONFIG_KEYS, ...LEGACY_CONFIG_KEYS]);
-  for (const key of ['ramBase', 'ramSize', 'sevenSegmentBase', 'buttonBase']) {
+  for (const key of ['ramBase', 'ramSize', 'dataBase', 'mmioBase', 'mmioSize', 'sevenSegmentBase', 'buttonBase']) {
     if (Object.hasOwn(config, key) && !Number.isInteger(config[key])) throw new TypeError(`Project config ${key} must be an integer.`);
   }
   for (const key of ['boardEnabled', 'trapOnEbreak']) {
@@ -7422,13 +7597,15 @@ function normalize({ name, source, config, breakpoints = [], view = {} }) {
   if (!Array.isArray(breakpoints) || breakpoints.some(line => !Number.isInteger(line) || line < 1 || line > lineCount)) {
     throw new TypeError('Project breakpoints must be valid, one-based source line numbers.');
   }
-  record(view, 'Project view', ['theme', 'speed', 'ioLayout']);
+  record(view, 'Project view', ['theme', 'speed', 'undoEnabled', 'ioLayout']);
   const theme = Object.hasOwn(view, 'theme') ? view.theme : 'light';
   const speed = Object.hasOwn(view, 'speed') ? view.speed : 500;
+  const undoEnabled = Object.hasOwn(view, 'undoEnabled') ? view.undoEnabled : true;
   if (!['light', 'dark'].includes(theme)) throw new TypeError('Project theme must be light or dark.');
-  if (![2, 20, 500, 50000].includes(speed)) throw new TypeError('Project speed must be 2, 20, 500, or 50000 ticks/s.');
+  if (![2, 20, 500, 50000, 'turbo'].includes(speed)) throw new TypeError('Project speed must be 2, 20, 500, or 50000 ticks/s, or turbo.');
+  if (typeof undoEnabled !== 'boolean') throw new TypeError('Project undoEnabled must be a boolean.');
   return { format: PROJECT_FORMAT, version: PROJECT_VERSION, name: name.trim(), source,
-    config: normalizeConfig(config), breakpoints: [...new Set(breakpoints)].sort((a, b) => a - b), view: { theme, speed, ...(Object.hasOwn(view,'ioLayout') ? {ioLayout:normalizeProjectLayout(view.ioLayout)} : {}) } };
+    config: normalizeConfig(config), breakpoints: [...new Set(breakpoints)].sort((a, b) => a - b), view: { theme, speed, undoEnabled, ...(Object.hasOwn(view,'ioLayout') ? {ioLayout:normalizeProjectLayout(view.ioLayout)} : {}) } };
 }
 
 /** Create a detached save value, including unfinished or invalid assembly source. */
@@ -7457,21 +7634,24 @@ modules["history"] = (() => {
  * the boundary automatically. RAM changes in record() must use bus.write().
  */
 class SimulationHistory {
-  constructor(machine, { maxEntries = 128, maxBytes = 16 * 1024 * 1024 } = {}) {
+  constructor(machine, { maxEntries = 128, maxBytes = 16 * 1024 * 1024, enabled = true } = {}) {
     if (!machine || typeof machine.recordState !== 'function' || typeof machine.restoreState !== 'function') {
       throw new TypeError('SimulationHistory requires a checkpoint-capable Machine.');
     }
     if (!Number.isSafeInteger(maxEntries) || maxEntries < 1 || maxEntries > 100000) throw new RangeError('maxEntries must be between 1 and 100000.');
     if (!Number.isSafeInteger(maxBytes) || maxBytes < 1) throw new RangeError('maxBytes must be a positive safe integer.');
+    if (typeof enabled !== 'boolean') throw new TypeError('Undo enabled must be a boolean.');
     this.machine = machine;
     this.maxEntries = maxEntries;
     this.maxBytes = maxBytes;
+    this._enabled = enabled;
     this.clear();
   }
 
   _checkBoundary() { if (this.version !== this.machine.historyVersion) this.clear(); }
+  get enabled() { return this._enabled; }
   get length() { this._checkBoundary(); return this.entries.length; }
-  get canUndo() { return this.length > 0; }
+  get canUndo() { return this.enabled && this.length > 0; }
   get byteLength() { this._checkBoundary(); return this.bytes; }
   get nextLabel() { this._checkBoundary(); return this.entries.at(-1)?.label ?? null; }
 
@@ -7482,7 +7662,22 @@ class SimulationHistory {
     this.truncated = false;
   }
 
+  /** Release all checkpoints on either transition; future actions start fresh. */
+  setEnabled(enabled) {
+    if (typeof enabled !== 'boolean') throw new TypeError('Undo enabled must be a boolean.');
+    if (enabled !== this.enabled) {
+      this._enabled = enabled;
+      this.clear();
+    }
+  }
+
   record(action, label = 'Input') {
+    if (!this.enabled) {
+      if (typeof action !== 'function') throw new TypeError('An Undo action must be a function.');
+      const result = action();
+      if (result && typeof result.then === 'function') throw new TypeError('Undo actions must be synchronous.');
+      return result;
+    }
     this._checkBoundary();
     const { result, checkpoint, byteLength } = this.machine.recordState(action);
     const savedLabel = String(label).slice(0, 256);
@@ -7504,12 +7699,14 @@ class SimulationHistory {
   }
 
   step() {
+    if (!this.enabled) return this.machine.step();
     this._checkBoundary();
     if (this.machine.halted) return this.machine.step();
     return this.record(() => this.machine.step(), 'Step');
   }
 
   undo() {
+    if (!this.enabled) return null;
     this._checkBoundary();
     const entry = this.entries.at(-1);
     if (!entry) return null;
@@ -7552,6 +7749,9 @@ const $ = id => document.getElementById(id);
 const storageKey = 'riscv-io-lab.draft.v1';
 const configKey = 'riscv-io-lab.mapping.v2';
 const layoutKey = 'riscv-io-lab.layout.v1';
+const undoKey = 'riscv-io-lab.undo.v1';
+let undoEnabled = true;
+try { undoEnabled = localStorage.getItem(undoKey) !== 'false'; } catch { /* Undo starts enabled when storage is unavailable. */ }
 let ioLayout = {order:[],panels:{}};
 try { ioLayout = normalizeProjectLayout(JSON.parse(localStorage.getItem(layoutKey) || '{}')); } catch { /* Invalid saved layout uses automatic card sizes. */ }
 const descriptions = Object.fromEntries(EXAMPLE_CATALOG.map(item=>[item.name,item.description]));
@@ -7561,13 +7761,19 @@ const exampleDevices = Object.fromEntries(EXAMPLE_CATALOG.map(item=>[item.name,i
 let config = { ...DEFAULT_CONFIG, peripherals: [] };
 try {
   const saved = JSON.parse(localStorage.getItem(configKey) || 'null');
-  if (saved) { const trial = new Machine(saved); config = { ...trial.bus.config }; }
+  if (saved) {
+    const normalized = {...saved, ramBase:0};
+    if (saved.ramBase && Number.isInteger(saved.dataBase)) normalized.dataBase = saved.dataBase - saved.ramBase;
+    const trial = new Machine(normalized); config = { ...trial.bus.config };
+  }
 } catch { /* Invalid or unavailable local storage falls back to the standard map. */ }
 let machine = new Machine(config);
-let history = new SimulationHistory(machine);
+config = {...machine.bus.config};
+let history = new SimulationHistory(machine, {enabled:undoEnabled});
 let projectDirty = false;
 let projectFileName = null;
 let pendingProjectAction = null;
+let pendingMemorySettings = null;
 let initializing = true;
 let assembledSource = null;
 let image = null;
@@ -7575,12 +7781,13 @@ let sourceMap = new Map();
 let firstAddressForLine = new Map();
 let running = false;
 let frame = 0;
+let turboTimer = null;
 let lastTime = 0;
 let tickCredit = 0;
 let renderTime = 0;
 let skipBreakpoint = null;
 let selectedTab = 'registers';
-let memoryAddress = 0x2000;
+let memoryAddress = config.dataBase;
 let lintTimer;
 let composing = false;
 let loadingSource = false;
@@ -7695,6 +7902,7 @@ function showDiagnostics(result) {
 function pause(message) {
   running = false;
   cancelAnimationFrame(frame);
+  clearTimeout(turboTimer); turboTimer = null;
   ioView.silence();
   $('run').innerHTML = '<span aria-hidden="true">▶</span> Run';
   $('run').classList.remove('primary');
@@ -7714,7 +7922,7 @@ function assembleProgram(announce = false) {
   ioView.releaseInputs?.();
   $('operation-message').hidden = true;
   const result = assemble($('source').value, { constants: constants(), textBase: config.ramBase,
-    dataBase: config.ramBase + Math.min(0x2000, Math.floor(config.ramSize / 8) * 4) });
+    dataBase: config.dataBase });
   showDiagnostics(result);
   if (!result.ok) {
     invalidateImage(); setStatus('Check your code', 'Resolve the diagnostics below', 'error');
@@ -7723,7 +7931,7 @@ function assembleProgram(announce = false) {
   try {
     const next = new Machine(config); next.load(result);
     if ($('encoding-dialog').open) $('encoding-dialog').close();
-    machine = next; history = new SimulationHistory(machine); image = result; assembledSource = $('source').value;
+    machine = next; history = new SimulationHistory(machine, {enabled:undoEnabled}); image = result; assembledSource = $('source').value;
     sourceMap = new Map(result.sourceMap.map(item => [item.address, item]));
     firstAddressForLine = new Map();
     for (const item of result.sourceMap) if (!firstAddressForLine.has(item.line)) firstAddressForLine.set(item.line, item.address);
@@ -7752,13 +7960,23 @@ function advance() {
   return event;
 }
 
+function simulationSpeed() { return $('speed').value === 'turbo' ? 'turbo' : Number($('speed').value); }
+function speedDescription() { return simulationSpeed() === 'turbo' ? 'Turbo · as fast as the browser allows' : `${simulationSpeed().toLocaleString()} ticks per second`; }
+function scheduleExecution() {
+  if (simulationSpeed() === 'turbo') turboTimer = setTimeout(() => { turboTimer = null; animationTick(performance.now()); }, 0);
+  else frame = requestAnimationFrame(animationTick);
+}
+
 function animationTick(time) {
   if (!running) return;
+  const turbo = simulationSpeed() === 'turbo';
   const elapsed = Math.min(time - lastTime, 100); lastTime = time;
-  tickCredit = Math.min(tickCredit + elapsed * Number($('speed').value) / 1000, 5000);
+  tickCredit = turbo ? 0 : Math.min(tickCredit + elapsed * simulationSpeed() / 1000, 5000);
   const count = Math.floor(tickCredit); tickCredit -= count;
+  // Bound CPU time rather than tick count in Turbo, then yield to browser input.
+  const deadline = performance.now() + 12;
   try {
-    for (let i = 0; i < count && running; i++) {
+    for (let i = 0; running && (turbo ? performance.now() < deadline : i < count); i++) {
       const line = sourceMap.get(machine.pc)?.line;
       if (breakpoints.has(line) && firstAddressForLine.get(line) === machine.pc && skipBreakpoint !== machine.pc) {
         pause(`Breakpoint on line ${line}`); skipBreakpoint = machine.pc;
@@ -7770,7 +7988,7 @@ function animationTick(time) {
     }
   } catch (error) { pause(); setStatus('Execution error', error.message, 'error'); }
   if (time - renderTime >= 100 || !running) { renderTime = time; render(); if (!running) revealCurrentLine(); }
-  if (running) frame = requestAnimationFrame(animationTick);
+  if (running) scheduleExecution();
 }
 
 function runPause() {
@@ -7779,14 +7997,14 @@ function runPause() {
   running = true; lastTime = performance.now(); tickCredit = 1;
   $('run').innerHTML = '<span aria-hidden="true">Ⅱ</span> Pause';
   $('run').classList.add('primary');
-  setStatus('Running', `${Number($('speed').value).toLocaleString()} ticks per second`, 'running');
+  setStatus('Running', speedDescription(), 'running');
   
-  frame = requestAnimationFrame(animationTick);
+  scheduleExecution();
 }
 
 function undoProgram() {
   pause();
-  if (!image || composing || loadingSource) return;
+  if (!undoEnabled || !image || composing || loadingSource) return;
   const undone = history.undo();
   if (!undone) return;
   skipBreakpoint = null; lastCurrentLine = null;
@@ -7870,11 +8088,11 @@ function render() {
   ioView.render(config);
   $('listing-state').textContent = image ? 'Select a row to explore its 32-bit encoding.' : 'Machine code appears when the source assembles successfully.';
   $('run').disabled = $('step').disabled = !image || composing || loadingSource;
-  $('undo').disabled = !image || !history.canUndo || composing || loadingSource;
+  $('undo').disabled = !undoEnabled || !image || !history.canUndo || composing || loadingSource;
   document.querySelectorAll('#instruction-listing tr.current').forEach(row => row.classList.remove('current'));
   if (assembledSource === $('source').value) document.querySelector(`#instruction-listing tr[data-address="${machine.pc}"]`)?.classList.add('current');
   if (running && machine.waiting) setStatus('Waiting for input', 'WFI · scheduler is running', 'running');
-  else if (running) setStatus('Running', `${Number($('speed').value).toLocaleString()} ticks per second`, 'running');
+  else if (running) setStatus('Running', speedDescription(), 'running');
 }
 
 function focusLine(line, column = 1) {
@@ -7928,7 +8146,7 @@ async function loadExample(name) {
           });
         const next = new Machine({...config, peripherals});
         ioView.releaseInputs?.();
-        config = {...next.bus.config}; machine = next; history = new SimulationHistory(machine); invalidateImage();
+        config = {...next.bus.config}; machine = next; history = new SimulationHistory(machine, {enabled:undoEnabled}); invalidateImage();
         reconcileLayout();
         try { localStorage.setItem(configKey, JSON.stringify(config)); } catch { /* Mapping remains available in this session. */ }
         renderAddressMap();
@@ -7960,13 +8178,13 @@ function loadPeripheralExample(id, mode) {
       // Validate device configuration and assembly before replacing the student's source.
       const next = new Machine(nextConfig);
       const trial = assemble(example.source, {constants:assemblyConstants(next.bus.config), textBase:config.ramBase,
-        dataBase:config.ramBase + Math.min(0x2000, Math.floor(config.ramSize / 8) * 4)});
+        dataBase:next.bus.config.dataBase});
       if (!trial.ok) throw new Error(trial.diagnostics.map(item => item.message).join('; '));
       next.load(trial);
       cancelExampleSetup(true); loadSequence++; clearTimeout(lintTimer); lintTimer = null;
       loadingSource = false; composing = false;
       ioView.releaseInputs?.();
-      config = {...next.bus.config}; machine = next; history = new SimulationHistory(machine); invalidateImage();
+      config = {...next.bus.config}; machine = next; history = new SimulationHistory(machine, {enabled:undoEnabled}); invalidateImage();
       $('source').value = example.source; $('source').setSelectionRange(0, 0);
       $('source').scrollTop = 0; $('source').scrollLeft = 0;
       $('source-badge').textContent = `${id}-${example.mode}.s`;
@@ -8075,7 +8293,7 @@ $('memory-go').addEventListener('click', () => {
 $('memory-address').addEventListener('input', () => $('memory-address').setCustomValidity(''));
 $('memory-address').addEventListener('keydown', e => { if (e.key === 'Enter') $('memory-go').click(); });
 $('memory-pc').addEventListener('click', () => { $('memory-address').value = hex(machine.pc); $('memory-go').click(); });
-$('memory-data').addEventListener('click', () => { $('memory-address').value = '0x00002000'; $('memory-go').click(); });
+$('memory-data').addEventListener('click', () => { $('memory-address').value = hex(config.dataBase); $('memory-go').click(); });
 document.querySelectorAll('[data-tab]').forEach(tab => {
   tab.addEventListener('click', () => selectTab(tab.dataset.tab));
   tab.addEventListener('keydown', event => {
@@ -8107,7 +8325,15 @@ function showPeripheralGuide(id) {
   $('peripheral-guide-dialog').scrollTop = 0;
 }
 function renderAddressMap() {
-  const entries = [{ label: 'RAM', base: config.ramBase, size: config.ramSize, symbol: 'RAM_TOP = ' + hex(config.ramBase + config.ramSize) }];
+  $('data-base').value = hex(config.dataBase);
+  $('ram-size').value = config.ramSize % 1073741824 === 0 ? `${config.ramSize / 1073741824}G` : config.ramSize % 1048576 === 0 ? `${config.ramSize / 1048576}M` : config.ramSize % 1024 === 0 ? `${config.ramSize / 1024}k` : String(config.ramSize);
+  $('ram-settings-error').textContent = ''; $('ram-settings-error').hidden = true;
+  const ramEnd = config.ramBase + config.ramSize, reservedEnd = config.mmioBase + config.mmioSize;
+  const entries = [];
+  const addRam = (base, end) => { if (end > base) entries.push({label:'RAM',base,size:end-base,symbol:'RAM_TOP = '+hex(constants().RAM_TOP)}); };
+  addRam(config.ramBase, Math.min(ramEnd, Math.max(config.ramBase, config.mmioBase)));
+  addRam(Math.max(config.ramBase, reservedEnd), ramEnd);
+  entries.push({label:'Reserved MMIO',base:config.mmioBase,size:config.mmioSize,symbol:`${config.mmioSize / 1024} KiB`});
   for (const device of config.peripherals) entries.push({label:device.id,base:device.base,size:256,symbol:device.id.toUpperCase()});
   $('address-map').innerHTML = entries.map(e => `<div class="map-row"><span>${escapeHTML(e.label)}</span><code>${hex(e.base)} – ${hex(e.base+e.size-1)}</code><code>${escapeHTML(e.symbol)}</code></div>`).join('');
 }
@@ -8118,9 +8344,13 @@ function applyConfiguration(nextConfig, message, renamed = null) {
   const selection = {start:editor.selectionStart,end:editor.selectionEnd,direction:editor.selectionDirection};
   const scroll = {top:editor.scrollTop,left:editor.scrollLeft};
   const remapped = updateMappedEquates(before, config, next.bus.config, renamed);
+  const dataMoved = config.dataBase !== next.bus.config.dataBase;
   pause(); clearTimeout(lintTimer);
   ioView.releaseInputs?.();
-  config = {...next.bus.config}; machine = next; history = new SimulationHistory(machine); invalidateImage(); markProjectDirty();
+  config = {...next.bus.config}; machine = next; history = new SimulationHistory(machine, {enabled:undoEnabled}); invalidateImage(); markProjectDirty();
+  if (dataMoved || memoryAddress < config.ramBase || memoryAddress >= config.ramBase + config.ramSize) {
+    memoryAddress = config.dataBase; $('memory-address').value = hex(memoryAddress);
+  }
   if (exampleSetup) editor.value = materializeExampleConstants(before, config);
   else if (remapped.source !== before) {
     editor.value = remapped.source;
@@ -8151,11 +8381,24 @@ function removeAllPeripherals() {
   cancelExampleSetup(true); loadSequence++; loadingSource = false;
   applyConfiguration({...config, peripherals:[]}, 'Disconnected all peripherals.');
 }
+function freePeripheralAddress(start, end, occupied) {
+  let address = Math.ceil(start / 4) * 4;
+  while (address + 256 <= end) {
+    const conflicts = occupied.filter(base => address < base+256 && address+256 > base);
+    if (!conflicts.length) return address;
+    address = Math.ceil(Math.max(...conflicts.map(base=>base+256)) / 4) * 4;
+  }
+  return null;
+}
 function availableAddress(preferred) {
-  const occupied = [{base:config.ramBase,size:config.ramSize}, ...config.peripherals.map(d => ({base:d.base,size:256}))];
-  let address = preferred;
-  while (occupied.some(d => address < d.base+d.size && address+256 > d.base)) address += 256;
-  return address;
+  const end = config.mmioBase + config.mmioSize;
+  const offset = preferred - DEFAULT_CONFIG.mmioBase;
+  const first = offset >= 0 && offset + 256 <= config.mmioSize ? config.mmioBase + offset : config.mmioBase;
+  for (const [start, limit] of [[first,end],[config.mmioBase,end]]) {
+    const address = freePeripheralAddress(start, limit, config.peripherals.map(d=>d.base));
+    if (address !== null) return address;
+  }
+  throw new RangeError('The reserved MMIO range is full. Disconnect a peripheral to add another.');
 }
 function cancelExampleSetup(closeDialog = false) {
   const wasGuided = Boolean(exampleSetup);
@@ -8211,8 +8454,9 @@ function openDeviceMapping(type, id = null, requirement = null) {
   let proposedId = type, suffix = 2;
   while (config.peripherals.some(d => d.id.toUpperCase() === proposedId.toUpperCase())) proposedId = type + suffix++;
   $('config-id').value = requirement?.id || existing?.id || proposedId;
-  $('config-base').value = hex(existing?.base ?? availableAddress(DEFAULT_PERIPHERALS.find(d => d.type === type).base));
-  $('mapping-range').textContent = 'Reserves 256 bytes starting at a word-aligned base. All ranges must be distinct from RAM and other devices.';
+  try { $('config-base').value = hex(existing?.base ?? availableAddress(DEFAULT_PERIPHERALS.find(d => d.type === type).base)); }
+  catch (error) { $('config-base').value = ''; $('mapping-error').textContent = error.message; }
+  $('mapping-range').textContent = 'Reserves 256 bytes at a word-aligned base in the reserved MMIO range or outside RAM. Device ranges must be distinct.';
   $('mapping-registers').innerHTML = `<details><summary>Register offsets and behavior</summary>${descriptor.protocol ? `<p>${escapeHTML(descriptor.protocol)}</p>` : ''}${descriptor.registers.map(r => `<div><code>+${hex(r.offset,2)} ${escapeHTML(r.name)} · ${escapeHTML(r.access)}</code><p>${escapeHTML(r.description)}</p></div>`).join('')}</details>`;
   if (!$('mapping-dialog').open) $('mapping-dialog').showModal();
 }
@@ -8298,7 +8542,7 @@ function updateProjectUI() {
 function markProjectDirty() { if (!initializing) projectDirty = true; updateProjectUI(); }
 function safeProjectName() { return ($('project-name').value.trim() || 'Untitled project').replace(/[<>:"/\\|?*\x00-\x1f]/g, '_').replace(/[. ]+$/g, '') || 'project'; }
 function projectFromEditor() {
-  return createProject({name:$('project-name').value.trim() || 'Untitled project', source:$('source').value, config, breakpoints:[...breakpoints].filter(line => line <= $('source').value.split('\n').length), view:{theme:$('theme-select').value, speed:Number($('speed').value),ioLayout}});
+  return createProject({name:$('project-name').value.trim() || 'Untitled project', source:$('source').value, config, breakpoints:[...breakpoints].filter(line => line <= $('source').value.split('\n').length), view:{theme:$('theme-select').value, speed:simulationSpeed(),undoEnabled,ioLayout}});
 }
 function saveProject() {
   try {
@@ -8318,6 +8562,7 @@ function requestProjectSave(afterSave = null) {
   $('project-name').select();
 }
 function requestReplacement(action) {
+  cancelPendingMemoryChange();
   // A new menu intent supersedes any older file read before asking to replace.
   loadSequence++; loadingSource = false;
   pause(); closeMenus();
@@ -8337,11 +8582,14 @@ function cancelReplacement() {
   else render();
 }
 function installProject(project, filename = null) {
+  validateBrowserProject(project);
   const next = new Machine(project.config);
+  cancelPendingMemoryChange();
   ioView.disableKeyboard?.();
   cancelExampleSetup(true); loadSequence++; clearTimeout(lintTimer); lintTimer = null; loadingSource = false; composing = false; pause();
   ioView.releaseInputs?.();
-  config = {...next.bus.config}; machine = next; history = new SimulationHistory(machine); invalidateImage();
+  applyUndoSetting(project.view.undoEnabled ?? true);
+  config = {...next.bus.config}; machine = next; history = new SimulationHistory(machine, {enabled:undoEnabled}); invalidateImage();
   ioLayout=normalizeProjectLayout(project.view.ioLayout); reconcileLayout(); ioView.refreshLayout?.();
   $('project-name').value = project.name; $('source').value = project.source;
   $('source').setSelectionRange(0, 0); $('source').scrollTop = 0; $('source').scrollLeft = 0;
@@ -8349,20 +8597,122 @@ function installProject(project, filename = null) {
   $('example-description').textContent = filename ? 'Project loaded. Source and I/O mappings are restored; execution starts at the program entry point.' : 'Write assembly and add the I/O peripherals for your experiment.';
   $('editor-save-state').textContent = filename ? 'Project source restored' : 'Live assembly · edits reset execution';
   breakpoints = new Set(project.breakpoints); $('speed').value = String(project.view.speed); applyTheme(project.view.theme);
-  memoryAddress = config.ramBase + (config.ramSize > 0x2040 ? 0x2000 : 0); $('memory-address').value = hex(memoryAddress);
+  memoryAddress = config.dataBase; $('memory-address').value = hex(memoryAddress);
   try { localStorage.setItem(configKey, JSON.stringify(config)); } catch { /* Project remains loaded in memory. */ }
   $('operation-message').hidden = true; renderAddressMap(); updateCaret(); selectEditorTab('source-code'); assembleProgram(false);
   projectFileName = filename; projectDirty = false; updateProjectUI();
   render();
 }
 function newProject() {
-  return requestReplacement(() => installProject(createProject({name:'Untitled project', source:'.text\n_start:\n    # Write your program here.\n    ebreak\n', config:{...DEFAULT_CONFIG, peripherals:[]}, breakpoints:[], view:{theme:$('theme-select').value,speed:Number($('speed').value)}})));
+  return requestReplacement(() => installProject(createProject({name:'Untitled project', source:'.text\n_start:\n    # Write your program here.\n    ebreak\n', config:{...DEFAULT_CONFIG, peripherals:[]}, breakpoints:[], view:{theme:$('theme-select').value,speed:simulationSpeed(),undoEnabled}})));
 }
 function applyTheme(theme) {
   const selected = theme === 'dark' ? 'dark' : 'light';
   document.body.dataset.theme = selected; $('theme-select').value = selected;
   try { localStorage.setItem('riscv-io-lab.theme.v1', selected); } catch { /* Session theme remains usable. */ }
 }
+function applyUndoSetting(enabled) {
+  history.setEnabled(enabled);
+  undoEnabled = enabled;
+  $('undo-enabled').checked = enabled;
+  try { localStorage.setItem(undoKey, String(enabled)); } catch { /* Session choice remains available. */ }
+}
+function validateBrowserProject(project) {
+  if (project.config.ramBase !== 0) throw new RangeError('This simulator uses RAM base 0x0. Set ramBase to 0 in the project.');
+}
+function applyMemorySettings() {
+  if (pendingMemorySettings) return;
+  const error = $('ram-settings-error');
+  try {
+    const readValue = (id, label, allowSizeSuffix = false) => {
+      const text = $(id).value.trim();
+      const sized = allowSizeSuffix ? /^(\d+)\s*(k(?:i?b)?|m(?:i?b)?|g(?:i?b)?)$/i.exec(text) : null;
+      if (!sized && !/^(?:0[xX][\da-fA-F]+|\d+)$/.test(text)) throw new TypeError(`${label} must be a decimal or hexadecimal integer${allowSizeSuffix ? ', or a size such as 64k, 64M, or 4G' : ''}.`);
+      const value = sized ? Number(sized[1]) * ({k:1024,m:1048576,g:1073741824}[sized[2][0].toLowerCase()]) : Number(text);
+      if (!Number.isSafeInteger(value)) throw new RangeError(`${label} is too large.`);
+      return value;
+    };
+    const dataBase = readValue('data-base', 'Data section start'), ramSize = readValue('ram-size', 'RAM size', true);
+    if (ramSize < 16 || ramSize > 0x100000000 || ramSize % 4) throw new RangeError('RAM size must be a multiple of 4, from 16 bytes to 4 GiB.');
+    if (dataBase < 0 || dataBase >= ramSize || dataBase % 4) throw new RangeError('Data section start must be word-aligned and inside RAM.');
+    if (loadingSource && (dataBase !== config.dataBase || ramSize !== config.ramSize)) {
+      // A newer memory choice supersedes an older asynchronous file/example read.
+      loadSequence++; loadingSource = false;
+      if (!image && !composing) assembleProgram(false);
+      render();
+    }
+    const next = {...config, ramBase:0, dataBase, ramSize};
+    const reachesReserved = ramSize > config.ramSize && ramSize > config.mmioBase;
+    const reachesDevice = config.peripherals.some(d => d.base < ramSize && (d.base < config.mmioBase || d.base+256 > config.mmioBase+config.mmioSize));
+    if (reachesReserved || reachesDevice) {
+      pendingMemorySettings = next;
+      const aboveRam = Math.ceil(ramSize / config.mmioSize) * config.mmioSize;
+      $('mmio-memory-base').value = hex(aboveRam + config.mmioSize <= 0x100000000 ? aboveRam : 0x100000000-config.mmioSize);
+      $('mmio-memory-error').textContent = '';
+      pause(); closeMenus(); renderMemoryMappingPreview(); $('mmio-memory-dialog').showModal();
+    } else if (dataBase !== config.dataBase || ramSize !== config.ramSize) applyConfiguration(next, 'Memory settings updated.');
+    else renderAddressMap();
+    error.textContent = ''; error.hidden = true;
+  } catch (failure) { error.textContent = failure.message; error.hidden = false; }
+}
+function cancelPendingMemoryChange() {
+  if (!pendingMemorySettings) return;
+  pendingMemorySettings = null; $('mmio-memory-dialog').close(); renderAddressMap();
+}
+function memoryMappingCandidate() {
+  const base = parseAddress($('mmio-memory-base').value);
+  const next = pendingMemorySettings;
+  if (!next) throw new Error('No pending memory change.');
+  if (base % 4 || base + next.mmioSize > 0x100000000) throw new RangeError('Choose a word-aligned base whose reserved range fits within 32 bits.');
+  // Keep offsets from the existing reservation. Place older custom mappings
+  // in its remaining slots without changing IDs, options, or probe references.
+  const assigned = new Map();
+  for (const device of next.peripherals) {
+    const offset = device.base-config.mmioBase;
+    if (offset >= 0 && offset+256 <= next.mmioSize) assigned.set(device.id, offset);
+  }
+  for (const device of next.peripherals) {
+    if (assigned.has(device.id)) continue;
+    const offset = freePeripheralAddress(0, next.mmioSize, [...assigned.values()]);
+    if (offset === null) throw new RangeError('The reserved MMIO range cannot hold all connected peripherals.');
+    assigned.set(device.id, offset);
+  }
+  return {...next, mmioBase:base, peripherals:next.peripherals.map(device=>({...device,base:base+assigned.get(device.id)}))};
+}
+function renderMemoryMappingPreview() {
+  try {
+    const next = memoryMappingCandidate();
+    new Machine(next); // Use the same range validation as the browser and CLI.
+    $('mmio-memory-range').textContent = `${hex(next.mmioBase)} – ${hex(next.mmioBase+next.mmioSize-1)} (${next.mmioSize / 1024} KiB reserved)`;
+    $('mmio-memory-preview').innerHTML = next.peripherals.length ? `<table><thead><tr><th>Peripheral</th><th>Current base</th><th>New base</th></tr></thead><tbody>${next.peripherals.map(device=>`<tr><td>${escapeHTML(device.id)}</td><td><code>${hex(config.peripherals.find(d=>d.id===device.id).base)}</code></td><td><code>${hex(device.base)}</code></td></tr>`).join('')}</tbody></table>` : '<p>New peripherals will use this reserved range.</p>';
+    $('mmio-memory-error').textContent = '';
+    $('mmio-memory-apply').disabled = false;
+  } catch (error) {
+    $('mmio-memory-range').textContent = ''; $('mmio-memory-preview').innerHTML = '';
+    $('mmio-memory-error').textContent = error.message;
+    $('mmio-memory-apply').disabled = true;
+  }
+}
+$('mmio-memory-base').addEventListener('input', renderMemoryMappingPreview);
+$('mmio-memory-form').addEventListener('submit', event => {
+  event.preventDefault();
+  try {
+    const next = memoryMappingCandidate();
+    applyConfiguration(next, 'Memory settings updated.');
+    pendingMemorySettings = null; $('mmio-memory-dialog').close();
+  } catch (error) { $('mmio-memory-error').textContent = error.message; }
+});
+$('mmio-memory-dialog').addEventListener('close', () => {
+  pendingMemorySettings = null; renderAddressMap();
+});
+$('ram-settings-form').addEventListener('submit', event => { event.preventDefault(); applyMemorySettings(); });
+for (const id of ['data-base', 'ram-size']) {
+  $(id).addEventListener('blur', applyMemorySettings);
+  $(id).addEventListener('keydown', event => {
+    if (event.key === 'Enter' && !event.isComposing) { event.preventDefault(); applyMemorySettings(); }
+  });
+}
+$('undo-enabled').addEventListener('change', event => { applyUndoSetting(event.target.checked); markProjectDirty(); render(); });
 $('new-project').addEventListener('click', newProject);
 $('save-project').addEventListener('click', () => requestProjectSave());
 $('save-project-form').addEventListener('submit', event => {
@@ -8381,7 +8731,12 @@ $('project-discard').addEventListener('click', () => finishReplacement(false));
 $('project-save-continue').addEventListener('click', () => finishReplacement(true));
 $('replace-project-dialog').addEventListener('cancel', cancelReplacement);
 $('theme-select').addEventListener('change', event => { applyTheme(event.target.value); markProjectDirty(); });
-$('speed').addEventListener('change', () => { tickCredit = 0; lastTime = performance.now(); markProjectDirty(); render(); });
+$('speed').addEventListener('change', () => {
+  cancelAnimationFrame(frame); clearTimeout(turboTimer); turboTimer = null;
+  tickCredit = 0; lastTime = performance.now();
+  if (running) scheduleExecution();
+  markProjectDirty(); render();
+});
 $('project-file').addEventListener('change', async event => {
   const file = event.target.files[0]; event.target.value = ''; if (!file) return;
   const sequence = ++loadSequence; loadingSource = false;
@@ -8389,6 +8744,7 @@ $('project-file').addEventListener('change', async event => {
   pause(); clearTimeout(lintTimer); lintTimer = null; loadingSource = true; render();
   try {
     const project = parseProject(await file.text());
+    validateBrowserProject(project);
     if (sequence !== loadSequence) return;
     loadingSource = false;
     requestReplacement(() => installProject(project, file.name)); render();
@@ -8398,11 +8754,24 @@ $('project-file').addEventListener('change', async event => {
     setStatus('Could not load project', error.message, 'error'); render();
   }
 });
+function fitSettingsMenu() {
+  const menu = $('settings-menu'), popup = menu.querySelector('.menu-popover');
+  if (menu.open && popup) {
+    const left = menu.getBoundingClientRect().left;
+    popup.style.left = `${Math.max(12 - left, Math.min(0, window.innerWidth - left - popup.offsetWidth - 12))}px`;
+    popup.style.maxHeight = `${Math.max(80, window.innerHeight - popup.getBoundingClientRect().top - 12)}px`;
+  }
+}
 document.querySelectorAll('.app-menu').forEach(menu => {
-  menu.addEventListener('toggle', () => { if (menu.open) document.querySelectorAll('.app-menu').forEach(other => { if (other !== menu) other.open = false; }); });
+  menu.addEventListener('toggle', () => {
+    if (menu.open) document.querySelectorAll('.app-menu').forEach(other => { if (other !== menu) other.open = false; });
+    fitSettingsMenu();
+  });
   menu.addEventListener('keydown', event => { if (event.key === 'Escape') { event.preventDefault(); menu.open = false; menu.querySelector('summary').focus(); } });
 });
 document.addEventListener('pointerdown', event => { if (!event.target.closest('.app-menu')) closeMenus(); });
+window.addEventListener('resize', fitSettingsMenu);
+document.addEventListener('scroll', fitSettingsMenu, true);
 
 document.addEventListener('keydown', event => {
   if (event.defaultPrevented || document.querySelector('dialog[open]')) return;
@@ -8415,6 +8784,8 @@ initializeWorkbenchLayout({workspace:$('workspace'), handle:$('workspace-resizer
 let savedTheme = 'light';
 try { savedTheme = localStorage.getItem('riscv-io-lab.theme.v1') || 'light'; } catch { /* Default appearance is light. */ }
 applyTheme(savedTheme);
+$('undo-enabled').checked = undoEnabled;
+$('memory-address').value = hex(memoryAddress);
 renderAddressMap();
 await loadExample('arithmetic');
 initializing = false; projectDirty = false; updateProjectUI(); render();
