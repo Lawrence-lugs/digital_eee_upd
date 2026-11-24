@@ -36,6 +36,7 @@ project:
     - cp static_apps/flipflops_registers_simulator.html _site/
     - cp static_apps/adel_datapath_explorer.html _site/
     - cp static_apps/timer_simulator.html _site/
+    - cp static_apps/serial_communications_protocol_simulator.html _site/
     - cp static_apps/adel-simulator.html _site/
     - cp static_apps/c-riscv-explorer.html _site/
     - cp static_apps/maxwell_equations.html _site/
@@ -111,6 +112,8 @@ website:
           - text: Embedded Systems
           - href: timer_simulator.html
             text: Timer Peripheral Simulator
+          - href: serial_communications_protocol_simulator.html
+            text: Serial Communications Protocol Simulator
           - text: Hardware for Machine Learning
           - href: systolic_array_simulator.html
             text: Systolic Array Simulator

@@ -603,6 +603,18 @@ include-in-header:
             <p class="text-sm text-gray-500 leading-relaxed">Explore a microcontroller timer with linked period-register and prescaler controls, an interactive counter circuit, and timing diagrams.</p>
           </div>
         </a>
+
+        <a href="serial_communications_protocol_simulator.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/serial_communications_protocol_simulator.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Serial Communications Protocol Simulator</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Explore UART, SPI, and I2C with configurable protocol waveforms, explanations, and waveform drawing exercises.</p>
+          </div>
+        </a>
       </div>
     </section>
 
