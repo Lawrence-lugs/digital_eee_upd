@@ -2298,6 +2298,10 @@ body[data-theme="dark"] .io-illustration-caption { color:var(--muted); }
   gap:0;
 }
 .io-card .io-scalable-matrix span { min-width:0; min-height:0; margin:10%; }
+/* Pixel style belongs to each matrix. Both styles keep square grid cells at any dimensions. */
+.io-card .io-scalable-matrix.io-matrix-pixels { padding:4px; }
+.io-card .io-scalable-matrix.io-matrix-pixels span { margin:.5px; border-radius:1px; box-shadow:none; }
+.io-card .io-scalable-matrix.io-matrix-pixels span:not(.on) { background:#000; }
 .io-card .io-rgb { width:calc(110px * var(--io-graphic-scale)); height:calc(110px * var(--io-graphic-scale)); flex:none; }
 .io-card .io-buzzer { width:calc(90px * var(--io-graphic-scale)); height:calc(90px * var(--io-graphic-scale)); flex:none; }
 .io-card .io-buzzer span { width:calc(35px * var(--io-graphic-scale)); height:calc(35px * var(--io-graphic-scale)); font-size:calc(22px * var(--io-graphic-scale)); }
@@ -2376,10 +2380,10 @@ body[data-theme="dark"] .io-pushbutton .io-key-hint { background:#253344; color:
 body[data-theme="dark"] .memory-table td.changed,body[data-theme="dark"] .csr-row.changed { background:#2a4159; }
 body[data-theme="dark"] .memory-table td.changed,body[data-theme="dark"] .csr-row.changed code { color:#b0d5ff; }
 
-/* The example collection opens to the side, with pointer and keyboard access. */
-.example-menu { border:0; padding:0; margin:0; }
-.example-menu>.menu-item { padding:9px 11px; }
-.example-menu>.menu-item>span { font-size:22px; line-height:1; }
+/* File submenus open to the side, with pointer and keyboard access. */
+.example-menu,.advanced-menu { border:0; padding:0; margin:0; }
+.example-menu>.menu-item,.advanced-menu>.menu-item { padding:9px 11px; }
+.example-menu>.menu-item>span,.advanced-menu>.menu-item>span { font-size:22px; line-height:1; }
 .menu-submenu { position:fixed; z-index:70; width:280px; max-width:calc(100vw - 16px); max-height:calc(100dvh - 16px); overflow:auto; border:1px solid var(--line); border-radius:9px; padding:7px; background:var(--surface); box-shadow:0 12px 36px #17212b26; }
 .menu-submenu .menu-item { padding:9px 11px; }
 
@@ -2410,7 +2414,8 @@ body[data-theme="dark"] .machine-panel { --change-flash:#517ba3; --change-rest:#
 .register-table tr.changed td,.memory-table td.changed,.csr-row.changed { animation:inspector-change 450ms ease-out; }
 @media(prefers-reduced-motion:reduce) { .register-table tr.changed td,.memory-table td.changed,.csr-row.changed { animation:none; } }
 #memory-address { background:var(--surface); color:var(--ink); border-color:var(--line); }
-#save-project-dialog #project-name { width:100%; background:var(--surface); color:var(--ink); }
+#save-project-dialog #project-name,#binary-load-dialog #binary-address { width:100%; background:var(--surface); color:var(--ink); }
+#binary-file-name { overflow-wrap:anywhere; }
 .io-address { display:flex; align-items:center; flex-wrap:wrap; gap:8px; min-width:0; }
 .io-address .io-symbol { padding:2px 5px; border-radius:4px; font:16px var(--mono); color:var(--blue); background:var(--accent-soft); overflow-wrap:anywhere; }
 
@@ -2465,6 +2470,7 @@ body[data-theme="dark"] .button.soft-danger:hover:not(:disabled) { background:#6
     <nav class="toolbar menu-bar" aria-label="Simulator controls and menus">
       <details id="file-menu" class="app-menu"><summary>File</summary><div class="menu-popover">
         <button id="new-project" class="menu-item">New Project</button>
+        <hr>
         <button id="load-project" class="menu-item">Load Project…</button><button id="load-assembly" class="menu-item">Load Assembly…</button>
         <div class="example-menu">
           <button id="example-trigger" type="button" class="menu-item" aria-haspopup="menu" aria-expanded="false" aria-controls="example-submenu">Load example <span aria-hidden="true">›</span></button>
@@ -2490,8 +2496,17 @@ body[data-theme="dark"] .button.soft-danger:hover:not(:disabled) { background:#6
             </div>
           </div>
         </div>
-        <button type="button" class="menu-item" data-example="draft">Restore saved draft</button>
+        <hr>
         <button id="save-project" class="menu-item">Save Project… <kbd>Ctrl+S</kbd></button><button id="download-source" class="menu-item">Save Assembly…</button>
+        <button type="button" class="menu-item" data-example="draft">Restore saved draft</button>
+        <hr>
+        <div class="advanced-menu">
+          <button id="advanced-trigger" type="button" class="menu-item" aria-haspopup="menu" aria-expanded="false" aria-controls="advanced-submenu">Advanced <span aria-hidden="true">›</span></button>
+          <div id="advanced-submenu" class="menu-submenu" role="menu" aria-label="Advanced file actions" hidden>
+            <button id="load-elf" type="button" class="menu-item" role="menuitem">Load RV32IM ELF…</button>
+            <button id="load-binary" type="button" class="menu-item" role="menuitem">Load Binary…</button>
+          </div>
+        </div>
       </div></details>
       <details id="settings-menu" class="app-menu"><summary>Settings</summary><div class="menu-popover">
         <form id="ram-settings-form" class="ram-settings">
@@ -2514,7 +2529,7 @@ body[data-theme="dark"] .button.soft-danger:hover:not(:disabled) { background:#6
       <div class="execution-controls"><button id="reset" class="button" title="Reset machine" aria-label="Reset machine">↺ Reset</button><button id="undo" class="button" title="Undo the last simulation tick or input" disabled>↶ Undo</button><button id="step" class="button execution-accent" title="Step one machine instruction">Step →</button><button id="run" class="button run-solid" title="Run or pause"><span aria-hidden="true">▶</span> Run</button></div>
     </nav>
     <div id="operation-message" class="operation-message" role="alert" hidden><span id="operation-message-text"></span><button id="dismiss-operation-message" class="text-button" type="button" aria-label="Dismiss error message">Dismiss</button></div>
-    <input type="file" id="project-file" accept=".json,.riscv" hidden><input type="file" id="source-file" accept=".s,.asm,.S,.txt" hidden>
+    <input type="file" id="project-file" accept=".json,.riscv" hidden><input type="file" id="source-file" accept=".s,.asm,.S,.txt" hidden><input type="file" id="elf-file" accept=".elf" hidden><input type="file" id="binary-file" hidden>
     <div id="example-description" hidden></div>
     <div class="workspace" id="workspace">
       <section class="panel editor-panel" aria-labelledby="editor-title">
@@ -2567,11 +2582,19 @@ body[data-theme="dark"] .button.soft-danger:hover:not(:disabled) { background:#6
       <div class="dialog-actions"><button id="mmio-memory-cancel" type="button" class="button" data-close="mmio-memory-dialog">Cancel</button><button id="mmio-memory-apply" type="submit" class="button primary">Use memory mapping</button></div>
     </form>
   </dialog>
+  <dialog id="binary-load-dialog" aria-labelledby="binary-load-title"><form id="binary-load-form">
+    <div class="dialog-heading"><h2 id="binary-load-title">Load Binary</h2><button type="button" class="text-button" data-close="binary-load-dialog" aria-label="Close binary loading">×</button></div>
+    <p id="binary-file-name"></p>
+    <label for="binary-address">Destination address</label><input id="binary-address" type="text" spellcheck="false" autocomplete="off" placeholder="0x02000000" aria-describedby="binary-load-note" required>
+    <p id="binary-load-note" class="dialog-note">Load this file's raw bytes into RAM at the destination address. Loading restarts the current program. Reset restores the program and loaded binary data.</p>
+    <p id="binary-load-error" class="form-error" role="alert" hidden></p>
+    <div class="dialog-actions"><button type="button" class="button" data-close="binary-load-dialog">Cancel</button><button id="binary-load-submit" type="submit" class="button primary">Load binary</button></div>
+  </form></dialog>
   <dialog id="save-project-dialog" aria-labelledby="save-project-title"><form id="save-project-form"><div class="dialog-heading"><h2 id="save-project-title">Save Project</h2><button type="button" class="text-button" data-close="save-project-dialog" aria-label="Close save project">×</button></div><label for="project-name">Project name</label><input id="project-name" value="Untitled project" maxlength="120" aria-label="Project name" autocomplete="off" required><div class="dialog-actions"><button type="button" class="button" data-close="save-project-dialog">Cancel</button><button type="submit" class="button primary">Save project file</button></div></form></dialog>
   <dialog id="replace-project-dialog" aria-labelledby="replace-project-title"><div class="dialog-heading"><h2 id="replace-project-title">Save your project changes?</h2></div><p>Your current assembly and I/O mapping have unsaved changes. Save a project file before opening another project or source.</p><div class="dialog-actions"><button id="project-cancel" class="button">Cancel</button><button id="project-discard" class="button soft-danger">Continue without saving</button><button id="project-save-continue" class="button primary">Save and continue</button></div></dialog>
   <dialog id="mapping-dialog" aria-labelledby="mapping-title"><div class="dialog-heading"><h2 id="mapping-title">Add I/O peripheral</h2><button class="text-button" type="button" data-close="mapping-dialog" aria-label="Close peripheral setup">✕</button></div>
     <div id="peripheral-picker"><p>Build your experiment. Choose a device, configure its size or probe connections, then assign its memory address.</p><div class="peripheral-library-tools"><label>Find a peripheral<input id="peripheral-search" type="search" placeholder="Search servo, sensor, SPI…" autocomplete="off"></label><label>Category<select id="peripheral-category"><option value="">All peripherals</option><option>Displays &amp; light</option><option>Inputs &amp; sensing</option><option>Motion &amp; control</option><option>Protocols</option><option>Timing</option><option>Instruments</option><option>Analog &amp; sound</option></select></label></div><p id="peripheral-choice-count" aria-live="polite"></p><div id="peripheral-options" class="peripheral-options"></div></div>
-    <form id="mapping-form" hidden><p id="mapping-description"></p><div id="mapping-device-fields" class="mapping-fields"><label>Device ID / assembly symbol<input id="config-id" pattern="[A-Za-z][A-Za-z0-9_]*" spellcheck="false" autocomplete="off"></label><label>Base address<input id="config-base" spellcheck="false" autocomplete="off"></label></div><div id="mapping-input-fields"><label>Input handling<select id="config-input-mode"><option value="poll">Polling · read the input register</option><option value="interrupt">Interrupt · notify on input change</option></select></label><p id="mapping-input-note" class="dialog-note"></p></div><div id="mapping-options"></div><p id="mapping-range" class="dialog-note"></p><div id="mapping-registers" class="mapping-registers"></div><p class="dialog-note">Connecting or remapping resets the machine. Changing a peripheral address updates its corresponding .equ declarations while preserving the rest of your assembly code.</p><div id="mapping-error" class="form-error" role="alert"></div><div class="dialog-actions"><button type="button" id="mapping-back" class="button">← Choose peripheral</button><button type="submit" id="mapping-submit" class="button primary">Connect peripheral</button></div></form>
+    <form id="mapping-form" hidden><p id="mapping-description"></p><div id="mapping-device-fields" class="mapping-fields"><label>Device ID / assembly symbol<input id="config-id" pattern="[A-Za-z][A-Za-z0-9_]*" spellcheck="false" autocomplete="off"></label><label>Base address<input id="config-base" spellcheck="false" autocomplete="off"></label></div><div id="mapping-input-fields"><label>Input handling<select id="config-input-mode"><option value="poll">Polling · read the input register</option><option value="interrupt">Interrupt · notify on input change</option></select></label><p id="mapping-input-note" class="dialog-note"></p></div><div id="mapping-options"></div><p id="mapping-range" class="dialog-note"></p><div id="mapping-registers" class="mapping-registers"></div><p id="mapping-reset-note" class="dialog-note">Connecting or remapping resets the machine. Changing a peripheral address updates its corresponding .equ declarations while preserving the rest of your assembly code.</p><div id="mapping-error" class="form-error" role="alert"></div><div class="dialog-actions"><button type="button" id="mapping-back" class="button">← Choose peripheral</button><button type="submit" id="mapping-submit" class="button primary">Connect peripheral</button></div></form>
   </dialog>
   <dialog id="encoding-dialog"><div class="dialog-heading"><h2>RISC-V instruction encoding</h2><button class="text-button" data-close="encoding-dialog" aria-label="Close instruction encoding">✕</button></div><div id="encoding-body"></div><div class="dialog-actions"><button class="button" id="encoding-prev">← Previous word</button><button class="button" id="encoding-next">Next word →</button></div></dialog>
   <dialog id="peripheral-guide-dialog" aria-labelledby="peripheral-guide-title"><div class="dialog-heading"><h2 id="peripheral-guide-title">Peripheral quick guide</h2><button class="text-button" type="button" data-close="peripheral-guide-dialog" aria-label="Close peripheral guide">✕</button></div><div id="peripheral-guide-content"></div></dialog>
@@ -2658,7 +2681,7 @@ body[data-theme="dark"] .button.soft-danger:hover:not(:disabled) { background:#6
 const modules = Object.create(null);
 modules["workbench-layout"] = (() => {
 /** Browser presentation controls. They never change the simulated machine. */
-function initializeWorkbenchLayout({workspace,handle,widthHandle,exampleTrigger,exampleSubmenu,onResize=()=>{},windowTarget=window,documentTarget=document,storage}) {
+function initializeWorkbenchLayout({workspace,handle,widthHandle,exampleTrigger,exampleSubmenu,advancedTrigger,advancedSubmenu,onResize=()=>{},windowTarget=window,documentTarget=document,storage}) {
   const storageKey='riscv-io-lab.workbench-height.v1', min=360, max=1000;
   const splitKey='riscv-io-lab.workbench-split.v1', splitMin=35, splitMax=65, panelMin=340;
   let height=760, split=55, preferredSplit=55, drag=null, widthDrag=null, disposed=false;
@@ -2740,10 +2763,11 @@ function initializeWorkbenchLayout({workspace,handle,widthHandle,exampleTrigger,
     else if(event.key==='Home'||event.key==='End'){event.preventDefault();setSplit(event.key==='Home'?splitMin:splitMax);}
   });
 
-  const fileMenu=exampleTrigger?.closest('.app-menu');
+  const fileMenu=(exampleTrigger??advancedTrigger)?.closest('.app-menu');
   const rootMenu={trigger:exampleTrigger,menu:exampleSubmenu,host:exampleTrigger?.parentElement,parent:null};
+  const advancedMenu={trigger:advancedTrigger,menu:advancedSubmenu,host:advancedTrigger?.parentElement,parent:null};
   const groups=[...(exampleSubmenu?.querySelectorAll('[data-example-group]')??[])].map(trigger=>({trigger,menu:trigger.nextElementSibling,host:trigger.parentElement,parent:rootMenu})).filter(item=>item.menu);
-  const menus=[rootMenu,...groups];
+  const roots=[rootMenu,advancedMenu],menus=[...roots,...groups];
   const items=record=>[...(record.menu?.querySelectorAll(':scope > [role="menuitem"], :scope > .example-menu-group > [role="menuitem"]')??[])];
   function closeMenu(record) {
     for(const child of menus.filter(item=>item.parent===record))closeMenu(child);
@@ -2751,6 +2775,7 @@ function initializeWorkbenchLayout({workspace,handle,widthHandle,exampleTrigger,
     record.trigger?.setAttribute('aria-expanded','false');
   }
   function closeExamples() { closeMenu(rootMenu); }
+  function closeSubmenus() { for(const record of roots)closeMenu(record); }
   function positionMenu(record) {
     if(!record.trigger||!record.menu)return;
     const anchor=record.trigger.getBoundingClientRect(),menu=record.menu.getBoundingClientRect();
@@ -2762,10 +2787,8 @@ function initializeWorkbenchLayout({workspace,handle,widthHandle,exampleTrigger,
   function positionExamples() { for(const record of menus)if(record.menu&&!record.menu.hidden)positionMenu(record); }
   function openMenu(record,focus=false) {
     if(!record.menu||disposed)return;
-    if(record.parent){
-      openMenu(record.parent);
-      for(const sibling of menus.filter(item=>item.parent===record.parent&&item!==record))closeMenu(sibling);
-    }
+    if(record.parent)openMenu(record.parent);
+    for(const sibling of menus.filter(item=>item.parent===record.parent&&item!==record))closeMenu(sibling);
     record.menu.hidden=false;record.trigger.setAttribute('aria-expanded','true');positionMenu(record);
     if(focus)items(record)[0]?.focus();
   }
@@ -2791,14 +2814,14 @@ function initializeWorkbenchLayout({workspace,handle,widthHandle,exampleTrigger,
         choices[next]?.focus();
       }
     });
-    listen(record.menu,'click',event=>{if(event.target.closest('[data-example]'))closeExamples();});
+    listen(record.menu,'click',event=>{if(event.target.closest('[data-example]')||event.target.closest('#load-elf, #load-binary'))closeSubmenus();});
   }
-  listen(fileMenu,'toggle',()=>{if(!fileMenu.open)closeExamples();});
+  listen(fileMenu,'toggle',()=>{if(!fileMenu.open)closeSubmenus();});
   listen(windowTarget,'resize',()=>{finishWidth();applySplit();positionExamples();});
   listen(windowTarget,'scroll',positionExamples);
   setHeight(height,false);
   applySplit();
-  return {setHeight,getHeight:()=>height,setSplit,getSplit:()=>split,closeExamples,dispose(){disposed=true;finish();finishWidth();closeExamples();for(const [target,type,fn]of listeners)target?.removeEventListener(type,fn);}};
+  return {setHeight,getHeight:()=>height,setSplit,getSplit:()=>split,closeExamples,closeSubmenus,dispose(){disposed=true;finish();finishWidth();closeSubmenus();for(const [target,type,fn]of listeners)target?.removeEventListener(type,fn);}};
 }
 return Object.freeze({ initializeWorkbenchLayout });
 })();
@@ -3021,6 +3044,8 @@ function createRegisterDevice(config, descriptor, hooks) {
   Object.defineProperty(device,'value',{get:() => (hooks.value?.(state) ?? hooks.read(state,0,false)) >>> 0});
   device.saveState = () => { if (!checkpoint) { const saved = freeze(clone(state)); checkpoint = Object.freeze({owner,state:saved,byteLength:bytes(saved)+128}); } return checkpoint; };
   device.restoreState = saved => { if (!saved || saved.owner !== owner) throw new TypeError(`Checkpoint does not belong to peripheral ${id}.`); state = clone(saved.state); checkpoint = saved; };
+  // Preserve the callable tick API while identifying the adapter's empty hook.
+  Object.defineProperty(device, 'schedulerCapabilities', {value:Object.freeze({idleTick:hooks.tick ? null : device.tick})});
   device.reset();
   return device;
 }
@@ -3636,7 +3661,7 @@ const displayOrderOption = value => ({key:'displayOrder',label:'Display order',t
 const commonOption = {key:'common',label:'Wiring',type:'select',default:'cathode',choices:[{value:'cathode',label:'Common cathode (active high)'},{value:'anode',label:'Common anode (active low)'}]};
 const converterOptions = [{key:'bits',label:'Resolution',type:'select',default:8,choices:[8,10,12,16].map(value=>({value,label:`${value} bits`}))},numberOption('vref','Reference voltage (V)',5,0.1,24,0.1)];
 const digitOptions = [numberOption('digits','Number of digits',2,1,8),commonOption,displayOrderOption('msb-first')];
-const matrixOptions = [numberOption('rows','Rows',8,1,32),numberOption('columns','Columns',8,1,32)];
+const matrixOptions = [numberOption('rows','Rows',8,1,32),numberOption('columns','Columns',8,1,32),{key:'pixelStyle',label:'Pixel style',type:'select',default:'dots',choices:[{value:'dots',label:'LED dots'},{value:'pixels',label:'Square pixels'}]}];
 const HEX_SEGMENTS = [0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71];
 const freeze = value => { if(value && typeof value === 'object'){Object.values(value).forEach(freeze);Object.freeze(value);} return value; };
 
@@ -5178,6 +5203,7 @@ function createPeripheral(config) {
     if ((type === 'timer' && (state.control & 1)) || (type === 'rotary5' && state.phases.length)) invalidateState();
     tick();
   };
+  Object.defineProperty(device, 'schedulerCapabilities', {value:Object.freeze({idleTick:['timer','rotary5'].includes(type) ? null : device.tick})});
   device.reset();
   return descriptor.hasInput ? withInputInterrupts(device,config) : device;
 }
@@ -5985,7 +6011,7 @@ function encodingMarkup({ item, explanation = explainInstruction(item.word,item.
   const notes = explanation.notes.filter(note => !note.startsWith('Little-endian storage at '));
   return `<div class="enc-view">${stale?'<p class="enc-stale" role="status">This word belongs to the last valid assembly. Correct the source diagnostics to update the listing.</p>':''}
     <div class="enc-current-head"><div><span class="enc-eyebrow">Decoded instruction</span><div class="enc-assembly">${esc(explanation.assembly)}</div></div><div class="enc-badges"><span>${esc(explanation.format)} format</span><span>32 bits</span></div></div>
-    <div class="enc-source"><span class="enc-eyebrow">Assembly source · line ${item.line}</span><code>${esc(item.text)}</code></div>
+    <div class="enc-source"><span class="enc-eyebrow">${item.line ? `Assembly source · line ${item.line}` : 'Compiled ELF instruction'}</span><code>${esc(item.text)}</code></div>
     <div class="enc-code-grid"><div class="enc-code-box"><span class="enc-eyebrow">Machine word</span><code>${explanation.hex}</code></div><div class="enc-code-box"><span class="enc-eyebrow">Instruction address</span><code>${hex(item.address)}</code></div></div>
     <section class="enc-partitions" aria-label="Instruction bit partition"><h3>Instruction partition</h3><p class="enc-lead">Read bits 31 to 0 from left to right. Select a colored field to inspect its meaning and value.</p><div class="enc-bit-scroll"><div class="enc-bit-stage"><div class="enc-index-row" aria-hidden="true">${Array.from({length:32},(_,i)=>`<span>${31-i}</span>`).join('')}</div><div class="enc-bit-row" aria-label="${explanation.binary}">${byBit.map((field,index)=>`<span class="enc-bit enc-kind-${kind(field.name)}" data-enc-bit="${31-index}" title="Instruction bit ${31-index}: ${esc(field.name)}">${explanation.binary[index]}</span>`).join('')}</div><div class="enc-field-bar">${fields.map((field,index)=>`<button type="button" class="enc-field-segment enc-kind-${kind(field.name)}" style="grid-column:${32-field.hi} / span ${field.hi-field.lo+1}" data-enc-field="${index}" data-enc-hi="${field.hi}" data-enc-lo="${field.lo}" aria-controls="enc-field-detail-${index}${routing && kind(field.name) === 'imm' ? ' enc-immediate-detail' : ''}" aria-expanded="false" title="${esc(field.name)}: bits [${range(field.hi,field.lo)}]"><span class="enc-range">bits ${range(field.hi,field.lo)}</span><strong>${esc(field.name)}</strong><code>${field.bits}</code><span class="enc-field-arrow" aria-hidden="true">▾</span></button>`).join('')}</div></div></div><p class="enc-field-hint">The field widths match their number of bits in the instruction.</p>${fields.map((field,index)=>fieldCard(field,index,explanation)).join('')}</section>
     ${routing?`<section class="enc-immediate" id="enc-immediate-detail" data-enc-immediate hidden><h3>Immediate formation and reconstruction</h3><p class="enc-lead">Follow each partition into its physical instruction positions. Gray boxes supply implicit zeros.</p><div class="enc-equation"><code>${esc(routing.formula)}</code></div>${routingDiagram(routing)}<p class="enc-extension">${esc(routing.extension)}</p>${explanation.target!==undefined?`<p class="enc-target"><code>PC ${hex(item.address)} + ${explanation.immediate} = ${hex(explanation.target)}</code>${explanation.mnemonic==='auipc'?' · value written to rd':' · target address'}</p>`:''}</section>`:''}
@@ -6036,6 +6062,10 @@ const digit = index => `<svg class="io-digit" data-digit="${index}" viewBox="0 0
 function indexedPeripheralDrawing(device) {
   const type = device.type, options = device.options || {};
   switch (type) {
+    case 'matrix8': case 'rgbmatrix': {
+      const rows=options.rows || 8, columns=options.columns || 8;
+      return `<div class="io-matrix-scroll"><div class="io-matrix io-scalable-matrix${options.pixelStyle==='pixels'?' io-matrix-pixels':''}" style="--matrix-columns:${columns};--matrix-rows:${rows}" role="img" aria-label="${rows} by ${columns} ${type==='rgbmatrix'?'RGB ':''}LED matrix">${Array.from({length:rows*columns},(_,i)=>`<span data-pixel="${i}"></span>`).join('')}</div></div><output class="io-detail"></output>`;
+    }
     case 'led8': return ledBank(options.count || 8, options.displayOrder);
     case 'hex7seg': case 'raw7seg': {const count=options.digits || (type==='raw7seg'?1:2);return `<div class="io-digit-scroll"><div class="io-digits" role="img" aria-label="${count} seven-segment digits">${displayIndices(count,options.displayOrder ?? 'msb-first').map(i=>digit(i).replace('</svg>','<circle data-io-segment="7" cx="93" cy="153" r="5"/></svg>')).join('')}</div></div><output class="io-detail"></output>`;}
     case 'switches': return `<div class="io-switches io-configurable-switches">${displayIndices(options.count || 8,options.displayOrder).map(i=>`<button class="io-switch" data-toggle-switch="${i}" aria-label="Switch ${i}" aria-pressed="false"><span></span><small>SW${i}</small></button>`).join('')}</div><output class="io-detail"></output>`;
@@ -6079,7 +6109,6 @@ function createPeripheralView({ container, selector, catalog, getMachine, isRunn
     if (indexed !== undefined) return indexed;
     switch(type) {
       case 'logic': case 'scope': case 'speaker': return instrumentDrawing(device);
-      case 'matrix8': case 'rgbmatrix': { const rows=options.rows || 8, columns=options.columns || 8; return `<div class="io-matrix-scroll"><div class="io-matrix io-scalable-matrix" style="--matrix-columns:${columns};--matrix-rows:${rows}" role="img" aria-label="${rows} by ${columns} ${type==='rgbmatrix'?'RGB ':''}LED matrix">${Array.from({length:rows*columns},(_,i)=>`<span data-pixel="${i}"></span>`).join('')}</div></div><output class="io-detail"></output>`; }
       case 'rgb24': return '<div class="io-rgb" role="img" aria-label="RGB LED"></div><output class="io-detail"></output>';
       case 'adc': { const max=2**(options.bits || 8)-1; return `<label class="io-slider-label">Analog input · 0–${options.vref || 5} V<input class="io-adc" type="range" min="0" max="${max}" value="0" aria-label="ADC input code"></label><div class="io-converter-flow"><span>Analog voltage</span><b>→ ADC →</b><span data-converter-code>0</span></div><output class="io-detail"></output>`; }
       case 'dac': return '<div class="io-converter-flow"><span data-converter-code>0</span><b>→ DAC →</b><span>Analog voltage</span></div><meter class="io-dac-meter" min="0" max="1" value="0" aria-label="DAC output voltage"></meter><output class="io-detail"></output><p class="io-connection-hint">Connect an oscilloscope or speaker to the voltage output in Configure.</p>';
@@ -6299,7 +6328,7 @@ function createPeripheralView({ container, selector, catalog, getMachine, isRunn
   }
   const silence=()=>{for(const voice of voices.values())voice.gain.gain.value=0;for(const view of instruments.values())view.silence?.();};
   window.addEventListener('pagehide',silence);
-  return {render,silence,refreshLayout:()=>layoutController?.refresh(),releaseInputs:()=>keyboard.releaseInputs(),disableKeyboard:()=>keyboard.disableKeyboard()};
+  return {render,silence,refreshLayout:()=>layoutController?.refresh(),releaseInputs:()=>keyboard.releaseInputs(),disableKeyboard:()=>keyboard.disableKeyboard(),enableKeyboard:id=>keyboard.setEnabled(id,true),isKeyboardEnabled:id=>keyboard.isEnabled(id)};
 }
 return Object.freeze({ indexedPeripheralDrawing, updateSegmentDigits, createPeripheralView });
 })();
@@ -6899,6 +6928,40 @@ class SparseRAM {
     return this.pages.get(Math.floor(index / 4096))?.bytes[index % 4096] ?? 0;
   }
 
+  // Bus validates the range and 1/2/4-byte alignment first. Its word-aligned
+  // RAM base makes every scalar fit in one 4096-byte page, even when relocated.
+  _readAligned(index, width) {
+    const bytes = this.pages.get(index >>> 12)?.bytes;
+    if (!bytes) return 0;
+    const offset = index & 4095;
+    if (width === 4) return (bytes[offset] | bytes[offset + 1] << 8 | bytes[offset + 2] << 16 | bytes[offset + 3] << 24) >>> 0;
+    if (width === 2) return bytes[offset] | bytes[offset + 1] << 8;
+    return bytes[offset];
+  }
+
+  // The same validated scalar path keeps one page lookup for stores, including
+  // Undo's original-byte journal. Allocation still depends on nonzero bytes.
+  _writeAligned(index, width, value, journal) {
+    const pageIndex = index >>> 12, offset = index & 4095;
+    let page = this.pages.get(pageIndex);
+    if (journal) {
+      for (let i = 0; i < width; i++) {
+        if (!journal.has(index + i)) journal.set(index + i, page?.bytes[offset + i] ?? 0);
+      }
+    }
+    if (!page) {
+      if (!value) return;
+      page = { bytes: new Uint8Array(4096), nonzero: 0 };
+      this.pages.set(pageIndex, page);
+    }
+    for (let i = 0; i < width; i++) {
+      const old = page.bytes[offset + i], byte = (value >>> (8 * i)) & 255;
+      page.nonzero += Number(byte !== 0) - Number(old !== 0);
+      page.bytes[offset + i] = byte;
+    }
+    if (!page.nonzero) this.pages.delete(pageIndex);
+  }
+
   write(index, value) {
     if (!Number.isInteger(index) || index < 0 || index >= this.length) return;
     const pageIndex = Math.floor(index / 4096), offset = index % 4096;
@@ -7017,7 +7080,16 @@ class Bus {
     this.mappings = [];
     this._mappingVersion = 0;
     this._writeJournal = null;
-    for (const item of peripherals) this.mapDevice(createPeripheral(item));
+    this._tickDevices = [];
+    this._observerDevices = [];
+    this._interruptDevices = new Map();
+    this._dynamicDeviceCallbacks = false;
+    this._cacheableDevices = new WeakSet();
+    for (const item of peripherals) {
+      const device = createPeripheral(item);
+      this._watchDeviceCapabilities(device);
+      this.mapDevice(device);
+    }
     validateInstrumentConnections(peripherals, this.snapshot());
     this._probeSources = new Set(peripherals.flatMap(item => item.options?.channels?.map(probe => probe.device) ?? (item.options?.source ? [item.options.source.device] : [])));
   }
@@ -7037,7 +7109,56 @@ class Bus {
     this.mappings.push(device);
     this.devices[device.name] = device;
     this._mappingVersion++;
+    this._refreshDeviceCapabilities();
     return device;
+  }
+
+  _watchDeviceCapabilities(device) {
+    // Only configuration-created built-ins have privately owned hook objects.
+    // Public mapDevice() extensions retain fully dynamic callback discovery.
+    if (!device.schedulerCapabilities) return;
+    const keys = ['tick','observe','interruptCause','interruptPending'];
+    const descriptors = keys.map(key => Object.getOwnPropertyDescriptor(device,key));
+    // Unusual descriptors and devices shared by multiple buses use the same
+    // conservative dispatch as custom mappings.
+    if (descriptors.some(descriptor => descriptor && (!descriptor.configurable || !Object.hasOwn(descriptor,'value')))
+        || (!Object.isExtensible(device) && descriptors.some(descriptor => !descriptor))) return;
+    this._cacheableDevices.add(device);
+    keys.forEach((key,index) => {
+      let value = device[key];
+      Object.defineProperty(device,key,{
+        configurable:true,enumerable:descriptors[index]?.enumerable ?? false,
+        get:() => value,
+        set:next => {
+          if (next === value) return;
+          value = next;
+          // Replacing a built-in hook may introduce arbitrary custom behavior.
+          // Future dispatch discovers its capabilities live, without a caller
+          // having to invalidate a cache explicitly.
+          this._cacheableDevices.delete(device);
+          this._refreshDeviceCapabilities();
+        },
+      });
+    });
+  }
+
+  _refreshDeviceCapabilities() {
+    this._tickDevices = [];
+    this._observerDevices = [];
+    this._interruptDevices = new Map();
+    this._dynamicDeviceCallbacks = false;
+    for (const device of this.mappings) {
+      if (!this._cacheableDevices.has(device)) {
+        this._dynamicDeviceCallbacks = true;
+        continue;
+      }
+      const capabilities = device.schedulerCapabilities;
+      if (typeof device.tick === 'function' && device.tick !== capabilities?.idleTick) this._tickDevices.push(device);
+      if (typeof device.observe === 'function') this._observerDevices.push(device);
+      let sources = this._interruptDevices.get(device.interruptCause);
+      if (!sources) this._interruptDevices.set(device.interruptCause, sources = []);
+      sources.push(device);
+    }
   }
 
   reset() {
@@ -7059,16 +7180,33 @@ class Bus {
   }
 
   tick(cycle = 0) {
-    for (const device of this.mappings) device.tick?.();
-    const observers = this.mappings.filter(device => typeof device.observe === 'function');
+    // Public custom devices may add callbacks at any time. Keep their dynamic
+    // dispatch semantics; configured built-ins use stable capability lists.
+    for (const device of this._dynamicDeviceCallbacks ? this.mappings : this._tickDevices) device.tick?.();
+    const observers = this._dynamicDeviceCallbacks ? this.mappings.filter(device => typeof device.observe === 'function') : this._observerDevices;
     if (observers.length) {
       // All probes see the same instant, independent of peripheral mapping order.
-      const signals = this.snapshot(this._probeSources);
-      for (const device of observers) device.observe(signals, Number(cycle));
+      if (this._dynamicDeviceCallbacks) {
+        const signals = this.snapshot(this._probeSources);
+        for (const device of observers) device.observe(signals, Number(cycle));
+        return;
+      }
+      let signals;
+      for (const device of observers) {
+        if (typeof device.observe !== 'function') continue;
+        signals ??= this.snapshot(this._probeSources);
+        device.observe(signals, Number(cycle));
+      }
     }
   }
 
-  interruptPending(cause) { return this.mappings.some(device => device.interruptCause === cause && device.interruptPending?.()); }
+  interruptPending(cause) {
+    const devices = this._dynamicDeviceCallbacks ? this.mappings : this._interruptDevices.get(cause);
+    if (devices) for (const device of devices) {
+      if (device.interruptCause === cause && device.interruptPending?.()) return true;
+    }
+    return false;
+  }
 
   _locate(address, width) {
     if (![1, 2, 4].includes(width)) throw new RangeError('Memory access width must be 1, 2, or 4 bytes.');
@@ -7089,9 +7227,7 @@ class Bus {
   read(address, width = 4) {
     const { offset, device } = this._locate(address, width);
     if (device) return this._readDevice(device, 'read', offset, width, address);
-    let value = 0;
-    for (let i = 0; i < width; i++) value |= this._ram.read(offset + i) << (8 * i);
-    return value >>> 0;
+    return this._ram._readAligned(offset, width);
   }
 
   _readDevice(device, method, offset, width, address) {
@@ -7107,7 +7243,7 @@ class Bus {
 
   peek(address, width = 1) {
     const { offset, device } = this._locate(address, width);
-    return device ? this._readDevice(device, 'peek', offset, width, address) : this.read(address, width);
+    return device ? this._readDevice(device, 'peek', offset, width, address) : this._ram._readAligned(offset, width);
   }
 
   write(address, width, value) {
@@ -7120,17 +7256,13 @@ class Bus {
       } catch (error) { throw new BusFault('access', address, error.message); }
       return;
     }
-    for (let i = 0; i < width; i++) {
-      const index = offset + i;
-      if (this._writeJournal && !this._writeJournal.has(index)) this._writeJournal.set(index, this._ram.read(index));
-      this._ram.write(index, value >>> (8 * i));
-    }
+    this._ram._writeAligned(offset, width, value, this._writeJournal);
   }
 
   fetch(address) {
     const { offset, device } = this._locate(address, 4);
     if (device) throw new BusFault('access', address, 'Peripheral memory is not executable.');
-    return (this._ram.read(offset) | (this._ram.read(offset + 1) << 8) | (this._ram.read(offset + 2) << 16) | (this._ram.read(offset + 3) << 24)) >>> 0;
+    return this._ram._readAligned(offset, 4);
   }
 }
 
@@ -7534,17 +7666,210 @@ class Machine {
 }
 return Object.freeze({ DEFAULT_CONFIG, CSR, hex, SparseRAM, Bus, Machine });
 })();
+modules["elf"] = (() => {
+/** ELF32 little-endian executables for the existing RV32IM machine. */
+const DOOM_RAM_SIZE = 64 * 1024 * 1024;
+const DOOM_WAD_ADDRESS = 0x02000000;
+const DOOM_CONFIG = Object.freeze({
+  ramBase: 0, ramSize: DOOM_RAM_SIZE, dataBase: 0x1000,
+  mmioBase: 0x10000000, mmioSize: 0x10000, trapOnEbreak: false,
+  peripherals: [
+    {id:'screen',type:'rgbmatrix',base:0x10000000,options:{rows:32,columns:32,pixelStyle:'pixels'}},
+    {id:'buttons',type:'buttons',base:0x10002000,inputMode:'poll',options:{count:12,keys:['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyF','Space','Enter','Escape','KeyR','KeyQ','Digit1','Digit2']}},
+    {id:'console',type:'uart',base:0x10003000,inputMode:'poll'},
+  ],
+});
+
+function parseElf(input, {ramSize = DOOM_RAM_SIZE} = {}) {
+  // Headers establish the container/ABI contract. Unsupported instructions trap
+  // when executed; executable segments may also contain inline constant data.
+  const bytes = input instanceof Uint8Array ? input : new Uint8Array(input);
+  if (bytes.length < 52) throw new Error('ELF header is truncated.');
+  const view = new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);
+  const u16 = offset => view.getUint16(offset,true), u32 = offset => view.getUint32(offset,true);
+  if (u32(0) !== 0x464c457f || bytes[4] !== 1 || bytes[5] !== 1 || bytes[6] !== 1) throw new Error('Choose an ELF32 little-endian executable.');
+  if (u16(16) !== 2 || u16(18) !== 243 || u32(20) !== 1) throw new Error('Choose a linked RISC-V executable (ET_EXEC).');
+  if (u32(36) !== 0) throw new Error('Use RV32IM with the ILP32 ABI and compressed instructions disabled.');
+  if (u16(40) !== 52 || u16(42) !== 32) throw new Error('Unsupported ELF header sizes.');
+  const entry = u32(24), phoff = u32(28), count = u16(44), segments = [], executableRanges = [], ranges = [], sourceMap = [];
+  if (!count || phoff < 52 || phoff + count * 32 > bytes.length) throw new Error('ELF program headers are missing or truncated.');
+  for (let index = 0; index < count; index++) {
+    const p = phoff + index * 32, type = u32(p);
+    if (type === 2 || type === 3) throw new Error('Dynamic executables require an operating system. Build a static bare-metal ELF.');
+    if (type !== 1) continue;
+    const offset = u32(p+4), address = u32(p+8), physical = u32(p+12), fileSize = u32(p+16), memorySize = u32(p+20), flags = u32(p+24), alignment = u32(p+28);
+    if (physical && physical !== address) throw new Error('ELF physical and virtual segment addresses must match.');
+    if (fileSize > memorySize || offset + fileSize > bytes.length) throw new Error('ELF segment is truncated or has an invalid size.');
+    if (address + memorySize > ramSize) throw new Error('ELF segment exceeds the configured RAM.');
+    if (address < 0x10010000 && address + memorySize > 0x10000000) throw new Error('ELF segment overlaps reserved I/O.');
+    if (alignment > 1 && ((alignment & (alignment-1)) !== 0 || address % alignment !== offset % alignment)) throw new Error('Invalid ELF segment alignment.');
+    if (memorySize && ranges.some(r => address < r.end && r.start < address + memorySize)) throw new Error('ELF memory segments overlap.');
+    if (memorySize) ranges.push({start:address,end:address+memorySize});
+    segments.push({address,bytes:bytes.slice(offset,offset+fileSize)});
+    if (flags & 1) {
+      if (address % 4 || fileSize % 4) throw new Error('Executable segments must contain aligned 32-bit instructions.');
+      executableRanges.push({start:address,end:address+fileSize});
+      for (let at = 0; at < fileSize; at += 4) sourceMap.push({address:address+at,word:u32(offset+at),line:null,text:'ELF machine code'});
+    }
+  }
+  if (!segments.length || entry % 4 || !executableRanges.some(r => entry >= r.start && entry+4 <= r.end)) throw new Error('ELF entry point must address an executable 32-bit instruction.');
+  return {ok:true,entry,segments,sourceMap,diagnostics:[],memoryRanges:ranges};
+}
+
+function createDoomImage(elfBytes, wadBytes) {
+  const result = parseElf(elfBytes), wad = wadBytes instanceof Uint8Array ? wadBytes : new Uint8Array(wadBytes);
+  const magic = String.fromCharCode(...wad.subarray(0,4));
+  if (wad.length < 12 || !['IWAD','PWAD'].includes(magic)) throw new Error('DOOM1.WAD has an invalid WAD header.');
+  const view = new DataView(wad.buffer,wad.byteOffset,wad.byteLength), lumps = view.getInt32(4,true), directory = view.getInt32(8,true);
+  if (lumps < 0 || directory < 12 || directory + lumps*16 > wad.length) throw new Error('DOOM1.WAD has an invalid directory.');
+  for (let index = 0; index < lumps; index++) {
+    const entry = directory + index*16, offset = view.getInt32(entry,true), size = view.getInt32(entry+4,true);
+    if (offset < 0 || size < 0 || offset + size > wad.length) throw new Error(`DOOM1.WAD lump ${index} extends outside the asset file.`);
+  }
+  if (DOOM_WAD_ADDRESS + wad.length > DOOM_RAM_SIZE) throw new Error('The WAD exceeds the available asset memory.');
+  if (result.memoryRanges.some(r => r.start < DOOM_WAD_ADDRESS+wad.length && r.end > DOOM_WAD_ADDRESS)) throw new Error('The ELF overlaps the WAD asset range.');
+  return {...result,segments:[...result.segments,{address:DOOM_WAD_ADDRESS,bytes:wad.slice()}]};
+}
+return Object.freeze({ DOOM_RAM_SIZE, DOOM_WAD_ADDRESS, DOOM_CONFIG, parseElf, createDoomImage });
+})();
 modules["project"] = (() => {
 const { Machine } = modules["core"];
+const { parseElf } = modules["elf"];
 
-/** Portable project files contain editable source and setup, never executable JS. */
+/** Portable projects contain source or embedded machine code and assets, never JavaScript. */
 const PROJECT_FORMAT = 'riscv-io-project';
 const PROJECT_VERSION = 1;
+const EXECUTABLE_PROJECT_VERSION = 2;
 const MAX_PROJECT_BYTES = 8 * 1024 * 1024;
 const MAX_SOURCE_BYTES = 1024 * 1024;
+const MAX_BINARY_BYTES = 64 * 1024 * 1024;
 const CONFIG_KEYS = ['ramBase', 'ramSize', 'dataBase', 'mmioBase', 'mmioSize', 'trapOnEbreak', 'peripherals'];
 const LEGACY_CONFIG_KEYS = ['sevenSegmentBase', 'buttonBase', 'buttonInputMode', 'boardEnabled'];
 const encoder = new TextEncoder();
+const base64Alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+
+/** Browser and Node compatible encoding; chunks avoid argument-count limits. */
+function encodeProjectBytes(bytes) {
+  if (!(bytes instanceof Uint8Array)) throw new TypeError('Project bytes must be a Uint8Array.');
+  if (bytes.length > MAX_PROJECT_BYTES * 3 / 4) throw new RangeError('Encoded project data exceeds the 8 MiB project limit.');
+  const chunks = [];
+  for (let offset = 0; offset < bytes.length; offset += 32768) chunks.push(String.fromCharCode(...bytes.subarray(offset, offset + 32768)));
+  return btoa(chunks.join(''));
+}
+
+function decodeProjectBytes(value, label = 'Project bytes') {
+  if (typeof value !== 'string' || !value.length || value.length > MAX_PROJECT_BYTES || value.length % 4 || /[^A-Za-z0-9+/=]/.test(value)) {
+    throw new TypeError(`${label} must contain nonempty canonical Base64 data within the project size limit.`);
+  }
+  const padding = value.endsWith('==') ? 2 : value.endsWith('=') ? 1 : 0;
+  const firstPadding = value.indexOf('=');
+  if ((firstPadding !== -1 && firstPadding !== value.length - padding)
+      || (padding && (base64Alphabet.indexOf(value[value.length - padding - 1]) & (padding === 2 ? 15 : 3)))) {
+    throw new TypeError(`${label} must contain canonical Base64 data.`);
+  }
+  const binary = atob(value);
+  return Uint8Array.from(binary, character => character.charCodeAt(0));
+}
+
+function normalizeAssets(assets, encodedBytes = 0) {
+  if (!Array.isArray(assets) || assets.length > 128) throw new TypeError('Project assets must be an array with at most 128 entries.');
+  const names = new Set();
+  return assets.map(asset => {
+    record(asset, 'Project asset', ['name', 'address', 'base64']);
+    if (typeof asset.name !== 'string' || !asset.name.trim() || asset.name.length > 120 || names.has(asset.name)) throw new TypeError('Project asset names must be nonempty and unique, with at most 120 characters.');
+    names.add(asset.name);
+    if (!Number.isInteger(asset.address) || asset.address < 0 || asset.address > 0xffffffff) throw new RangeError('Project asset address must be an unsigned 32-bit integer.');
+    if (typeof asset.base64 !== 'string') throw new TypeError('Project asset must contain Base64 data.');
+    encodedBytes += asset.base64.length;
+    if (encodedBytes > MAX_PROJECT_BYTES) throw new RangeError('Encoded project data exceeds the 8 MiB project limit.');
+    return {name:asset.name,address:asset.address,base64:asset.base64};
+  });
+}
+
+function normalizeProgram(value) {
+  record(value, 'Project program', ['format', 'elfBase64', 'assets']);
+  if (value.format !== 'elf32-riscv') throw new TypeError('Project program must use the elf32-riscv format.');
+  if (typeof value.elfBase64 !== 'string' || value.elfBase64.length > MAX_PROJECT_BYTES) throw new TypeError('Project ELF must contain Base64 data within the project size limit.');
+  return {format:'elf32-riscv',elfBase64:value.elfBase64,assets:normalizeAssets(value.assets ?? [],value.elfBase64.length)};
+}
+
+const overlaps = (a,b) => a.start < b.end && b.start < a.end;
+
+function imageRanges(image) {
+  if (!image || image.ok === false || !Array.isArray(image.segments)) throw new TypeError('Load a valid program before adding binary data.');
+  const ranges = (image.memoryRanges ?? []).map(range => ({...range}));
+  for (const segment of image.segments) {
+    const range = {start:segment.address,end:segment.address + segment.bytes.length};
+    if (range.start !== range.end && !ranges.some(existing => existing.start <= range.start && existing.end >= range.end)) ranges.push(range);
+  }
+  return ranges;
+}
+
+function validateBinaryRange(bytes, address, config, ranges) {
+  if (!(bytes instanceof Uint8Array) || !bytes.length) throw new TypeError('Binary data must contain at least one byte.');
+  if (bytes.length > MAX_BINARY_BYTES) throw new RangeError('Binary data must not exceed 64 MiB.');
+  if (!Number.isInteger(address) || address < 0 || address > 0xffffffff) throw new RangeError('Binary address must be an unsigned 32-bit integer.');
+  const range = {start:address,end:address + bytes.length};
+  if (range.end > 0x100000000 || range.start < config.ramBase || range.end > config.ramBase + config.ramSize) throw new RangeError('Binary data exceeds configured RAM.');
+  if (overlaps(range,{start:config.mmioBase,end:config.mmioBase + config.mmioSize})) throw new RangeError('Binary data overlaps configured I/O.');
+  if (ranges.some(other => overlaps(range,other))) throw new RangeError('Binary data overlaps program memory or another loaded binary.');
+  return range;
+}
+
+/** Append data to a detached reset image, preserving the program's entry point. */
+function appendBinaryImage(image, bytes, address, config = {}) {
+  const ranges = imageRanges(image);
+  const range = validateBinaryRange(bytes,address,normalizeConfig(config),ranges);
+  const result = structuredClone(image);
+  result.segments.push({address,bytes:new Uint8Array(bytes)});
+  result.memoryRanges = [...ranges,range];
+  return result;
+}
+
+/** Decode saved binary assets and validate their placement against a program. */
+function appendProjectAssets(image, assets = [], config = {}) {
+  const normalizedConfig = normalizeConfig(config), ranges = imageRanges(image), segments = [];
+  for (const asset of normalizeAssets(assets)) {
+    const bytes = decodeProjectBytes(asset.base64,`Asset ${asset.name}`);
+    ranges.push(validateBinaryRange(bytes,asset.address,normalizedConfig,ranges));
+    segments.push({address:asset.address,bytes});
+  }
+  const result = structuredClone(image);
+  result.segments.push(...segments);
+  result.memoryRanges = ranges;
+  return result;
+}
+
+/** Validate the whole linked image before applying a new hardware configuration. */
+function createConfiguredMachine(image, config = {}) {
+  const next = new Machine(normalizeConfig(config));
+  const {ramBase,ramSize,mmioBase,mmioSize} = next.bus.config;
+  const reserved = {start:mmioBase,end:mmioBase + mmioSize};
+  for (const range of imageRanges(image)) {
+    if (!Number.isInteger(range.start) || !Number.isInteger(range.end)
+        || range.start < 0 || range.end < range.start || range.end > 0x100000000) {
+      throw new RangeError('Program memory ranges must fit in the 32-bit address space.');
+    }
+    if (range.start < ramBase || range.end > ramBase + ramSize) throw new RangeError('Program memory or binary data exceeds configured RAM.');
+    if (range.end > range.start && overlaps(range,reserved)) throw new RangeError('Program memory or binary data overlaps configured I/O.');
+  }
+  return next.load(image);
+}
+
+function executableImage(program, config) {
+  if (config.ramBase !== 0) throw new RangeError('Executable projects require RAM to start at address zero.');
+  const image = parseElf(decodeProjectBytes(program.elfBase64, 'Project ELF'), {ramSize:config.ramSize});
+  const reserved = {start:config.mmioBase,end:config.mmioBase + config.mmioSize};
+  // Full ELF memory ranges include BSS, so assets cannot overwrite zero-filled globals.
+  for (const range of image.memoryRanges) if (overlaps(range,reserved)) throw new RangeError('Project executable overlaps configured I/O.');
+  return appendProjectAssets(image,program.assets,config);
+}
+
+/** Validate and materialize embedded machine code and assets without fetching files. */
+function projectImage(project) {
+  if (!project?.program) return null;
+  return executableImage(normalizeProgram(project.program), normalizeConfig(project.config));
+}
 
 /** Layout is presentation data; it never changes device addresses or execution order. */
 function normalizeProjectLayout(value = {}) {
@@ -7589,7 +7914,7 @@ function normalizeConfig(config) {
     ? JSON.parse(JSON.stringify(validated.peripherals)) : validated[key]]));
 }
 
-function normalize({ name, source, config, breakpoints = [], view = {} }) {
+function normalize({ name, source, config, breakpoints = [], view = {}, program, assets }) {
   if (typeof name !== 'string' || !name.trim() || name.trim().length > 120) throw new TypeError('Project name must contain 1 to 120 characters.');
   if (typeof source !== 'string') throw new TypeError('Project source must be assembly text.');
   if (encoder.encode(source).length > MAX_SOURCE_BYTES) throw new RangeError('Assembly source must not exceed 1 MiB.');
@@ -7597,20 +7922,58 @@ function normalize({ name, source, config, breakpoints = [], view = {} }) {
   if (!Array.isArray(breakpoints) || breakpoints.some(line => !Number.isInteger(line) || line < 1 || line > lineCount)) {
     throw new TypeError('Project breakpoints must be valid, one-based source line numbers.');
   }
-  record(view, 'Project view', ['theme', 'speed', 'undoEnabled', 'ioLayout']);
+  record(view, 'Project view', ['theme', 'speed', 'undoEnabled', 'ioLayout', 'keyboardEnabled', 'pixelDisplay']);
   const theme = Object.hasOwn(view, 'theme') ? view.theme : 'light';
   const speed = Object.hasOwn(view, 'speed') ? view.speed : 500;
   const undoEnabled = Object.hasOwn(view, 'undoEnabled') ? view.undoEnabled : true;
   if (!['light', 'dark'].includes(theme)) throw new TypeError('Project theme must be light or dark.');
   if (![2, 20, 500, 50000, 'turbo'].includes(speed)) throw new TypeError('Project speed must be 2, 20, 500, or 50000 ticks/s, or turbo.');
   if (typeof undoEnabled !== 'boolean') throw new TypeError('Project undoEnabled must be a boolean.');
-  return { format: PROJECT_FORMAT, version: PROJECT_VERSION, name: name.trim(), source,
-    config: normalizeConfig(config), breakpoints: [...new Set(breakpoints)].sort((a, b) => a - b), view: { theme, speed, undoEnabled, ...(Object.hasOwn(view,'ioLayout') ? {ioLayout:normalizeProjectLayout(view.ioLayout)} : {}) } };
+  if (Object.hasOwn(view,'pixelDisplay') && typeof view.pixelDisplay !== 'boolean') throw new TypeError('Project pixelDisplay must be a boolean.');
+  // Older Doom projects styled the screen through a global presentation flag.
+  // Migrate before normalization supplies the new per-device default; an explicit style wins.
+  if (view.pixelDisplay && Array.isArray(config?.peripherals)) {
+    config = {...config,peripherals:config.peripherals.map(device => {
+      const options = device?.options;
+      if (device?.id !== 'screen' || !['matrix8','rgbmatrix'].includes(device.type)
+          || (options !== undefined && (!options || typeof options !== 'object' || Array.isArray(options)))
+          || Object.hasOwn(options ?? {},'pixelStyle')) return device;
+      return {...device,options:{...options,pixelStyle:'pixels'}};
+    })};
+  }
+  const normalizedConfig = normalizeConfig(config);
+  const extras = {};
+  if (Object.hasOwn(view,'keyboardEnabled')) {
+    const ids = view.keyboardEnabled;
+    if (!Array.isArray(ids) || ids.length > 128 || new Set(ids).size !== ids.length
+        || ids.some(id => typeof id !== 'string' || !normalizedConfig.peripherals.some(device => device.id === id && ['buttons','keypad4'].includes(device.type)))) {
+      throw new TypeError('Project keyboardEnabled must list unique configured pushbutton or keypad device IDs.');
+    }
+    extras.keyboardEnabled = [...ids];
+  }
+  const normalizedProgram = program === undefined ? undefined : normalizeProgram(program);
+  if (normalizedProgram && assets !== undefined) throw new TypeError('Executable project assets belong inside program.assets.');
+  const normalizedAssets = assets === undefined ? undefined : normalizeAssets(assets);
+  if (normalizedAssets) {
+    // Incomplete assembly remains saveable. Program overlap is checked once it assembles.
+    appendProjectAssets({ok:true,segments:[]},normalizedAssets,normalizedConfig);
+  }
+  if (normalizedProgram) {
+    if (breakpoints.length) throw new TypeError('Executable projects use machine code and require an empty source-breakpoint list.');
+    executableImage(normalizedProgram, normalizedConfig);
+  }
+  const result = { format: PROJECT_FORMAT, version: normalizedProgram ? EXECUTABLE_PROJECT_VERSION : PROJECT_VERSION, name: name.trim(), source,
+    config: normalizedConfig, breakpoints: [...new Set(breakpoints)].sort((a, b) => a - b),
+    view: { theme, speed, undoEnabled, ...(Object.hasOwn(view,'ioLayout') ? {ioLayout:normalizeProjectLayout(view.ioLayout)} : {}), ...extras },
+    ...(normalizedProgram ? {program:normalizedProgram} : {}),
+    ...(normalizedAssets ? {assets:normalizedAssets} : {}) };
+  if (encoder.encode(JSON.stringify(result)).length > MAX_PROJECT_BYTES) throw new RangeError('Project file must not exceed 8 MiB.');
+  return result;
 }
 
 /** Create a detached save value, including unfinished or invalid assembly source. */
-function createProject({ name = 'Untitled project', source = '', config = {}, breakpoints = [], view = {} } = {}) {
-  return normalize({ name, source, config, breakpoints, view });
+function createProject({ name = 'Untitled project', source = '', config = {}, breakpoints = [], view = {}, program, assets } = {}) {
+  return normalize({ name, source, config, breakpoints, view, program, assets });
 }
 
 /** Validate before the caller replaces any current workbench state. */
@@ -7621,12 +7984,14 @@ function parseProject(input) {
     try { value = JSON.parse(input); }
     catch { throw new SyntaxError('This file does not contain valid project JSON.'); }
   }
-  record(value, 'Project', ['format', 'version', 'name', 'source', 'config', 'breakpoints', 'view']);
+  record(value, 'Project', ['format', 'version', 'name', 'source', 'config', 'breakpoints', 'view', 'program', 'assets']);
   if (value.format !== PROJECT_FORMAT) throw new TypeError('This file is not a RISC-V I/O project.');
-  if (value.version !== PROJECT_VERSION) throw new RangeError(`Unsupported project version ${String(value.version)}. Expected version 1.`);
+  if (![PROJECT_VERSION,EXECUTABLE_PROJECT_VERSION].includes(value.version)) throw new RangeError(`Unsupported project version ${String(value.version)}. Expected version 1 or 2.`);
+  if (value.version === PROJECT_VERSION && Object.hasOwn(value,'program')) throw new TypeError('Embedded executable programs require project version 2.');
+  if (value.version === EXECUTABLE_PROJECT_VERSION && !value.program) throw new TypeError('Project version 2 requires an embedded executable program.');
   return normalize(value);
 }
-return Object.freeze({ PROJECT_FORMAT, PROJECT_VERSION, MAX_PROJECT_BYTES, MAX_SOURCE_BYTES, normalizeProjectLayout, createProject, parseProject });
+return Object.freeze({ PROJECT_FORMAT, PROJECT_VERSION, EXECUTABLE_PROJECT_VERSION, MAX_PROJECT_BYTES, MAX_SOURCE_BYTES, MAX_BINARY_BYTES, encodeProjectBytes, decodeProjectBytes, appendBinaryImage, appendProjectAssets, createConfiguredMachine, projectImage, normalizeProjectLayout, createProject, parseProject });
 })();
 modules["history"] = (() => {
 /** Bounded exact Undo for scheduler ticks and synchronous input actions.
@@ -7743,13 +8108,14 @@ const { createPeripheralView } = modules["io-view"];
 const { peripheralGuide } = modules["peripheral-guides"];
 const { renderPeripheralOptions, readPeripheralOptions, remapProbeReferences } = modules["peripheral-config"];
 const { SimulationHistory } = modules["history"];
-const { createProject, parseProject, normalizeProjectLayout, MAX_PROJECT_BYTES } = modules["project"];
+const { createProject, parseProject, projectImage, encodeProjectBytes, decodeProjectBytes, appendBinaryImage, createConfiguredMachine, normalizeProjectLayout, MAX_PROJECT_BYTES } = modules["project"];
+const { parseElf } = modules["elf"];
 
 const $ = id => document.getElementById(id);
-const storageKey = 'riscv-io-lab.draft.v1';
-const configKey = 'riscv-io-lab.mapping.v2';
-const layoutKey = 'riscv-io-lab.layout.v1';
-const undoKey = 'riscv-io-lab.undo.v1';
+const storageKey = 'riscv-doom.draft.v1';
+const configKey = 'riscv-doom.mapping.v2';
+const layoutKey = 'riscv-doom.layout.v1';
+const undoKey = 'riscv-doom.undo.v1';
 let undoEnabled = true;
 try { undoEnabled = localStorage.getItem(undoKey) !== 'false'; } catch { /* Undo starts enabled when storage is unavailable. */ }
 let ioLayout = {order:[],panels:{}};
@@ -7777,6 +8143,9 @@ let pendingMemorySettings = null;
 let initializing = true;
 let assembledSource = null;
 let image = null;
+let executable = null;
+let assemblyBinaries = [];
+let pendingBinary = null;
 let sourceMap = new Map();
 let firstAddressForLine = new Map();
 let running = false;
@@ -7910,6 +8279,8 @@ function pause(message) {
 }
 
 function invalidateImage() {
+  executable = null;
+  $('source').readOnly = false;
   history.clear();
   image = null; assembledSource = null; sourceMap.clear(); firstAddressForLine.clear();
   if ($('encoding-dialog').open) $('encoding-dialog').close();
@@ -7919,6 +8290,7 @@ function invalidateImage() {
 function assembleProgram(announce = false) {
   pause(); clearTimeout(lintTimer); lintTimer = null;
   if (composing || loadingSource) return false;
+  if (executable) return resetExecutable();
   ioView.releaseInputs?.();
   $('operation-message').hidden = true;
   const result = assemble($('source').value, { constants: constants(), textBase: config.ramBase,
@@ -7929,9 +8301,11 @@ function assembleProgram(announce = false) {
     render(); return false;
   }
   try {
-    const next = new Machine(config); next.load(result);
+    let loadedImage = result;
+    for (const asset of assemblyBinaries) loadedImage = appendBinaryImage(loadedImage,asset.bytes,asset.address,config);
+    const next = new Machine(config); next.load(loadedImage);
     if ($('encoding-dialog').open) $('encoding-dialog').close();
-    machine = next; history = new SimulationHistory(machine, {enabled:undoEnabled}); image = result; assembledSource = $('source').value;
+    machine = next; history = new SimulationHistory(machine, {enabled:undoEnabled}); image = loadedImage; assembledSource = $('source').value;
     sourceMap = new Map(result.sourceMap.map(item => [item.address, item]));
     firstAddressForLine = new Map();
     for (const item of result.sourceMap) if (!firstAddressForLine.has(item.line)) firstAddressForLine.set(item.line, item.address);
@@ -7954,11 +8328,143 @@ function ensureFresh() {
 
 function advance() {
   const event = history.step();
+  if (executable && event.type === 'trap' && !event.interrupt) {
+    pause(); setStatus('Executable trap', `${event.message} at ${hex(event.pc)} (cause ${event.cause}).`, 'error');
+  }
   if (machine.halted) {
     pause(); setStatus('Stopped', String(machine.haltReason || 'Execution completed'));
   }
   return event;
 }
+
+function resetExecutable() {
+  if (!executable) return false;
+  ioView.releaseInputs?.();
+  machine.load(executable.image);
+  history.clear(); skipBreakpoint = null; lastRegs = new Uint32Array(32);
+  $('operation-message').hidden = true;
+  render(); return true;
+}
+
+function installExecutable(nextImage, name, nextConfig, {project = null, filename = null, program = null} = {}) {
+  const view = project?.view ?? {speed:'turbo',undoEnabled:false};
+  const keyboardIds = project ? view.keyboardEnabled ?? [] : enabledKeyboardIds();
+  const next = new Machine(nextConfig); next.load(nextImage);
+  cancelPendingMemoryChange(); cancelExampleSetup(true); loadSequence++;
+  clearTimeout(lintTimer); lintTimer = null; loadingSource = false; composing = false; pause();
+  ioView.disableKeyboard?.(); ioView.releaseInputs?.();
+  invalidateImage(); config = {...next.bus.config}; machine = next;
+  undoEnabled = view.undoEnabled ?? false; history = new SimulationHistory(machine,{enabled:undoEnabled}); $('undo-enabled').checked = undoEnabled;
+  image = nextImage; executable = {image:nextImage,name,program:project?.program ?? program};
+  assemblyBinaries = [];
+  sourceMap = new Map(nextImage.sourceMap.map(item => [item.address,item])); firstAddressForLine.clear(); breakpoints.clear();
+  $('source').value = project?.source ?? `# ${name}\n# Linked RV32IM executable.\n# Entry: ${hex(nextImage.entry)}\n# ${nextImage.sourceMap.length.toLocaleString()} machine instructions\n# RAM: ${config.ramSize / 1048576} MiB\n#\n# Run starts or resumes execution.\n# Step executes one instruction.\n# Reset restores the loaded executable and assets.\n# The Machine code tab shows the compiled instructions.\n# File > Save Project includes the executable and I/O configuration.\n# File > New Project returns to editable assembly.\n`;
+  $('source').readOnly = true; assembledSource = $('source').value;
+  $('source').setSelectionRange(0,0); $('source').scrollTop = 0; $('source').scrollLeft = 0;
+  $('source-badge').textContent = filename ?? name; $('editor-save-state').textContent = 'Executable project · Reset restores program memory';
+  $('project-name').value = project?.name ?? name;
+  $('speed').value = String(view.speed); memoryAddress = nextImage.entry; $('memory-address').value = hex(memoryAddress);
+  if (view.theme) applyTheme(view.theme);
+  if (project) ioLayout = normalizeProjectLayout(view.ioLayout);
+  reconcileLayout();
+  ioView.refreshLayout?.();
+  showDiagnostics(nextImage);
+  $('diagnostics').innerHTML = `<div class="diagnostic-ok"><span>✓</span> ${nextImage.sourceMap.length.toLocaleString()} linked instructions · ELF loaded at ${hex(nextImage.entry)}</div>`;
+  lastRegs = new Uint32Array(32); skipBreakpoint = null; listingPage = 0;
+  $('operation-message').hidden = true;
+  renderAddressMap(); updateCaret(); renderListing(); render(); selectEditorTab('source-code');
+  restoreKeyboardIds(keyboardIds);
+  projectDirty = false; projectFileName = filename; updateProjectUI();
+}
+
+$('load-elf').addEventListener('click', () => { closeMenus(); pause(); $('elf-file').click(); });
+$('elf-file').addEventListener('change', async event => {
+  const file = event.target.files[0]; event.target.value = ''; if (!file) return;
+  const sequence = ++loadSequence; loadingSource = false; pause(); clearTimeout(lintTimer); lintTimer = null;
+  if (file.size > 64 * 1048576) { if (!image) assembleProgram(false); setStatus('Could not load ELF','Choose an ELF smaller than 64 MiB.','error'); render(); return; }
+  loadingSource = true; render();
+  try {
+    const ramSize = Math.max(config.ramSize,64 * 1048576);
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    const nextImage = parseElf(bytes,{ramSize});
+    const program = bytes.length <= MAX_PROJECT_BYTES * 3 / 4
+      ? {format:'elf32-riscv',elfBase64:encodeProjectBytes(bytes),assets:[]} : null;
+    if (sequence !== loadSequence) return;
+    loadingSource = false;
+    requestReplacement(() => installExecutable(nextImage,file.name,{...config,ramSize},{program}));
+  } catch(error) {
+    if (sequence === loadSequence) { loadingSource = false; if (!image) assembleProgram(false); setStatus('Could not load ELF',error.message,'error'); }
+  } finally { render(); }
+});
+
+$('load-binary').addEventListener('click', () => {
+  closeMenus(); pause(); loadSequence++; loadingSource = false;
+  clearTimeout(lintTimer); lintTimer = null;
+  if ((!image || assembledSource !== $('source').value) && !assembleProgram(false)) {
+    showOperationError('Load an ELF or assemble a valid program before adding binary data.'); return;
+  }
+  render(); $('binary-file').click();
+});
+$('binary-file').addEventListener('change', event => {
+  const file = event.target.files[0]; event.target.value = ''; if (!file) return;
+  if (!file.size || file.size > 64 * 1048576) {
+    showOperationError('Choose a nonempty binary file up to 64 MiB.'); return;
+  }
+  loadingSource = false; pendingBinary = {file,sequence:++loadSequence};
+  $('binary-file-name').textContent = `${file.name} · ${file.size.toLocaleString()} bytes`;
+  $('binary-address').value = hex(memoryAddress);
+  $('binary-load-error').hidden = true;
+  $('binary-load-submit').disabled = false;
+  $('binary-load-dialog').showModal();
+  $('binary-address').focus(); $('binary-address').select();
+});
+$('binary-load-dialog').addEventListener('close', () => {
+  if (pendingBinary?.sequence === loadSequence) { loadSequence++; loadingSource = false; }
+  pendingBinary = null; $('binary-load-submit').disabled = false; render();
+});
+$('binary-load-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  const pending = pendingBinary;
+  if (!pending || loadingSource) return;
+  try {
+    const address = parseAddress($('binary-address').value);
+    $('binary-load-error').hidden = true;
+    $('binary-load-submit').disabled = true; loadingSource = true; render();
+    const bytes = new Uint8Array(await pending.file.arrayBuffer());
+    if (pending.sequence !== loadSequence || pendingBinary !== pending) return;
+    const nextImage = appendBinaryImage(image,bytes,address,config);
+    const next = new Machine(config); next.load(nextImage);
+    const existing = executable?.program?.assets ?? assemblyBinaries;
+    const baseName = pending.file.name.slice(0,110) || 'binary';
+    let name = baseName, suffix = 2;
+    while (existing.some(asset => asset.name === name)) name = `${baseName} (${suffix++})`;
+    let program = executable?.program ?? null;
+    if (program) {
+      try {
+        program = {...program,assets:[...program.assets,{name,address,base64:encodeProjectBytes(bytes)}]};
+        // Large imports can still run; portable saves retain the existing project-size limit.
+        createProject({name:'Executable',source:$('source').value,config,program});
+      } catch (error) {
+        if (!(error instanceof RangeError)) throw error;
+        program = null;
+      }
+    }
+    ioView.releaseInputs?.(); machine = next; image = nextImage;
+    history = new SimulationHistory(machine,{enabled:undoEnabled});
+    if (executable) executable = {...executable,image:nextImage,program};
+    else assemblyBinaries.push({name,address,bytes});
+    lastRegs = new Uint32Array(32); skipBreakpoint = null;
+    memoryAddress = address; $('memory-address').value = hex(address);
+    $('operation-message').hidden = true;
+    $('editor-save-state').textContent = `Loaded ${pending.file.name} at ${hex(address)} · Reset restores binary data`;
+    loadingSource = false; pendingBinary = null; loadSequence++;
+    $('binary-load-dialog').close(); markProjectDirty(); selectTab('memory'); render();
+  } catch (error) {
+    if (pendingBinary !== pending || pending.sequence !== loadSequence) return;
+    loadingSource = false; $('binary-load-submit').disabled = false;
+    $('binary-load-error').textContent = error.message; $('binary-load-error').hidden = false; render();
+  }
+});
 
 function simulationSpeed() { return $('speed').value === 'turbo' ? 'turbo' : Number($('speed').value); }
 function speedDescription() { return simulationSpeed() === 'turbo' ? 'Turbo · as fast as the browser allows' : `${simulationSpeed().toLocaleString()} ticks per second`; }
@@ -7973,18 +8479,24 @@ function animationTick(time) {
   const elapsed = Math.min(time - lastTime, 100); lastTime = time;
   tickCredit = turbo ? 0 : Math.min(tickCredit + elapsed * simulationSpeed() / 1000, 5000);
   const count = Math.floor(tickCredit); tickCredit -= count;
-  // Bound CPU time rather than tick count in Turbo, then yield to browser input.
+  // Check Turbo's time budget between small batches, then yield to browser input.
   const deadline = performance.now() + 12;
   try {
-    for (let i = 0; running && (turbo ? performance.now() < deadline : i < count); i++) {
-      const line = sourceMap.get(machine.pc)?.line;
-      if (breakpoints.has(line) && firstAddressForLine.get(line) === machine.pc && skipBreakpoint !== machine.pc) {
-        pause(`Breakpoint on line ${line}`); skipBreakpoint = machine.pc;
-        renderCurrentLine(); revealCurrentLine();
-        break;
+    for (let i = 0; running && (turbo ? performance.now() < deadline : i < count);) {
+      const batchEnd = turbo ? i + 128 : count;
+      for (; running && i < batchEnd; i++) {
+        // Debugger stops remain instruction-exact, including inside a batch.
+        if (breakpoints.size) {
+          const line = sourceMap.get(machine.pc)?.line;
+          if (breakpoints.has(line) && firstAddressForLine.get(line) === machine.pc && skipBreakpoint !== machine.pc) {
+            pause(`Breakpoint on line ${line}`); skipBreakpoint = machine.pc;
+            renderCurrentLine(); revealCurrentLine();
+            break;
+          }
+        }
+        skipBreakpoint = null;
+        advance();
       }
-      skipBreakpoint = null;
-      advance();
     }
   } catch (error) { pause(); setStatus('Execution error', error.message, 'error'); }
   if (time - renderTime >= 100 || !running) { renderTime = time; render(); if (!running) revealCurrentLine(); }
@@ -8087,6 +8599,11 @@ function render() {
   $('remove-all-peripherals').disabled = config.peripherals.length === 0;
   ioView.render(config);
   $('listing-state').textContent = image ? 'Select a row to explore its 32-bit encoding.' : 'Machine code appears when the source assembles successfully.';
+  const binaryMode = Boolean(executable);
+  $('save-project').disabled = binaryMode && !executable.program;
+  $('download-source').disabled = binaryMode;
+  document.querySelectorAll('.io-example-select, .io-card-actions button[aria-label^="Load example"]').forEach(button => { button.disabled = binaryMode; });
+  document.querySelector('.live-assembly-label').textContent = binaryMode ? 'ELF executable' : 'Live assembly';
   $('run').disabled = $('step').disabled = !image || composing || loadingSource;
   $('undo').disabled = !undoEnabled || !image || !history.canUndo || composing || loadingSource;
   document.querySelectorAll('#instruction-listing tr.current').forEach(row => row.classList.remove('current'));
@@ -8110,6 +8627,7 @@ function updateCaret() {
 }
 
 function sourceChanged() {
+  if (executable) return;
   markProjectDirty();
   cancelExampleSetup(true);
   loadSequence++; loadingSource = false; pause(); clearTimeout(lintTimer); invalidateImage();
@@ -8153,6 +8671,7 @@ async function loadExample(name) {
       }
       source = materializeExampleConstants(source, config);
     }
+    invalidateImage(); assemblyBinaries = [];
     $('source').value = source.replace(/\r\n/g, '\n');
     $('source').setSelectionRange(0, 0);
     $('source').scrollTop = 0; $('source').scrollLeft = 0;
@@ -8185,6 +8704,7 @@ function loadPeripheralExample(id, mode) {
       loadingSource = false; composing = false;
       ioView.releaseInputs?.();
       config = {...next.bus.config}; machine = next; history = new SimulationHistory(machine, {enabled:undoEnabled}); invalidateImage();
+      assemblyBinaries = [];
       $('source').value = example.source; $('source').setSelectionRange(0, 0);
       $('source').scrollTop = 0; $('source').scrollLeft = 0;
       $('source-badge').textContent = `${id}-${example.mode}.s`;
@@ -8241,13 +8761,13 @@ function renderListing() {
   $('listing-next').disabled = listingPage === pageCount - 1;
   $('instruction-listing').innerHTML = items.slice(listingPage * listingPageSize, (listingPage + 1) * listingPageSize).map(item => {
     const decoded = explainInstruction(item.word, item.address);
-    return `<tr data-address="${item.address}" data-encoding="${item.address}" tabindex="0" aria-label="Explain ${escapeHTML(decoded.assembly)} at ${hex(item.address)}"><td><code>${hex(item.address)}</code></td><td><button class="encoding-link" tabindex="-1" data-encoding="${item.address}">${hex(item.word)}</button></td><td><div class="listing-decoded"><span class="format-badge">${escapeHTML(decoded.format)}</span><code>${escapeHTML(decoded.assembly)}</code></div><small class="listing-source">L${item.line} · ${escapeHTML(item.text.trim())}</small></td></tr>`;
+    return `<tr data-address="${item.address}" data-encoding="${item.address}" tabindex="0" aria-label="Explain ${escapeHTML(decoded.assembly)} at ${hex(item.address)}"><td><code>${hex(item.address)}</code></td><td><button class="encoding-link" tabindex="-1" data-encoding="${item.address}">${hex(item.word)}</button></td><td><div class="listing-decoded"><span class="format-badge">${escapeHTML(decoded.format)}</span><code>${escapeHTML(decoded.assembly)}</code></div><small class="listing-source">${item.line ? `L${item.line} · ` : ''}${escapeHTML(item.text.trim())}</small></td></tr>`;
   }).join('');
 }
 function showEncoding(address) {
   const item = sourceMap.get(address); if (!item) return;
   encodingAddress = address;
-  $('encoding-body').innerHTML = encodingMarkup({ item, explanation: explainInstruction(item.word, address), expansion: image.sourceMap.filter(word => word.line === item.line), stale: assembledSource !== $('source').value });
+  $('encoding-body').innerHTML = encodingMarkup({ item, explanation: explainInstruction(item.word, address), expansion: executable ? [item] : image.sourceMap.filter(word => word.line === item.line), stale: assembledSource !== $('source').value });
   const index = image.sourceMap.findIndex(word=>word.address===address);
   $('encoding-prev').disabled=index===0; $('encoding-next').disabled=index===image.sourceMap.length-1;
   if (!$('encoding-dialog').open) $('encoding-dialog').showModal();
@@ -8268,12 +8788,14 @@ if (typeof ResizeObserver !== 'undefined') new ResizeObserver(syncEditorScroll).
 $('source').addEventListener('click', updateCaret);
 $('source').addEventListener('keyup', updateCaret);
 $('source').addEventListener('keydown', event => {
+  if (executable) return;
   if (event.key === 'Tab') {
     event.preventDefault(); const start = event.target.selectionStart, end = event.target.selectionEnd;
     event.target.setRangeText('    ', start, end, 'end'); sourceChanged();
   }
 });
 $('gutter-lines').addEventListener('click', event => {
+  if (executable) return;
   const line = Number(event.target.dataset.line); if (!line) return;
   if (breakpoints.has(line)) breakpoints.delete(line); else breakpoints.add(line);
   markProjectDirty(); highlightSource();
@@ -8337,9 +8859,35 @@ function renderAddressMap() {
   for (const device of config.peripherals) entries.push({label:device.id,base:device.base,size:256,symbol:device.id.toUpperCase()});
   $('address-map').innerHTML = entries.map(e => `<div class="map-row"><span>${escapeHTML(e.label)}</span><code>${hex(e.base)} – ${hex(e.base+e.size-1)}</code><code>${escapeHTML(e.symbol)}</code></div>`).join('');
 }
+function enabledKeyboardIds() {
+  return config.peripherals.filter(device=>ioView.isKeyboardEnabled?.(device.id)).map(device=>device.id);
+}
+function restoreKeyboardIds(ids) {
+  for (const id of ids) if (config.peripherals.some(device=>device.id === id && ['buttons','keypad4'].includes(device.type))) ioView.enableKeyboard?.(id);
+}
 function applyConfiguration(nextConfig, message, renamed = null) {
   assemblyConstants(nextConfig);
-  const next = new Machine(nextConfig);
+  // Validate the complete reset image before changing the active executable or mapping.
+  const next = executable ? createConfiguredMachine(executable.image,nextConfig) : new Machine(nextConfig);
+  const keyboardIds = enabledKeyboardIds().map(id=>renamed && id === renamed.from ? renamed.to : id);
+  if (executable) {
+    pause(); clearTimeout(lintTimer); lintTimer = null; loadSequence++; loadingSource = false;
+    ioView.releaseInputs?.();
+    config = {...next.bus.config}; machine = next;
+    history = new SimulationHistory(machine,{enabled:undoEnabled});
+    image = executable.image; lastRegs = new Uint32Array(32); skipBreakpoint = null;
+    if ($('encoding-dialog').open) $('encoding-dialog').close();
+    encodingAddress = null; listingPage = 0;
+    if (memoryAddress < config.ramBase || memoryAddress >= config.ramBase + config.ramSize) {
+      memoryAddress = image.entry; $('memory-address').value = hex(memoryAddress);
+    }
+    reconcileLayout(renamed);
+    try { localStorage.setItem(configKey,JSON.stringify(config)); } catch { /* Session mapping remains available. */ }
+    $('operation-message').hidden = true;
+    $('editor-save-state').textContent = `${message} Program restarted · ELF and binary data retained`;
+    markProjectDirty(); renderAddressMap(); renderListing(); render(); restoreKeyboardIds(keyboardIds);
+    return;
+  }
   const editor = $('source'), before = editor.value;
   const selection = {start:editor.selectionStart,end:editor.selectionEnd,direction:editor.selectionDirection};
   const scroll = {top:editor.scrollTop,left:editor.scrollLeft};
@@ -8369,6 +8917,7 @@ function applyConfiguration(nextConfig, message, renamed = null) {
   reconcileLayout(renamed);
   try { localStorage.setItem(configKey, JSON.stringify(config)); } catch { /* Session mapping remains available. */ }
   renderAddressMap(); assembleProgram(false); render();
+  restoreKeyboardIds(keyboardIds);
   editor.scrollTop=scroll.top; editor.scrollLeft=scroll.left; syncEditorScroll(); updateCaret();
 }
 
@@ -8443,6 +8992,9 @@ function openDeviceMapping(type, id = null, requirement = null) {
   $('peripheral-picker').hidden = true; $('mapping-form').hidden = false;
   $('mapping-title').textContent = `${id ? 'Configure' : 'Connect'} ${descriptor.label}`;
   $('mapping-description').textContent = descriptor.description + (requirement?.id ? ` The ${exampleSetup.name} example uses the assembly symbol ${requirement.id.toUpperCase()}. Choose its base address below.` : '');
+  $('mapping-reset-note').textContent = executable
+    ? 'Changes restart the program and retain the ELF and loaded binary data. Program addresses remain as compiled.'
+    : 'Connecting or remapping resets the machine. Changing a peripheral address updates its corresponding .equ declarations while preserving the rest of your assembly code.';
   $('mapping-submit').textContent = id ? 'Apply mapping' : 'Connect peripheral';
   $('mapping-error').textContent = '';
   $('mapping-input-fields').hidden = !descriptor.hasInput;
@@ -8527,6 +9079,8 @@ $('source-file').addEventListener('change', async event => {
   loadingSource = false;
   requestReplacement(() => {
     composing = false;
+    invalidateImage();
+    assemblyBinaries = [];
     $('source').value = text.replace(/\r\n/g, '\n'); $('source').setSelectionRange(0, 0);
     $('source').scrollTop = 0; $('source').scrollLeft = 0;
     $('source-badge').textContent = file.name; $('example-description').textContent = 'Loaded assembly source. Connected I/O and address mappings stay with this project.';
@@ -8542,7 +9096,7 @@ function updateProjectUI() {
 function markProjectDirty() { if (!initializing) projectDirty = true; updateProjectUI(); }
 function safeProjectName() { return ($('project-name').value.trim() || 'Untitled project').replace(/[<>:"/\\|?*\x00-\x1f]/g, '_').replace(/[. ]+$/g, '') || 'project'; }
 function projectFromEditor() {
-  return createProject({name:$('project-name').value.trim() || 'Untitled project', source:$('source').value, config, breakpoints:[...breakpoints].filter(line => line <= $('source').value.split('\n').length), view:{theme:$('theme-select').value, speed:simulationSpeed(),undoEnabled,ioLayout}});
+  return createProject({name:$('project-name').value.trim() || 'Untitled project', source:$('source').value, config, breakpoints:[...breakpoints].filter(line => line <= $('source').value.split('\n').length), ...(executable ? {program:executable.program} : assemblyBinaries.length ? {assets:assemblyBinaries.map(({name,address,bytes})=>({name,address,base64:encodeProjectBytes(bytes)}))} : {}), view:{theme:$('theme-select').value, speed:simulationSpeed(),undoEnabled,ioLayout, keyboardEnabled:enabledKeyboardIds()}});
 }
 function saveProject() {
   try {
@@ -8555,6 +9109,7 @@ function saveProject() {
 }
 let afterProjectSave = null;
 function requestProjectSave(afterSave = null) {
+  if (executable && !executable.program) { showOperationError('This program and its binary data exceed the 8 MiB project limit. Keep the original files for reloading.'); return; }
   closeMenus(); pause();
   afterProjectSave = afterSave;
   $('save-project-dialog').showModal();
@@ -8583,6 +9138,7 @@ function cancelReplacement() {
 }
 function installProject(project, filename = null) {
   validateBrowserProject(project);
+  if (project.program) return installExecutable(projectImage(project),project.name,project.config,{project,filename});
   const next = new Machine(project.config);
   cancelPendingMemoryChange();
   ioView.disableKeyboard?.();
@@ -8590,6 +9146,7 @@ function installProject(project, filename = null) {
   ioView.releaseInputs?.();
   applyUndoSetting(project.view.undoEnabled ?? true);
   config = {...next.bus.config}; machine = next; history = new SimulationHistory(machine, {enabled:undoEnabled}); invalidateImage();
+  assemblyBinaries = (project.assets ?? []).map(({name,address,base64})=>({name,address,bytes:decodeProjectBytes(base64,`Asset ${name}`)}));
   ioLayout=normalizeProjectLayout(project.view.ioLayout); reconcileLayout(); ioView.refreshLayout?.();
   $('project-name').value = project.name; $('source').value = project.source;
   $('source').setSelectionRange(0, 0); $('source').scrollTop = 0; $('source').scrollLeft = 0;
@@ -8600,6 +9157,7 @@ function installProject(project, filename = null) {
   memoryAddress = config.dataBase; $('memory-address').value = hex(memoryAddress);
   try { localStorage.setItem(configKey, JSON.stringify(config)); } catch { /* Project remains loaded in memory. */ }
   $('operation-message').hidden = true; renderAddressMap(); updateCaret(); selectEditorTab('source-code'); assembleProgram(false);
+  for (const id of project.view.keyboardEnabled ?? []) ioView.enableKeyboard?.(id);
   projectFileName = filename; projectDirty = false; updateProjectUI();
   render();
 }
@@ -8682,7 +9240,8 @@ function memoryMappingCandidate() {
 function renderMemoryMappingPreview() {
   try {
     const next = memoryMappingCandidate();
-    new Machine(next); // Use the same range validation as the browser and CLI.
+    if (executable) createConfiguredMachine(executable.image,next);
+    else new Machine(next);
     $('mmio-memory-range').textContent = `${hex(next.mmioBase)} – ${hex(next.mmioBase+next.mmioSize-1)} (${next.mmioSize / 1024} KiB reserved)`;
     $('mmio-memory-preview').innerHTML = next.peripherals.length ? `<table><thead><tr><th>Peripheral</th><th>Current base</th><th>New base</th></tr></thead><tbody>${next.peripherals.map(device=>`<tr><td>${escapeHTML(device.id)}</td><td><code>${hex(config.peripherals.find(d=>d.id===device.id).base)}</code></td><td><code>${hex(device.base)}</code></td></tr>`).join('')}</tbody></table>` : '<p>New peripherals will use this reserved range.</p>';
     $('mmio-memory-error').textContent = '';
@@ -8779,7 +9338,7 @@ document.addEventListener('keydown', event => {
 });
 window.addEventListener('pagehide', () => { ioView.releaseInputs?.(); pause(); });
 
-initializeWorkbenchLayout({workspace:$('workspace'), handle:$('workspace-resizer'), widthHandle:$('workspace-width-resizer'), exampleTrigger:$('example-trigger'), exampleSubmenu:$('example-submenu'), onResize:()=>{syncEditorScroll();if(running)revealCurrentLine();}});
+initializeWorkbenchLayout({workspace:$('workspace'), handle:$('workspace-resizer'), widthHandle:$('workspace-width-resizer'), exampleTrigger:$('example-trigger'), exampleSubmenu:$('example-submenu'), advancedTrigger:$('advanced-trigger'), advancedSubmenu:$('advanced-submenu'), onResize:()=>{syncEditorScroll();if(running)revealCurrentLine();}});
 
 let savedTheme = 'light';
 try { savedTheme = localStorage.getItem('riscv-io-lab.theme.v1') || 'light'; } catch { /* Default appearance is light. */ }
