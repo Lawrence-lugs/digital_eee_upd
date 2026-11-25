@@ -2041,7 +2041,7 @@ body[data-theme="dark"] .protocol-reference-dialog{--protocol-ink:#d6e0ec;--prot
       <tr><td><code>BGT Rs, target</code></td><td>Branch when signed <code>Rs &gt; 0</code>.</td></tr>
     </tbody>
   </table>
-  <p>Results wrap to eight bits. Signed comparisons interpret values as −128 to 127. The simulator accepts decimal, hexadecimal (<code>0x</code>), and binary (<code>0b</code>) literals. Immediate operands accept −128 through 255.</p>
+  <p>Results wrap to eight bits. Decimal immediates and branch offsets must be −128 through 127. Hexadecimal (<code>0x00</code>–<code>0xFF</code>) and binary (<code>0b00000000</code>–<code>0b11111111</code>) literals specify 8-bit patterns: <code>0xF0</code>, <code>0b11110000</code>, and <code>-16</code> are equivalent. Decimal <code>240</code> is out of range. An explicit minus sign denotes a signed value, so <code>-0x10</code> also means −16. Signed comparisons interpret register values as −128 to 127.</p>
   <p>A branch target can be a label or an offset from −128 to 127. A taken branch computes <code>PC + offset</code> from the branch instruction's own address. Other instructions advance to <code>PC + 1</code>. Both updates wrap within the 256-word address space.</p>
   <h4>Example: count five iterations</h4>
   <pre><code>ANDI R0, R0, 0
@@ -2440,11 +2440,11 @@ BEQ  R0, poll</pre>
     </section>
     <section aria-labelledby="rotary5CodeTitle">
       <h3 id="rotary5CodeTitle">Read inputs and write LEDs</h3>
-      <pre class="protocol-code">ANDI R1, R3, 192 # 0xC0: sample A and B together.
+      <pre class="protocol-code">ANDI R1, R3, -64 # 0xC0: sample A and B together.
 ANDI R2, R3, 32  # 0x20: sample PUSH separately.
 ANDI R0, R0, 0   # Prepare an LED value.
 ORI  R0, R0, 5   # 00101 lights LED2 and LED0.
-ANDI R3, R3, 224 # Preserve input bits and clear the five LED bits.
+ANDI R3, R3, -32 # 0xE0: Preserve input bits and clear the five LED bits.
 OR   R3, R3, R0  # Apply the LED value.</pre>
       <p>These instructions show individual port operations. The full template uses the same atomic A/B reads while validating the complete phase sequence.</p>
     </section>
@@ -2496,10 +2496,10 @@ ORI  R3, R0, 35  # 0x23: ADDR=1, EN=0, address=3.
 ORI  R3, R0, 99  # 0x63: EN rises and captures address 3.
 ORI  R3, R0, 9   # 0x09: EN=0, ADDR=0, R/W=0, data=9.
 ORI  R3, R0, 73  # 0x49: EN rises and writes 9.
-ORI  R3, R0, 128 # 0x80: EN=0, ADDR=0, R/W=1.
-ORI  R3, R0, 192 # 0xC0: EN rises and captures read data.
+ORI  R3, R0, -128 # 0x80: EN=0, ADDR=0, R/W=1.
+ORI  R3, R0, -64 # 0xC0: EN rises and captures read data.
 ANDI R2, R3, 15  # R2=9; strip the control bits.
-ANDI R3, R3, 191 # 0xBF: lower EN to finish.
+ANDI R3, R3, -65 # 0xBF: lower EN to finish.
 done:
 BEQ  R0, done</pre>
       <p class="protocol-note">Holding EN high performs one transfer. The read latch drives only bits 3–0 while R/W=1, EN=1, and ADDR=0. Reset clears all sixteen cells, the selected address, and the read latch.</p>
@@ -3915,6 +3915,7 @@ function processExpansionPeripheralState(type,state,value){
   const examples = {
     io_ultrasonic:
 `# Ultrasonic distance sampler: each completed reading appears in R2.
+# Decimal: -128..127. Hex/binary: 8-bit patterns (0xF0 = -16).
 # R3[7]=TRIG output, [6]=READY input, [5:0]=distance in whole cm (0..63).
 # A rising TRIG captures the target distance and clears READY while busy.
 # Completion takes 2 + captured distance CPU cycles; READY then becomes 1.
@@ -3926,7 +3927,7 @@ function processExpansionPeripheralState(type,state,value){
 ANDI R0, R0, 0  # Constant zero for control writes and unconditional branches.
 measure:
 ORI  R3, R0, 0  # Ensure TRIG is low before the next rising edge.
-ORI  R3, R0, 128  # TRIG rises: begin one measurement of the current target.
+ORI  R3, R0, -128  # 0x80: TRIG rises: begin one measurement of the current target.
 ORI  R3, R0, 0  # End the pulse; measurement continues with TRIG low.
 wait_ready:
 ANDI R1, R3, 64  # Isolate READY; distance bits cannot affect this test.
@@ -3941,6 +3942,7 @@ BNE  R1, hold_result  # Repeat until R1 reaches zero.
 BEQ  R0, measure  # R0=0 starts the next measurement.`,
     io_shift8:
 `# Shift-register GPIO output: latch pattern A5 (10100101) onto eight pins.
+# Decimal: -128..127. Hex/binary: 8-bit patterns (0xF0 = -16).
 # R3[3]=DIR, [2]=LATCH/CAP, [1]=CLK, [0]=DATA.
 # DIR=1 makes the entire eight-pin bank outputs; DATA is the serial input.
 # Each CLK rising edge shifts left and inserts DATA into bit 0.
@@ -3951,7 +3953,7 @@ BEQ  R0, measure  # R0=0 starts the next measurement.`,
 
 ANDI R0, R0, 0  # Constant zero for port writes and unconditional branches.
 ORI  R3, R0, 8  # DIR=1; CLK=0, LATCH=0, DATA=0.
-ORI  R1, R0, 165  # 0xA5 is the byte to transmit, most-significant bit first.
+ORI  R1, R0, -91  # 0xA5 is the byte to transmit, most-significant bit first.
 ORI  R2, R0, 8  # Exactly eight clock pulses fill the shift register.
 next_bit:
 BLT  R1, send_one  # A signed-negative R1 has its next outgoing bit 7 set.
@@ -3961,18 +3963,19 @@ send_one:
 ORI  R3, R0, 9  # Set DATA=1 with CLK low; keep DIR=1.
 clock_bit:
 ORI  R3, R3, 2  # CLK rises: shift left and insert the prepared DATA bit.
-ANDI R3, R3, 253  # 0xFD clears CLK only, preparing its next rising edge.
+ANDI R3, R3, -3  # 0xFD clears CLK only, preparing its next rising edge.
 ADD  R1, R1, R1  # Shift R1 left; the next source bit moves into bit 7.
 SUBI R2, R2, 1  # One fewer output bit remains.
 BNE  R2, next_bit  # Continue until the staging register contains all eight bits.
 
 # The pins keep their old output until LATCH rises.
 ORI  R3, R3, 4  # LATCH rises with CLK low: publish the complete A5 byte.
-ANDI R3, R3, 251  # 0xFB lowers LATCH while preserving DIR and DATA.
+ANDI R3, R3, -5  # 0xFB lowers LATCH while preserving DIR and DATA.
 done:
 BEQ  R0, done  # Hold the latched pin pattern for inspection.`,
     io_shift8_input:
 `# Shift-register GPIO input: repeatedly capture eight pin toggles into R2.
+# Decimal: -128..127. Hex/binary: 8-bit patterns (0xF0 = -16).
 # R3[3]=DIR, [2]=CAP/LATCH, [1]=CLK, [0]=DATA.
 # DIR=0 makes the entire eight-pin bank inputs; the pin toggles are editable.
 # A CAP rising edge snapshots pins P7..P0 and exposes captured bit 7 on DATA.
@@ -3993,7 +3996,7 @@ ANDI R0, R3, 1  # Sample DATA before raising CLK; result is 0 or 1.
 ADD  R2, R2, R2  # Move previously received bits one position left.
 OR   R2, R2, R0  # Append this DATA bit at bit 0.
 ORI  R3, R3, 2  # CLK rises: advance the captured byte to its next bit.
-ANDI R3, R3, 253  # Lower CLK; the current DATA sample is ignored as an output.
+ANDI R3, R3, -3  # 0xFD: Lower CLK; the current DATA sample is ignored as an output.
 SUBI R1, R1, 1  # Count the bit just received.
 BNE  R1, read_bit  # Stop after all eight original pin values are in R2.
 
@@ -4078,6 +4081,7 @@ done:
 BEQ  R1, done  # R1=0 holds R2=0x7F for inspection.`,
     io_i2c:
 `# I2C sensor: read identification register 4, expected value 0xA5, into R2.
+# Decimal: -128..127. Hex/binary: 8-bit patterns (0xF0 = -16).
 # R3[1]=SDA (0 drives low, 1 releases); R3[0]=SCL.
 # Sensor address is seven-bit 0x48: address bytes 0x90 write and 0x91 read.
 # R0 is zero for constant writes, then sampled SDA; R1 is ACK/bit count.
@@ -4227,11 +4231,12 @@ error:
 ORI  R3, R0, 0  # Prepare STOP from a low clock.
 ORI  R3, R0, 1  # Raise SCL with SDA held low.
 ORI  R3, R0, 3  # Release SDA to complete STOP.
-ORI  R2, R0, 255  # 0xFF marks an address or data ACK failure.
+ORI  R2, R0, -1  # 0xFF marks an address or data ACK failure.
 error_hold:
 BNE  R1, error_hold  # Preserve the failed-ACK result.`,
     io_pwm:
 `# R3[7] = ENABLE; R3[6:0] = DUTY, from 0 to 127.
+# Decimal: -128..127. Hex/binary: 8-bit patterns (0xF0 = -16).
 # Duty cycle = DUTY / 127 * 100%; 0 is always low, 127 always high.
 # One PWM period is 127 CPU cycles. Only Step/Run advances its phase.
 # R0 = constant zero, R1 = duty code, R2 = delay counter.
@@ -4240,7 +4245,7 @@ ANDI R0, R0, 0    # Reserve R0 as zero for constants and unconditional branches.
 restart:
 ANDI R1, R0, 0    # Begin at 0% duty cycle.
 ramp:
-ORI  R3, R1, 128  # Set ENABLE while preserving the seven duty bits.
+ORI  R3, R1, -128  # 0x80: Set ENABLE while preserving the seven duty bits.
 ORI  R2, R0, 70   # Hold the setting for more than one complete PWM period.
 hold:
 SUBI R2, R2, 1
@@ -4249,7 +4254,7 @@ ADDI R1, R1, 16   # Try duty codes 0, 16, ..., 112.
 BLT  R1, full     # 128 is negative as a signed byte: finish the ramp.
 BEQ  R0, ramp
 full:
-ORI  R3, R0, 255  # ENABLE=1 and DUTY=127: constant high (100%).
+ORI  R3, R0, -1  # 0xFF: ENABLE=1 and DUTY=127: constant high (100%).
 ORI  R2, R0, 70
 hold_full:
 SUBI R2, R2, 1
@@ -4263,6 +4268,7 @@ BEQ  R0, restart  # Clear the duty code and repeat the demonstration.`,
 
     io_servo:
 `# R3[7] = enable; R3[6:0] is position 0..127, mapped to 0..180 degrees.
+# Decimal: -128..127. Hex/binary: 8-bit patterns (0xF0 = -16).
 # Enabled writes set the shaft position; disabling retains its last position.
 # R0 = constant zero, R1 = position code, R2 = hold counter.
 # Expect an upward sweep, a downward sweep, then a disabled middle position.
@@ -4273,30 +4279,30 @@ BEQ  R0, restart  # Clear the duty code and repeat the demonstration.`,
 ANDI R0, R0, 0    # Establish zero for command constants and unconditional branches.
 ANDI R1, R0, 0    # Start with position code 0.
 sweep_up:
-ORI  R3, R1, 128  # Enable and apply position codes 0, 16, ..., 112.
+ORI  R3, R1, -128  # 0x80: Enable and apply position codes 0, 16, ..., 112.
 ADDI R1, R1, 16
 BLT  R1, top      # 112 + 16 = 128, interpreted as -128: end the upward sweep.
 BEQ  R0, sweep_up # R0 is always zero, so continue the sweep otherwise.
 top:
-ORI  R3, R0, 255  # 0xFF = enable + position 127: reach exactly 180 degrees.
+ORI  R3, R0, -1  # 0xFF = enable + position 127: reach exactly 180 degrees.
 ADDI R2, R0, 8
 top_hold:
 SUBI R2, R2, 1
 BNE  R2, top_hold # Hold the upper endpoint for eight loop iterations.
 ORI  R1, R0, 127  # Start the descending codes at 127.
 sweep_down:
-ORI  R3, R1, 128  # Apply position codes 127, 111, ..., 15.
+ORI  R3, R1, -128  # 0x80: Apply position codes 127, 111, ..., 15.
 SUBI R1, R1, 16
 BLT  R1, bottom   # 15 - 16 wraps to 255, signed -1: end the downward sweep.
 BEQ  R0, sweep_down
 bottom:
-ORI  R3, R0, 128  # 0x80 = enable + position 0: reach exactly 0 degrees.
+ORI  R3, R0, -128  # 0x80 = enable + position 0: reach exactly 0 degrees.
 ADDI R2, R0, 8
 bottom_hold:
 SUBI R2, R2, 1
 BNE  R2, bottom_hold
 # Position 64 gives approximately 90.7 degrees because the range has 128 codes.
-ORI  R3, R0, 192  # 0xC0 = enable + position 64.
+ORI  R3, R0, -64  # 0xC0 = enable + position 64.
 ADDI R2, R0, 8
 center_hold:
 SUBI R2, R2, 1
@@ -4311,6 +4317,7 @@ ANDI R1, R0, 0    # Restart the next sweep from position code 0.
 BEQ  R0, sweep_up`,
     io_motor:
 `# R3[7] = enable, [6] = direction (0 CW, 1 CCW), [5:0] = speed 0..63.
+# Decimal: -128..127. Hex/binary: 8-bit patterns (0xF0 = -16).
 # CW means clockwise; CCW means counterclockwise.
 # R0 = constant zero, R1 = speed code, R2 = comparison/hold counter.
 # Each CPU cycle turns the enabled shaft by 12 degrees times speed / 63.
@@ -4322,39 +4329,39 @@ ANDI R0, R0, 0    # Establish zero for command constants and the loop branch.
 loop:
 ANDI R1, R0, 0    # Begin each ramp with speed zero.
 cw_up:
-ORI  R3, R1, 128  # 0x80 | speed: enable clockwise rotation.
+ORI  R3, R1, -128  # 0x80 | speed: enable clockwise rotation.
 ADDI R1, R1, 7    # Increase the next speed in steps of 7.
 SUBI R2, R1, 63   # Test whether the next speed has reached the maximum.
 BNE  R2, cw_up
-ORI  R3, R0, 191  # 0xBF = enable + CW + speed 63: full clockwise speed.
+ORI  R3, R0, -65  # 0xBF = enable + CW + speed 63: full clockwise speed.
 ADDI R2, R0, 8
 cw_hold:
 SUBI R2, R2, 1
 BNE  R2, cw_hold  # Hold full speed for eight loop iterations.
 cw_down:
-ORI  R3, R1, 128  # Apply descending CW speeds 63, 56, ..., 7.
+ORI  R3, R1, -128  # 0x80: Apply descending CW speeds 63, 56, ..., 7.
 SUBI R1, R1, 7
 BNE  R1, cw_down  # End the ramp when the next speed reaches zero.
-ORI  R3, R0, 128  # 0x80: still enabled, but speed zero stops the shaft.
+ORI  R3, R0, -128  # 0x80: still enabled, but speed zero stops the shaft.
 ADDI R2, R0, 8
 cw_stop:
 SUBI R2, R2, 1
 BNE  R2, cw_stop
 ccw_up:
-ORI  R3, R1, 192  # 0xC0 | speed: enable and set bit 6 for CCW rotation.
+ORI  R3, R1, -64  # 0xC0 | speed: enable and set bit 6 for CCW rotation.
 ADDI R1, R1, 7
 SUBI R2, R1, 63
 BNE  R2, ccw_up   # Ramp toward speed 63 using the same comparison as CW.
-ORI  R3, R0, 255  # 0xFF = enable + CCW + speed 63.
+ORI  R3, R0, -1  # 0xFF = enable + CCW + speed 63.
 ADDI R2, R0, 8
 ccw_hold:
 SUBI R2, R2, 1
 BNE  R2, ccw_hold
 ccw_down:
-ORI  R3, R1, 192  # Keep CCW selected while reducing the speed.
+ORI  R3, R1, -64  # 0xC0: Keep CCW selected while reducing the speed.
 SUBI R1, R1, 7
 BNE  R1, ccw_down
-ORI  R3, R0, 192  # 0xC0: enabled CCW command with speed zero.
+ORI  R3, R0, -64  # 0xC0: enabled CCW command with speed zero.
 ADDI R2, R0, 8
 ccw_stop:
 SUBI R2, R2, 1
@@ -4367,6 +4374,7 @@ BNE  R2, disabled_hold
 BEQ  R0, loop     # R0 is zero: start the clockwise ramp again.`,
     io_timer:
 `# R3 bit 7 = RUN, bit 6 = RESET, bits 5..0 = prescaler P.
+# Decimal: -128..127. Hex/binary: 8-bit patterns (0xF0 = -16).
 # The display counts once per P+1 completed processor cycles.
 # RESET has priority over RUN; holding RESET keeps the count at zero.
 # RUN = 0 retains count and divider progress; changing P restarts progress.
@@ -4377,7 +4385,7 @@ BEQ  R0, loop     # R0 is zero: start the clockwise ramp again.`,
 ANDI R0, R0, 0    # Establish zero for command constants and the loop branch.
 loop:
 ORI  R3, R0, 67   # 0x43: RESET = 1, RUN = 0, P = 3; clear count and progress.
-ORI  R3, R0, 131  # 0x83: release RESET, RUN = 1, P = 3; one count per 4 cycles.
+ORI  R3, R0, -125  # 0x83: release RESET, RUN = 1, P = 3; one count per 4 cycles.
 ORI  R1, R0, 24   # Keep the slow command active during 24 loop iterations.
 slow:
 SUBI R1, R1, 1
@@ -4387,7 +4395,7 @@ ORI  R1, R0, 12   # Wait 12 iterations with counting paused.
 pause:
 SUBI R1, R1, 1
 BNE  R1, pause
-ORI  R3, R0, 128  # 0x80: RUN = 1, P = 0; now count every processor cycle.
+ORI  R3, R0, -128  # 0x80: RUN = 1, P = 0; now count every processor cycle.
 ORI  R1, R0, 24
 fast:
 SUBI R1, R1, 1
@@ -4400,6 +4408,7 @@ BNE  R1, hold
 BEQ  R0, loop     # R0 is zero: return to RESET and repeat the demonstration.`,
     io_memory4:
 `# A 16-address memory stores four bits at each address through one R3 port.
+# Decimal: -128..127. Hex/binary: 8-bit patterns (0xF0 = -16).
 # R3[7] = R/W (1 read, 0 write), [6] = EN, [5] = ADDR; [4] is unused.
 # R3[3:0] is the payload. ADDR = 1 latches an address; ADDR = 0 transfers data.
 # Each transfer needs EN low then high. Holding EN high makes no new transfer.
@@ -4414,11 +4423,11 @@ fill:
 # Address phase: prepare the payload with EN low, then raise EN to latch it.
 ORI  R3, R1, 32   # 0x20 | address: ADDR = 1, EN = 0.
 ORI  R3, R3, 64   # Set 0x40: EN rises and memory selects this address.
-ANDI R3, R3, 191  # Mask 0xBF clears EN, preparing the next rising edge.
+ANDI R3, R3, -65  # Mask 0xBF clears EN, preparing the next rising edge.
 # Write phase: replacing the full port clears ADDR and R/W.
 ORI  R3, R2, 0    # Copy the four-bit data value; EN = 0, ADDR = 0, R/W = 0.
 ORI  R3, R3, 64   # EN rises: write the payload into the latched address.
-ANDI R3, R3, 191  # Lower EN before the next address phase.
+ANDI R3, R3, -65  # 0xBF: Lower EN before the next address phase.
 ADDI R1, R1, 1    # Advance to the next address.
 SUBI R2, R2, 1    # Prepare the next descending value.
 SUBI R0, R1, 16   # Compare the new address with 16 using a subtraction.
@@ -4428,13 +4437,13 @@ ANDI R2, R2, 0    # Reuse R2 as the sum accumulator.
 read:
 ORI  R3, R1, 32   # Address phase: ADDR = 1, EN = 0, payload = R1.
 ORI  R3, R3, 64   # EN rises to latch the address.
-ANDI R3, R3, 191  # Lower EN before changing to the data phase.
+ANDI R3, R3, -65  # 0xBF: Lower EN before changing to the data phase.
 ANDI R3, R3, 0    # Clear ADDR and the old payload.
-ORI  R3, R3, 128  # 0x80: select read direction with EN still low.
+ORI  R3, R3, -128  # 0x80: select read direction with EN still low.
 ORI  R3, R3, 64   # 0xC0: EN rises; the selected cell enters the read-data latch.
 ANDI R0, R3, 15   # Mask 0x0F reads only the returned data, excluding controls.
 ADD  R2, R2, R0   # Accumulate the 16 values; their sum is 120.
-ANDI R3, R3, 191  # Lower EN to release readback before the next address.
+ANDI R3, R3, -65  # 0xBF: Lower EN to release readback before the next address.
 ADDI R1, R1, 1
 SUBI R0, R1, 16
 BNE  R0, read     # Continue until all addresses 0..15 have been read.
@@ -4601,6 +4610,7 @@ ADDI R3, R3, 1  # Advance 00..FF; a carry crosses the two digit nibbles.
 BGT  R0, loop  # Signed R0 remains +1, so continue counting.`,
     io_sw4led4:
 `# Mirror four switches onto four LEDs using one shared 8-bit port.
+# Decimal: -128..127. Hex/binary: 8-bit patterns (0xF0 = -16).
 # R3[7:4] are inputs SW3..SW0; R3[3:0] are outputs LED3..LED0.
 # R1 stores one switch snapshot; R2 builds the complete next LED nibble.
 # R0 is bit-test scratch, then is cleared for the unconditional branch.
@@ -4609,11 +4619,11 @@ BGT  R0, loop  # Signed R0 remains +1, so continue counting.`,
 # BEQ tests zero, so a set input bit 7 (0x80) is correctly treated as ON.
 
 loop:
-ANDI R1, R3, 0xF0  # Mask off LED outputs and sample all four switch bits once.
+ANDI R1, R3, -16  # 0xF0: Mask off LED outputs and sample all four switch bits once.
 
 ANDI R2, R2, 0x00  # Start with all four LEDs off in the temporary output byte.
 
-ANDI R0, R1, 0x80  # Test SW3, input bit 7.
+ANDI R0, R1, -128  # 0x80: Test SW3, input bit 7.
 BEQ  R0, check_sw2  # If SW3 is off, leave LED3 clear.
 ORI  R2, R2, 0x08  # SW3 is on: set LED3, output bit 3.
 
@@ -4640,6 +4650,7 @@ ANDI R0, R0, 0  # Clear the scratch value so BEQ always branches.
 BEQ  R0, loop  # Take a fresh switch snapshot for the next update.`,
     io_matrix8:
 `# Draw and retain an X in the stateful 8x8 LED matrix.
+# Decimal: -128..127. Hex/binary: 8-bit patterns (0xF0 = -16).
 # R3[7]=WR, [6]=PIXEL, [5:3]=ROW, [2:0]=COL; rows/columns are 0..7.
 # PIXEL=1 lights the addressed pixel; PIXEL=0 would clear it.
 # A pixel is committed only on a WR rising edge, from 0 to 1.
@@ -4650,39 +4661,39 @@ BEQ  R0, loop  # Take a fresh switch snapshot for the next update.`,
 
 # Main diagonal: row equals column.
 ADDI R3, R0, 0x40  # WR=0, PIXEL=1, row 0, column 0; prepare the command.
-ORI  R3, R3, 0x80  # Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
+ORI  R3, R3, -128  # 0x80: Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
 ADDI R3, R0, 0x49  # WR=0, PIXEL=1, row 1, column 1; prepare the command.
-ORI  R3, R3, 0x80  # Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
+ORI  R3, R3, -128  # 0x80: Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
 ADDI R3, R0, 0x52  # WR=0, PIXEL=1, row 2, column 2; prepare the command.
-ORI  R3, R3, 0x80  # Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
+ORI  R3, R3, -128  # 0x80: Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
 ADDI R3, R0, 0x5B  # WR=0, PIXEL=1, row 3, column 3; prepare the command.
-ORI  R3, R3, 0x80  # Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
+ORI  R3, R3, -128  # 0x80: Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
 ADDI R3, R0, 0x64  # WR=0, PIXEL=1, row 4, column 4; prepare the command.
-ORI  R3, R3, 0x80  # Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
+ORI  R3, R3, -128  # 0x80: Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
 ADDI R3, R0, 0x6D  # WR=0, PIXEL=1, row 5, column 5; prepare the command.
-ORI  R3, R3, 0x80  # Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
+ORI  R3, R3, -128  # 0x80: Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
 ADDI R3, R0, 0x76  # WR=0, PIXEL=1, row 6, column 6; prepare the command.
-ORI  R3, R3, 0x80  # Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
+ORI  R3, R3, -128  # 0x80: Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
 ADDI R3, R0, 0x7F  # WR=0, PIXEL=1, row 7, column 7; prepare the command.
-ORI  R3, R3, 0x80  # Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
+ORI  R3, R3, -128  # 0x80: Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
 
 # Opposite diagonal: column = 7 - row.
 ADDI R3, R0, 0x47  # WR=0, PIXEL=1, row 0, column 7; prepare the command.
-ORI  R3, R3, 0x80  # Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
+ORI  R3, R3, -128  # 0x80: Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
 ADDI R3, R0, 0x4E  # WR=0, PIXEL=1, row 1, column 6; prepare the command.
-ORI  R3, R3, 0x80  # Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
+ORI  R3, R3, -128  # 0x80: Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
 ADDI R3, R0, 0x55  # WR=0, PIXEL=1, row 2, column 5; prepare the command.
-ORI  R3, R3, 0x80  # Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
+ORI  R3, R3, -128  # 0x80: Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
 ADDI R3, R0, 0x5C  # WR=0, PIXEL=1, row 3, column 4; prepare the command.
-ORI  R3, R3, 0x80  # Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
+ORI  R3, R3, -128  # 0x80: Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
 ADDI R3, R0, 0x63  # WR=0, PIXEL=1, row 4, column 3; prepare the command.
-ORI  R3, R3, 0x80  # Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
+ORI  R3, R3, -128  # 0x80: Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
 ADDI R3, R0, 0x6A  # WR=0, PIXEL=1, row 5, column 2; prepare the command.
-ORI  R3, R3, 0x80  # Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
+ORI  R3, R3, -128  # 0x80: Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
 ADDI R3, R0, 0x71  # WR=0, PIXEL=1, row 6, column 1; prepare the command.
-ORI  R3, R3, 0x80  # Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
+ORI  R3, R3, -128  # 0x80: Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
 ADDI R3, R0, 0x78  # WR=0, PIXEL=1, row 7, column 0; prepare the command.
-ORI  R3, R3, 0x80  # Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
+ORI  R3, R3, -128  # 0x80: Raise WR without changing PIXEL, ROW, or COL; commit one pixel.
 
 hold:
 BEQ  R0, hold  # R0 is zero: stay here with no new WR edge; stored pixels remain lit.`,
@@ -4710,6 +4721,7 @@ ADDI R3, R0, 0x00  # With R0=0, start or restart at black (R=G=B=0).
 BEQ  R0, loop  # R0 stays zero, so repeat unconditionally.`,
     io_buzzer7:
 `# Buzzer: sweep the tone through all 128 frequency codes.
+# Decimal: -128..127. Hex/binary: 8-bit patterns (0xF0 = -16).
 # R3[7]=enable: 1 sounds the tone, 0 silences it; R3[6:0]=code.
 # The simulator uses frequency = 100 + 15*code Hz, from 100 to 2005 Hz.
 # R3 holds enable plus code; R1 isolates and compares the frequency code.
@@ -4717,7 +4729,7 @@ BEQ  R0, loop  # R0 stays zero, so repeat unconditionally.`,
 # Restart at code 127 before 0xFF could wrap to 0x00 and disable the tone.
 # SUBI may wrap below zero; BEQ only checks whether code equals 127.
 
-ADDI R3, R0, 0x80  # Set enable with code 0: 100 Hz, using the zero in R0.
+ADDI R3, R0, -128  # 0x80: Set enable with code 0: 100 Hz, using the zero in R0.
 
 loop:
 ANDI R1, R3, 0x7F  # Remove the enable bit; retain only the seven frequency bits.
@@ -4727,10 +4739,11 @@ ADDI R3, R3, 1  # Increase the code by one, raising frequency by 15 Hz.
 BEQ  R0, loop  # R0 stays zero, so repeat unconditionally.
 
 restart:
-ADDI R3, R0, 0x80  # Set enable with code 0: 100 Hz, using the zero in R0.
+ADDI R3, R0, -128  # 0x80: Set enable with code 0: 100 Hz, using the zero in R0.
 BEQ  R0, loop  # R0 stays zero, so repeat unconditionally.`,
     io_adc8:
 `# ADC polling: read an analog input through the 8-bit R3 input port.
+# Decimal: -128..127. Hex/binary: 8-bit patterns (0xF0 = -16).
 # Move the ADC input VIN between 0 and VDD = 5.000 V.
 # The simulator supplies R3 = round(255*VIN/VDD), limited to 0..255.
 # R2 holds one sampled byte; R1 holds its high-bit flag (0 or 0x80).
@@ -4741,7 +4754,7 @@ BEQ  R0, loop  # R0 stays zero, so repeat unconditionally.`,
 
 loop:
 ADDI R2, R3, 0  # Copy the current ADC input code without changing it.
-ANDI R1, R2, 0x80  # Test sample bit 7: 0 for codes 0..127, 0x80 for 128..255.
+ANDI R1, R2, -128  # Test sample bit 7: 0 for codes 0..127, 0x80 for 128..255.
 BEQ  R0, loop  # R0 is zero: poll again to capture a later VIN sample.`,
     io_dac8:
 `# DAC ramp: write an 8-bit output code to the R3 output port.
@@ -4757,6 +4770,7 @@ ADDI R3, R3, 1  # Raise VOUT one code step; 0xFF + 1 wraps to 0x00.
 BEQ  R0, loop  # R0 stays zero: repeat the ramp without changing R3 here.`,
     io_rotary5:
 `# Rotary encoder: validate complete detents and show the count on five LEDs.
+# Decimal: -128..127. Hex/binary: 8-bit patterns (0xF0 = -16).
 # R3[7]=A, [6]=B, [5]=PUSH, [4:0]=LED4..LED0.
 # CW: 00 -> 01 -> 11 -> 10 -> 00. CCW follows the reverse order.
 # A/B runs on wall time, even while the processor is paused.
@@ -4772,11 +4786,11 @@ BEQ  R0, loop  # R0 stays zero: repeat the ramp without changing R3 here.`,
 reset:
 ANDI R0, R0, 0    # Prepare zero; R0 is an ordinary writable register.
 ANDI R2, R2, 0    # Clear the count.
-ANDI R3, R3, 224  # Clear LED bits while preserving A/B/PUSH inputs.
+ANDI R3, R3, -32  # 0xE0: Clear LED bits while preserving A/B/PUSH inputs.
 BEQ  R0, rearm    # Start decoding only after observing idle 00.
 
 rearm:
-ANDI R1, R3, 224  # Read A, B, and PUSH together in one instruction.
+ANDI R1, R3, -32  # 0xE0: Read A, B, and PUSH together in one instruction.
 ANDI R0, R1, 32   # Test PUSH from that same sample.
 BNE  R0, reset    # Held PUSH keeps the count cleared.
 BEQ  R1, idle     # PUSH=0, so R1=0 means A/B=00.
@@ -4784,7 +4798,7 @@ BEQ  R0, rearm    # Discard phases until the encoder reaches idle.
 
 # Idle 00: either direction may start.
 idle:
-ANDI R1, R3, 224  # Atomic A/B/PUSH sample; LED bits are excluded.
+ANDI R1, R3, -32  # 0xE0: Atomic A/B/PUSH sample; LED bits are excluded.
 ANDI R0, R1, 32   # R0=0 when PUSH is released.
 BNE  R0, reset
 BEQ  R1, idle    # Sample 00.
@@ -4797,7 +4811,7 @@ BEQ  R0, rearm    # Sample 11 (0xC0).
 
 # CW started at 01; wait for 11, or backtrack to 00.
 cw1:
-ANDI R1, R3, 224  # Atomic A/B/PUSH sample; LED bits are excluded.
+ANDI R1, R3, -32  # 0xE0: Atomic A/B/PUSH sample; LED bits are excluded.
 ANDI R0, R1, 32   # R0=0 when PUSH is released.
 BNE  R0, reset
 BEQ  R1, idle    # Sample 00.
@@ -4810,7 +4824,7 @@ BEQ  R0, cw2    # Sample 11 (0xC0).
 
 # CW reached 11; next is 10. Returning to 01 reverses one edge.
 cw2:
-ANDI R1, R3, 224  # Atomic A/B/PUSH sample; LED bits are excluded.
+ANDI R1, R3, -32  # 0xE0: Atomic A/B/PUSH sample; LED bits are excluded.
 ANDI R0, R1, 32   # R0=0 when PUSH is released.
 BNE  R0, reset
 BEQ  R1, rearm    # Sample 00.
@@ -4823,7 +4837,7 @@ BEQ  R0, cw2    # Sample 11 (0xC0).
 
 # CW reached 10; returning to 00 completes one clockwise detent.
 cw3:
-ANDI R1, R3, 224  # Atomic A/B/PUSH sample; LED bits are excluded.
+ANDI R1, R3, -32  # 0xE0: Atomic A/B/PUSH sample; LED bits are excluded.
 ANDI R0, R1, 32   # R0=0 when PUSH is released.
 BNE  R0, reset
 BEQ  R1, count_up    # Sample 00.
@@ -4836,7 +4850,7 @@ BEQ  R0, cw2    # Sample 11 (0xC0).
 
 # CCW started at 10; wait for 11, or backtrack to 00.
 ccw1:
-ANDI R1, R3, 224  # Atomic A/B/PUSH sample; LED bits are excluded.
+ANDI R1, R3, -32  # 0xE0: Atomic A/B/PUSH sample; LED bits are excluded.
 ANDI R0, R1, 32   # R0=0 when PUSH is released.
 BNE  R0, reset
 BEQ  R1, idle    # Sample 00.
@@ -4849,7 +4863,7 @@ BEQ  R0, ccw2    # Sample 11 (0xC0).
 
 # CCW reached 11; next is 01. Returning to 10 reverses one edge.
 ccw2:
-ANDI R1, R3, 224  # Atomic A/B/PUSH sample; LED bits are excluded.
+ANDI R1, R3, -32  # 0xE0: Atomic A/B/PUSH sample; LED bits are excluded.
 ANDI R0, R1, 32   # R0=0 when PUSH is released.
 BNE  R0, reset
 BEQ  R1, rearm    # Sample 00.
@@ -4862,7 +4876,7 @@ BEQ  R0, ccw2    # Sample 11 (0xC0).
 
 # CCW reached 01; returning to 00 completes one counterclockwise detent.
 ccw3:
-ANDI R1, R3, 224  # Atomic A/B/PUSH sample; LED bits are excluded.
+ANDI R1, R3, -32  # 0xE0: Atomic A/B/PUSH sample; LED bits are excluded.
 ANDI R0, R1, 32   # R0=0 when PUSH is released.
 BNE  R0, reset
 BEQ  R1, count_down    # Sample 00.
@@ -4877,18 +4891,19 @@ BEQ  R0, ccw2    # Sample 11 (0xC0).
 count_up:
 ADDI R2, R2, 1
 ANDI R2, R2, 31   # Modulo 32: 31 wraps to 0.
-ANDI R3, R3, 224  # Keep current inputs and clear the previous LED value.
+ANDI R3, R3, -32  # 0xE0: Keep current inputs and clear the previous LED value.
 OR   R3, R3, R2   # Write the count to the five LEDs.
 BEQ  R0, idle     # R0=0 came from the accepted input sample.
 
 count_down:
 SUBI R2, R2, 1
 ANDI R2, R2, 31   # Modulo 32: 0 wraps to 31.
-ANDI R3, R3, 224
+ANDI R3, R3, -32  # 0xE0 byte pattern.
 OR   R3, R3, R2
 BEQ  R0, idle`,
     io_keypad4:
 `# Scan the 4x4 keypad by driving one row at a time.
+# Decimal: -128..127. Hex/binary: 8-bit patterns (0xF0 = -16).
 # R3[7:4]=ROW3..ROW0 outputs; R3[3:0]=COL3..COL0 inputs.
 # Row commands are 0x10, 0x20, 0x40, 0x80; column masks are 1, 2, 4, 8.
 # R0 holds the decoded key; R1 stays zero; R2 holds masked column samples.
@@ -4911,7 +4926,7 @@ BNE  R2, row1  # At least one column is high on this row.
 ADDI R3, R1, 0x40  # R1=0: drive only ROW2 (7 8 9 C).
 ANDI R2, R3, 0x0F  # Discard row bits; keep active column inputs.
 BNE  R2, row2  # At least one column is high on this row.
-ADDI R3, R1, 0x80  # R1=0: drive only ROW3 (star 0 hash D).
+ADDI R3, R1, -128  # 0x80: R1=0: drive only ROW3 (star 0 hash D).
 ANDI R2, R3, 0x0F  # Discard row bits; keep active column inputs.
 BNE  R2, row3  # At least one column is high on this row.
 BEQ  R1, scan  # No row reported a key; retain R0 and scan again.
@@ -5015,6 +5030,7 @@ ADDI R0, R1, 0x0F
 BEQ  R1, scan`,
     io_lcd16x2:
 `# Write HELLO, ADEL! and 16x2 LCD ASCII through the four-bit LCD bus.
+# Decimal: -128..127. Hex/binary: 8-bit patterns (0xF0 = -16).
 # R3[7]=BL, [6]=E, [5]=RW, [4]=RS, [3:0]=data nibble.
 # R0 stays zero for loading bus values; R1 and R2 are unused.
 # The simulator starts in four-bit mode; each falling E edge latches one nibble.
@@ -5024,190 +5040,190 @@ BEQ  R1, scan`,
 # Two falling edges complete each byte; text writes then advance the cursor.
 
 # Command 0x28: Function set: four-bit bus and two rows; this model already starts in four-bit mode.
-ADDI R3, R0, 0xC2  # 0xC0 (BL + E, RS=0) plus high nibble 0x2.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xC8  # Raise E with the same control bits and low nibble 0x8.
-ANDI R3, R3, 0xBF  # E falls: Complete command 0x28.
+ADDI R3, R0, -62  # 0xC2: 0xC0 (BL + E, RS=0) plus high nibble 0x2.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -56  # 0xC8: Raise E with the same control bits and low nibble 0x8.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete command 0x28.
 
 # Command 0x0C: Display ON with cursor OFF.
-ADDI R3, R0, 0xC0  # 0xC0 (BL + E, RS=0) plus high nibble 0x0.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xCC  # Raise E with the same control bits and low nibble 0xC.
-ANDI R3, R3, 0xBF  # E falls: Complete command 0x0C.
+ADDI R3, R0, -64  # 0xC0 (BL + E, RS=0) plus high nibble 0x0.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -52  # 0xCC: Raise E with the same control bits and low nibble 0xC.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete command 0x0C.
 
 # Command 0x06: Entry mode: advance the cursor after each character.
-ADDI R3, R0, 0xC0  # 0xC0 (BL + E, RS=0) plus high nibble 0x0.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xC6  # Raise E with the same control bits and low nibble 0x6.
-ANDI R3, R3, 0xBF  # E falls: Complete command 0x06.
+ADDI R3, R0, -64  # 0xC0 (BL + E, RS=0) plus high nibble 0x0.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -58  # 0xC6: Raise E with the same control bits and low nibble 0x6.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete command 0x06.
 
 # Command 0x01: Clear the display and return the address to row 1, column 1.
-ADDI R3, R0, 0xC0  # 0xC0 (BL + E, RS=0) plus high nibble 0x0.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xC1  # Raise E with the same control bits and low nibble 0x1.
-ANDI R3, R3, 0xBF  # E falls: Complete command 0x01.
+ADDI R3, R0, -64  # 0xC0 (BL + E, RS=0) plus high nibble 0x0.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -63  # 0xC1: Raise E with the same control bits and low nibble 0x1.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete command 0x01.
 
 # Row 1, column 1: ASCII 'H' = 0x48.
-ADDI R3, R0, 0xD4  # 0xD0 (BL + E + RS) plus high nibble 0x4.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xD8  # Raise E with the same control bits and low nibble 0x8.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -44  # 0xD4: 0xD0 (BL + E + RS) plus high nibble 0x4.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -40  # 0xD8: Raise E with the same control bits and low nibble 0x8.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 1, column 2: ASCII 'E' = 0x45.
-ADDI R3, R0, 0xD4  # 0xD0 (BL + E + RS) plus high nibble 0x4.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xD5  # Raise E with the same control bits and low nibble 0x5.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -44  # 0xD4: 0xD0 (BL + E + RS) plus high nibble 0x4.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -43  # 0xD5: Raise E with the same control bits and low nibble 0x5.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 1, column 3: ASCII 'L' = 0x4C.
-ADDI R3, R0, 0xD4  # 0xD0 (BL + E + RS) plus high nibble 0x4.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xDC  # Raise E with the same control bits and low nibble 0xC.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -44  # 0xD4: 0xD0 (BL + E + RS) plus high nibble 0x4.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -36  # 0xDC: Raise E with the same control bits and low nibble 0xC.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 1, column 4: ASCII 'L' = 0x4C.
-ADDI R3, R0, 0xD4  # 0xD0 (BL + E + RS) plus high nibble 0x4.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xDC  # Raise E with the same control bits and low nibble 0xC.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -44  # 0xD4: 0xD0 (BL + E + RS) plus high nibble 0x4.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -36  # 0xDC: Raise E with the same control bits and low nibble 0xC.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 1, column 5: ASCII 'O' = 0x4F.
-ADDI R3, R0, 0xD4  # 0xD0 (BL + E + RS) plus high nibble 0x4.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xDF  # Raise E with the same control bits and low nibble 0xF.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -44  # 0xD4: 0xD0 (BL + E + RS) plus high nibble 0x4.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -33  # 0xDF: Raise E with the same control bits and low nibble 0xF.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 1, column 6: ASCII ',' = 0x2C.
-ADDI R3, R0, 0xD2  # 0xD0 (BL + E + RS) plus high nibble 0x2.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xDC  # Raise E with the same control bits and low nibble 0xC.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -46  # 0xD2: 0xD0 (BL + E + RS) plus high nibble 0x2.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -36  # 0xDC: Raise E with the same control bits and low nibble 0xC.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 1, column 7: ASCII 'space' = 0x20.
-ADDI R3, R0, 0xD2  # 0xD0 (BL + E + RS) plus high nibble 0x2.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xD0  # Raise E with the same control bits and low nibble 0x0.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -46  # 0xD2: 0xD0 (BL + E + RS) plus high nibble 0x2.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -48  # 0xD0: Raise E with the same control bits and low nibble 0x0.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 1, column 8: ASCII 'A' = 0x41.
-ADDI R3, R0, 0xD4  # 0xD0 (BL + E + RS) plus high nibble 0x4.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xD1  # Raise E with the same control bits and low nibble 0x1.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -44  # 0xD4: 0xD0 (BL + E + RS) plus high nibble 0x4.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -47  # 0xD1: Raise E with the same control bits and low nibble 0x1.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 1, column 9: ASCII 'D' = 0x44.
-ADDI R3, R0, 0xD4  # 0xD0 (BL + E + RS) plus high nibble 0x4.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xD4  # Raise E with the same control bits and low nibble 0x4.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -44  # 0xD4: 0xD0 (BL + E + RS) plus high nibble 0x4.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -44  # 0xD4: Raise E with the same control bits and low nibble 0x4.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 1, column 10: ASCII 'E' = 0x45.
-ADDI R3, R0, 0xD4  # 0xD0 (BL + E + RS) plus high nibble 0x4.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xD5  # Raise E with the same control bits and low nibble 0x5.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -44  # 0xD4: 0xD0 (BL + E + RS) plus high nibble 0x4.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -43  # 0xD5: Raise E with the same control bits and low nibble 0x5.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 1, column 11: ASCII 'L' = 0x4C.
-ADDI R3, R0, 0xD4  # 0xD0 (BL + E + RS) plus high nibble 0x4.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xDC  # Raise E with the same control bits and low nibble 0xC.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -44  # 0xD4: 0xD0 (BL + E + RS) plus high nibble 0x4.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -36  # 0xDC: Raise E with the same control bits and low nibble 0xC.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 1, column 12: ASCII '!' = 0x21.
-ADDI R3, R0, 0xD2  # 0xD0 (BL + E + RS) plus high nibble 0x2.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xD1  # Raise E with the same control bits and low nibble 0x1.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -46  # 0xD2: 0xD0 (BL + E + RS) plus high nibble 0x2.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -47  # 0xD1: Raise E with the same control bits and low nibble 0x1.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Command 0xC0: Set DDRAM address 0x40: 0x80 address command + 0x40 selects row 2.
-ADDI R3, R0, 0xCC  # 0xC0 (BL + E, RS=0) plus high nibble 0xC.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xC0  # Raise E with the same control bits and low nibble 0x0.
-ANDI R3, R3, 0xBF  # E falls: Complete command 0xC0.
+ADDI R3, R0, -52  # 0xCC: 0xC0 (BL + E, RS=0) plus high nibble 0xC.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -64  # 0xC0: Raise E with the same control bits and low nibble 0x0.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete command 0xC0.
 
 # Row 2, column 1: ASCII '1' = 0x31.
-ADDI R3, R0, 0xD3  # 0xD0 (BL + E + RS) plus high nibble 0x3.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xD1  # Raise E with the same control bits and low nibble 0x1.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -45  # 0xD3: 0xD0 (BL + E + RS) plus high nibble 0x3.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -47  # 0xD1: Raise E with the same control bits and low nibble 0x1.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 2, column 2: ASCII '6' = 0x36.
-ADDI R3, R0, 0xD3  # 0xD0 (BL + E + RS) plus high nibble 0x3.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xD6  # Raise E with the same control bits and low nibble 0x6.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -45  # 0xD3: 0xD0 (BL + E + RS) plus high nibble 0x3.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -42  # 0xD6: Raise E with the same control bits and low nibble 0x6.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 2, column 3: ASCII 'x' = 0x78.
-ADDI R3, R0, 0xD7  # 0xD0 (BL + E + RS) plus high nibble 0x7.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xD8  # Raise E with the same control bits and low nibble 0x8.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -41  # 0xD7: 0xD0 (BL + E + RS) plus high nibble 0x7.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -40  # 0xD8: Raise E with the same control bits and low nibble 0x8.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 2, column 4: ASCII '2' = 0x32.
-ADDI R3, R0, 0xD3  # 0xD0 (BL + E + RS) plus high nibble 0x3.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xD2  # Raise E with the same control bits and low nibble 0x2.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -45  # 0xD3: 0xD0 (BL + E + RS) plus high nibble 0x3.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -46  # 0xD2: Raise E with the same control bits and low nibble 0x2.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 2, column 5: ASCII 'space' = 0x20.
-ADDI R3, R0, 0xD2  # 0xD0 (BL + E + RS) plus high nibble 0x2.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xD0  # Raise E with the same control bits and low nibble 0x0.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -46  # 0xD2: 0xD0 (BL + E + RS) plus high nibble 0x2.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -48  # 0xD0: Raise E with the same control bits and low nibble 0x0.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 2, column 6: ASCII 'L' = 0x4C.
-ADDI R3, R0, 0xD4  # 0xD0 (BL + E + RS) plus high nibble 0x4.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xDC  # Raise E with the same control bits and low nibble 0xC.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -44  # 0xD4: 0xD0 (BL + E + RS) plus high nibble 0x4.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -36  # 0xDC: Raise E with the same control bits and low nibble 0xC.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 2, column 7: ASCII 'C' = 0x43.
-ADDI R3, R0, 0xD4  # 0xD0 (BL + E + RS) plus high nibble 0x4.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xD3  # Raise E with the same control bits and low nibble 0x3.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -44  # 0xD4: 0xD0 (BL + E + RS) plus high nibble 0x4.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -45  # 0xD3: Raise E with the same control bits and low nibble 0x3.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 2, column 8: ASCII 'D' = 0x44.
-ADDI R3, R0, 0xD4  # 0xD0 (BL + E + RS) plus high nibble 0x4.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xD4  # Raise E with the same control bits and low nibble 0x4.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -44  # 0xD4: 0xD0 (BL + E + RS) plus high nibble 0x4.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -44  # 0xD4: Raise E with the same control bits and low nibble 0x4.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 2, column 9: ASCII 'space' = 0x20.
-ADDI R3, R0, 0xD2  # 0xD0 (BL + E + RS) plus high nibble 0x2.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xD0  # Raise E with the same control bits and low nibble 0x0.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -46  # 0xD2: 0xD0 (BL + E + RS) plus high nibble 0x2.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -48  # 0xD0: Raise E with the same control bits and low nibble 0x0.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 2, column 10: ASCII 'A' = 0x41.
-ADDI R3, R0, 0xD4  # 0xD0 (BL + E + RS) plus high nibble 0x4.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xD1  # Raise E with the same control bits and low nibble 0x1.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -44  # 0xD4: 0xD0 (BL + E + RS) plus high nibble 0x4.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -47  # 0xD1: Raise E with the same control bits and low nibble 0x1.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 2, column 11: ASCII 'S' = 0x53.
-ADDI R3, R0, 0xD5  # 0xD0 (BL + E + RS) plus high nibble 0x5.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xD3  # Raise E with the same control bits and low nibble 0x3.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -43  # 0xD5: 0xD0 (BL + E + RS) plus high nibble 0x5.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -45  # 0xD3: Raise E with the same control bits and low nibble 0x3.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 2, column 12: ASCII 'C' = 0x43.
-ADDI R3, R0, 0xD4  # 0xD0 (BL + E + RS) plus high nibble 0x4.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xD3  # Raise E with the same control bits and low nibble 0x3.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -44  # 0xD4: 0xD0 (BL + E + RS) plus high nibble 0x4.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -45  # 0xD3: Raise E with the same control bits and low nibble 0x3.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 2, column 13: ASCII 'I' = 0x49.
-ADDI R3, R0, 0xD4  # 0xD0 (BL + E + RS) plus high nibble 0x4.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xD9  # Raise E with the same control bits and low nibble 0x9.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -44  # 0xD4: 0xD0 (BL + E + RS) plus high nibble 0x4.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -39  # 0xD9: Raise E with the same control bits and low nibble 0x9.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # Row 2, column 14: ASCII 'I' = 0x49.
-ADDI R3, R0, 0xD4  # 0xD0 (BL + E + RS) plus high nibble 0x4.
-ANDI R3, R3, 0xBF  # E falls: latch the high nibble.
-ADDI R3, R0, 0xD9  # Raise E with the same control bits and low nibble 0x9.
-ANDI R3, R3, 0xBF  # E falls: Complete the character write and advance the cursor.
+ADDI R3, R0, -44  # 0xD4: 0xD0 (BL + E + RS) plus high nibble 0x4.
+ANDI R3, R3, -65  # 0xBF: E falls: latch the high nibble.
+ADDI R3, R0, -39  # 0xD9: Raise E with the same control bits and low nibble 0x9.
+ANDI R3, R3, -65  # 0xBF: E falls: Complete the character write and advance the cursor.
 
 # R0 stays zero, so the finished display is held without more bus edges.
 hold:
@@ -7000,6 +7016,19 @@ BEQ  R0, hold`
     return null;
   }
 
+  function parseByteLiteral(token,lineNo){
+    const value = parseNumber(token);
+    if (value === null) return null;
+    const pattern = /^\+?0[xb]/i.test(token.trim());
+    if (pattern && value >= 0 && value <= 255) return value > 127 ? value - 256 : value;
+    if (value >= -128 && value <= 127) return value;
+
+    const detail = pattern ? 'exceeds 8 bits.'
+      : value >= 128 && value <= 255 ? `out of range; use ${value - 256}.`
+      : 'out of range [-128, 127].';
+    throw new Error(`Line ${lineNo}: ${token} ${detail}`);
+  }
+
   function parseReg(token,lineNo){
     const key = token.trim().toUpperCase();
     if (!(key in REG)) throw new Error(`Line ${lineNo}: unknown register "${token}". Use R0-R3.`);
@@ -7106,7 +7135,7 @@ BEQ  R0, hold`
 
         const src1 = parseReg(args[0],item.lineNo);
         const targetToken = args[1];
-        const numericOffset = parseNumber(targetToken);
+        const numericOffset = parseByteLiteral(targetToken,item.lineNo);
 
         if (numericOffset !== null) {
           resolvedOffset = numericOffset;
@@ -7159,16 +7188,10 @@ BEQ  R0, hold`
         let low8;
 
         if (immediate) {
-          const imm = parseNumber(args[2]);
+          const imm = parseByteLiteral(args[2],item.lineNo);
           if (imm === null) {
             throw new Error(
               `Line ${item.lineNo}: invalid immediate "${args[2]}".`
-            );
-          }
-
-          if (imm < -128 || imm > 255) {
-            throw new Error(
-              `Line ${item.lineNo}: immediate ${imm} does not fit the supported 8-bit literal range [-128, 255].`
             );
           }
 
