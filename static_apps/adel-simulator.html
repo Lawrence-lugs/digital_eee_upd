@@ -6078,6 +6078,7 @@ BEQ  R0, hold`
     if(ioConfig===IO_CONFIGS.rotary5) refreshRotaryInteractionVisuals();
     if(ioConfig===IO_CONFIGS.keypad4) refreshKeypadInteractionVisuals();
     if(ioConfig===IO_CONFIGS.freeplay){
+      refreshFreePlaySevenSegmentVisuals();
       freePlaySlots.forEach(slot=>{if(slot.type==='rotary5') refreshRotaryInteractionVisuals(slot)});
     }
   }
@@ -6494,10 +6495,31 @@ BEQ  R0, hold`
     Object.entries(segments).forEach(([name,points]) => {
       const poly = document.createElementNS('http://www.w3.org/2000/svg','polygon');
       poly.setAttribute('points', points);
+      poly.setAttribute('data-segment', name);
       poly.setAttribute('class', 'io-seg' + (active.has(name) ? ' on' : ''));
       svg.appendChild(poly);
     });
     return svg;
+  }
+
+  function refreshFreePlaySevenSegmentVisuals(){
+    if (ioConfig !== IO_CONFIGS.freeplay) return;
+    const bodies = els.ioPanel.querySelectorAll('.io-freeplay-body');
+    freePlaySlots.forEach((slot,index) => {
+      if (slot.type !== 'hex7seg') return;
+      const display = bodies[index]?.querySelector('.io-freeplay-seven');
+      if (!display) return;
+      const value = rf[slot.reg];
+      display.setAttribute('aria-label',`Hex display ${hex(value,2)}`);
+      // Keep both peripherals mounted so button holds and keyboard focus survive.
+      display.querySelectorAll('svg').forEach((svg,digit) => {
+        const nibble = digit === 0 ? (value >>> 4) & 15 : value & 15;
+        const active = new Set(HEX_SEGMENTS[nibble]);
+        svg.querySelectorAll('[data-segment]').forEach(segment => {
+          segment.classList.toggle('on',active.has(segment.dataset.segment));
+        });
+      });
+    });
   }
 
   function freePlayTypeOptions(selected){
@@ -6524,6 +6546,7 @@ BEQ  R0, hold`
       for(let b=7;b>=0;b--){const led=document.createElement('span');led.className='io-led'+(((value>>b)&1)?' on':'');bank.appendChild(led)} container.appendChild(bank);
     } else if (slot.type==='hex7seg') {
       const wrap=document.createElement('div');wrap.className='io-freeplay-seven';
+      wrap.setAttribute('role','img');wrap.setAttribute('aria-label',`Hex display ${hex(value,2)}`);
       const a=document.createElement('div');a.className='io-digit';a.appendChild(createSevenSegmentSvg((value>>4)&15));
       const b=document.createElement('div');b.className='io-digit';b.appendChild(createSevenSegmentSvg(value&15));wrap.append(a,b);container.appendChild(wrap);
     } else if (slot.type==='sw4led4') {
@@ -7357,7 +7380,6 @@ BEQ  R0, hold`
         freeRunLastPaint = timestamp;
         const skipInteractiveIo=ioInteractionActive || ioRangeInteractionActive || portButtonsActive();
         render({skipIoPanel:skipInteractiveIo});
-        if(skipInteractiveIo) refreshInteractivePeripheralVisuals();
       }
       freeRunUiFrame = requestAnimationFrame(paint);
     };
@@ -8169,6 +8191,7 @@ BEQ  R0, hold`
     renderMachine();
     renderTrace();
     if (!skipIoPanel && !portButtonsActive()) renderIoPanel();
+    else refreshInteractivePeripheralVisuals();
     updateBuzzerAudio();
     updateFreePlayBuzzerAudio();
     renderProbes();
