@@ -112,7 +112,7 @@ h1{
 .panel-body{padding:9px;min-width:0}
 .top-panels{
   display:grid;
-  grid-template-columns:minmax(280px,var(--panel-0,1fr)) 16px minmax(240px,var(--panel-1,300px)) 16px minmax(252px,var(--panel-2,252px));
+  grid-template-columns:minmax(280px,var(--panel-0,1fr)) 16px minmax(340px,var(--panel-1,340px)) 16px minmax(252px,var(--panel-2,252px));
   gap:0;
   margin-bottom:0;
   align-items:stretch;
@@ -146,7 +146,7 @@ h1{
 .top-panels .status{font-size:15px}
 .top-panels .machine th,.trace-panel .trace th{font-size:14px}
 .top-panels .machine td,.trace td{font-size:16px}
-.machine tbody td:nth-child(3){font-weight:750}
+.machine tbody td:nth-child(3){font-weight:750;white-space:nowrap}
 .top-panels .editor,.top-panels .editor-syntax{font-size:16px}
 
 .sidebar{display:contents}
@@ -256,12 +256,12 @@ h1{
 .assembly-dialog-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px;margin-top:16px}
 .assembly-dialog-actions .danger{background:#f3dada;border-color:#dcb0b4;color:#873338}
 .assembly-dialog-actions .danger:hover:not(:disabled){background:#ebc6c9;border-color:#c88d94}
-.template-list{display:grid;gap:8px}
+.template-list{display:grid;gap:8px;position:absolute;left:100%;top:var(--templates-offset,0px);z-index:40;width:360px;max-height:calc(100dvh - 24px);overflow-y:auto;padding:7px;background:var(--panel);border:1px solid var(--border);border-radius:11px;box-shadow:0 12px 36px #17212b26}
 .template-choice{
   width:100%;min-height:54px;padding:9px 11px;border:1px solid var(--border);border-radius:9px;
   background:#fff;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:12px;
 }
-.template-choice:hover{background:#f8fafc;border-color:#aab4c2}
+.template-choice:hover,.template-choice:focus-visible{background:#f8fafc;border-color:#aab4c2}
 .template-choice-title{font-weight:800;color:#344054}
 .template-choice-note{font-size:12px;color:var(--muted);margin-top:2px}
 .template-choice-tag{
@@ -1607,6 +1607,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .menu-popover hr{border:0;border-top:1px solid var(--border);margin:6px 2px}
 .menu-item{display:flex;width:100%;align-items:center;justify-content:space-between;gap:12px;min-height:42px;padding:9px 11px;border:0;border-radius:6px;background:transparent;color:var(--text);font:inherit;font-size:16px;line-height:1.4;text-align:left;text-decoration:none;cursor:pointer;margin:0}
 .menu-item:hover,.menu-item:focus-visible{background:#f3f5f7}
+#file-menu>.menu-popover{overflow:visible}
+.template-submenu{position:relative}
+.template-submenu>summary{list-style:none}
+.template-submenu>summary::-webkit-details-marker{display:none}
+.template-submenu>summary .submenu-arrow{font-size:22px;line-height:1;color:var(--muted)}
+.template-submenu[open]>summary{background:var(--surface-hover,#f3f5f7)}
 .menu-item-label{display:inline-flex;align-items:center;gap:9px}
 .menu-item-icon{width:26px;height:26px;flex:none;padding:3px;border-radius:6px;color:var(--accent);background:var(--accent-soft)}
 .menu-popover .animation-switch{display:flex;padding:9px 11px;justify-content:space-between;white-space:normal}
@@ -1650,6 +1656,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   .top-panels,.datapath-panel,.trace-panel{scroll-margin-top:145px}
 }
 @media(max-width:560px){.menu-bar{top:0;border-top-left-radius:0;border-top-right-radius:0}}
+@media(max-width:720px),(max-height:520px){
+  #file-menu>.menu-popover{overflow-y:auto;max-height:var(--menu-height,calc(100dvh - 150px))}
+  .template-list{position:static;width:auto;max-height:none;margin:4px 0 4px 11px;box-shadow:none}
+  .template-submenu[open]>summary .submenu-arrow{transform:rotate(90deg)}
+}
 
 /* Appearance uses the RISC-V workbench palette. */
 :root{
@@ -1719,7 +1730,7 @@ body[data-theme="dark"] .state.register-flash{animation-name:registerFlashDark}
 }
 body[data-theme="dark"] :is(.assembly-dialog-body p,.template-choice-title,.lcd-reference-body p,.reference-dialog pre){color:var(--text)}
 body[data-theme="dark"] :is(.template-choice,.io-choice){background:var(--panel);color:var(--text);border-color:var(--border)}
-body[data-theme="dark"] :is(.template-choice:hover,.io-choice:hover){background:var(--surface-soft);border-color:#bc818b}
+body[data-theme="dark"] :is(.template-choice:hover,.template-choice:focus-visible,.io-choice:hover){background:var(--surface-soft);border-color:#bc818b}
 body[data-theme="dark"] .template-choice-tag{background:var(--surface-hover);color:var(--muted)}
 body[data-theme="dark"] .io-choice.selected{border-color:var(--accent);box-shadow:0 0 0 2px #f0adb233}
 body[data-theme="dark"] .encoding-note{background:#443b29;color:#f0d997}
@@ -1873,11 +1884,15 @@ body[data-theme="dark"] .protocol-reference-dialog{--protocol-ink:#d6e0ec;--prot
   <nav class="menu-bar" aria-label="Simulator controls and menus">
     <details id="file-menu" class="app-menu"><summary>File</summary><div class="menu-popover">
       <button type="button" id="newProgramButton" class="menu-item" title="Start a blank assembly program">New Assembly</button>
-      <button type="button" id="loadProgramButton" class="menu-item" title="Load a local text file into the Assembly editor">Load Assembly…</button>
-      <button type="button" id="saveProgramButton" class="menu-item" title="Save the current Assembly source to a local file">Save Assembly…</button>
-      <button type="button" id="restoreDraftButton" class="menu-item" disabled>Restore saved draft</button>
       <hr>
-      <button type="button" id="templatesButton" class="menu-item" aria-haspopup="dialog" aria-controls="templatesDialog">Templates…</button>
+      <button type="button" id="loadProgramButton" class="menu-item" title="Load a local text file into the Assembly editor">Load Assembly</button>
+      <details id="templatesMenu" class="template-submenu">
+        <summary id="templatesButton" class="menu-item" aria-controls="templateList">Load Templates <span class="submenu-arrow" aria-hidden="true">›</span></summary>
+        <div id="templateList" class="template-list" role="group" aria-label="Assembly templates"></div>
+      </details>
+      <hr>
+      <button type="button" id="saveProgramButton" class="menu-item" title="Save the current Assembly source to a local file">Save Assembly</button>
+      <button type="button" id="restoreDraftButton" class="menu-item" disabled>Restore saved draft</button>
     </div></details>
     <details id="view-menu" class="app-menu"><summary>View</summary><div class="menu-popover">
       <div class="menu-field">
@@ -1918,7 +1933,7 @@ body[data-theme="dark"] .protocol-reference-dialog{--protocol-ink:#d6e0ec;--prot
     </div></details>
     <button id="about-button" class="menu-button" type="button" aria-haspopup="dialog" aria-controls="about-dialog">About</button>
     <div class="execution-controls">
-      <button type="button" id="resetBtn" title="Reset the PC, registers, and execution trace."><span aria-hidden="true">↺</span> Reset</button>
+      <button type="button" id="resetBtn" title="Reset the processor and power-cycle I/O devices."><span aria-hidden="true">↺</span> Reset</button>
       <span id="manualCycleControls" class="cycle-controls">
         <button type="button" id="undoBtn" disabled title="Undo the most recent processor cycle."><span aria-hidden="true">↶</span> Undo</button>
         <button type="button" class="execution-accent" id="stepBtn" title="Execute one processor cycle.">Step <span aria-hidden="true">→</span></button>
@@ -2015,7 +2030,7 @@ body[data-theme="dark"] .protocol-reference-dialog{--protocol-ink:#d6e0ec;--prot
   <h3 id="help-overview-title">Getting started</h3>
   <p>ADEL means <strong>Architecture Design that's Easy to Learn</strong>. Its single-cycle processor uses 16-bit instructions, an 8-bit datapath, four registers (<code>R0</code>–<code>R3</code>), and an 8-bit program counter. Instruction memory holds up to 256 words.</p>
   <ol>
-    <li>Choose <strong>File → Templates</strong> for an example, or <strong>File → New Assembly</strong> to write a program.</li>
+    <li>Choose <strong>File → Load Templates</strong> for an example, or <strong>File → New Assembly</strong> to write a program.</li>
     <li>Edit the Assembly panel. The live assembler updates Machine code and instruction ROM when the source is valid.</li>
     <li>Choose <strong>Step</strong> to execute one cycle. Follow the register values, datapath probes, and Execution trace.</li>
     <li>Choose <strong>Run</strong> for continuous execution and <strong>Pause</strong> to inspect the current state. Use <strong>File → Save Assembly</strong> to keep your source.</li>
@@ -2098,8 +2113,8 @@ BEQ  R0, done</code></pre>
     </table>
   </div>
   <p><strong>Step and Run</strong> execute instructions and advance clocked device state. Switches, buttons, and sliders can also update their input values while the processor is paused. <strong>Undo</strong> restores the preceding processor cycle and its saved device state.</p>
-  <p><strong>Reset</strong> clears the processor, timer, RAM, PWM phase, and motor positions. SPI flash returns to FF, and the I²C sensor returns to its default inputs and clears its transaction state. Reset also cancels pending rotary steps and returns the knob and A/B inputs to zero. It clears both shift-register banks and input toggles, and restores the ultrasonic target to 20 cm with READY cleared. Active input devices then supply their current values. Matrix pixels and LCD text remain stored.</p>
-  <p><strong>File → Templates</strong> includes the examples available for the current I/O configuration. Peripheral mappings and examples use the same ADEL instruction set as the processor.</p>
+  <p><strong>Reset</strong> restarts the processor and power-cycles every I/O device. It clears matrix pixels, LCD text, RAM, counters, PWM phase, shift-register storage, and pending transfers. SPI flash returns to FF. Motor and rotary positions return to zero, pending rotary steps are canceled, and momentary inputs are released. Peripheral assignments, switches, ADC voltage, sensor settings, ultrasonic target distance, and external shift-register input pins are preserved. Active input devices then supply their current values.</p>
+  <p><strong>File → Load Templates</strong> includes the examples available for the current I/O configuration. Peripheral mappings and examples use the same ADEL instruction set as the processor.</p>
 </section>
 
 <section class="help-section" data-help-topic="controls" aria-labelledby="help-controls-title">
@@ -2112,7 +2127,7 @@ BEQ  R0, done</code></pre>
       <tr><td><strong>Undo</strong></td><td>Restore the previous cycle while paused.</td></tr>
       <tr><td><strong>Breakpoints</strong></td><td>Click an executable source line number to pause Run before that instruction. Click again to remove its breakpoint. Run continues past the current stop once; Step executes one instruction. Reset retains breakpoints. Editing, loading, or replacing the source clears them.</td></tr>
       <tr><td><strong>Run / Pause</strong></td><td>Start or pause continuous execution.</td></tr>
-      <tr><td><strong>Reset</strong></td><td>Clear the PC, registers, and execution trace. Active input devices then supply their current values.</td></tr>
+      <tr><td><strong>Reset</strong></td><td>Reset the processor and I/O devices, clearing display data, device memory, counters, and pending transfers. Keep peripheral assignments and external input settings.</td></tr>
       <tr><td><strong>View → Appearance</strong></td><td>Choose Light mode or Dark mode for the workbench and Assembly editor. The browser remembers your selection.</td></tr>
       <tr><td><strong>View → Simulation speed</strong></td><td>Set the continuous execution rate from 1 to 60 cycles per second.</td></tr>
       <tr><td><strong>View → Show datapath</strong></td><td>Show or hide the diagram. Attached I/O stays visible; Free play places its two peripherals side by side. Datapath animations are disabled while the diagram is hidden.</td></tr>
@@ -2163,14 +2178,6 @@ BEQ  R0, done</code></pre>
       <button type="button" id="replaceProgramSave" class="primary">Save and continue</button>
     </div>
   </div>
-</dialog>
-
-<dialog id="templatesDialog" class="assembly-dialog">
-  <div class="assembly-dialog-head">
-    <div><h3>Templates</h3><div class="small">General examples plus the template for the active I/O peripheral.</div></div>
-    <button type="button" id="templatesClose" class="assembly-dialog-close" aria-label="Close">×</button>
-  </div>
-  <div class="assembly-dialog-body"><div id="templateList" class="template-list"></div></div>
 </dialog>
 
 <dialog id="ioChooserDialog" class="io-chooser-dialog">
@@ -2345,7 +2352,7 @@ ORI  R3, R0, 3   # A+B: one reverse half-step.
 hold:
 BEQ  R0, hold    # Keep A+B energized and hold position.</pre>
       <p class="protocol-note">The simulator uses 0.9° per half-step, or 400 half-steps per turn. The first pattern after release establishes a phase without movement. Skipped phases or invalid coil masks flag a sequence error and leave the position unchanged. Reset clears the error and position.</p>
-      <p>Add delay instructions between patterns to slow movement. The <strong>File → Templates</strong> example demonstrates a complete forward and reverse sequence.</p>
+      <p>Add delay instructions between patterns to slow movement. The <strong>File → Load Templates</strong> example demonstrates a complete forward and reverse sequence.</p>
     </section>
   </div>
 </dialog>
@@ -2388,7 +2395,7 @@ release:
 ANDI R1, R3, 15
 BNE  R1, release # Wait for release before accepting another press.
 BEQ  R0, poll</pre>
-      <p>The simulator models one held key at a time. Use <strong>File → Templates</strong> for a complete four-row scanner.</p>
+      <p>The simulator models one held key at a time. Use <strong>File → Load Templates</strong> for a complete four-row scanner.</p>
     </section>
   </div>
 </dialog>
@@ -2435,7 +2442,7 @@ BEQ  R0, poll</pre>
         <li>Count once when a complete valid sequence returns to <code>00</code>.</li>
         <li>If a phase jump is invalid, discard the incomplete step and wait for <code>00</code> to synchronize again.</li>
       </ol>
-      <p>The <strong>File → Templates</strong> example implements this state machine and resets the five-LED count when PUSH is held.</p>
+      <p>The <strong>File → Load Templates</strong> example implements this state machine and resets the five-LED count when PUSH is held.</p>
       <p class="protocol-note"><strong>Use Run at 60 cyc/s for the best capture.</strong> A faster simulation gives the polling loop more samples per phase. Slow execution can miss transitions; polling cannot recover a complete cycle that passed between samples. Use Step to inspect the instructions and Run to capture rotation.</p>
     </section>
     <section aria-labelledby="rotary5CodeTitle">
@@ -2841,7 +2848,7 @@ ORI R3, R0, 3    # Release SDA while SCL stays high</pre>
     const panels = [...container.querySelectorAll('.panel')];
     const handles = [...container.querySelectorAll('.panel-resizer')];
     // Match the grid track minima, leaving room for controls and register values.
-    const minimums = [280,240,252];
+    const minimums = [280,340,252];
     const stackedScreen = matchMedia('(max-width:980px)');
     const widths = () => panels.map(panel => panel.getBoundingClientRect().width);
     let drag = null;
@@ -5432,6 +5439,7 @@ BEQ  R0, hold`
     loadProgramButton:document.getElementById('loadProgramButton'),
     saveProgramButton:document.getElementById('saveProgramButton'),
     templatesButton:document.getElementById('templatesButton'),
+    templatesMenu:document.getElementById('templatesMenu'),
     loadProgramInput:document.getElementById('loadProgramInput'),
     restoreDraftButton:document.getElementById('restoreDraftButton'),
     replaceProgramDialog:document.getElementById('replaceProgramDialog'),
@@ -5441,8 +5449,6 @@ BEQ  R0, hold`
     replaceProgramCancel:document.getElementById('replaceProgramCancel'),
     replaceProgramDiscard:document.getElementById('replaceProgramDiscard'),
     replaceProgramSave:document.getElementById('replaceProgramSave'),
-    templatesDialog:document.getElementById('templatesDialog'),
-    templatesClose:document.getElementById('templatesClose'),
     templateList:document.getElementById('templateList'),
     probeAnimationToggle:document.getElementById('probeAnimationToggle'),
     showDatapathToggle:document.getElementById('showDatapathToggle'),
@@ -6423,6 +6429,35 @@ BEQ  R0, hold`
     freePlaySlots.forEach(slot => Object.assign(slot.state,createPortPeripheralState()));
   }
 
+  function powerCycleIoPeripherals(){
+    // External stimulus settings survive a power cycle; device storage and
+    // protocol state return to their initial values in both I/O modes.
+    const inputs=state=>Object.fromEntries(
+      ['i2cTemperature','i2cLight','ultrasonicTarget','shiftInputPins']
+        .map(key=>[key,state[key]]));
+    const portInputs=inputs(portPeripheralState);
+    const slotInputs=freePlaySlots.map(slot=>({
+      ...inputs(slot.state),switchNibble:slot.state.switchNibble,
+      adcInputVoltage:slot.state.adcInputVoltage
+    }));
+    resetPortPeripherals();
+    Object.assign(portPeripheralState,portInputs);
+    freePlaySlots.forEach((slot,index)=>{
+      slot.state={...createFreePlaySlot(slot.type,slot.reg).state,...slotInputs[index]};
+    });
+    matrixFramebuffer=new Uint8Array(64);
+    matrixLastWrite=0;
+    clearLcdDisplay();
+    lcdDisplayOn=true;
+    lcdEntryIncrement=true;
+    lcdHighNibble=null;
+    lcdHighRs=0;
+    lcdLastEnable=0;
+    keypadPressed=-1;
+    ioInteractionActive=false;
+    ioRangeInteractionActive=false;
+  }
+
   function arrangeIoChoices(){
     const chooser = document.getElementById('ioChooserDialog');
     const grid = chooser?.querySelector('.io-choice-grid');
@@ -7248,7 +7283,7 @@ BEQ  R0, hold`
     if (value >= -128 && value <= 127) return value;
 
     const detail = pattern ? 'exceeds 8 bits.'
-      : value >= 128 && value <= 255 ? `out of range; use ${value - 256}.`
+      : value >= 128 && value <= 255 ? `out of range [-128, 127]; use ${value - 256} instead.`
       : 'out of range [-128, 127].';
     throw new Error(`Line ${lineNo}: ${token} ${detail}`);
   }
@@ -7580,7 +7615,7 @@ BEQ  R0, hold`
       if (timestamp - freeRunLastPaint >= 33) {
         freeRunLastPaint = timestamp;
         const skipInteractiveIo=ioInteractionActive || ioRangeInteractionActive || portButtonsActive();
-        render({skipIoPanel:skipInteractiveIo});
+        render({skipIoPanel:skipInteractiveIo,followExecution:true});
       }
       freeRunUiFrame = requestAnimationFrame(paint);
     };
@@ -7609,7 +7644,7 @@ BEQ  R0, hold`
     const item = currentSourceItem();
     if (!item || !breakpoints.has(item.lineNo) || skipBreakpointAddress === pc) return false;
     breakpointPauseAddress = pc;
-    stopFreeRun();
+    stopFreeRun({followExecution:true});
     return true;
   }
 
@@ -7641,12 +7676,13 @@ BEQ  R0, hold`
     freeRunEnabled = true;
     freeRunLastPaint = 0;
     updateFreeRunUi();
+    render({followExecution:true,forceFollow:true});
     if (pauseForBreakpoint()) return;
     scheduleNextFreeRunCycle();
     scheduleFreeRunUiFrame();
   }
 
-  function stopFreeRun(){
+  function stopFreeRun({followExecution=false}={}){
     if (!freeRunEnabled && !freeRunTimer && freeRunUiFrame === null) return;
     freeRunEnabled = false;
     skipBreakpointAddress = null;
@@ -7657,11 +7693,12 @@ BEQ  R0, hold`
     updateFreeRunUi();
     // Paint once at the exact cycle where execution stopped so manual stepping
     // resumes from a fully synchronized architectural/UI state.
-    if (sourceIsValid) render();
+    // Editing also stops Run; only an execution-control action follows the PC.
+    if (sourceIsValid) render({followExecution,forceFollow:followExecution});
   }
 
   function toggleFreeRun(){
-    if (freeRunEnabled) stopFreeRun();
+    if (freeRunEnabled) stopFreeRun({followExecution:true});
     else startFreeRun();
   }
 
@@ -7737,7 +7774,7 @@ BEQ  R0, hold`
 
   function resetState(){
     clearBreakpointPause();
-    resetPortPeripherals();
+    powerCycleIoPeripherals();
     previousProbeValues.clear();
     clearUndoHistory();
     rf = new Uint8Array(4);
@@ -7866,7 +7903,7 @@ BEQ  R0, hold`
     updateBuzzerAudio();
     updateFreePlayBuzzerAudio();
 
-    if (renderUi) render();
+    if (renderUi) render({followExecution:true,forceFollow:true});
   }
 
   function fieldBits(value,width){
@@ -8106,7 +8143,7 @@ BEQ  R0, hold`
     return program.find(item => item.address === pc) || null;
   }
 
-  function positionAssemblyHighlight({center=false}={}){
+  function positionAssemblyHighlight({center=false,force=false}={}){
     const item = currentSourceItem();
     if (!sourceIsValid || !item || !els.editorCurrentLine || !els.source) {
       if (els.editorCurrentLine) els.editorCurrentLine.style.display = 'none';
@@ -8119,7 +8156,7 @@ BEQ  R0, hold`
     const borderTop = parseFloat(style.borderTopWidth) || 0;
     const lineTop = borderTop + paddingTop + ((item.lineNo - 1) * lineHeight);
 
-    if (center && lastCenteredSourceLine !== item.lineNo) {
+    if (center && (force || lastCenteredSourceLine !== item.lineNo)) {
       const target = lineTop - (els.source.clientHeight / 2) + (lineHeight / 2);
       els.source.scrollTo({
         top:Math.max(0,target),
@@ -8138,8 +8175,8 @@ BEQ  R0, hold`
     els.editorCurrentLine.style.height = `${lineHeight}px`;
   }
 
-  function renderAssemblyExecution(){
-    positionAssemblyHighlight({center:true});
+  function renderAssemblyExecution({followExecution=false,forceFollow=false}={}){
+    positionAssemblyHighlight({center:followExecution,force:forceFollow});
     renderAssemblyGutter();
   }
 
@@ -8385,10 +8422,10 @@ BEQ  R0, hold`
     }
   }
 
-  function render({skipIoPanel=false}={}){
+  function render({skipIoPanel=false,followExecution=false,forceFollow=false}={}){
     signals = evaluate();
     renderState();
-    renderAssemblyExecution();
+    renderAssemblyExecution({followExecution,forceFollow});
     renderMachine();
     renderTrace();
     if (!skipIoPanel && !portButtonsActive()) renderIoPanel();
@@ -8496,10 +8533,17 @@ BEQ  R0, hold`
       menu.style.setProperty('--menu-top',`${top}px`);
       menu.style.setProperty('--menu-height',`${Math.max(80,window.innerHeight - top - 12)}px`);
     });
+    if (els.templatesMenu.open && els.templatesMenu.closest('.app-menu').open) {
+      const top = els.templatesMenu.getBoundingClientRect().top;
+      const height = els.templateList.getBoundingClientRect().height;
+      const offset = Math.max(12,Math.min(top,window.innerHeight - height - 12)) - top;
+      els.templatesMenu.style.setProperty('--templates-offset',`${offset}px`);
+    }
   }
   window.addEventListener('resize',positionOpenMenus);
   window.addEventListener('scroll',positionOpenMenus,{passive:true});
   function closeMenus(){
+    els.templatesMenu.open = false;
     document.querySelectorAll('.app-menu').forEach(menu => { menu.open = false; });
   }
   document.querySelectorAll('.app-menu').forEach(menu => {
@@ -8507,6 +8551,7 @@ BEQ  R0, hold`
       if (menu.open) document.querySelectorAll('.app-menu').forEach(other => {
         if (other !== menu) other.open = false;
       });
+      else if (menu.contains(els.templatesMenu)) els.templatesMenu.open = false;
       positionOpenMenus();
     });
     menu.addEventListener('keydown',event => {
@@ -8706,20 +8751,54 @@ BEQ  R0, hold`
 
   els.saveProgramButton.addEventListener('click',downloadCurrentProgram);
 
-  els.templatesButton.addEventListener('click',() => {
-    refreshTemplateChoices();
-    if (typeof els.templatesDialog.showModal === 'function') els.templatesDialog.showModal();
-    else els.templatesDialog.setAttribute('open','');
+  els.templatesButton.addEventListener('pointerenter',event => {
+    if (event.pointerType !== 'mouse') return;
+    els.templatesMenu.open = true;
+    positionOpenMenus();
   });
-  els.templatesClose.addEventListener('click',() => els.templatesDialog.close());
-  els.templatesDialog.addEventListener('click',e => { if (e.target === els.templatesDialog) els.templatesDialog.close(); });
+  els.templatesButton.addEventListener('click',event => {
+    if (event.pointerType !== 'mouse') return;
+    event.preventDefault(); // A click after hovering should keep the submenu open.
+    els.templatesMenu.open = true;
+    positionOpenMenus();
+  });
+  els.templatesMenu.addEventListener('pointerleave',event => {
+    if (event.pointerType !== 'mouse') return;
+    if (els.templateList.contains(document.activeElement)) els.templatesButton.focus({preventScroll:true});
+    els.templatesMenu.open = false;
+  });
+  els.templatesMenu.addEventListener('toggle',positionOpenMenus);
+  els.templatesMenu.addEventListener('keydown',event => {
+    const choices = Array.from(els.templateList.querySelectorAll('button'));
+    const atSummary = event.target === els.templatesButton;
+    if (atSummary && ['ArrowRight','ArrowDown'].includes(event.key)) {
+      event.preventDefault();
+      event.stopPropagation();
+      els.templatesMenu.open = true;
+      choices[0]?.focus();
+    } else if (els.templatesMenu.open && ['ArrowLeft','Escape'].includes(event.key)) {
+      event.preventDefault();
+      event.stopPropagation();
+      els.templatesMenu.open = false;
+      els.templatesButton.focus();
+    } else if (!atSummary && ['ArrowDown','ArrowUp','Home','End'].includes(event.key)) {
+      event.preventDefault();
+      event.stopPropagation();
+      const index = choices.indexOf(document.activeElement);
+      const next = event.key === 'Home' ? 0 : event.key === 'End' ? choices.length - 1
+        : (index + (event.key === 'ArrowDown' ? 1 : -1) + choices.length) % choices.length;
+      choices[next]?.focus();
+    }
+  });
   els.templateList.addEventListener('click',e => {
     const button = e.target.closest('[data-template-key]');
     if (!button) return;
-    requestSourceReplacement(() => {
-      loadTemplate(button.dataset.templateKey);
-      els.templatesDialog.close();
-    },'Loading this template replaces your current assembly. Save your changes before continuing.');
+    const summary = els.templatesMenu.closest('.app-menu').querySelector('summary');
+    closeMenus();
+    summary.focus({preventScroll:true});
+    if (hasUnsavedSource()) dialogMenuFocus.set(els.replaceProgramDialog,summary);
+    requestSourceReplacement(() => loadTemplate(button.dataset.templateKey),
+      'Loading this template replaces your current assembly. Save your changes before continuing.');
   });
   document.addEventListener('change',event => {
     if (draftIsCurrent && event.target.matches('[data-fp-type],[data-fp-reg]')) saveAssemblyDraft();
