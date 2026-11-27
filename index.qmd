@@ -445,6 +445,18 @@ include-in-header:
           to see how instructions change registers and memory.</p>
           </div>
         </a>
+
+        <a href="computer-system-explorer.html" class="simulator-card block bg-white rounded-xl border border-gray-200 overflow-hidden
+                  hover:shadow-md hover:border-red-300 transition-all group">
+          <div class="simulator-preview">
+            <img src="static_apps/snapshots/computer-system-explorer.png" alt="" width="1280" height="720"
+                 loading="lazy" decoding="async">
+          </div>
+          <div class="p-6">
+            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-red-800 transition-colors">Computer System Explorer</h4>
+            <p class="text-sm text-gray-500 leading-relaxed">Explore a computer in 3D and inspect its processor, memory, I/O, electrical power, and cooling.</p>
+          </div>
+        </a>
       </div>
     </section>
 

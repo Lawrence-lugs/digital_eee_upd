@@ -38,6 +38,7 @@ project:
     - cp static_apps/timer_simulator.html _site/
     - cp static_apps/serial_communications_protocol_simulator.html _site/
     - cp static_apps/adel-simulator.html _site/
+    - cp static_apps/computer-system-explorer.html _site/
     - cp static_apps/c-riscv-explorer.html _site/
     - cp static_apps/maxwell_equations.html _site/
     - cp static_apps/ac_motor_simulator.html _site/
@@ -85,6 +86,8 @@ website:
             text: ADEL Datapath Explorer
           - href: adel-simulator.html
             text: ADEL Simulator
+          - href: computer-system-explorer.html
+            text: Computer System Explorer
           - text: Digital Design Fundamentals
           - href: kmapgameee
             text: kmap-gamEEE
